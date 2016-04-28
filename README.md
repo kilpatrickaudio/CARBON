@@ -5,4 +5,4 @@ Please use this repository to track bugs and feature requests for CARBON. Only b
 
 Feature requests should be opened as issues. Only feature requested submitted through this system will be considered.
 
-We are planning to open source CARBON once the first few versions of the code are released. License type and acceptable usage is still to be decided. Comments as to the best way to do this would be appreciated.
+We are planning to open source CARBON once the first few versions of the code are released. It will be released under the GPL so that changes and derived works remain free as well.
