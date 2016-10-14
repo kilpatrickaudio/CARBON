@@ -1,0 +1,249 @@
+/**
+  ******************************************************************************
+  * @file    stm32f4xx_it.c 
+  * @author  MCD Application Team
+  * @version V1.2.1
+  * @date    13-March-2015
+  * @brief   Main Interrupt Service Routines.
+  *          This file provides template for all exceptions handler and 
+  *          peripherals interrupt service routine.
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; COPYRIGHT(c) 2015 STMicroelectronics</center></h2>
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *   1. Redistributions of source code must retain the above copyright notice,
+  *      this list of conditions and the following disclaimer.
+  *   2. Redistributions in binary form must reproduce the above copyright notice,
+  *      this list of conditions and the following disclaimer in the documentation
+  *      and/or other materials provided with the distribution.
+  *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  *      may be used to endorse or promote products derived from this software
+  *      without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *
+  ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+#include "stm32f4xx_it.h"
+#include "debug.h"
+#include "util/log.h"
+#include "usbh_midi/usbh_midi.h"
+
+//extern USART_HandleTypeDef din_midi1_h;  // DIN RX and TX1 - UART4
+extern ADC_HandleTypeDef ioctl_adc_handle;  // ADC3 IOCTL interface
+extern SPI_HandleTypeDef panel_spi_handle;  // SPI2 panel interface
+extern SPI_HandleTypeDef aout_spi_handle;  // SPI1 analog out interface
+extern UART_HandleTypeDef din_midi1_handle;  // DIN1 RX and TX - UART4
+extern UART_HandleTypeDef din_midi2_handle;  // DIN2 TX - USART2
+extern SPI_HandleTypeDef spi_flash_spi_handle;  // SPI3 flash interface
+// USB stuff
+extern PCD_HandleTypeDef usbdev_handle;  // USB device handle
+extern HCD_HandleTypeDef hhcd;  // USB host handle
+extern TIM_HandleTypeDef usbh_task_timer;  // USB host task timer
+
+/******************************************************************************/
+/*            Cortex-M4 Processor Exceptions Handlers                         */
+/******************************************************************************/
+/**
+  * @brief  This function handles NMI exception.
+  * @param  None
+  * @retval None
+  */
+void NMI_Handler(void) {
+}
+
+/**
+  * @brief  This function handles Hard Fault exception.
+  * @param  None
+  * @retval None
+  */
+void HardFault_Handler(void) {
+  /* Go to infinite loop when Hard Fault exception occurs */
+  while(1) {
+  }
+}
+
+/**
+  * @brief  This function handles Memory Manage exception.
+  * @param  None
+  * @retval None
+  */
+void MemManage_Handler(void) {
+  /* Go to infinite loop when Memory Manage exception occurs */
+  while(1) {
+  }
+}
+
+/**
+  * @brief  This function handles Bus Fault exception.
+  * @param  None
+  * @retval None
+  */
+void BusFault_Handler(void) {
+  /* Go to infinite loop when Bus Fault exception occurs */
+  while(1) {
+  }
+}
+
+/**
+  * @brief  This function handles Usage Fault exception.
+  * @param  None
+  * @retval None
+  */
+void UsageFault_Handler(void) {
+  /* Go to infinite loop when Usage Fault exception occurs */
+  while(1) {
+  }
+}
+
+/**
+  * @brief  This function handles SVCall exception.
+  * @param  None
+  * @retval None
+  */
+void SVC_Handler(void) {
+}
+
+/**
+  * @brief  This function handles Debug Monitor exception.
+  * @param  None
+  * @retval None
+  */
+void DebugMon_Handler(void) {
+}
+
+/**
+  * @brief  This function handles PendSVC exception.
+  * @param  None
+  * @retval None
+  */
+void PendSV_Handler(void) {
+}
+
+/**
+  * @brief  This function handles SysTick Handler.
+  * @param  None
+  * @retval None
+  */
+void SysTick_Handler(void) {
+    main_timer_task();
+    HAL_IncTick();
+    HAL_SYSTICK_IRQHandler();
+}
+
+/******************************************************************************/
+/*                 STM32F4xx Peripherals Interrupt Handlers                   */
+/******************************************************************************/
+// ADC3 IRQ handler
+void DMA2_Stream0_IRQHandler(void) {
+    HAL_DMA_IRQHandler(ioctl_adc_handle.DMA_Handle);
+}
+
+// analog out SPI1 IRQ handler
+void SPI1_IRQHandler(void) {
+    HAL_SPI_IRQHandler(&aout_spi_handle);
+}
+
+// panel SPI2 IRQ handler
+void SPI2_IRQHandler(void) {
+  HAL_SPI_IRQHandler(&panel_spi_handle);
+}
+
+//
+// SPI flash SPI3
+//
+// SPI flash SPI3 TX IRQ handler
+void DMA1_Stream5_IRQHandler(void) {
+    HAL_DMA_IRQHandler(spi_flash_spi_handle.hdmatx);
+}
+
+// SPI flash SPI3 RX IRQ handler
+void DMA1_Stream0_IRQHandler(void) {
+    HAL_DMA_IRQHandler(spi_flash_spi_handle.hdmarx);
+}
+
+//
+// DIN MIDI 1
+//
+// DIN MIDI UART4 DMA TX
+void DMA1_Stream4_IRQHandler(void) {
+    HAL_DMA_IRQHandler(din_midi1_handle.hdmatx);
+}
+
+// DIN MIDI UART4 DMA RX
+void DMA1_Stream2_IRQHandler(void) {
+    HAL_DMA_IRQHandler(din_midi1_handle.hdmarx);
+}
+
+// DIN MIDI UART4
+void UART4_IRQHandler(void) {
+    HAL_UART_IRQHandler(&din_midi1_handle);
+}
+
+//
+// DIN MIDI 2
+// 
+// DIN MIDI USART2 DMA TX
+void DMA1_Stream6_IRQHandler(void) {
+    HAL_DMA_IRQHandler(din_midi2_handle.hdmatx);
+}
+
+// DIN MIDI USART2
+void USART2_IRQHandler(void) {
+    HAL_UART_IRQHandler(&din_midi2_handle);
+}
+
+//
+// USB
+//
+// USB device handler - FS
+#ifdef USBD_USE_FS
+void OTG_FS_IRQHandler(void) {
+    HAL_PCD_IRQHandler(&usbdev_handle);
+}
+#endif
+
+// USB device handler - HS
+#ifdef USBD_USE_HS
+void OTG_HS_IRQHandler(void) {
+    HAL_PCD_IRQHandler(&usbdev_handle);
+}
+#endif
+
+// USB host handler - FS
+#ifdef USBH_USE_FS
+void OTG_FS_IRQHandler(void) {
+    // host interrupt handler
+    HAL_HCD_IRQHandler(&hhcd);
+}
+#endif
+
+// USB host handler - HS
+#ifdef USBH_USE_HS
+void OTG_HS_IRQHandler(void) {
+    // host interrupt handler
+    HAL_HCD_IRQHandler(&hhcd);
+}
+#endif
+
+// USB host task timer - approx. 840us period
+void TIM3_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&usbh_task_timer);
+    usbh_midi_task();  // USB host housekeeping stuff 
+}
+

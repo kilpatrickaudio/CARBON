@@ -1,0 +1,86 @@
+CARBON Version Notes
+
+Written by: Andrew Kilpatrick
+Copyright 2016: Kilpatrick Audio
+
+This file is part of CARBON.
+
+CARBON is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CARBON is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CARBON.  If not, see <http://www.gnu.org/licenses/>.
+
+Introduction:
+
+CARBON is the firmware for the K66 CARBON Sequencer. The hardware is built
+and sold by Kilpatrick Audio / QP925 Trading Corp. The hardware is not open
+source and schematics or hardware plans are not available. Although you are
+free to use code from CARBON for any purpose as per the GPL, we hope that
+you will consider buying CARBON to help support continued development of
+unique musical equipment and improvements to the CARBON codebase.
+
+
+Support for sources:
+
+Andrew Kilpatrick and Kilpatrick Audio provides NO SUPPORT for the code and
+scripts provided here. If you can't figure it out or get it to work for you,
+sorry about that. We make our living by selling hardware, which we support
+very well. We believe in open source and want to contribute what we can, but
+simply do not have the resouces to answer emails related to this code. All
+feature and bug requests, or suggestions should be performed through the
+online GitHub source repository. Emails received directly by Kilpatrick Audio 
+or Andrew Kilpatrick will unfortunately go unanswered.
+
+GihHub repository:
+
+https://github.com/kilpatrickaudio/CARBON
+
+
+CARBON Development Tools:
+
+Note: Some changes might be needed to various scripts used. These are
+provided with the distribution for completeness. We develop CARBON on Linux
+Mint and the tools work for us but might not work for you. We don't know
+anything about Windows or OS X so please don't ask about building on these
+platforms.
+
+Makefile generator:
+- makegen - Makefile Generator - by: Andrew Kilpatrick
+  - https://github.com/kilpatrickaudio/Makegen
+
+Compiler:
+- gcc version 4.9.3 20150303 (release) [ARM/embedded-4_9-branch 
+  revision 221220] (GNU Tools for ARM Embedded Processors) 
+
+Drivers:
+- updated to STM32Cube V1.11.0 on 2016-03-11
+
+Middlewares: (USB stuff)
+- running V1.8.0 - no changes in V1.11.0 so didn't update
+- there are modifications made to some ST-supplied files due to bugs or
+  workarounds that we required so please do a diff before updating to make
+  sure that you don't clobber important changes
+
+Generating Makefile when adding new sources:
+- use the makegen tool by Kilpatrick Audio (look on the Kilpatrick 
+  Audio github)
+
+Flashing over JTAG:
+- use OpenOCD with the script provided - we use a JLink programmer but 
+  other models might by useable too
+
+Flashing over DFU:
+- you need dfu-util for Linux or your operating system
+- put CARBON in DFU mode by holding down the power button when applying
+  power to the unit
+- use the dfu flashing script provided
+
+
