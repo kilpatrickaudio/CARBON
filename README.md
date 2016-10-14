@@ -23,8 +23,8 @@ __IMPORTANT: Do not place multiple feature / bug requests in the same issue!__
 
 ## Changelog:
 
-- ver. 1.02: Initial product release firmware. Code for this version was
+- __ver. 1.02:__ Initial product release firmware. Code for this version was
   published on 2016-10-14. No binaries are available at this time as all
-  released harwdare already has this version.
+  released hardware already has this version.
   
 
