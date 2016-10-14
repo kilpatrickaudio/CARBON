@@ -1,8 +1,8 @@
 # CARBON
 CARBON Sequencer
 
-The is the source code for the CARBON hardware music sequencer by Kilpatrick 
-Audio. Please see this link for a link to the product details:
+This is the source code for the CARBON hardware music sequencer by Kilpatrick 
+Audio. Please see this link for product details:
 
 [CARBON page at Kilpatrick Audio](http://www.kilpatrickaudio.com/?p=carbon)
 
