@@ -93,12 +93,23 @@
 #define SEQ_TASK_INTERVAL_US 1000  // us interval for realtime sequencer stuff
 
 // display
+//#define GUI_DISP_TYPE_A  // original production - 320x480 3.95" display
+#define GUI_DISP_TYPE_B  // second production - 320x48 3.5" display
+// 320x480 3.95" display
+#if defined(GUI_DISP_TYPE_A)
 #define LCD_W 320
 #define LCD_H 480
-#define LCD_X_OFFSET 40
-#define LCD_Y_OFFSET 40
-#define GUI_WIDTH 240
-#define GUI_HEIGHT 400
+#define LCD_X_OFFSET 40  // used by LCD drive to offset 0,0 position
+#define LCD_Y_OFFSET 40  // used by LCD drive to offset 0,0 position
+// 320x48 3.5" display
+#elif defined(GUI_DISP_TYPE_B)
+#define LCD_W 320
+#define LCD_H 480
+#define LCD_X_OFFSET 25  // used by LCD drive to offset 0,0 position
+#define LCD_Y_OFFSET 25  // used by LCD drive to offset 0,0 position
+#else
+#error GUI_DISP_TYPE_A or GUI_DISP_TYPE_B must be defined!
+#endif
 #define GFX_LABEL_LEN 64
 
 // panel
