@@ -27,11 +27,13 @@
 #include "ILI948x_drv.h"
 
 // fonts
-#define GFX_NUM_FONTS 2
-char GFX_FONT_WIDTH[] = {8, 8};
-char GFX_FONT_HEIGHT[] = {8, 12};
+#define GFX_NUM_FONTS 4
+char GFX_FONT_WIDTH[] = {8, 8, 9, 9};
+char GFX_FONT_HEIGHT[] = {8, 12, 9, 13};
 extern const char font_sinclair_8x8_bitmap[95][8];
 extern const char font_system_8x12_bitmap[95][12];
+// sinclair 9x9
+extern const char font_system_8x13_bitmap[95][13];
 
 // LCD macros
 #define LCD_DRV_INIT ILI948x_drv_init
@@ -178,6 +180,8 @@ uint32_t gfx_get_font_row(int font, char ch, int row) {
             return font_sinclair_8x8_bitmap[(int)ch - 32][row];              
         case GFX_FONT_SYSTEM_8X12:
             return font_system_8x12_bitmap[(int)ch - 32][row];
+        case GFX_FONT_SYSTEM_8X13:
+            return font_system_8x13_bitmap[(int)ch - 32][row];
         default:
             return 0;
     }

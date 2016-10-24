@@ -122,16 +122,13 @@ uint32_t GUI_GRID_TRACK_COLOR_OFF[][2] = {
 #define GUI_OVERLAY_COLOR_HIGH 0xffc0c000
 
 //
-// font indexes
-//
-#define GUI_FONT_NORMAL GFX_FONT_SINCLAIR_8X8
-#define GUI_FONT_HEADING GFX_FONT_SYSTEM_8X12
-
-//
-// sizes / positions
+// sizes / positions / fonts
 //
 // 320x480 3.95" display
 #if defined(GUI_DISP_TYPE_A)
+// font indexes
+#define GUI_FONT_NORMAL GFX_FONT_SINCLAIR_8X8
+#define GUI_FONT_HEADING GFX_FONT_SYSTEM_8X12
 // grid settings
 #define GUI_GRID_X 0
 #define GUI_GRID_Y 50
@@ -181,6 +178,9 @@ uint32_t GUI_GRID_TRACK_COLOR_OFF[][2] = {
 #define GUI_LABEL_STATUS_L4_Y 381
 // 320x48 3.5" display
 #elif defined(GUI_DISP_TYPE_B)
+// font indexes
+#define GUI_FONT_NORMAL GFX_FONT_SINCLAIR_8X8
+#define GUI_FONT_HEADING GFX_FONT_SYSTEM_8X13
 // grid settings
 #define GUI_GRID_X 0
 #define GUI_GRID_Y 55
@@ -204,7 +204,7 @@ uint32_t GUI_GRID_TRACK_COLOR_OFF[][2] = {
 // text positions
 #define GUI_LABEL_SONG_X 3
 #define GUI_LABEL_SONG_Y 10
-#define GUI_LABEL_TEMPO_X 80
+#define GUI_LABEL_TEMPO_X 95
 #define GUI_LABEL_TEMPO_Y 10
 #define GUI_LABEL_SCENE_X 220
 #define GUI_LABEL_SCENE_Y 10

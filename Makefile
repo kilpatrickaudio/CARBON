@@ -19,13 +19,5140 @@ LDFLAGS = --specs=nosys.specs -mthumb -mthumb-interwork -mcpu=cortex-m4 -Wl,-Map
 default: main
 
 # binary dependencies
-main: $(OUT_DIR)/usbh_pipes.c.o $(OUT_DIR)/usbh_ctlreq.c.o $(OUT_DIR)/usbh_ioreq.c.o $(OUT_DIR)/usbh_core.c.o $(OUT_DIR)/usbd_ioreq.c.o $(OUT_DIR)/usbd_core.c.o $(OUT_DIR)/usbd_ctlreq.c.o $(OUT_DIR)/usbd_midi.c.o $(OUT_DIR)/usbd_conf.c.o $(OUT_DIR)/power_ctrl.c.o $(OUT_DIR)/stm32f4xx_it.c.o $(OUT_DIR)/main.c.o $(OUT_DIR)/switch_filter.c.o $(OUT_DIR)/panel_if.c.o $(OUT_DIR)/analog_out.c.o $(OUT_DIR)/debug.c.o $(OUT_DIR)/cvproc.c.o $(OUT_DIR)/stm32f4xx_hal_msp.c.o $(OUT_DIR)/gfx.c.o $(OUT_DIR)/ioctl.c.o $(OUT_DIR)/lcd_fsmc_if.c.o $(OUT_DIR)/ILI948x_drv.c.o $(OUT_DIR)/font_sinclair_8x8.c.o $(OUT_DIR)/font_system_8x12.c.o $(OUT_DIR)/gui.c.o $(OUT_DIR)/panel_menu.c.o $(OUT_DIR)/panel.c.o $(OUT_DIR)/step_edit.c.o $(OUT_DIR)/song_edit.c.o $(OUT_DIR)/config_store.c.o $(OUT_DIR)/midi_stream.c.o $(OUT_DIR)/midi_utils.c.o $(OUT_DIR)/log.c.o $(OUT_DIR)/time_utils.c.o $(OUT_DIR)/panel_utils.c.o $(OUT_DIR)/state_change.c.o $(OUT_DIR)/seq_utils.c.o $(OUT_DIR)/system_stm32f4xx.c.o $(OUT_DIR)/startup_stm32f407xx.s.o $(OUT_DIR)/lcd_drv.c.o $(OUT_DIR)/spi_flash.c.o $(OUT_DIR)/iface_midi_router.c.o $(OUT_DIR)/iface_panel.c.o $(OUT_DIR)/usbh_midi.c.o $(OUT_DIR)/usbh_conf.c.o $(OUT_DIR)/delay.c.o $(OUT_DIR)/metronome.c.o $(OUT_DIR)/sysex.c.o $(OUT_DIR)/midi_ctrl.c.o $(OUT_DIR)/pattern.c.o $(OUT_DIR)/arp.c.o $(OUT_DIR)/seq_ctrl.c.o $(OUT_DIR)/arp_progs.c.o $(OUT_DIR)/clock.c.o $(OUT_DIR)/clock_out.c.o $(OUT_DIR)/scale.c.o $(OUT_DIR)/seq_engine.c.o $(OUT_DIR)/song.c.o $(OUT_DIR)/outproc.c.o $(OUT_DIR)/spi_callbacks.c.o $(OUT_DIR)/ext_flash.c.o $(OUT_DIR)/din_midi.c.o $(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sai.c.o $(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o $(OUT_DIR)/stm32f4xx_hal_hcd.c.o $(OUT_DIR)/stm32f4xx_hal_nor.c.o $(OUT_DIR)/stm32f4xx_hal_smartcard.c.o $(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_spi.c.o $(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc.c.o $(OUT_DIR)/stm32f4xx_hal_qspi.c.o $(OUT_DIR)/stm32f4xx_hal_nand.c.o $(OUT_DIR)/stm32f4xx_hal_tim.c.o $(OUT_DIR)/stm32f4xx_hal_dsi.c.o $(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o $(OUT_DIR)/stm32f4xx_ll_fmc.c.o $(OUT_DIR)/stm32f4xx_hal_pcd.c.o $(OUT_DIR)/stm32f4xx_hal_gpio.c.o $(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o $(OUT_DIR)/stm32f4xx_hal_pwr.c.o $(OUT_DIR)/stm32f4xx_hal_dac.c.o $(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o $(OUT_DIR)/stm32f4xx_hal_can.c.o $(OUT_DIR)/stm32f4xx_hal_rng.c.o $(OUT_DIR)/stm32f4xx_hal_uart.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sram.c.o $(OUT_DIR)/stm32f4xx_hal_sd.c.o $(OUT_DIR)/stm32f4xx_hal_pccard.c.o $(OUT_DIR)/stm32f4xx_hal_hash.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o $(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o $(OUT_DIR)/stm32f4xx_hal.c.o $(OUT_DIR)/stm32f4xx_hal_i2s.c.o $(OUT_DIR)/stm32f4xx_hal_wwdg.c.o $(OUT_DIR)/stm32f4xx_hal_iwdg.c.o $(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o $(OUT_DIR)/stm32f4xx_hal_eth.c.o $(OUT_DIR)/stm32f4xx_hal_dma2d.c.o $(OUT_DIR)/stm32f4xx_hal_crc.c.o $(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o $(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_cec.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi.c.o $(OUT_DIR)/stm32f4xx_hal_lptim.c.o $(OUT_DIR)/stm32f4xx_hal_irda.c.o $(OUT_DIR)/stm32f4xx_ll_fsmc.c.o $(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o $(OUT_DIR)/stm32f4xx_ll_usb.c.o $(OUT_DIR)/stm32f4xx_hal_sdram.c.o $(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dma.c.o $(OUT_DIR)/stm32f4xx_hal_rcc.c.o $(OUT_DIR)/stm32f4xx_hal_cortex.c.o $(OUT_DIR)/stm32f4xx_hal_i2c.c.o $(OUT_DIR)/stm32f4xx_hal_rtc.c.o $(OUT_DIR)/stm32f4xx_hal_cryp.c.o $(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o $(OUT_DIR)/stm32f4xx_hal_flash.c.o $(OUT_DIR)/stm32f4xx_hal_adc.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o $(OUT_DIR)/stm32f4xx_hal_usart.c.o 
+main: $(OUT_DIR)/usbh_midi.c.o $(OUT_DIR)/usbh_conf.c.o $(OUT_DIR)/config_store.c.o $(OUT_DIR)/ioctl.c.o $(OUT_DIR)/panel_if.c.o $(OUT_DIR)/ext_flash.c.o $(OUT_DIR)/spi_flash.c.o $(OUT_DIR)/lcd_fsmc_if.c.o $(OUT_DIR)/midi_utils.c.o $(OUT_DIR)/midi_stream.c.o $(OUT_DIR)/din_midi.c.o $(OUT_DIR)/power_ctrl.c.o $(OUT_DIR)/ILI948x_drv.c.o $(OUT_DIR)/font_system_8x12.c.o $(OUT_DIR)/font_system_8x13.c.o $(OUT_DIR)/font_sinclair_8x8.c.o $(OUT_DIR)/system_stm32f4xx.c.o $(OUT_DIR)/cvproc.c.o $(OUT_DIR)/debug.c.o $(OUT_DIR)/time_utils.c.o $(OUT_DIR)/log.c.o $(OUT_DIR)/seq_utils.c.o $(OUT_DIR)/state_change.c.o $(OUT_DIR)/panel_utils.c.o $(OUT_DIR)/stm32f4xx_it.c.o $(OUT_DIR)/panel.c.o $(OUT_DIR)/panel_menu.c.o $(OUT_DIR)/song_edit.c.o $(OUT_DIR)/gui.c.o $(OUT_DIR)/step_edit.c.o $(OUT_DIR)/gfx.c.o $(OUT_DIR)/stm32f4xx_hal_msp.c.o $(OUT_DIR)/analog_out.c.o $(OUT_DIR)/main.c.o $(OUT_DIR)/startup_stm32f407xx.s.o $(OUT_DIR)/spi_callbacks.c.o $(OUT_DIR)/usbd_conf.c.o $(OUT_DIR)/usbd_midi.c.o $(OUT_DIR)/switch_filter.c.o $(OUT_DIR)/delay.c.o $(OUT_DIR)/lcd_drv.c.o $(OUT_DIR)/iface_midi_router.c.o $(OUT_DIR)/iface_panel.c.o $(OUT_DIR)/clock.c.o $(OUT_DIR)/metronome.c.o $(OUT_DIR)/sysex.c.o $(OUT_DIR)/pattern.c.o $(OUT_DIR)/clock_out.c.o $(OUT_DIR)/seq_engine.c.o $(OUT_DIR)/outproc.c.o $(OUT_DIR)/seq_ctrl.c.o $(OUT_DIR)/arp_progs.c.o $(OUT_DIR)/scale.c.o $(OUT_DIR)/song.c.o $(OUT_DIR)/midi_ctrl.c.o $(OUT_DIR)/arp.c.o $(OUT_DIR)/stm32f4xx_hal_rng.c.o $(OUT_DIR)/stm32f4xx_hal_eth.c.o $(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o $(OUT_DIR)/stm32f4xx_hal_pwr.c.o $(OUT_DIR)/stm32f4xx_hal_uart.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o $(OUT_DIR)/stm32f4xx_hal_tim.c.o $(OUT_DIR)/stm32f4xx_hal_lptim.c.o $(OUT_DIR)/stm32f4xx_hal_iwdg.c.o $(OUT_DIR)/stm32f4xx_hal_i2s.c.o $(OUT_DIR)/stm32f4xx_hal_sd.c.o $(OUT_DIR)/stm32f4xx_hal_smartcard.c.o $(OUT_DIR)/stm32f4xx_hal_sram.c.o $(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o $(OUT_DIR)/stm32f4xx_ll_fsmc.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_nor.c.o $(OUT_DIR)/stm32f4xx_hal.c.o $(OUT_DIR)/stm32f4xx_ll_fmc.c.o $(OUT_DIR)/stm32f4xx_hal_adc.c.o $(OUT_DIR)/stm32f4xx_hal_wwdg.c.o $(OUT_DIR)/stm32f4xx_hal_irda.c.o $(OUT_DIR)/stm32f4xx_hal_pcd.c.o $(OUT_DIR)/stm32f4xx_hal_sai.c.o $(OUT_DIR)/stm32f4xx_hal_rtc.c.o $(OUT_DIR)/stm32f4xx_hal_nand.c.o $(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o $(OUT_DIR)/stm32f4xx_hal_dma2d.c.o $(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o $(OUT_DIR)/stm32f4xx_hal_can.c.o $(OUT_DIR)/stm32f4xx_hal_hash.c.o $(OUT_DIR)/stm32f4xx_hal_flash.c.o $(OUT_DIR)/stm32f4xx_hal_cryp.c.o $(OUT_DIR)/stm32f4xx_hal_crc.c.o $(OUT_DIR)/stm32f4xx_hal_rcc.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o $(OUT_DIR)/stm32f4xx_hal_i2c.c.o $(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sdram.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc.c.o $(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dma.c.o $(OUT_DIR)/stm32f4xx_hal_cortex.c.o $(OUT_DIR)/stm32f4xx_hal_cec.c.o $(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dsi.c.o $(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o $(OUT_DIR)/stm32f4xx_hal_usart.c.o $(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_gpio.c.o $(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o $(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_spi.c.o $(OUT_DIR)/stm32f4xx_hal_hcd.c.o $(OUT_DIR)/stm32f4xx_ll_usb.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi.c.o $(OUT_DIR)/stm32f4xx_hal_pccard.c.o $(OUT_DIR)/stm32f4xx_hal_qspi.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o $(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dac.c.o $(OUT_DIR)/usbd_ctlreq.c.o $(OUT_DIR)/usbd_ioreq.c.o $(OUT_DIR)/usbd_core.c.o $(OUT_DIR)/usbh_pipes.c.o $(OUT_DIR)/usbh_ctlreq.c.o $(OUT_DIR)/usbh_ioreq.c.o $(OUT_DIR)/usbh_core.c.o 
 	@echo 'Linking main...'
-	$(LD) -o main $(OUT_DIR)/usbh_pipes.c.o $(OUT_DIR)/usbh_ctlreq.c.o $(OUT_DIR)/usbh_ioreq.c.o $(OUT_DIR)/usbh_core.c.o $(OUT_DIR)/usbd_ioreq.c.o $(OUT_DIR)/usbd_core.c.o $(OUT_DIR)/usbd_ctlreq.c.o $(OUT_DIR)/usbd_midi.c.o $(OUT_DIR)/usbd_conf.c.o $(OUT_DIR)/power_ctrl.c.o $(OUT_DIR)/stm32f4xx_it.c.o $(OUT_DIR)/main.c.o $(OUT_DIR)/switch_filter.c.o $(OUT_DIR)/panel_if.c.o $(OUT_DIR)/analog_out.c.o $(OUT_DIR)/debug.c.o $(OUT_DIR)/cvproc.c.o $(OUT_DIR)/stm32f4xx_hal_msp.c.o $(OUT_DIR)/gfx.c.o $(OUT_DIR)/ioctl.c.o $(OUT_DIR)/lcd_fsmc_if.c.o $(OUT_DIR)/ILI948x_drv.c.o $(OUT_DIR)/font_sinclair_8x8.c.o $(OUT_DIR)/font_system_8x12.c.o $(OUT_DIR)/gui.c.o $(OUT_DIR)/panel_menu.c.o $(OUT_DIR)/panel.c.o $(OUT_DIR)/step_edit.c.o $(OUT_DIR)/song_edit.c.o $(OUT_DIR)/config_store.c.o $(OUT_DIR)/midi_stream.c.o $(OUT_DIR)/midi_utils.c.o $(OUT_DIR)/log.c.o $(OUT_DIR)/time_utils.c.o $(OUT_DIR)/panel_utils.c.o $(OUT_DIR)/state_change.c.o $(OUT_DIR)/seq_utils.c.o $(OUT_DIR)/system_stm32f4xx.c.o $(OUT_DIR)/startup_stm32f407xx.s.o $(OUT_DIR)/lcd_drv.c.o $(OUT_DIR)/spi_flash.c.o $(OUT_DIR)/iface_midi_router.c.o $(OUT_DIR)/iface_panel.c.o $(OUT_DIR)/usbh_midi.c.o $(OUT_DIR)/usbh_conf.c.o $(OUT_DIR)/delay.c.o $(OUT_DIR)/metronome.c.o $(OUT_DIR)/sysex.c.o $(OUT_DIR)/midi_ctrl.c.o $(OUT_DIR)/pattern.c.o $(OUT_DIR)/arp.c.o $(OUT_DIR)/seq_ctrl.c.o $(OUT_DIR)/arp_progs.c.o $(OUT_DIR)/clock.c.o $(OUT_DIR)/clock_out.c.o $(OUT_DIR)/scale.c.o $(OUT_DIR)/seq_engine.c.o $(OUT_DIR)/song.c.o $(OUT_DIR)/outproc.c.o $(OUT_DIR)/spi_callbacks.c.o $(OUT_DIR)/ext_flash.c.o $(OUT_DIR)/din_midi.c.o $(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sai.c.o $(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o $(OUT_DIR)/stm32f4xx_hal_hcd.c.o $(OUT_DIR)/stm32f4xx_hal_nor.c.o $(OUT_DIR)/stm32f4xx_hal_smartcard.c.o $(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_spi.c.o $(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc.c.o $(OUT_DIR)/stm32f4xx_hal_qspi.c.o $(OUT_DIR)/stm32f4xx_hal_nand.c.o $(OUT_DIR)/stm32f4xx_hal_tim.c.o $(OUT_DIR)/stm32f4xx_hal_dsi.c.o $(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o $(OUT_DIR)/stm32f4xx_ll_fmc.c.o $(OUT_DIR)/stm32f4xx_hal_pcd.c.o $(OUT_DIR)/stm32f4xx_hal_gpio.c.o $(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o $(OUT_DIR)/stm32f4xx_hal_pwr.c.o $(OUT_DIR)/stm32f4xx_hal_dac.c.o $(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o $(OUT_DIR)/stm32f4xx_hal_can.c.o $(OUT_DIR)/stm32f4xx_hal_rng.c.o $(OUT_DIR)/stm32f4xx_hal_uart.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sram.c.o $(OUT_DIR)/stm32f4xx_hal_sd.c.o $(OUT_DIR)/stm32f4xx_hal_pccard.c.o $(OUT_DIR)/stm32f4xx_hal_hash.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o $(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o $(OUT_DIR)/stm32f4xx_hal.c.o $(OUT_DIR)/stm32f4xx_hal_i2s.c.o $(OUT_DIR)/stm32f4xx_hal_wwdg.c.o $(OUT_DIR)/stm32f4xx_hal_iwdg.c.o $(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o $(OUT_DIR)/stm32f4xx_hal_eth.c.o $(OUT_DIR)/stm32f4xx_hal_dma2d.c.o $(OUT_DIR)/stm32f4xx_hal_crc.c.o $(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o $(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_cec.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi.c.o $(OUT_DIR)/stm32f4xx_hal_lptim.c.o $(OUT_DIR)/stm32f4xx_hal_irda.c.o $(OUT_DIR)/stm32f4xx_ll_fsmc.c.o $(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o $(OUT_DIR)/stm32f4xx_ll_usb.c.o $(OUT_DIR)/stm32f4xx_hal_sdram.c.o $(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dma.c.o $(OUT_DIR)/stm32f4xx_hal_rcc.c.o $(OUT_DIR)/stm32f4xx_hal_cortex.c.o $(OUT_DIR)/stm32f4xx_hal_i2c.c.o $(OUT_DIR)/stm32f4xx_hal_rtc.c.o $(OUT_DIR)/stm32f4xx_hal_cryp.c.o $(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o $(OUT_DIR)/stm32f4xx_hal_flash.c.o $(OUT_DIR)/stm32f4xx_hal_adc.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o $(OUT_DIR)/stm32f4xx_hal_usart.c.o $(LDFLAGS)
+	$(LD) -o main $(OUT_DIR)/usbh_midi.c.o $(OUT_DIR)/usbh_conf.c.o $(OUT_DIR)/config_store.c.o $(OUT_DIR)/ioctl.c.o $(OUT_DIR)/panel_if.c.o $(OUT_DIR)/ext_flash.c.o $(OUT_DIR)/spi_flash.c.o $(OUT_DIR)/lcd_fsmc_if.c.o $(OUT_DIR)/midi_utils.c.o $(OUT_DIR)/midi_stream.c.o $(OUT_DIR)/din_midi.c.o $(OUT_DIR)/power_ctrl.c.o $(OUT_DIR)/ILI948x_drv.c.o $(OUT_DIR)/font_system_8x12.c.o $(OUT_DIR)/font_system_8x13.c.o $(OUT_DIR)/font_sinclair_8x8.c.o $(OUT_DIR)/system_stm32f4xx.c.o $(OUT_DIR)/cvproc.c.o $(OUT_DIR)/debug.c.o $(OUT_DIR)/time_utils.c.o $(OUT_DIR)/log.c.o $(OUT_DIR)/seq_utils.c.o $(OUT_DIR)/state_change.c.o $(OUT_DIR)/panel_utils.c.o $(OUT_DIR)/stm32f4xx_it.c.o $(OUT_DIR)/panel.c.o $(OUT_DIR)/panel_menu.c.o $(OUT_DIR)/song_edit.c.o $(OUT_DIR)/gui.c.o $(OUT_DIR)/step_edit.c.o $(OUT_DIR)/gfx.c.o $(OUT_DIR)/stm32f4xx_hal_msp.c.o $(OUT_DIR)/analog_out.c.o $(OUT_DIR)/main.c.o $(OUT_DIR)/startup_stm32f407xx.s.o $(OUT_DIR)/spi_callbacks.c.o $(OUT_DIR)/usbd_conf.c.o $(OUT_DIR)/usbd_midi.c.o $(OUT_DIR)/switch_filter.c.o $(OUT_DIR)/delay.c.o $(OUT_DIR)/lcd_drv.c.o $(OUT_DIR)/iface_midi_router.c.o $(OUT_DIR)/iface_panel.c.o $(OUT_DIR)/clock.c.o $(OUT_DIR)/metronome.c.o $(OUT_DIR)/sysex.c.o $(OUT_DIR)/pattern.c.o $(OUT_DIR)/clock_out.c.o $(OUT_DIR)/seq_engine.c.o $(OUT_DIR)/outproc.c.o $(OUT_DIR)/seq_ctrl.c.o $(OUT_DIR)/arp_progs.c.o $(OUT_DIR)/scale.c.o $(OUT_DIR)/song.c.o $(OUT_DIR)/midi_ctrl.c.o $(OUT_DIR)/arp.c.o $(OUT_DIR)/stm32f4xx_hal_rng.c.o $(OUT_DIR)/stm32f4xx_hal_eth.c.o $(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o $(OUT_DIR)/stm32f4xx_hal_pwr.c.o $(OUT_DIR)/stm32f4xx_hal_uart.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o $(OUT_DIR)/stm32f4xx_hal_tim.c.o $(OUT_DIR)/stm32f4xx_hal_lptim.c.o $(OUT_DIR)/stm32f4xx_hal_iwdg.c.o $(OUT_DIR)/stm32f4xx_hal_i2s.c.o $(OUT_DIR)/stm32f4xx_hal_sd.c.o $(OUT_DIR)/stm32f4xx_hal_smartcard.c.o $(OUT_DIR)/stm32f4xx_hal_sram.c.o $(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o $(OUT_DIR)/stm32f4xx_ll_fsmc.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_nor.c.o $(OUT_DIR)/stm32f4xx_hal.c.o $(OUT_DIR)/stm32f4xx_ll_fmc.c.o $(OUT_DIR)/stm32f4xx_hal_adc.c.o $(OUT_DIR)/stm32f4xx_hal_wwdg.c.o $(OUT_DIR)/stm32f4xx_hal_irda.c.o $(OUT_DIR)/stm32f4xx_hal_pcd.c.o $(OUT_DIR)/stm32f4xx_hal_sai.c.o $(OUT_DIR)/stm32f4xx_hal_rtc.c.o $(OUT_DIR)/stm32f4xx_hal_nand.c.o $(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o $(OUT_DIR)/stm32f4xx_hal_dma2d.c.o $(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o $(OUT_DIR)/stm32f4xx_hal_can.c.o $(OUT_DIR)/stm32f4xx_hal_hash.c.o $(OUT_DIR)/stm32f4xx_hal_flash.c.o $(OUT_DIR)/stm32f4xx_hal_cryp.c.o $(OUT_DIR)/stm32f4xx_hal_crc.c.o $(OUT_DIR)/stm32f4xx_hal_rcc.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o $(OUT_DIR)/stm32f4xx_hal_i2c.c.o $(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o $(OUT_DIR)/stm32f4xx_hal_sdram.c.o $(OUT_DIR)/stm32f4xx_hal_ltdc.c.o $(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dma.c.o $(OUT_DIR)/stm32f4xx_hal_cortex.c.o $(OUT_DIR)/stm32f4xx_hal_cec.c.o $(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o $(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dsi.c.o $(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o $(OUT_DIR)/stm32f4xx_hal_usart.c.o $(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o $(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o $(OUT_DIR)/stm32f4xx_hal_gpio.c.o $(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o $(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o $(OUT_DIR)/stm32f4xx_hal_spi.c.o $(OUT_DIR)/stm32f4xx_hal_hcd.c.o $(OUT_DIR)/stm32f4xx_ll_usb.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi.c.o $(OUT_DIR)/stm32f4xx_hal_pccard.c.o $(OUT_DIR)/stm32f4xx_hal_qspi.c.o $(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o $(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o $(OUT_DIR)/stm32f4xx_hal_dac.c.o $(OUT_DIR)/usbd_ctlreq.c.o $(OUT_DIR)/usbd_ioreq.c.o $(OUT_DIR)/usbd_core.c.o $(OUT_DIR)/usbh_pipes.c.o $(OUT_DIR)/usbh_ctlreq.c.o $(OUT_DIR)/usbh_ioreq.c.o $(OUT_DIR)/usbh_core.c.o $(LDFLAGS)
 	~/bin/gcc-arm/bin/arm-none-eabi-objcopy -Obinary main main.bin
 	@echo done.
 
 # source targets
+# source file: ./src/usbh_midi/usbh_midi.c
+$(OUT_DIR)/usbh_midi.c.o: src/usbh_midi/usbh_midi.c \
+ src/usbh_midi/usbh_midi.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ src/usbh_midi/usbh_conf.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ src/usbh_midi/../config.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
+ src/usbh_midi/usbh_conf.h src/usbh_midi/../midi/midi_stream.h \
+ src/usbh_midi/../midi/midi_utils.h src/usbh_midi/../midi/midi_protocol.h \
+ src/usbh_midi/../util/log.h src/usbh_midi/../debug.h \
+ src/usbh_midi/../system_stm32f4xx.h
+	@echo 'compiling usbh_midi.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbh_midi.c.o -c ./src/usbh_midi/usbh_midi.c
+	@echo done.
+
+# source file: ./src/usbh_midi/usbh_conf.c
+$(OUT_DIR)/usbh_conf.c.o: src/usbh_midi/usbh_conf.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ src/usbh_midi/usbh_conf.h src/usbh_midi/../config.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
+ src/usbh_midi/usbh_midi.h src/usbh_midi/../config.h
+	@echo 'compiling usbh_conf.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbh_conf.c.o -c ./src/usbh_midi/usbh_conf.c
+	@echo done.
+
+# source file: ./src/config_store.c
+$(OUT_DIR)/config_store.c.o: src/config_store.c src/config_store.h \
+ src/config.h src/ext_flash.h src/spi_flash.h src/util/log.h \
+ src/util/state_change.h src/util/state_change_events.h
+	@echo 'compiling config_store.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/config_store.c.o -c ./src/config_store.c
+	@echo done.
+
+# source file: ./src/ioctl.c
+$(OUT_DIR)/ioctl.c.o: src/ioctl.c src/ioctl.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling ioctl.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/ioctl.c.o -c ./src/ioctl.c
+	@echo done.
+
+# source file: ./src/panel_if.c
+$(OUT_DIR)/panel_if.c.o: src/panel_if.c src/panel_if.h src/config.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/spi_callbacks.h \
+ src/switch_filter.h src/gui/panel.h src/gui/../config.h \
+ src/seq/seq_ctrl.h src/seq/../config.h src/util/log.h
+	@echo 'compiling panel_if.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel_if.c.o -c ./src/panel_if.c
+	@echo done.
+
+# source file: ./src/ext_flash.c
+$(OUT_DIR)/ext_flash.c.o: src/ext_flash.c src/ext_flash.h src/spi_flash.h \
+ src/util/log.h
+	@echo 'compiling ext_flash.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/ext_flash.c.o -c ./src/ext_flash.c
+	@echo done.
+
+# source file: ./src/spi_flash.c
+$(OUT_DIR)/spi_flash.c.o: src/spi_flash.c src/spi_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/spi_callbacks.h \
+ src/config.h src/util/log.h
+	@echo 'compiling spi_flash.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/spi_flash.c.o -c ./src/spi_flash.c
+	@echo done.
+
+# source file: ./src/lcd_fsmc_if.c
+$(OUT_DIR)/lcd_fsmc_if.c.o: src/lcd_fsmc_if.c src/lcd_fsmc_if.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling lcd_fsmc_if.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/lcd_fsmc_if.c.o -c ./src/lcd_fsmc_if.c
+	@echo done.
+
+# source file: ./src/midi/midi_utils.c
+$(OUT_DIR)/midi_utils.c.o: src/midi/midi_utils.c src/midi/midi_utils.h \
+ src/midi/midi_protocol.h src/midi/../util/log.h
+	@echo 'compiling midi_utils.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/midi_utils.c.o -c ./src/midi/midi_utils.c
+	@echo done.
+
+# source file: ./src/midi/midi_stream.c
+$(OUT_DIR)/midi_stream.c.o: src/midi/midi_stream.c src/midi/midi_stream.h \
+ src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/../config.h \
+ src/midi/../util/log.h
+	@echo 'compiling midi_stream.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/midi_stream.c.o -c ./src/midi/midi_stream.c
+	@echo done.
+
+# source file: ./src/din_midi.c
+$(OUT_DIR)/din_midi.c.o: src/din_midi.c src/din_midi.h src/config.h \
+ src/debug.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ src/midi/midi_stream.h src/midi/midi_utils.h src/midi/midi_protocol.h \
+ src/util/log.h
+	@echo 'compiling din_midi.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/din_midi.c.o -c ./src/din_midi.c
+	@echo done.
+
+# source file: ./src/power_ctrl.c
+$(OUT_DIR)/power_ctrl.c.o: src/power_ctrl.c src/power_ctrl.h src/ioctl.h \
+ src/config.h src/gui/gui.h src/gui/../config.h src/seq/seq_ctrl.h \
+ src/seq/../config.h src/usbh_midi/usbh_midi.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ src/usbh_midi/usbh_conf.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ src/usbh_midi/../config.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
+ src/util/log.h src/util/state_change.h src/util/state_change_events.h
+	@echo 'compiling power_ctrl.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/power_ctrl.c.o -c ./src/power_ctrl.c
+	@echo done.
+
+# source file: ./src/ILI948x_drv.c
+$(OUT_DIR)/ILI948x_drv.c.o: src/ILI948x_drv.c src/ILI948x_drv.h \
+ src/lcd_drv.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/delay.h \
+ src/config.h src/debug.h src/lcd_fsmc_if.h src/util/log.h
+	@echo 'compiling ILI948x_drv.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/ILI948x_drv.c.o -c ./src/ILI948x_drv.c
+	@echo done.
+
+# source file: ./src/text/font_system_8x12.c
+$(OUT_DIR)/font_system_8x12.c.o: src/text/font_system_8x12.c
+	@echo 'compiling font_system_8x12.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/font_system_8x12.c.o -c ./src/text/font_system_8x12.c
+	@echo done.
+
+# source file: ./src/text/font_system_8x13.c
+$(OUT_DIR)/font_system_8x13.c.o: src/text/font_system_8x13.c
+	@echo 'compiling font_system_8x13.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/font_system_8x13.c.o -c ./src/text/font_system_8x13.c
+	@echo done.
+
+# source file: ./src/text/font_sinclair_8x8.c
+$(OUT_DIR)/font_sinclair_8x8.c.o: src/text/font_sinclair_8x8.c
+	@echo 'compiling font_sinclair_8x8.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/font_sinclair_8x8.c.o -c ./src/text/font_sinclair_8x8.c
+	@echo done.
+
+# source file: ./src/system_stm32f4xx.c
+$(OUT_DIR)/system_stm32f4xx.c.o: src/system_stm32f4xx.c \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling system_stm32f4xx.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/system_stm32f4xx.c.o -c ./src/system_stm32f4xx.c
+	@echo done.
+
+# source file: ./src/cvproc.c
+$(OUT_DIR)/cvproc.c.o: src/cvproc.c src/cvproc.h src/config.h \
+ src/analog_out.h src/midi/midi_protocol.h src/midi/midi_stream.h \
+ src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/midi_utils.h \
+ src/util/log.h
+	@echo 'compiling cvproc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/cvproc.c.o -c ./src/cvproc.c
+	@echo done.
+
+# source file: ./src/debug.c
+$(OUT_DIR)/debug.c.o: src/debug.c src/debug.h src/config.h \
+ src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/midi_stream.h \
+ src/midi/midi_utils.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling debug.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/debug.c.o -c ./src/debug.c
+	@echo done.
+
+# source file: ./src/util/time_utils.c
+$(OUT_DIR)/time_utils.c.o: src/util/time_utils.c src/util/time_utils.h \
+ src/util/log.h
+	@echo 'compiling time_utils.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/time_utils.c.o -c ./src/util/time_utils.c
+	@echo done.
+
+# source file: ./src/util/log.c
+$(OUT_DIR)/log.c.o: src/util/log.c src/util/log.h src/util/../config.h
+	@echo 'compiling log.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/log.c.o -c ./src/util/log.c
+	@echo done.
+
+# source file: ./src/util/seq_utils.c
+$(OUT_DIR)/seq_utils.c.o: src/util/seq_utils.c src/util/seq_utils.h \
+ src/util/../config.h
+	@echo 'compiling seq_utils.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/seq_utils.c.o -c ./src/util/seq_utils.c
+	@echo done.
+
+# source file: ./src/util/state_change.c
+$(OUT_DIR)/state_change.c.o: src/util/state_change.c \
+ src/util/state_change.h src/util/log.h
+	@echo 'compiling state_change.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/state_change.c.o -c ./src/util/state_change.c
+	@echo done.
+
+# source file: ./src/util/panel_utils.c
+$(OUT_DIR)/panel_utils.c.o: src/util/panel_utils.c src/util/panel_utils.h \
+ src/util/seq_utils.h src/util/../seq/song.h \
+ src/util/../seq/../midi/midi_protocol.h src/util/../seq/../cvproc.h \
+ src/util/../config.h
+	@echo 'compiling panel_utils.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel_utils.c.o -c ./src/util/panel_utils.c
+	@echo done.
+
+# source file: ./src/stm32f4xx_it.c
+$(OUT_DIR)/stm32f4xx_it.c.o: src/stm32f4xx_it.c src/main.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/stm32f4xx_it.h \
+ src/debug.h src/util/log.h src/usbh_midi/usbh_midi.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ src/usbh_midi/usbh_conf.h src/usbh_midi/../config.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h
+	@echo 'compiling stm32f4xx_it.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_it.c.o -c ./src/stm32f4xx_it.c
+	@echo done.
+
+# source file: ./src/gui/panel.c
+$(OUT_DIR)/panel.c.o: src/gui/panel.c src/gui/panel.h src/gui/../config.h \
+ src/gui/panel_menu.h src/gui/step_edit.h src/gui/../midi/midi_utils.h \
+ src/gui/../midi/midi_protocol.h src/gui/song_edit.h \
+ src/gui/../iface/iface_panel.h src/gui/../iface/../midi/midi_utils.h \
+ src/gui/../midi/midi_stream.h src/gui/../midi/midi_utils.h \
+ src/gui/../seq/seq_ctrl.h src/gui/../seq/../config.h \
+ src/gui/../seq/song.h src/gui/../seq/../midi/midi_protocol.h \
+ src/gui/../seq/../cvproc.h src/gui/../seq/seq_engine.h \
+ src/gui/../seq/seq_ctrl.h src/gui/../seq/../midi/midi_utils.h \
+ src/gui/../util/log.h src/gui/../util/seq_utils.h \
+ src/gui/../util/state_change.h src/gui/../util/state_change_events.h \
+ src/gui/../panel_if.h src/gui/../power_ctrl.h
+	@echo 'compiling panel.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel.c.o -c ./src/gui/panel.c
+	@echo done.
+
+# source file: ./src/gui/panel_menu.c
+$(OUT_DIR)/panel_menu.c.o: src/gui/panel_menu.c src/gui/panel_menu.h \
+ src/gui/gui.h src/gui/../config.h src/gui/../seq/arp.h \
+ src/gui/../seq/../midi/midi_utils.h \
+ src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/arp_progs.h \
+ src/gui/../seq/scale.h src/gui/../seq/seq_ctrl.h \
+ src/gui/../seq/../config.h src/gui/../seq/song.h \
+ src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/../cvproc.h \
+ src/gui/../util/log.h src/gui/../util/panel_utils.h \
+ src/gui/../util/seq_utils.h src/gui/../util/state_change.h \
+ src/gui/../util/state_change_events.h
+	@echo 'compiling panel_menu.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel_menu.c.o -c ./src/gui/panel_menu.c
+	@echo done.
+
+# source file: ./src/gui/song_edit.c
+$(OUT_DIR)/song_edit.c.o: src/gui/song_edit.c src/gui/song_edit.h \
+ src/gui/gui.h src/gui/../config.h src/gui/../gfx.h src/gui/../config.h \
+ src/gui/../seq/song.h src/gui/../seq/../midi/midi_protocol.h \
+ src/gui/../seq/../cvproc.h src/gui/../util/log.h \
+ src/gui/../util/panel_utils.h src/gui/../util/seq_utils.h
+	@echo 'compiling song_edit.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/song_edit.c.o -c ./src/gui/song_edit.c
+	@echo done.
+
+# source file: ./src/gui/gui.c
+$(OUT_DIR)/gui.c.o: src/gui/gui.c src/gui/gui.h src/gui/../config.h \
+ src/gui/panel.h src/gui/../gfx.h src/gui/../config.h \
+ src/gui/../seq/pattern.h src/gui/../seq/scale.h \
+ src/gui/../seq/seq_ctrl.h src/gui/../seq/../config.h \
+ src/gui/../seq/seq_engine.h src/gui/../seq/seq_ctrl.h \
+ src/gui/../seq/../midi/midi_utils.h \
+ src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/song.h \
+ src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/../cvproc.h \
+ src/gui/../seq/clock.h src/gui/../util/log.h \
+ src/gui/../util/panel_utils.h src/gui/../util/seq_utils.h \
+ src/gui/../util/state_change.h src/gui/../util/state_change_events.h
+	@echo 'compiling gui.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/gui.c.o -c ./src/gui/gui.c
+	@echo done.
+
+# source file: ./src/gui/step_edit.c
+$(OUT_DIR)/step_edit.c.o: src/gui/step_edit.c src/gui/step_edit.h \
+ src/gui/../midi/midi_utils.h src/gui/../midi/midi_protocol.h \
+ src/gui/gui.h src/gui/../config.h src/gui/../gfx.h src/gui/../config.h \
+ src/gui/../seq/outproc.h src/gui/../seq/../midi/midi_utils.h \
+ src/gui/../seq/seq_ctrl.h src/gui/../seq/../config.h \
+ src/gui/../seq/song.h src/gui/../seq/../midi/midi_protocol.h \
+ src/gui/../seq/../cvproc.h src/gui/../util/log.h \
+ src/gui/../util/panel_utils.h src/gui/../util/seq_utils.h \
+ src/gui/../util/state_change.h src/gui/../util/state_change_events.h
+	@echo 'compiling step_edit.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/step_edit.c.o -c ./src/gui/step_edit.c
+	@echo done.
+
+# source file: ./src/gfx.c
+$(OUT_DIR)/gfx.c.o: src/gfx.c src/gfx.h src/config.h src/debug.h \
+ src/ILI948x_drv.h
+	@echo 'compiling gfx.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/gfx.c.o -c ./src/gfx.c
+	@echo done.
+
+# source file: ./src/stm32f4xx_hal_msp.c
+$(OUT_DIR)/stm32f4xx_hal_msp.c.o: src/stm32f4xx_hal_msp.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h
+	@echo 'compiling stm32f4xx_hal_msp.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_msp.c.o -c ./src/stm32f4xx_hal_msp.c
+	@echo done.
+
+# source file: ./src/analog_out.c
+$(OUT_DIR)/analog_out.c.o: src/analog_out.c src/analog_out.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h \
+ src/spi_callbacks.h
+	@echo 'compiling analog_out.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/analog_out.c.o -c ./src/analog_out.c
+	@echo done.
+
+# source file: ./src/main.c
+$(OUT_DIR)/main.c.o: src/main.c src/main.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h \
+ src/ioctl.h src/analog_out.h src/config_store.h src/cvproc.h src/debug.h \
+ src/delay.h src/din_midi.h src/ext_flash.h src/spi_flash.h \
+ src/power_ctrl.h src/panel_if.h src/spi_callbacks.h \
+ src/util/time_utils.h src/util/log.h src/midi/midi_utils.h \
+ src/midi/midi_protocol.h src/midi/midi_stream.h src/midi/midi_utils.h \
+ src/usbd_midi/usbd_midi.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ src/usbd_midi/usbd_conf.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ src/usbd_midi/../config.h src/usbh_midi/usbh_midi.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ src/usbh_midi/usbh_conf.h src/usbh_midi/../config.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
+ Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
+ src/gui/panel.h src/gui/../config.h src/seq/seq_ctrl.h \
+ src/seq/../config.h src/gfx.h
+	@echo 'compiling main.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/main.c.o -c ./src/main.c
+	@echo done.
+
+# source file: ./src/startup_stm32f407xx.s
+$(OUT_DIR)/startup_stm32f407xx.s.o: ./src/startup_stm32f407xx.s
+	@echo 'assembling startup_stm32f407xx.s...'
+	$(AS) -o $(OUT_DIR)/startup_stm32f407xx.s.o ./src/startup_stm32f407xx.s
+	@echo done.
+
+# source file: ./src/spi_callbacks.c
+$(OUT_DIR)/spi_callbacks.c.o: src/spi_callbacks.c src/spi_callbacks.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h \
+ src/util/log.h
+	@echo 'compiling spi_callbacks.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/spi_callbacks.c.o -c ./src/spi_callbacks.c
+	@echo done.
+
+# source file: ./src/usbd_midi/usbd_conf.c
+$(OUT_DIR)/usbd_conf.c.o: src/usbd_midi/usbd_conf.c \
+ src/usbd_midi/usbd_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ src/usbd_midi/usbd_conf.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
+ src/usbd_midi/../config.h
+	@echo 'compiling usbd_conf.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_conf.c.o -c ./src/usbd_midi/usbd_conf.c
+	@echo done.
+
+# source file: ./src/usbd_midi/usbd_midi.c
+$(OUT_DIR)/usbd_midi.c.o: src/usbd_midi/usbd_midi.c \
+ src/usbd_midi/usbd_midi.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ src/usbd_midi/usbd_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ src/usbd_midi/../config.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
+ src/usbd_midi/usbd_conf.h src/usbd_midi/../util/log.h \
+ src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/midi_stream.h \
+ src/midi/midi_utils.h src/usbd_midi/../debug.h
+	@echo 'compiling usbd_midi.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_midi.c.o -c ./src/usbd_midi/usbd_midi.c
+	@echo done.
+
+# source file: ./src/switch_filter.c
+$(OUT_DIR)/switch_filter.c.o: src/switch_filter.c src/switch_filter.h
+	@echo 'compiling switch_filter.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/switch_filter.c.o -c ./src/switch_filter.c
+	@echo done.
+
+# source file: ./src/delay.c
+$(OUT_DIR)/delay.c.o: src/delay.c src/delay.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling delay.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/delay.c.o -c ./src/delay.c
+	@echo done.
+
+# source file: ./src/lcd_drv.c
+$(OUT_DIR)/lcd_drv.c.o: src/lcd_drv.c src/lcd_drv.h
+	@echo 'compiling lcd_drv.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/lcd_drv.c.o -c ./src/lcd_drv.c
+	@echo done.
+
+# source file: ./src/iface/iface_midi_router.c
+$(OUT_DIR)/iface_midi_router.c.o: src/iface/iface_midi_router.c \
+ src/iface/iface_midi_router.h src/iface/iface_panel.h \
+ src/iface/../midi/midi_utils.h src/iface/../midi/midi_protocol.h \
+ src/iface/../analog_out.h src/iface/../cvproc.h src/iface/../config.h \
+ src/iface/../config_store.h src/iface/../midi/midi_protocol.h \
+ src/iface/../midi/midi_stream.h src/iface/../midi/midi_utils.h \
+ src/iface/../util/log.h src/iface/../util/seq_utils.h \
+ src/iface/../util/state_change.h src/iface/../util/state_change_events.h
+	@echo 'compiling iface_midi_router.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/iface_midi_router.c.o -c ./src/iface/iface_midi_router.c
+	@echo done.
+
+# source file: ./src/iface/iface_panel.c
+$(OUT_DIR)/iface_panel.c.o: src/iface/iface_panel.c \
+ src/iface/iface_panel.h src/iface/../midi/midi_utils.h \
+ src/iface/../midi/midi_protocol.h src/iface/iface_midi_router.h \
+ src/iface/../config.h src/iface/../gui/panel.h \
+ src/iface/../gui/../config.h src/iface/../midi/midi_protocol.h \
+ src/iface/../midi/midi_stream.h src/iface/../midi/midi_utils.h \
+ src/iface/../util/log.h
+	@echo 'compiling iface_panel.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/iface_panel.c.o -c ./src/iface/iface_panel.c
+	@echo done.
+
+# source file: ./src/seq/clock.c
+$(OUT_DIR)/clock.c.o: src/seq/clock.c src/seq/clock.h \
+ src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
+ src/seq/seq_ctrl.h src/seq/../config.h src/seq/../tables/swing_table.h \
+ src/seq/../util/log.h src/seq/../util/seq_utils.h \
+ src/seq/../util/state_change.h src/seq/../util/state_change_events.h
+	@echo 'compiling clock.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/clock.c.o -c ./src/seq/clock.c
+	@echo done.
+
+# source file: ./src/seq/metronome.c
+$(OUT_DIR)/metronome.c.o: src/seq/metronome.c src/seq/metronome.h \
+ src/seq/clock.h src/seq/../midi/midi_utils.h \
+ src/seq/../midi/midi_protocol.h src/seq/outproc.h src/seq/seq_ctrl.h \
+ src/seq/../config.h src/seq/song.h src/seq/../midi/midi_protocol.h \
+ src/seq/../cvproc.h src/seq/../analog_out.h src/seq/../gui/panel.h \
+ src/seq/../gui/../config.h
+	@echo 'compiling metronome.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/metronome.c.o -c ./src/seq/metronome.c
+	@echo done.
+
+# source file: ./src/seq/sysex.c
+$(OUT_DIR)/sysex.c.o: src/seq/sysex.c src/seq/sysex.h \
+ src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
+ src/seq/../config.h src/seq/../config_store.h src/seq/../ext_flash.h \
+ src/seq/../spi_flash.h src/seq/../midi/midi_stream.h \
+ src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
+ src/seq/../util/log.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling sysex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/sysex.c.o -c ./src/seq/sysex.c
+	@echo done.
+
+# source file: ./src/seq/pattern.c
+$(OUT_DIR)/pattern.c.o: src/seq/pattern.c src/seq/pattern.h \
+ src/seq/song.h src/seq/../midi/midi_protocol.h src/seq/../cvproc.h \
+ src/seq/seq_ctrl.h src/seq/../config.h src/seq/../config_store.h \
+ src/seq/../util/log.h src/seq/../util/state_change.h \
+ src/seq/../util/state_change_events.h
+	@echo 'compiling pattern.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/pattern.c.o -c ./src/seq/pattern.c
+	@echo done.
+
+# source file: ./src/seq/clock_out.c
+$(OUT_DIR)/clock_out.c.o: src/seq/clock_out.c src/seq/clock_out.h \
+ src/seq/song.h src/seq/../midi/midi_protocol.h src/seq/../cvproc.h \
+ src/seq/../analog_out.h src/seq/../config.h \
+ src/seq/../midi/midi_stream.h src/seq/../midi/midi_utils.h \
+ src/seq/../midi/midi_protocol.h src/seq/../midi/midi_utils.h \
+ src/seq/../util/log.h src/seq/../util/seq_utils.h \
+ src/seq/../util/state_change.h src/seq/../util/state_change_events.h
+	@echo 'compiling clock_out.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/clock_out.c.o -c ./src/seq/clock_out.c
+	@echo done.
+
+# source file: ./src/seq/seq_engine.c
+$(OUT_DIR)/seq_engine.c.o: src/seq/seq_engine.c src/seq/seq_engine.h \
+ src/seq/seq_ctrl.h src/seq/../config.h src/seq/../midi/midi_utils.h \
+ src/seq/../midi/midi_protocol.h src/seq/arp.h src/seq/arp_progs.h \
+ src/seq/clock.h src/seq/clock_out.h src/seq/metronome.h \
+ src/seq/midi_ctrl.h src/seq/song.h src/seq/../midi/midi_protocol.h \
+ src/seq/../cvproc.h src/seq/pattern.h src/seq/outproc.h src/seq/sysex.h \
+ src/seq/../gui/gui.h src/seq/../gui/../config.h src/seq/../gui/panel.h \
+ src/seq/../gui/step_edit.h src/seq/../gui/../midi/midi_utils.h \
+ src/seq/../midi/midi_stream.h src/seq/../midi/midi_utils.h \
+ src/seq/../util/log.h src/seq/../util/seq_utils.h \
+ src/seq/../util/state_change.h src/seq/../util/state_change_events.h
+	@echo 'compiling seq_engine.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/seq_engine.c.o -c ./src/seq/seq_engine.c
+	@echo done.
+
+# source file: ./src/seq/outproc.c
+$(OUT_DIR)/outproc.c.o: src/seq/outproc.c src/seq/outproc.h \
+ src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
+ src/seq/scale.h src/seq/seq_engine.h src/seq/seq_ctrl.h \
+ src/seq/../config.h src/seq/song.h src/seq/../midi/midi_protocol.h \
+ src/seq/../cvproc.h src/seq/../midi/midi_stream.h \
+ src/seq/../midi/midi_utils.h src/seq/../util/log.h
+	@echo 'compiling outproc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/outproc.c.o -c ./src/seq/outproc.c
+	@echo done.
+
+# source file: ./src/seq/seq_ctrl.c
+$(OUT_DIR)/seq_ctrl.c.o: src/seq/seq_ctrl.c src/seq/seq_ctrl.h \
+ src/seq/../config.h src/seq/seq_engine.h src/seq/../midi/midi_utils.h \
+ src/seq/../midi/midi_protocol.h src/seq/arp.h src/seq/arp_progs.h \
+ src/seq/clock.h src/seq/metronome.h src/seq/outproc.h src/seq/pattern.h \
+ src/seq/scale.h src/seq/song.h src/seq/../midi/midi_protocol.h \
+ src/seq/../cvproc.h src/seq/sysex.h src/seq/../config_store.h \
+ src/seq/../power_ctrl.h src/seq/../gui/gui.h src/seq/../gui/../config.h \
+ src/seq/../gui/panel.h src/seq/../gui/step_edit.h \
+ src/seq/../gui/../midi/midi_utils.h src/seq/../gui/song_edit.h \
+ src/seq/../iface/iface_panel.h src/seq/../iface/../midi/midi_utils.h \
+ src/seq/../iface/iface_midi_router.h src/seq/../util/log.h \
+ src/seq/../util/seq_utils.h src/seq/../util/state_change.h \
+ src/seq/../util/state_change_events.h
+	@echo 'compiling seq_ctrl.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/seq_ctrl.c.o -c ./src/seq/seq_ctrl.c
+	@echo done.
+
+# source file: ./src/seq/arp_progs.c
+$(OUT_DIR)/arp_progs.c.o: src/seq/arp_progs.c src/seq/arp_progs.h \
+ src/seq/arp.h src/seq/../midi/midi_utils.h \
+ src/seq/../midi/midi_protocol.h src/seq/../config.h
+	@echo 'compiling arp_progs.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/arp_progs.c.o -c ./src/seq/arp_progs.c
+	@echo done.
+
+# source file: ./src/seq/scale.c
+$(OUT_DIR)/scale.c.o: src/seq/scale.c src/seq/scale.h \
+ src/seq/../tables/scale_tables.h src/seq/../config.h
+	@echo 'compiling scale.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/scale.c.o -c ./src/seq/scale.c
+	@echo done.
+
+# source file: ./src/seq/song.c
+$(OUT_DIR)/song.c.o: src/seq/song.c src/seq/song.h \
+ src/seq/../midi/midi_protocol.h src/seq/../cvproc.h src/seq/arp.h \
+ src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
+ src/seq/arp_progs.h src/seq/scale.h src/seq/../config.h \
+ src/seq/../ext_flash.h src/seq/../spi_flash.h src/seq/../util/log.h \
+ src/seq/../util/seq_utils.h src/seq/../util/state_change.h \
+ src/seq/../util/state_change_events.h
+	@echo 'compiling song.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/song.c.o -c ./src/seq/song.c
+	@echo done.
+
+# source file: ./src/seq/midi_ctrl.c
+$(OUT_DIR)/midi_ctrl.c.o: src/seq/midi_ctrl.c src/seq/midi_ctrl.h \
+ src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
+ src/seq/arp_progs.h src/seq/seq_ctrl.h src/seq/../config.h \
+ src/seq/../midi/midi_protocol.h src/seq/../util/log.h \
+ src/seq/../util/seq_utils.h
+	@echo 'compiling midi_ctrl.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/midi_ctrl.c.o -c ./src/seq/midi_ctrl.c
+	@echo done.
+
+# source file: ./src/seq/arp.c
+$(OUT_DIR)/arp.c.o: src/seq/arp.c src/seq/arp.h \
+ src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
+ src/seq/arp_progs.h src/seq/seq_engine.h src/seq/seq_ctrl.h \
+ src/seq/../config.h src/seq/../midi/midi_protocol.h \
+ src/seq/../util/log.h src/seq/../util/seq_utils.h
+	@echo 'compiling arp.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/arp.c.o -c ./src/seq/arp.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rng.c
+$(OUT_DIR)/stm32f4xx_hal_rng.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rng.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_rng.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rng.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rng.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c
+$(OUT_DIR)/stm32f4xx_hal_eth.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_eth.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_eth.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spdifrx.c
+$(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spdifrx.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_spdifrx.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spdifrx.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+$(OUT_DIR)/stm32f4xx_hal_pwr.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_pwr.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pwr.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+$(OUT_DIR)/stm32f4xx_hal_uart.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_uart.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_uart.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+$(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_flash_ramfunc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+$(OUT_DIR)/stm32f4xx_hal_tim.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_tim.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_tim.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_lptim.c
+$(OUT_DIR)/stm32f4xx_hal_lptim.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_lptim.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_lptim.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_lptim.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_lptim.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_iwdg.c
+$(OUT_DIR)/stm32f4xx_hal_iwdg.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_iwdg.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_iwdg.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_iwdg.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_iwdg.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s.c
+$(OUT_DIR)/stm32f4xx_hal_i2s.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_i2s.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2s.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c
+$(OUT_DIR)/stm32f4xx_hal_sd.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_sd.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sd.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_smartcard.c
+$(OUT_DIR)/stm32f4xx_hal_smartcard.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_smartcard.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_smartcard.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_smartcard.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_smartcard.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
+$(OUT_DIR)/stm32f4xx_hal_sram.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_sram.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sram.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
+$(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_i2c_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c
+$(OUT_DIR)/stm32f4xx_ll_fsmc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_ll_fsmc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_fsmc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc_ex.c
+$(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_ltdc_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nor.c
+$(OUT_DIR)/stm32f4xx_hal_nor.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nor.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_nor.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_nor.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nor.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+$(OUT_DIR)/stm32f4xx_hal.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c
+$(OUT_DIR)/stm32f4xx_ll_fmc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_ll_fmc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_fmc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
+$(OUT_DIR)/stm32f4xx_hal_adc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_adc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_adc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_wwdg.c
+$(OUT_DIR)/stm32f4xx_hal_wwdg.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_wwdg.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_wwdg.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_wwdg.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_wwdg.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_irda.c
+$(OUT_DIR)/stm32f4xx_hal_irda.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_irda.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_irda.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_irda.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_irda.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c
+$(OUT_DIR)/stm32f4xx_hal_pcd.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_pcd.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pcd.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai.c
+$(OUT_DIR)/stm32f4xx_hal_sai.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_sai.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sai.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
+$(OUT_DIR)/stm32f4xx_hal_rtc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_rtc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rtc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c
+$(OUT_DIR)/stm32f4xx_hal_nand.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_nand.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_nand.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c
+$(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_ll_sdmmc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c
+$(OUT_DIR)/stm32f4xx_hal_dma2d.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dma2d.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dma2d.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c
+$(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dac_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c
+$(OUT_DIR)/stm32f4xx_hal_can.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_can.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_can.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash.c
+$(OUT_DIR)/stm32f4xx_hal_hash.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_hash.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_hash.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+$(OUT_DIR)/stm32f4xx_hal_flash.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_flash.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_flash.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp.c
+$(OUT_DIR)/stm32f4xx_hal_cryp.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_cryp.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cryp.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.c
+$(OUT_DIR)/stm32f4xx_hal_crc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_crc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_crc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+$(OUT_DIR)/stm32f4xx_hal_rcc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_rcc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rcc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c.c
+$(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_fmpi2c.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
+$(OUT_DIR)/stm32f4xx_hal_i2c.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_i2c.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2c.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+$(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_pwr_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c
+$(OUT_DIR)/stm32f4xx_hal_sdram.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_sdram.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sdram.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc.c
+$(OUT_DIR)/stm32f4xx_hal_ltdc.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_ltdc.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_ltdc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai_ex.c
+$(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_sai_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+$(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dma_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+$(OUT_DIR)/stm32f4xx_hal_dma.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dma.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dma.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+$(OUT_DIR)/stm32f4xx_hal_cortex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_cortex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cortex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cec.c
+$(OUT_DIR)/stm32f4xx_hal_cec.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cec.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_cec.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cec.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cec.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash_ex.c
+$(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_hash_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
+$(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_adc_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+$(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_rcc_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c
+$(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_pcd_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c_ex.c
+$(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_fmpi2c_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dsi.c
+$(OUT_DIR)/stm32f4xx_hal_dsi.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dsi.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dsi.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dsi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dsi.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp_ex.c
+$(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_cryp_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c
+$(OUT_DIR)/stm32f4xx_hal_usart.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_usart.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_usart.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+$(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_tim_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+$(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_flash_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+$(OUT_DIR)/stm32f4xx_hal_gpio.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_gpio.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_gpio.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c
+$(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_timebase_tim_template.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
+$(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_rtc_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
+$(OUT_DIR)/stm32f4xx_hal_spi.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_spi.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_spi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c
+$(OUT_DIR)/stm32f4xx_hal_hcd.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_hcd.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_hcd.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c
+$(OUT_DIR)/stm32f4xx_ll_usb.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_ll_usb.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_usb.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi.c
+$(OUT_DIR)/stm32f4xx_hal_dcmi.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dcmi.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dcmi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c
+$(OUT_DIR)/stm32f4xx_hal_pccard.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_pccard.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pccard.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c
+$(OUT_DIR)/stm32f4xx_hal_qspi.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_qspi.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_qspi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi_ex.c
+$(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dcmi_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s_ex.c
+$(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s_ex.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_i2s_ex.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s_ex.c
+	@echo done.
+
+# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac.c
+$(OUT_DIR)/stm32f4xx_hal_dac.c.o: \
+ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac.c \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
+	@echo 'compiling stm32f4xx_hal_dac.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dac.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac.c
+	@echo done.
+
+# source file: ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
+$(OUT_DIR)/usbd_ctlreq.c.o: \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ src/usbd_midi/usbd_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+	@echo 'compiling usbd_ctlreq.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_ctlreq.c.o -c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
+	@echo done.
+
+# source file: ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
+$(OUT_DIR)/usbd_ioreq.c.o: \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ src/usbd_midi/usbd_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+	@echo 'compiling usbd_ioreq.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_ioreq.c.o -c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
+	@echo done.
+
+# source file: ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
+$(OUT_DIR)/usbd_core.c.o: \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ src/usbd_midi/usbd_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ src/stm32f4xx_hal_conf.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
+ Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
+ Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
+ Drivers/CMSIS/Include/core_cmSimd.h \
+ Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
+ Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+	@echo 'compiling usbd_core.c...'
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_core.c.o -c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
+	@echo done.
+
 # source file: ./Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.c
 $(OUT_DIR)/usbh_pipes.c.o: \
  Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.c \
@@ -264,5124 +5391,6 @@ $(OUT_DIR)/usbh_core.c.o: \
  Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h
 	@echo 'compiling usbh_core.c...'
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbh_core.c.o -c ./Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.c
-	@echo done.
-
-# source file: ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
-$(OUT_DIR)/usbd_ioreq.c.o: \
- Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- src/usbd_midi/usbd_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
-	@echo 'compiling usbd_ioreq.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_ioreq.c.o -c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
-	@echo done.
-
-# source file: ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
-$(OUT_DIR)/usbd_core.c.o: \
- Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- src/usbd_midi/usbd_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
-	@echo 'compiling usbd_core.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_core.c.o -c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
-	@echo done.
-
-# source file: ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
-$(OUT_DIR)/usbd_ctlreq.c.o: \
- Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- src/usbd_midi/usbd_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
-	@echo 'compiling usbd_ctlreq.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_ctlreq.c.o -c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
-	@echo done.
-
-# source file: ./src/usbd_midi/usbd_midi.c
-$(OUT_DIR)/usbd_midi.c.o: src/usbd_midi/usbd_midi.c \
- src/usbd_midi/usbd_midi.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- src/usbd_midi/usbd_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- src/usbd_midi/../config.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
- src/usbd_midi/usbd_conf.h src/usbd_midi/../util/log.h \
- src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/midi_stream.h \
- src/midi/midi_utils.h src/usbd_midi/../debug.h
-	@echo 'compiling usbd_midi.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_midi.c.o -c ./src/usbd_midi/usbd_midi.c
-	@echo done.
-
-# source file: ./src/usbd_midi/usbd_conf.c
-$(OUT_DIR)/usbd_conf.c.o: src/usbd_midi/usbd_conf.c \
- src/usbd_midi/usbd_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- src/usbd_midi/usbd_conf.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
- src/usbd_midi/../config.h
-	@echo 'compiling usbd_conf.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbd_conf.c.o -c ./src/usbd_midi/usbd_conf.c
-	@echo done.
-
-# source file: ./src/power_ctrl.c
-$(OUT_DIR)/power_ctrl.c.o: src/power_ctrl.c src/power_ctrl.h src/ioctl.h \
- src/config.h src/gui/gui.h src/gui/../config.h src/seq/seq_ctrl.h \
- src/seq/../config.h src/usbh_midi/usbh_midi.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- src/usbh_midi/usbh_conf.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- src/usbh_midi/../config.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
- src/util/log.h src/util/state_change.h src/util/state_change_events.h
-	@echo 'compiling power_ctrl.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/power_ctrl.c.o -c ./src/power_ctrl.c
-	@echo done.
-
-# source file: ./src/stm32f4xx_it.c
-$(OUT_DIR)/stm32f4xx_it.c.o: src/stm32f4xx_it.c src/main.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/stm32f4xx_it.h \
- src/debug.h src/util/log.h src/usbh_midi/usbh_midi.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- src/usbh_midi/usbh_conf.h src/usbh_midi/../config.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h
-	@echo 'compiling stm32f4xx_it.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_it.c.o -c ./src/stm32f4xx_it.c
-	@echo done.
-
-# source file: ./src/main.c
-$(OUT_DIR)/main.c.o: src/main.c src/main.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h \
- src/ioctl.h src/analog_out.h src/config_store.h src/cvproc.h src/debug.h \
- src/delay.h src/din_midi.h src/ext_flash.h src/spi_flash.h \
- src/power_ctrl.h src/panel_if.h src/spi_callbacks.h \
- src/util/time_utils.h src/util/log.h src/midi/midi_utils.h \
- src/midi/midi_protocol.h src/midi/midi_stream.h src/midi/midi_utils.h \
- src/usbd_midi/usbd_midi.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- src/usbd_midi/usbd_conf.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
- Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- src/usbd_midi/../config.h src/usbh_midi/usbh_midi.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- src/usbh_midi/usbh_conf.h src/usbh_midi/../config.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
- src/gui/panel.h src/gui/../config.h src/seq/seq_ctrl.h \
- src/seq/../config.h src/gfx.h
-	@echo 'compiling main.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/main.c.o -c ./src/main.c
-	@echo done.
-
-# source file: ./src/switch_filter.c
-$(OUT_DIR)/switch_filter.c.o: src/switch_filter.c src/switch_filter.h
-	@echo 'compiling switch_filter.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/switch_filter.c.o -c ./src/switch_filter.c
-	@echo done.
-
-# source file: ./src/panel_if.c
-$(OUT_DIR)/panel_if.c.o: src/panel_if.c src/panel_if.h src/config.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/spi_callbacks.h \
- src/switch_filter.h src/gui/panel.h src/gui/../config.h \
- src/seq/seq_ctrl.h src/seq/../config.h src/util/log.h
-	@echo 'compiling panel_if.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel_if.c.o -c ./src/panel_if.c
-	@echo done.
-
-# source file: ./src/analog_out.c
-$(OUT_DIR)/analog_out.c.o: src/analog_out.c src/analog_out.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h \
- src/spi_callbacks.h
-	@echo 'compiling analog_out.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/analog_out.c.o -c ./src/analog_out.c
-	@echo done.
-
-# source file: ./src/debug.c
-$(OUT_DIR)/debug.c.o: src/debug.c src/debug.h src/config.h \
- src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/midi_stream.h \
- src/midi/midi_utils.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling debug.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/debug.c.o -c ./src/debug.c
-	@echo done.
-
-# source file: ./src/cvproc.c
-$(OUT_DIR)/cvproc.c.o: src/cvproc.c src/cvproc.h src/config.h \
- src/analog_out.h src/midi/midi_protocol.h src/midi/midi_stream.h \
- src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/midi_utils.h \
- src/util/log.h
-	@echo 'compiling cvproc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/cvproc.c.o -c ./src/cvproc.c
-	@echo done.
-
-# source file: ./src/stm32f4xx_hal_msp.c
-$(OUT_DIR)/stm32f4xx_hal_msp.c.o: src/stm32f4xx_hal_msp.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h
-	@echo 'compiling stm32f4xx_hal_msp.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_msp.c.o -c ./src/stm32f4xx_hal_msp.c
-	@echo done.
-
-# source file: ./src/gfx.c
-$(OUT_DIR)/gfx.c.o: src/gfx.c src/gfx.h src/config.h src/debug.h \
- src/ILI948x_drv.h
-	@echo 'compiling gfx.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/gfx.c.o -c ./src/gfx.c
-	@echo done.
-
-# source file: ./src/ioctl.c
-$(OUT_DIR)/ioctl.c.o: src/ioctl.c src/ioctl.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling ioctl.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/ioctl.c.o -c ./src/ioctl.c
-	@echo done.
-
-# source file: ./src/lcd_fsmc_if.c
-$(OUT_DIR)/lcd_fsmc_if.c.o: src/lcd_fsmc_if.c src/lcd_fsmc_if.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling lcd_fsmc_if.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/lcd_fsmc_if.c.o -c ./src/lcd_fsmc_if.c
-	@echo done.
-
-# source file: ./src/ILI948x_drv.c
-$(OUT_DIR)/ILI948x_drv.c.o: src/ILI948x_drv.c src/ILI948x_drv.h \
- src/lcd_drv.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/delay.h \
- src/config.h src/debug.h src/lcd_fsmc_if.h src/util/log.h
-	@echo 'compiling ILI948x_drv.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/ILI948x_drv.c.o -c ./src/ILI948x_drv.c
-	@echo done.
-
-# source file: ./src/text/font_sinclair_8x8.c
-$(OUT_DIR)/font_sinclair_8x8.c.o: src/text/font_sinclair_8x8.c
-	@echo 'compiling font_sinclair_8x8.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/font_sinclair_8x8.c.o -c ./src/text/font_sinclair_8x8.c
-	@echo done.
-
-# source file: ./src/text/font_system_8x12.c
-$(OUT_DIR)/font_system_8x12.c.o: src/text/font_system_8x12.c
-	@echo 'compiling font_system_8x12.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/font_system_8x12.c.o -c ./src/text/font_system_8x12.c
-	@echo done.
-
-# source file: ./src/gui/gui.c
-$(OUT_DIR)/gui.c.o: src/gui/gui.c src/gui/gui.h src/gui/../config.h \
- src/gui/panel.h src/gui/../gfx.h src/gui/../config.h \
- src/gui/../seq/pattern.h src/gui/../seq/scale.h \
- src/gui/../seq/seq_ctrl.h src/gui/../seq/../config.h \
- src/gui/../seq/seq_engine.h src/gui/../seq/seq_ctrl.h \
- src/gui/../seq/../midi/midi_utils.h \
- src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/song.h \
- src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/../cvproc.h \
- src/gui/../seq/clock.h src/gui/../util/log.h \
- src/gui/../util/panel_utils.h src/gui/../util/seq_utils.h \
- src/gui/../util/state_change.h src/gui/../util/state_change_events.h
-	@echo 'compiling gui.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/gui.c.o -c ./src/gui/gui.c
-	@echo done.
-
-# source file: ./src/gui/panel_menu.c
-$(OUT_DIR)/panel_menu.c.o: src/gui/panel_menu.c src/gui/panel_menu.h \
- src/gui/gui.h src/gui/../config.h src/gui/../seq/arp.h \
- src/gui/../seq/../midi/midi_utils.h \
- src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/arp_progs.h \
- src/gui/../seq/scale.h src/gui/../seq/seq_ctrl.h \
- src/gui/../seq/../config.h src/gui/../seq/song.h \
- src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/../cvproc.h \
- src/gui/../util/log.h src/gui/../util/panel_utils.h \
- src/gui/../util/seq_utils.h src/gui/../util/state_change.h \
- src/gui/../util/state_change_events.h
-	@echo 'compiling panel_menu.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel_menu.c.o -c ./src/gui/panel_menu.c
-	@echo done.
-
-# source file: ./src/gui/panel.c
-$(OUT_DIR)/panel.c.o: src/gui/panel.c src/gui/panel.h src/gui/../config.h \
- src/gui/panel_menu.h src/gui/step_edit.h src/gui/../midi/midi_utils.h \
- src/gui/../midi/midi_protocol.h src/gui/song_edit.h \
- src/gui/../iface/iface_panel.h src/gui/../iface/../midi/midi_utils.h \
- src/gui/../midi/midi_stream.h src/gui/../midi/midi_utils.h \
- src/gui/../seq/seq_ctrl.h src/gui/../seq/../config.h \
- src/gui/../seq/song.h src/gui/../seq/../midi/midi_protocol.h \
- src/gui/../seq/../cvproc.h src/gui/../seq/seq_engine.h \
- src/gui/../seq/seq_ctrl.h src/gui/../seq/../midi/midi_utils.h \
- src/gui/../util/log.h src/gui/../util/seq_utils.h \
- src/gui/../util/state_change.h src/gui/../util/state_change_events.h \
- src/gui/../panel_if.h src/gui/../power_ctrl.h
-	@echo 'compiling panel.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel.c.o -c ./src/gui/panel.c
-	@echo done.
-
-# source file: ./src/gui/step_edit.c
-$(OUT_DIR)/step_edit.c.o: src/gui/step_edit.c src/gui/step_edit.h \
- src/gui/../midi/midi_utils.h src/gui/../midi/midi_protocol.h \
- src/gui/gui.h src/gui/../config.h src/gui/../gfx.h src/gui/../config.h \
- src/gui/../seq/outproc.h src/gui/../seq/../midi/midi_utils.h \
- src/gui/../seq/seq_ctrl.h src/gui/../seq/../config.h \
- src/gui/../seq/song.h src/gui/../seq/../midi/midi_protocol.h \
- src/gui/../seq/../cvproc.h src/gui/../util/log.h \
- src/gui/../util/panel_utils.h src/gui/../util/seq_utils.h \
- src/gui/../util/state_change.h src/gui/../util/state_change_events.h
-	@echo 'compiling step_edit.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/step_edit.c.o -c ./src/gui/step_edit.c
-	@echo done.
-
-# source file: ./src/gui/song_edit.c
-$(OUT_DIR)/song_edit.c.o: src/gui/song_edit.c src/gui/song_edit.h \
- src/gui/gui.h src/gui/../config.h src/gui/../gfx.h src/gui/../config.h \
- src/gui/../seq/song.h src/gui/../seq/../midi/midi_protocol.h \
- src/gui/../seq/../cvproc.h src/gui/../util/log.h \
- src/gui/../util/panel_utils.h src/gui/../util/seq_utils.h
-	@echo 'compiling song_edit.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/song_edit.c.o -c ./src/gui/song_edit.c
-	@echo done.
-
-# source file: ./src/config_store.c
-$(OUT_DIR)/config_store.c.o: src/config_store.c src/config_store.h \
- src/config.h src/ext_flash.h src/spi_flash.h src/util/log.h \
- src/util/state_change.h src/util/state_change_events.h
-	@echo 'compiling config_store.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/config_store.c.o -c ./src/config_store.c
-	@echo done.
-
-# source file: ./src/midi/midi_stream.c
-$(OUT_DIR)/midi_stream.c.o: src/midi/midi_stream.c src/midi/midi_stream.h \
- src/midi/midi_utils.h src/midi/midi_protocol.h src/midi/../config.h \
- src/midi/../util/log.h
-	@echo 'compiling midi_stream.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/midi_stream.c.o -c ./src/midi/midi_stream.c
-	@echo done.
-
-# source file: ./src/midi/midi_utils.c
-$(OUT_DIR)/midi_utils.c.o: src/midi/midi_utils.c src/midi/midi_utils.h \
- src/midi/midi_protocol.h src/midi/../util/log.h
-	@echo 'compiling midi_utils.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/midi_utils.c.o -c ./src/midi/midi_utils.c
-	@echo done.
-
-# source file: ./src/util/log.c
-$(OUT_DIR)/log.c.o: src/util/log.c src/util/log.h src/util/../config.h
-	@echo 'compiling log.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/log.c.o -c ./src/util/log.c
-	@echo done.
-
-# source file: ./src/util/time_utils.c
-$(OUT_DIR)/time_utils.c.o: src/util/time_utils.c src/util/time_utils.h \
- src/util/log.h
-	@echo 'compiling time_utils.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/time_utils.c.o -c ./src/util/time_utils.c
-	@echo done.
-
-# source file: ./src/util/panel_utils.c
-$(OUT_DIR)/panel_utils.c.o: src/util/panel_utils.c src/util/panel_utils.h \
- src/util/seq_utils.h src/util/../seq/song.h \
- src/util/../seq/../midi/midi_protocol.h src/util/../seq/../cvproc.h \
- src/util/../config.h
-	@echo 'compiling panel_utils.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/panel_utils.c.o -c ./src/util/panel_utils.c
-	@echo done.
-
-# source file: ./src/util/state_change.c
-$(OUT_DIR)/state_change.c.o: src/util/state_change.c \
- src/util/state_change.h src/util/log.h
-	@echo 'compiling state_change.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/state_change.c.o -c ./src/util/state_change.c
-	@echo done.
-
-# source file: ./src/util/seq_utils.c
-$(OUT_DIR)/seq_utils.c.o: src/util/seq_utils.c src/util/seq_utils.h \
- src/util/../config.h
-	@echo 'compiling seq_utils.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/seq_utils.c.o -c ./src/util/seq_utils.c
-	@echo done.
-
-# source file: ./src/system_stm32f4xx.c
-$(OUT_DIR)/system_stm32f4xx.c.o: src/system_stm32f4xx.c \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling system_stm32f4xx.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/system_stm32f4xx.c.o -c ./src/system_stm32f4xx.c
-	@echo done.
-
-# source file: ./src/startup_stm32f407xx.s
-$(OUT_DIR)/startup_stm32f407xx.s.o: ./src/startup_stm32f407xx.s
-	@echo 'assembling startup_stm32f407xx.s...'
-	$(AS) -o $(OUT_DIR)/startup_stm32f407xx.s.o ./src/startup_stm32f407xx.s
-	@echo done.
-
-# source file: ./src/lcd_drv.c
-$(OUT_DIR)/lcd_drv.c.o: src/lcd_drv.c src/lcd_drv.h
-	@echo 'compiling lcd_drv.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/lcd_drv.c.o -c ./src/lcd_drv.c
-	@echo done.
-
-# source file: ./src/spi_flash.c
-$(OUT_DIR)/spi_flash.c.o: src/spi_flash.c src/spi_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/spi_callbacks.h \
- src/config.h src/util/log.h
-	@echo 'compiling spi_flash.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/spi_flash.c.o -c ./src/spi_flash.c
-	@echo done.
-
-# source file: ./src/iface/iface_midi_router.c
-$(OUT_DIR)/iface_midi_router.c.o: src/iface/iface_midi_router.c \
- src/iface/iface_midi_router.h src/iface/iface_panel.h \
- src/iface/../midi/midi_utils.h src/iface/../midi/midi_protocol.h \
- src/iface/../analog_out.h src/iface/../cvproc.h src/iface/../config.h \
- src/iface/../config_store.h src/iface/../midi/midi_protocol.h \
- src/iface/../midi/midi_stream.h src/iface/../midi/midi_utils.h \
- src/iface/../util/log.h src/iface/../util/seq_utils.h \
- src/iface/../util/state_change.h src/iface/../util/state_change_events.h
-	@echo 'compiling iface_midi_router.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/iface_midi_router.c.o -c ./src/iface/iface_midi_router.c
-	@echo done.
-
-# source file: ./src/iface/iface_panel.c
-$(OUT_DIR)/iface_panel.c.o: src/iface/iface_panel.c \
- src/iface/iface_panel.h src/iface/../midi/midi_utils.h \
- src/iface/../midi/midi_protocol.h src/iface/iface_midi_router.h \
- src/iface/../config.h src/iface/../gui/panel.h \
- src/iface/../gui/../config.h src/iface/../midi/midi_protocol.h \
- src/iface/../midi/midi_stream.h src/iface/../midi/midi_utils.h \
- src/iface/../util/log.h
-	@echo 'compiling iface_panel.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/iface_panel.c.o -c ./src/iface/iface_panel.c
-	@echo done.
-
-# source file: ./src/usbh_midi/usbh_midi.c
-$(OUT_DIR)/usbh_midi.c.o: src/usbh_midi/usbh_midi.c \
- src/usbh_midi/usbh_midi.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- src/usbh_midi/usbh_conf.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- src/usbh_midi/../config.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
- src/usbh_midi/usbh_conf.h src/usbh_midi/../midi/midi_stream.h \
- src/usbh_midi/../midi/midi_utils.h src/usbh_midi/../midi/midi_protocol.h \
- src/usbh_midi/../util/log.h src/usbh_midi/../debug.h \
- src/usbh_midi/../system_stm32f4xx.h
-	@echo 'compiling usbh_midi.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbh_midi.c.o -c ./src/usbh_midi/usbh_midi.c
-	@echo done.
-
-# source file: ./src/usbh_midi/usbh_conf.c
-$(OUT_DIR)/usbh_conf.c.o: src/usbh_midi/usbh_conf.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- src/usbh_midi/usbh_conf.h src/usbh_midi/../config.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h \
- Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h \
- src/usbh_midi/usbh_midi.h src/usbh_midi/../config.h
-	@echo 'compiling usbh_conf.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/usbh_conf.c.o -c ./src/usbh_midi/usbh_conf.c
-	@echo done.
-
-# source file: ./src/delay.c
-$(OUT_DIR)/delay.c.o: src/delay.c src/delay.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling delay.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/delay.c.o -c ./src/delay.c
-	@echo done.
-
-# source file: ./src/seq/metronome.c
-$(OUT_DIR)/metronome.c.o: src/seq/metronome.c src/seq/metronome.h \
- src/seq/clock.h src/seq/../midi/midi_utils.h \
- src/seq/../midi/midi_protocol.h src/seq/outproc.h src/seq/seq_ctrl.h \
- src/seq/../config.h src/seq/song.h src/seq/../midi/midi_protocol.h \
- src/seq/../cvproc.h src/seq/../analog_out.h src/seq/../gui/panel.h \
- src/seq/../gui/../config.h
-	@echo 'compiling metronome.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/metronome.c.o -c ./src/seq/metronome.c
-	@echo done.
-
-# source file: ./src/seq/sysex.c
-$(OUT_DIR)/sysex.c.o: src/seq/sysex.c src/seq/sysex.h \
- src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
- src/seq/../config.h src/seq/../config_store.h src/seq/../ext_flash.h \
- src/seq/../spi_flash.h src/seq/../midi/midi_stream.h \
- src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
- src/seq/../util/log.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling sysex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/sysex.c.o -c ./src/seq/sysex.c
-	@echo done.
-
-# source file: ./src/seq/midi_ctrl.c
-$(OUT_DIR)/midi_ctrl.c.o: src/seq/midi_ctrl.c src/seq/midi_ctrl.h \
- src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h
-	@echo 'compiling midi_ctrl.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/midi_ctrl.c.o -c ./src/seq/midi_ctrl.c
-	@echo done.
-
-# source file: ./src/seq/pattern.c
-$(OUT_DIR)/pattern.c.o: src/seq/pattern.c src/seq/pattern.h \
- src/seq/song.h src/seq/../midi/midi_protocol.h src/seq/../cvproc.h \
- src/seq/seq_ctrl.h src/seq/../config.h src/seq/../config_store.h \
- src/seq/../util/log.h src/seq/../util/state_change.h \
- src/seq/../util/state_change_events.h
-	@echo 'compiling pattern.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/pattern.c.o -c ./src/seq/pattern.c
-	@echo done.
-
-# source file: ./src/seq/arp.c
-$(OUT_DIR)/arp.c.o: src/seq/arp.c src/seq/arp.h \
- src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
- src/seq/arp_progs.h src/seq/seq_engine.h src/seq/seq_ctrl.h \
- src/seq/../config.h src/seq/../midi/midi_protocol.h \
- src/seq/../util/log.h src/seq/../util/seq_utils.h
-	@echo 'compiling arp.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/arp.c.o -c ./src/seq/arp.c
-	@echo done.
-
-# source file: ./src/seq/seq_ctrl.c
-$(OUT_DIR)/seq_ctrl.c.o: src/seq/seq_ctrl.c src/seq/seq_ctrl.h \
- src/seq/../config.h src/seq/seq_engine.h src/seq/../midi/midi_utils.h \
- src/seq/../midi/midi_protocol.h src/seq/arp.h src/seq/arp_progs.h \
- src/seq/clock.h src/seq/metronome.h src/seq/outproc.h src/seq/pattern.h \
- src/seq/scale.h src/seq/song.h src/seq/../midi/midi_protocol.h \
- src/seq/../cvproc.h src/seq/sysex.h src/seq/../config_store.h \
- src/seq/../power_ctrl.h src/seq/../gui/gui.h src/seq/../gui/../config.h \
- src/seq/../gui/panel.h src/seq/../gui/step_edit.h \
- src/seq/../gui/../midi/midi_utils.h src/seq/../gui/song_edit.h \
- src/seq/../iface/iface_panel.h src/seq/../iface/../midi/midi_utils.h \
- src/seq/../iface/iface_midi_router.h src/seq/../util/log.h \
- src/seq/../util/seq_utils.h src/seq/../util/state_change.h \
- src/seq/../util/state_change_events.h
-	@echo 'compiling seq_ctrl.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/seq_ctrl.c.o -c ./src/seq/seq_ctrl.c
-	@echo done.
-
-# source file: ./src/seq/arp_progs.c
-$(OUT_DIR)/arp_progs.c.o: src/seq/arp_progs.c src/seq/arp_progs.h \
- src/seq/arp.h src/seq/../midi/midi_utils.h \
- src/seq/../midi/midi_protocol.h src/seq/../config.h
-	@echo 'compiling arp_progs.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/arp_progs.c.o -c ./src/seq/arp_progs.c
-	@echo done.
-
-# source file: ./src/seq/clock.c
-$(OUT_DIR)/clock.c.o: src/seq/clock.c src/seq/clock.h \
- src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
- src/seq/seq_ctrl.h src/seq/../config.h src/seq/../tables/swing_table.h \
- src/seq/../util/log.h src/seq/../util/seq_utils.h \
- src/seq/../util/state_change.h src/seq/../util/state_change_events.h
-	@echo 'compiling clock.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/clock.c.o -c ./src/seq/clock.c
-	@echo done.
-
-# source file: ./src/seq/clock_out.c
-$(OUT_DIR)/clock_out.c.o: src/seq/clock_out.c src/seq/clock_out.h \
- src/seq/song.h src/seq/../midi/midi_protocol.h src/seq/../cvproc.h \
- src/seq/../analog_out.h src/seq/../config.h \
- src/seq/../midi/midi_stream.h src/seq/../midi/midi_utils.h \
- src/seq/../midi/midi_protocol.h src/seq/../midi/midi_utils.h \
- src/seq/../util/log.h src/seq/../util/seq_utils.h \
- src/seq/../util/state_change.h src/seq/../util/state_change_events.h
-	@echo 'compiling clock_out.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/clock_out.c.o -c ./src/seq/clock_out.c
-	@echo done.
-
-# source file: ./src/seq/scale.c
-$(OUT_DIR)/scale.c.o: src/seq/scale.c src/seq/scale.h \
- src/seq/../tables/scale_tables.h src/seq/../config.h
-	@echo 'compiling scale.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/scale.c.o -c ./src/seq/scale.c
-	@echo done.
-
-# source file: ./src/seq/seq_engine.c
-$(OUT_DIR)/seq_engine.c.o: src/seq/seq_engine.c src/seq/seq_engine.h \
- src/seq/seq_ctrl.h src/seq/../config.h src/seq/../midi/midi_utils.h \
- src/seq/../midi/midi_protocol.h src/seq/arp.h src/seq/arp_progs.h \
- src/seq/clock.h src/seq/clock_out.h src/seq/metronome.h \
- src/seq/midi_ctrl.h src/seq/song.h src/seq/../midi/midi_protocol.h \
- src/seq/../cvproc.h src/seq/pattern.h src/seq/outproc.h src/seq/sysex.h \
- src/seq/../gui/gui.h src/seq/../gui/../config.h src/seq/../gui/panel.h \
- src/seq/../gui/step_edit.h src/seq/../gui/../midi/midi_utils.h \
- src/seq/../midi/midi_stream.h src/seq/../midi/midi_utils.h \
- src/seq/../util/log.h src/seq/../util/seq_utils.h \
- src/seq/../util/state_change.h src/seq/../util/state_change_events.h
-	@echo 'compiling seq_engine.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/seq_engine.c.o -c ./src/seq/seq_engine.c
-	@echo done.
-
-# source file: ./src/seq/song.c
-$(OUT_DIR)/song.c.o: src/seq/song.c src/seq/song.h \
- src/seq/../midi/midi_protocol.h src/seq/../cvproc.h src/seq/arp.h \
- src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
- src/seq/arp_progs.h src/seq/scale.h src/seq/../config.h \
- src/seq/../ext_flash.h src/seq/../spi_flash.h src/seq/../util/log.h \
- src/seq/../util/seq_utils.h src/seq/../util/state_change.h \
- src/seq/../util/state_change_events.h
-	@echo 'compiling song.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/song.c.o -c ./src/seq/song.c
-	@echo done.
-
-# source file: ./src/seq/outproc.c
-$(OUT_DIR)/outproc.c.o: src/seq/outproc.c src/seq/outproc.h \
- src/seq/../midi/midi_utils.h src/seq/../midi/midi_protocol.h \
- src/seq/scale.h src/seq/seq_engine.h src/seq/seq_ctrl.h \
- src/seq/../config.h src/seq/song.h src/seq/../midi/midi_protocol.h \
- src/seq/../cvproc.h src/seq/../midi/midi_stream.h \
- src/seq/../midi/midi_utils.h src/seq/../util/log.h
-	@echo 'compiling outproc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/outproc.c.o -c ./src/seq/outproc.c
-	@echo done.
-
-# source file: ./src/spi_callbacks.c
-$(OUT_DIR)/spi_callbacks.c.o: src/spi_callbacks.c src/spi_callbacks.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h src/config.h \
- src/util/log.h
-	@echo 'compiling spi_callbacks.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/spi_callbacks.c.o -c ./src/spi_callbacks.c
-	@echo done.
-
-# source file: ./src/ext_flash.c
-$(OUT_DIR)/ext_flash.c.o: src/ext_flash.c src/ext_flash.h src/spi_flash.h \
- src/util/log.h
-	@echo 'compiling ext_flash.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/ext_flash.c.o -c ./src/ext_flash.c
-	@echo done.
-
-# source file: ./src/din_midi.c
-$(OUT_DIR)/din_midi.c.o: src/din_midi.c src/din_midi.h src/config.h \
- src/debug.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
- src/midi/midi_stream.h src/midi/midi_utils.h src/midi/midi_protocol.h \
- src/util/log.h
-	@echo 'compiling din_midi.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/din_midi.c.o -c ./src/din_midi.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
-$(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dma_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dma_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai.c
-$(OUT_DIR)/stm32f4xx_hal_sai.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_sai.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sai.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c
-$(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_timebase_tim_template.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_timebase_tim_template.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c.c
-$(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_fmpi2c.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_fmpi2c.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c
-$(OUT_DIR)/stm32f4xx_hal_hcd.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_hcd.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_hcd.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nor.c
-$(OUT_DIR)/stm32f4xx_hal_nor.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nor.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_nor.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_nor.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nor.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_smartcard.c
-$(OUT_DIR)/stm32f4xx_hal_smartcard.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_smartcard.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_smartcard.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_smartcard.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_smartcard.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash_ex.c
-$(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_hash_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_hash_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
-$(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_adc_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_adc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
-$(OUT_DIR)/stm32f4xx_hal_spi.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_spi.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_spi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
-$(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_tim_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_tim_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc.c
-$(OUT_DIR)/stm32f4xx_hal_ltdc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_ltdc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_ltdc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c
-$(OUT_DIR)/stm32f4xx_hal_qspi.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_qspi.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_qspi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_qspi.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c
-$(OUT_DIR)/stm32f4xx_hal_nand.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_nand.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_nand.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_nand.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
-$(OUT_DIR)/stm32f4xx_hal_tim.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_tim.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_tim.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dsi.c
-$(OUT_DIR)/stm32f4xx_hal_dsi.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dsi.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dsi.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dsi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dsi.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp_ex.c
-$(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_cryp_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cryp_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c
-$(OUT_DIR)/stm32f4xx_ll_fmc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_ll_fmc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_fmc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c
-$(OUT_DIR)/stm32f4xx_hal_pcd.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_pcd.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pcd.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
-$(OUT_DIR)/stm32f4xx_hal_gpio.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_gpio.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_gpio.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c
-$(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_pcd_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pcd_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
-$(OUT_DIR)/stm32f4xx_hal_pwr.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_pwr.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pwr.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac.c
-$(OUT_DIR)/stm32f4xx_hal_dac.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dac.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dac.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
-$(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_i2c_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2c_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c
-$(OUT_DIR)/stm32f4xx_hal_can.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_can.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_can.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rng.c
-$(OUT_DIR)/stm32f4xx_hal_rng.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rng.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_rng.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rng.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rng.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
-$(OUT_DIR)/stm32f4xx_hal_uart.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_uart.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_uart.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c_ex.c
-$(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_fmpi2c_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_fmpi2c_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_fmpi2c_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
-$(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_flash_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_flash_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc_ex.c
-$(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_ltdc_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_ltdc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_ltdc_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
-$(OUT_DIR)/stm32f4xx_hal_sram.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_sram.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sram.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c
-$(OUT_DIR)/stm32f4xx_hal_sd.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_sd.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sd.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c
-$(OUT_DIR)/stm32f4xx_hal_pccard.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_pccard.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pccard.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pccard.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash.c
-$(OUT_DIR)/stm32f4xx_hal_hash.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_hash.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_hash.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hash.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi_ex.c
-$(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dcmi_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dcmi_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c
-$(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_ll_sdmmc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_sdmmc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
-$(OUT_DIR)/stm32f4xx_hal.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s.c
-$(OUT_DIR)/stm32f4xx_hal_i2s.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_i2s.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2s.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_wwdg.c
-$(OUT_DIR)/stm32f4xx_hal_wwdg.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_wwdg.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_wwdg.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_wwdg.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_wwdg.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_iwdg.c
-$(OUT_DIR)/stm32f4xx_hal_iwdg.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_iwdg.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_iwdg.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_iwdg.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_iwdg.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
-$(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_pwr_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_pwr_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c
-$(OUT_DIR)/stm32f4xx_hal_eth.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_eth.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_eth.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_eth.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c
-$(OUT_DIR)/stm32f4xx_hal_dma2d.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dma2d.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dma2d.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.c
-$(OUT_DIR)/stm32f4xx_hal_crc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_crc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_crc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spdifrx.c
-$(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spdifrx.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_spdifrx.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_spdifrx.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spdifrx.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
-$(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_rtc_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rtc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cec.c
-$(OUT_DIR)/stm32f4xx_hal_cec.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cec.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_cec.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cec.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cec.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi.c
-$(OUT_DIR)/stm32f4xx_hal_dcmi.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dcmi.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dcmi.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dcmi.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_lptim.c
-$(OUT_DIR)/stm32f4xx_hal_lptim.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_lptim.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_lptim.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_lptim.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_lptim.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_irda.c
-$(OUT_DIR)/stm32f4xx_hal_irda.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_irda.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_irda.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_irda.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_irda.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c
-$(OUT_DIR)/stm32f4xx_ll_fsmc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_ll_fsmc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_fsmc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fsmc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s_ex.c
-$(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_i2s_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2s_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2s_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c
-$(OUT_DIR)/stm32f4xx_ll_usb.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_ll_usb.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_ll_usb.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c
-$(OUT_DIR)/stm32f4xx_hal_sdram.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_sdram.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sdram.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
-$(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_rcc_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rcc_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai_ex.c
-$(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_sai_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_sai_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sai_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
-$(OUT_DIR)/stm32f4xx_hal_dma.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dma.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dma.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
-$(OUT_DIR)/stm32f4xx_hal_rcc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_rcc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rcc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
-$(OUT_DIR)/stm32f4xx_hal_cortex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_cortex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cortex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
-$(OUT_DIR)/stm32f4xx_hal_i2c.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_i2c.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_i2c.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
-$(OUT_DIR)/stm32f4xx_hal_rtc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_rtc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_rtc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp.c
-$(OUT_DIR)/stm32f4xx_hal_cryp.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_cryp.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_cryp.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cryp.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c
-$(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_dac_ex.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_dac_ex.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
-$(OUT_DIR)/stm32f4xx_hal_flash.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_flash.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_flash.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
-$(OUT_DIR)/stm32f4xx_hal_adc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_adc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_adc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
-$(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_flash_ramfunc.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_flash_ramfunc.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
-	@echo done.
-
-# source file: ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c
-$(OUT_DIR)/stm32f4xx_hal_usart.c.o: \
- Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
- src/stm32f4xx_hal_conf.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
- Drivers/CMSIS/Include/core_cm4.h Drivers/CMSIS/Include/core_cmInstr.h \
- Drivers/CMSIS/Include/cmsis_gcc.h Drivers/CMSIS/Include/core_cmFunc.h \
- Drivers/CMSIS/Include/core_cmSimd.h \
- Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dcmi_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hash.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
-	@echo 'compiling stm32f4xx_hal_usart.c...'
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUT_DIR)/stm32f4xx_hal_usart.c.o -c ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c
 	@echo done.
 
 

@@ -1,7 +1,8 @@
 /*
  * 8x12 Bitmap Font
  *
- * Exported by FontTFTtoBitmap
+ * Exported by FontTFTtoBitmap tool by Andrew Kilpatrick. (unreleased)
+ * found here: http://www.dafontfree.net/find.php?q=unicode_8x12.ttf
  *
  * This file is part of CARBON.
  *

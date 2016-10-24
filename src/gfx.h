@@ -45,9 +45,10 @@ struct gfx_label {
 #define GFX_HIGHLIGHT_INVERT 1
 
 // fonts
-//#define GFX_FONT_SYSTEM_8X8 0
-#define GFX_FONT_SINCLAIR_8X8 0
-#define GFX_FONT_SYSTEM_8X12 1
+#define GFX_FONT_SINCLAIR_8X8 0  // original screen
+#define GFX_FONT_SYSTEM_8X12 1  // original screen
+#define GFX_FONT_SINCLAIR_9X9 2  // higher DPI screen
+#define GFX_FONT_SYSTEM_8X13 3  // higher DPI screen
 
 // init the graphics
 int gfx_init(void);

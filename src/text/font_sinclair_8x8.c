@@ -1,5 +1,5 @@
 /*
- * 8x8 Bitmap Font
+ * 8x8 Bitmap Font - based on Sinclair_S font
  *
  * found here: http://www.rinkydinkelectronics.com/r_fonts.php
  *
