@@ -82,6 +82,7 @@
 #define CONFIG_STORE_IFACE_CV_PROGRAM 1
 #define CONFIG_STORE_IFACE_CV_BEND_RANGE 2
 #define CONFIG_STORE_IFACE_ANALOG_CLOCK_DIV 3
+#define CONFIG_STORE_MENU_TIMEOUT 4
 #define CONFIG_STORE_PATTERN_BANK 62  // start of the pattern bank
 // patterns consume 65 words (260 bytes) of space
 #define CONFIG_STORE_TOKEN (CONFIG_STORE_NUM_ITEMS - 1)  // must be last item
@@ -114,7 +115,8 @@
 
 // panel
 #define PANEL_SHIFT_TAP_TIMEOUT 300  // ms to time out double tapping
-#define PANEL_MENU_TIMEOUT 10000  // ms to time out the menu display
+//#define PANEL_MENU_TIMEOUT_DEFAULT 10000  // default ms to time out the menu display
+#define PANEL_MENU_TIMEOUT 10000  // default ms to time out the menu display
 #define PANEL_MENU_CONFIRM_TIMEOUT 1000  // ms to time out the menu after confirming
 #define PANEL_KEYS_VELOCITY 100
 //#define PANEL_IF_DISABLE_BL  // uncomment to disable the backlight
