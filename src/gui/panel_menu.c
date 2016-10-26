@@ -21,6 +21,7 @@
 #include "panel_menu.h"
 #include "gui.h"
 #include "../config.h"
+#include "../config_store.h"
 #include "../seq/arp.h"
 #include "../seq/scale.h"
 #include "../seq/seq_ctrl.h"
@@ -37,12 +38,15 @@ struct panel_menu_state {
     int menu_mode;  // the current menu mode
     int menu_submode;  // the submode of the current mode
     int num_submodes;  // the number of submodes
+    int menu_timeout;  // the timeout setting
     int menu_timeout_count;  // timeout to dismiss the menu
     int load_save_song;  // selected load or save song
 };
 struct panel_menu_state pmstate;
 
 // local functions
+int panel_menu_get_timeout(void);
+void panel_menu_set_timeout(int timeout);
 void panel_menu_handle_state_change(int event_type, int *data, int data_len);
 void panel_menu_track_select_changed(void);
 void panel_menu_update_prev_next(void);
@@ -71,21 +75,26 @@ void panel_menu_init(void) {
     pmstate.menu_mode = PANEL_MENU_NONE;
     pmstate.menu_submode = 0;
     pmstate.num_submodes = 0;
+    pmstate.menu_timeout = PANEL_MENU_TIMEOUT_DEFAULT;
     pmstate.menu_timeout_count = 0;
 
     // register for events
     state_change_register(panel_menu_handle_state_change, SCEC_SONG);
     state_change_register(panel_menu_handle_state_change, SCEC_CTRL);
     state_change_register(panel_menu_handle_state_change, SCEC_ENG);
+    state_change_register(panel_menu_handle_state_change, SCEC_CONFIG);
 }
 
 // run the panel timer task - run on the realtime thread
 void panel_menu_timer_task(void) {
     // handle menu timeout
     if(pmstate.menu_timeout_count) {
-        pmstate.menu_timeout_count --;
-        if(pmstate.menu_timeout_count == 0) {
-            panel_menu_set_mode(PANEL_MENU_NONE);
+        // only time out if we're not set to max = special non-timeout setting
+        if(pmstate.menu_timeout_count != PANEL_MENU_TIMEOUT_MAX) {
+            pmstate.menu_timeout_count --;
+            if(pmstate.menu_timeout_count == 0) {
+                panel_menu_set_mode(PANEL_MENU_NONE);
+            }
         }
     }
 }
@@ -178,7 +187,7 @@ void panel_menu_set_mode(int mode) {
         pmstate.menu_submode = 0;
         panel_menu_update_display();
         if(pmstate.menu_mode != PANEL_MENU_NONE) {
-            pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+            pmstate.menu_timeout_count = pmstate.menu_timeout;
         }
     }
 }
@@ -193,7 +202,7 @@ void panel_menu_adjust_cursor(int change, int shift) {
         pmstate.menu_submode = 0;
     }
     panel_menu_update_display();
-    pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+    pmstate.menu_timeout_count = pmstate.menu_timeout;
 }
 
 // adjust the value (if edit is selected)
@@ -230,7 +239,24 @@ void panel_menu_adjust_value(int change, int shift) {
         default:
             return;
     }        
-    pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+    pmstate.menu_timeout_count = pmstate.menu_timeout;
+}
+
+// get the panel menu timeout
+int panel_menu_get_timeout(void) {
+    return pmstate.menu_timeout;
+}
+
+// set the panel menu timeout
+void panel_menu_set_timeout(int timeout) {
+    // fix value if it's invalid
+    if(timeout < PANEL_MENU_TIMEOUT_MIN || timeout > PANEL_MENU_TIMEOUT_MAX) {
+        pmstate.menu_timeout = PANEL_MENU_TIMEOUT_DEFAULT;
+    }
+    else {
+        pmstate.menu_timeout = timeout;
+    }
+    config_store_set_val(CONFIG_STORE_MENU_TIMEOUT, pmstate.menu_timeout);
 }
 
 //
@@ -243,56 +269,56 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             if(pmstate.menu_mode == PANEL_MENU_SWING &&
                     pmstate.menu_submode == PANEL_MENU_SWING_SWING) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_TONALITY:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
                     pmstate.menu_submode == PANEL_MENU_TONALITY_SCALE) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;                    
+                pmstate.menu_timeout_count = pmstate.menu_timeout;                    
             }
             break;
         case SCE_SONG_TRANSPOSE:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
                     pmstate.menu_submode == PANEL_MENU_TONALITY_TRANSPOSE) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }            
             break;
         case SCE_SONG_BIAS_TRACK:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
                     pmstate.menu_submode == PANEL_MENU_TONALITY_BIAS_TRACK) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }            
             break;            
         case SCE_SONG_TRACK_TYPE:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
                     pmstate.menu_submode == PANEL_MENU_TONALITY_TRACK_TYPE) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }            
             break;
         case SCE_SONG_ARP_TYPE:
             if(pmstate.menu_mode == PANEL_MENU_ARP &&
                     pmstate.menu_submode == PANEL_MENU_ARP_TYPE) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }            
             break;
         case SCE_SONG_ARP_SPEED:
             if(pmstate.menu_mode == PANEL_MENU_ARP &&
                     pmstate.menu_submode == PANEL_MENU_ARP_SPEED) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }            
             break;
         case SCE_SONG_ARP_GATE_TIME:
             if(pmstate.menu_mode == PANEL_MENU_ARP &&
                     pmstate.menu_submode == PANEL_MENU_ARP_GATE_TIME) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }            
             break;
         case SCE_SONG_LOADED:
@@ -348,7 +374,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     (pmstate.menu_submode == PANEL_MENU_MIDI_PROGRAM_A ||
                     pmstate.menu_submode == PANEL_MENU_MIDI_PROGRAM_B)) {
                 panel_menu_update_display();        
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_MIDI_PORT_MAP:
@@ -356,7 +382,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     (pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTA_PORT ||
                     pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTB_PORT)) {
                 panel_menu_update_display();        
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_MIDI_CHANNEL_MAP:
@@ -364,35 +390,35 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     (pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTA_CHAN ||
                     pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTB_CHAN)) {
                 panel_menu_update_display();        
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_KEY_SPLIT:
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     pmstate.menu_submode == PANEL_MENU_MIDI_KEY_SPLIT) {
                 panel_menu_update_display();        
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_KEY_VELOCITY_SCALE:
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     pmstate.menu_submode == PANEL_MENU_MIDI_KEY_VELOCITY) {
                 panel_menu_update_display();        
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_CV_GATE_PAIRS:
             if(pmstate.menu_mode == PANEL_MENU_SYS &&
                     pmstate.menu_submode == PANEL_MENU_SYS_CVGATE_PAIRS) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_CV_BEND_RANGE:
             if(pmstate.menu_mode == PANEL_MENU_SYS &&
                     pmstate.menu_submode == PANEL_MENU_SYS_CV_BEND_RANGE) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_CVCAL:
@@ -402,20 +428,20 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     pmstate.menu_submode == PANEL_MENU_SYS_CVCAL3 ||
                     pmstate.menu_submode == PANEL_MENU_SYS_CVCAL4)) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;                    
+                pmstate.menu_timeout_count = pmstate.menu_timeout;                    
             }
         case SCE_SONG_STEP_LEN:
             if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
                     pmstate.menu_submode == PANEL_MENU_CLOCK_STEP_LEN) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_METRONOME_MODE:
             if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
                     pmstate.menu_submode == PANEL_MENU_CLOCK_METRONOME_MODE) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_MIDI_PORT_CLOCK:
@@ -426,12 +452,18 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     pmstate.menu_submode == PANEL_MENU_CLOCK_TX_USB_HOST ||
                     pmstate.menu_submode == PANEL_MENU_CLOCK_TX_CV)) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_CTRL_FIRST_TRACK:
         case SCE_ENG_CURRENT_SCENE:
             panel_menu_track_select_changed();
+            break;
+        case SCE_CONFIG_LOADED:
+            panel_menu_set_timeout(config_store_get_val(CONFIG_STORE_MENU_TIMEOUT));
+            break;
+        case SCE_CONFIG_CLEARED:
+            panel_menu_set_timeout(PANEL_MENU_TIMEOUT_DEFAULT);                
             break;
         default:
             break;
@@ -448,7 +480,7 @@ void panel_menu_track_select_changed(void) {
         case PANEL_MENU_CLOCK:
         case PANEL_MENU_SWING:
             panel_menu_update_display();
-            pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
+            pmstate.menu_timeout_count = pmstate.menu_timeout;
             break;
         case PANEL_MENU_LOAD:
         case PANEL_MENU_SAVE:
@@ -875,6 +907,17 @@ void panel_menu_display_sys(void) {
             sprintf(tempstr, "%d", song_get_cvcal(temp));
             gui_set_menu_value(tempstr);
             break;
+        case PANEL_MENU_SYS_MENU_TIMEOUT:
+            gui_set_menu_subtitle("Menu Timeout");
+            gui_set_menu_param("Timeout");
+            if(pmstate.menu_timeout == PANEL_MENU_TIMEOUT_MAX) {
+                sprintf(tempstr, "SHIFT EXIT");
+            }
+            else {
+                sprintf(tempstr, "%ds", (pmstate.menu_timeout / 1000));
+            }
+            gui_set_menu_value(tempstr);            
+            break;
     }
 }
 
@@ -1105,6 +1148,11 @@ void panel_menu_edit_sys(int change) {
         case PANEL_MENU_SYS_CVCAL4:
             temp = pmstate.menu_submode - PANEL_MENU_SYS_CVCAL1;
             seq_ctrl_adjust_cvcal(temp, change);
+            break;
+        case PANEL_MENU_SYS_MENU_TIMEOUT:
+            panel_menu_set_timeout(seq_utils_clamp(pmstate.menu_timeout + 
+                (change * 1000),
+                PANEL_MENU_TIMEOUT_MIN, PANEL_MENU_TIMEOUT_MAX));
             break;
     }
     panel_menu_update_display();

@@ -20,6 +20,7 @@
  */
 #include "song_edit.h"
 #include "gui.h"
+#include "panel_menu.h"
 #include "../gfx.h"
 #include "../config.h"
 #include "../seq/song.h"
@@ -72,7 +73,7 @@ void song_edit_set_enable(int enable) {
     // start edit
     if(enable) {
         sngedits.enable = 1;
-        sngedits.edit_timeout = SONG_EDIT_TIMEOUT;
+        sngedits.edit_timeout = panel_menu_get_timeout();
         gui_grid_clear_overlay();
         gui_grid_set_overlay_enable(1);
         gui_clear_status_text_all();
@@ -188,6 +189,6 @@ void song_edit_update_display(void) {
         }
     }
     // make the mode state active for a while
-    sngedits.edit_timeout = SONG_EDIT_TIMEOUT;
+    sngedits.edit_timeout = panel_menu_get_timeout();
 }
 

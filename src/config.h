@@ -115,8 +115,9 @@
 
 // panel
 #define PANEL_SHIFT_TAP_TIMEOUT 300  // ms to time out double tapping
-//#define PANEL_MENU_TIMEOUT_DEFAULT 10000  // default ms to time out the menu display
-#define PANEL_MENU_TIMEOUT 10000  // default ms to time out the menu display
+#define PANEL_MENU_TIMEOUT_DEFAULT 10000  // default ms to time out the menu display
+#define PANEL_MENU_TIMEOUT_MIN 1000  // min menu timeout
+#define PANEL_MENU_TIMEOUT_MAX 60000  // max menu timeout - max = no timeout
 #define PANEL_MENU_CONFIRM_TIMEOUT 1000  // ms to time out the menu after confirming
 #define PANEL_KEYS_VELOCITY 100
 //#define PANEL_IF_DISABLE_BL  // uncomment to disable the backlight
@@ -212,7 +213,6 @@
 //#define SEQ_START_DELAY_MAX (CLOCK_PPQ * 4)  // max start delay - 1 bar
 #define SEQ_START_DELAY_MAX (CLOCK_PPQ)  // 1 beat
 #define STEP_EDIT_NEW_NOTE_VELOCITY 100
-#define STEP_EDIT_TIMEOUT 4000  // ms to time out edit mode
 #define STEP_EDIT_LOWEST_NOTE 24
 #define STEP_EDIT_HIGHEST_NOTE 104
 #define STEP_EDIT_SHORTEST_NOTE 1
@@ -220,7 +220,6 @@
 #define STEP_EDIT_NEW_NOTE 60
 #define STEP_EDIT_NEW_CC 1
 #define STEP_EDIT_NEW_CC_VAL 64
-#define SONG_EDIT_TIMEOUT 10000  // ms to time out edit mode
 #define SEQ_ENGINE_KEY_TRANSPOSE_CENTRE 60
 #define SEQ_ENGINE_KEY_TRANSPOSE_MIN -24
 #define SEQ_ENGINE_KEY_TRANSPOSE_MAX 24
@@ -237,8 +236,8 @@
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
 
-//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode

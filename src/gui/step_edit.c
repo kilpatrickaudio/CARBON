@@ -20,6 +20,7 @@
  */
 #include "step_edit.h"
 #include "gui.h"
+#include "panel_menu.h"
 #include "../config.h"
 #include "../gfx.h"
 #include "../seq/outproc.h"
@@ -142,7 +143,7 @@ void step_edit_handle_input(struct midi_msg *msg) {
     // handle incoming MIDI types
     switch(msg->status & 0xf0) {
         case MIDI_NOTE_ON:
-            sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+            sedits.edit_timeout = panel_menu_get_timeout();
             // if this is the first note we need to clear other notes off the step
             if(step_edit_get_num_recording_notes() == 0) {
                 for(i = 0; i < SEQ_TRACK_POLY; i ++) {
@@ -169,11 +170,11 @@ void step_edit_handle_input(struct midi_msg *msg) {
             step_edit_add_recording_note(msg->data0);
             break;
         case MIDI_NOTE_OFF:
-            sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+            sedits.edit_timeout = panel_menu_get_timeout();
             step_edit_remove_recording_note(msg->data0);
             break;
         case MIDI_CONTROL_CHANGE:
-            sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+            sedits.edit_timeout = panel_menu_get_timeout();
             // add / edit the new CC
             event.type = SONG_EVENT_CC;
             event.data0 = msg->data0;
@@ -197,12 +198,12 @@ void step_edit_set_enable(int enable) {
         // we're already editing - just trigger the note
         if(sedits.enable) {
             step_edit_adjust_cursor(0, 0);  // causes the step to be played / displayed        
-            sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+            sedits.edit_timeout = panel_menu_get_timeout();
         }
         // start editing from scratch
         else {
             sedits.enable = 1;
-            sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+            sedits.edit_timeout = panel_menu_get_timeout();
             sedits.scene = seq_ctrl_get_scene();
             sedits.track = seq_ctrl_get_first_track();
             gui_grid_clear_overlay();
@@ -227,7 +228,7 @@ void step_edit_set_enable(int enable) {
 // adjust the cursor position
 void step_edit_adjust_cursor(int change, int shift) {
     int val;
-    sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+    sedits.edit_timeout = panel_menu_get_timeout();
     
     // select event pos
     if(shift) {
@@ -258,7 +259,7 @@ void step_edit_adjust_cursor(int change, int shift) {
 
 // adjust the step note
 void step_edit_adjust_note(int change, int shift) {
-    sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+    sedits.edit_timeout = panel_menu_get_timeout();
     if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {
         step_edit_adjust_step(change, STEP_EDIT_ADJUST_NOTE, 0, shift);
     }
@@ -269,7 +270,7 @@ void step_edit_adjust_note(int change, int shift) {
 
 // adjust the step velocity
 void step_edit_adjust_velocity(int change, int shift) {
-    sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+    sedits.edit_timeout = panel_menu_get_timeout();
     if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {
         step_edit_adjust_step(change << 1, STEP_EDIT_ADJUST_VELO, 0, shift);
     }
@@ -280,7 +281,7 @@ void step_edit_adjust_velocity(int change, int shift) {
 
 // adjust the step gate time
 void step_edit_adjust_gate_time(int change, int shift) {
-    sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+    sedits.edit_timeout = panel_menu_get_timeout();
     if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {    
         step_edit_adjust_step(change, STEP_EDIT_ADJUST_GATE_TIME, 0, shift);
     }
@@ -291,13 +292,13 @@ void step_edit_adjust_gate_time(int change, int shift) {
 
 // adjust the start delay
 void step_edit_adjust_start_delay(int change, int shift) {
-    sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+    sedits.edit_timeout = panel_menu_get_timeout();
     step_edit_adjust_step(change, STEP_EDIT_ADJUST_START_DELAY, 0, shift);    
 }
 
 // adjust the ratchet mode
 void step_edit_adjust_ratchet_mode(int change, int shift) {
-    sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+    sedits.edit_timeout = panel_menu_get_timeout();
     song_set_ratchet_mode(sedits.scene, sedits.track, sedits.step_pos,
         seq_utils_clamp(song_get_ratchet_mode(sedits.scene, sedits.track, 
         sedits.step_pos) + change,
@@ -309,7 +310,7 @@ void step_edit_adjust_ratchet_mode(int change, int shift) {
 
 // clear the current step
 void step_edit_clear_step(void) {
-    sedits.edit_timeout = STEP_EDIT_TIMEOUT;
+    sedits.edit_timeout = panel_menu_get_timeout();
     step_edit_stop_notes();
     // clear specific event
     if(sedits.event_pos != STEP_EDIT_EVENT_POS_ALL) {

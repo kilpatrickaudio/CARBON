@@ -78,7 +78,7 @@
 #define PANEL_MENU_MIDI_KEY_VELOCITY 7  // per song
 #define PANEL_MENU_MIDI_REMOTE_CTRL 8  // per song
 // sys
-#define PANEL_MENU_SYS_NUM_SUBMODES 15
+#define PANEL_MENU_SYS_NUM_SUBMODES 16
 #define PANEL_MENU_SYS_VERSION 0  // global
 #define PANEL_MENU_SYS_CVGATE_PAIRS 1  // per song
 #define PANEL_MENU_SYS_CV_BEND_RANGE 2  // per song
@@ -94,9 +94,10 @@
 #define PANEL_MENU_SYS_CVCAL2 12  // per song
 #define PANEL_MENU_SYS_CVCAL3 13  // per song
 #define PANEL_MENU_SYS_CVCAL4 14  // per song
+#define PANEL_MENU_SYS_MENU_TIMEOUT 15 // global
 
 // clock
-#define PANEL_MENU_CLOCK_NUM_SUBMODES 7
+#define PANEL_MENU_CLOCK_NUM_SUBMODES 8
 #define PANEL_MENU_CLOCK_STEP_LEN 0  // per scene / track
 #define PANEL_MENU_CLOCK_METRONOME_MODE 1  // per song
 #define PANEL_MENU_CLOCK_METRONOME_SOUND_LEN 2  // per song
@@ -123,6 +124,12 @@ void panel_menu_adjust_cursor(int change, int shift);
 
 // adjust the value (if edit is selected)
 void panel_menu_adjust_value(int change, int shift);
+
+// get the panel menu timeout
+int panel_menu_get_timeout(void);
+
+// set the panel menu timeout
+void panel_menu_set_timeout(int timeout);
 
 #endif
 
