@@ -128,8 +128,6 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
     // handle system common messages first
     switch(msg->status) {
         case MIDI_SONG_SELECT:
-            log_debug("ss");
-        
             // only allow the song numbers we support
             if(msg->data0 > (SEQ_NUM_SONGS - 1)) {
                 return;
