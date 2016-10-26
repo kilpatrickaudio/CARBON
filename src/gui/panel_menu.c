@@ -746,8 +746,8 @@ void panel_menu_display_midi(void) {
             // MIDI output
             else {
                 temp = song_get_midi_program(track, 0);
-                if(temp == 0) {
-                    sprintf(tempstr, "--");
+                if(temp < 0) {
+                    panel_utils_get_blank_str(tempstr);
                 }
                 else {
                     sprintf(tempstr, "%d", temp + 1);
@@ -766,8 +766,8 @@ void panel_menu_display_midi(void) {
             // MIDI output
             else {
                 temp = song_get_midi_program(track, 1);
-                if(temp == 0) {
-                    sprintf(tempstr, "--");
+                if(temp < 0) {
+                    panel_utils_get_blank_str(tempstr);
                 }
                 else {
                     sprintf(tempstr, "%d", temp + 1);

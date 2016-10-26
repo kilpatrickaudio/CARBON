@@ -673,7 +673,7 @@ void seq_ctrl_adjust_midi_program(int mapnum, int change) {
         if(seq_ctrl_get_track_select(track)) {
             seq_ctrl_set_midi_program(track, mapnum,
                 seq_utils_clamp(song_get_midi_program(sstate.first_track, 
-                    mapnum) + change, -1, 0x7f));
+                    mapnum) + change, SONG_MIDI_PROG_NULL, 0x7f));
         }
     }
 }
@@ -1319,6 +1319,9 @@ void seq_ctrl_refresh_modules(void) {
     // song version <=1.02
     if(song_ver <= 0x00010002) {
         song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
+    }
+    if(song_ver != CARBON_VERSION_MAJMIN) {
+        song_set_version_to_current();  // make sure we save back current ver
     }
     
     // set up clock / reset position

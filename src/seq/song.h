@@ -117,6 +117,9 @@ void song_copy_scene(int dest, int src);
 // - version minor: lower 16 bits
 uint32_t song_get_song_version(void);
 
+// reset the song version to current version
+void song_set_version_to_current(void);
+
 // get the song tempo
 float song_get_tempo(void);
 

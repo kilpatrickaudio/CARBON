@@ -290,8 +290,7 @@ void song_clear(void) {
             }
         }
     }
-    song.song_version = ((CARBON_VERSION_MAJOR & 0xffff) << 16) |
-        (CARBON_VERSION_MINOR & 0xffff);    
+    song_set_version_to_current();
     song.magic_num = SONG_MAGIC_NUM;
     // fire event
     state_change_fire1(SCE_SONG_CLEARED, songs.loadsave_song);
@@ -373,6 +372,11 @@ void song_copy_scene(int dest, int src) {
 // - version minor: lower 16 bits
 uint32_t song_get_song_version(void) {
     return song.song_version;
+}
+
+// reset the song version to current version
+void song_set_version_to_current(void) {
+    song.song_version = CARBON_VERSION_MAJMIN;
 }
 
 // get the song tempo
@@ -791,10 +795,12 @@ void song_set_midi_program(int track, int mapnum, int program) {
         log_error("ssmp - mapnum invalid: %d", mapnum);
         return;
     }
-    if(program < -1 || program > 127) {
+    if(program < SONG_MIDI_PROG_NULL || program > 127) {
         log_error("ssmp - program invalid: %d", program);
         return;
     }
+    log_debug("prog: %d", program);
+    
     song.trkparam[track].midi_program[mapnum] = program;
     // fire event
     state_change_fire3(SCE_SONG_MIDI_PROGRAM, track, mapnum, program);

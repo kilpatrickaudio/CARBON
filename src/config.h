@@ -26,6 +26,7 @@
 // global
 #define CARBON_VERSION_MAJOR 1
 #define CARBON_VERSION_MINOR 3
+#define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
 // - while not actual config data this is a nice place to mention it
@@ -236,8 +237,8 @@
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
 
-#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode

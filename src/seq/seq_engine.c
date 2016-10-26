@@ -332,6 +332,13 @@ void seq_engine_run(uint32_t tick_count) {
             }
         }        
 
+        // start realtime record
+        // all tracks will be armed together by this one action
+        if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
+            // all selected tracks will go into run mode
+            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT);
+        }
+
         // process track notes / recording start/stop
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             // precompute live state on the track
@@ -346,6 +353,7 @@ void seq_engine_run(uint32_t tick_count) {
             // manage notes on this track - check on every tick
             seq_engine_track_manage_notes(track);
 
+/*
             // give a half-step lead-in to start RT recording
             // this is so we can catch notes played a half step early
             // only if we are armed and in the last half of the step time
@@ -358,6 +366,7 @@ void seq_engine_run(uint32_t tick_count) {
                 // all selected tracks will go into run mode
                 seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT);
             }
+*/
 
             // run the step
             if(sestate.clock_div_count[track] == 0) {
