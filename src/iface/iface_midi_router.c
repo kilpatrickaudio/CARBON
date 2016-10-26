@@ -228,6 +228,7 @@ void iface_midi_router_handle_state_change(int event_type,
     switch(event_type) {
         case SCE_CONFIG_LOADED:
             log_debug("imrhsc - config loaded");
+            iface_midi_router_load_config();
             break;
         case SCE_CONFIG_CLEARED:
             log_debug("imrhsc - config cleared");
