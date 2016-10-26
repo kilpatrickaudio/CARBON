@@ -47,10 +47,18 @@ https://github.com/kilpatrickaudio/CARBON
 CARBON Development Tools:
 
 Note: Some changes might be needed to various scripts used. These are
-provided with the distribution for completeness. We develop CARBON on Linux
-Mint and the tools work for us but might not work for you. We don't know
+provided with the distribution for completeness. We develop CARBON on Mint 
+Linux and the tools work for us but might not work for you. We don't know
 anything about Windows or OS X so please don't ask about building on these
 platforms.
+
+The config.h contains many config options for the entire system including
+settings that affect debugging. Specifically, debug print output is supported
+over MIDI using a SYSEX format. This allows the use of the log.c functions
+to send formatted strings to a host PC. You will need a program to decode
+these messages, which are a SYSEX header followed by 7 bit ASCII. We use an
+internal tool but this is not available at this time.
+
 
 Makefile generator:
 - makegen - Makefile Generator - by: Andrew Kilpatrick
