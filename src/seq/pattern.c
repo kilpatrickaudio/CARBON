@@ -96,6 +96,7 @@ void pattern_handle_state_change(int event_type,
     switch(event_type) {
         case SCE_CONFIG_LOADED:
             log_debug("phsc - config loaded");
+            pattern_load_patterns();
             break;
         case SCE_CONFIG_CLEARED:
             log_debug("phsc - config cleared");
