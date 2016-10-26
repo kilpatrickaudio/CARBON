@@ -541,7 +541,7 @@ void seq_ctrl_set_kbtrans(int kbtrans) {
 }
 
 //
-// system edit
+// global params (per song)
 //
 // adjust the CV cal on a channel
 void seq_ctrl_adjust_cvcal(int channel, int change) {
@@ -553,9 +553,6 @@ void seq_ctrl_adjust_cvcal(int channel, int change) {
         CVPROC_CVCAL_MIN, CVPROC_CVCAL_MAX));
 }
 
-//
-// global params (per song)
-//
 // set the tempo
 void seq_ctrl_set_tempo(float tempo) {
     song_set_tempo(clock_get_tempo());
@@ -596,6 +593,13 @@ void seq_ctrl_adjust_metronome_mode(int change) {
         }
     }
     song_set_metronome_mode(val);
+}
+
+// adjust the metronome sound len
+void seq_ctrl_adjust_metronome_sound_len(int change) {
+    int val = seq_utils_clamp(song_get_metronome_sound_len() + change,
+        METRONOME_SOUND_LENGTH_MIN, METRONOME_SOUND_LENGTH_MAX);
+    song_set_metronome_sound_len(val);
 }
 
 // adjust the key velocity on the input
@@ -1308,10 +1312,22 @@ void seq_ctrl_cancel_record(void) {
 // refresh modules when the song is loaded or cleared
 void seq_ctrl_refresh_modules(void) {
     int i;
+    int song_ver = song_get_song_version();
+    
+    log_debug("song ver: %x", song_ver);
+    //
+    // do song version upgrades based on song version and system version
+    //
+    // song version <=1.02
+    if(song_ver <= 0x00010002) {
+        song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
+    }
+    
     // set up clock / reset position
     clock_set_tempo(song_get_tempo());   
     clock_set_swing(song_get_swing());     
     metronome_mode_changed(song_get_metronome_mode());
+    metronome_sound_len_changed(song_get_metronome_sound_len());
     cvproc_set_bend_range(song_get_cv_bend_range());
     cvproc_set_pairs(song_get_cvgate_pairs());
     for(i = 0; i < CVPROC_NUM_PAIRS; i ++) {

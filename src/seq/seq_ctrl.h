@@ -136,14 +136,11 @@ void seq_ctrl_set_record_mode(int mode);
 void seq_ctrl_set_kbtrans(int kbtrans);
 
 //
-// system edit
+// global params (per song)
 //
 // adjust the CV cal on a channel
 void seq_ctrl_adjust_cvcal(int channel, int change);
 
-//
-// global params (per song)
-//
 // set the tempo
 void seq_ctrl_set_tempo(float tempo);
 
@@ -158,6 +155,9 @@ void seq_ctrl_adjust_swing(int change);
 
 // adjust the metronome mode
 void seq_ctrl_adjust_metronome_mode(int change);
+
+// adjust the metronome sound len
+void seq_ctrl_adjust_metronome_sound_len(int change);
 
 // adjust the key velocity on the input
 void seq_ctrl_adjust_key_velocity_scale(int change);

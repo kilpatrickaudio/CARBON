@@ -42,5 +42,8 @@ void metronome_stop_sound(void);
 // the metronome mode changed
 void metronome_mode_changed(int mode);
 
+// the metronome sound length changed
+void metronome_sound_len_changed(int len);
+
 #endif
 

@@ -109,20 +109,27 @@ struct song_data {
     struct track_step_param trkstepparam[SEQ_NUM_TRACKS][SEQ_NUM_STEPS];  // step params
     struct track_event trkevents[SEQ_NUM_TRACKS][SEQ_NUM_STEPS][SEQ_TRACK_POLY];  // events
 #endif
-    // additional data
+    //
+    // additional data (from original song layout 
+    //  - do not move this up or you will break existing songs 
+    //  - new data here must be checked against the song version number
+    //
+    // CARBON version 1.01
     uint8_t midi_remote_ctrl;  // MIDI remote control - 0 = disabled, 1 = enabled
+    // CARBON version 1.03
+    uint8_t metronome_sound_len;  // metronome sound length in ms
 
     // dummy padding - to make it an even number of 4096 byte sectors in the flash
     // - be VERY careful that this is correct or other RAM could be overwritten
 #ifdef SONG_NOTES_PER_SCENE
     uint8_t dummy0[1024];
-    uint8_t dummy1[478];
+    uint8_t dummy1[477];
 #else
     uint8_t dummy0[1024];
     uint8_t dummy1[1024];
     uint8_t dummy2[1024];
     uint8_t dummy3[1024];
-    uint8_t dummy4[731];
+    uint8_t dummy4[730];
 #endif    
     // token to identify correct loading of file
     uint32_t magic_num;
@@ -202,6 +209,7 @@ void song_clear(void) {
     song_set_tempo(120.0);
     song_set_swing(50);
     song_set_metronome_mode(SONG_METRONOME_INTERNAL);
+    song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
     song_set_key_velocity_scale(0);
     song_set_cv_bend_range(2);
     song_set_cvgate_pairs(SONG_CVGATE_PAIR_ABCD);
@@ -414,6 +422,22 @@ void song_set_metronome_mode(int mode) {
     song.metronome = mode;
     // fire event
     state_change_fire1(SCE_SONG_METRONOME_MODE, mode);
+}
+
+// get the metronome sound length
+int song_get_metronome_sound_len(void) {
+    return song.metronome_sound_len;
+}
+
+// set the metronome sound length
+void song_set_metronome_sound_len(int len) {
+    if(len < METRONOME_SOUND_LENGTH_MIN || len > METRONOME_SOUND_LENGTH_MAX) {
+        log_error("ssmsl - len invalid: %d", len);
+        return;
+    }
+    song.metronome_sound_len = len;
+    // fire event
+    state_change_fire1(SCE_SONG_METRONOME_SOUND_LEN, len);
 }
 
 // get the MIDI input key velocity scaling

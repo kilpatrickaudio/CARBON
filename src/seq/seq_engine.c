@@ -144,7 +144,6 @@ void seq_engine_live_mode_changed(int newval);
 void seq_engine_track_select_changed(int track, int newval);
 void seq_engine_mute_select_changed(int scene, int track, int newval);
 void seq_engine_cvgate_mode_changed(void);
-void seq_engine_metronome_mode_changed(int mode);
 void seq_engine_key_split_changed(int track, int mode);
 void seq_engine_arp_type_changed(int scene, int track, int type);
 void seq_engine_arp_speed_changed(int scene, int track, int speed);
@@ -552,7 +551,10 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
             seq_engine_song_mode_enable_changed(data[0]);
             break;
         case SCE_SONG_METRONOME_MODE:
-            seq_engine_metronome_mode_changed(data[0]);
+            metronome_mode_changed(data[0]);
+            break;
+        case SCE_SONG_METRONOME_SOUND_LEN:
+            metronome_sound_len_changed(data[0]);
             break;
         case SCE_SONG_KEY_SPLIT:
             seq_engine_key_split_changed(data[0], data[1]);
@@ -1749,11 +1751,6 @@ void seq_engine_mute_select_changed(int scene, int track, int newval) {
     else {
         sestate.track_mute[track] = 0;    
     }
-}
-
-// the metronome mode changed
-void seq_engine_metronome_mode_changed(int mode) {
-    metronome_mode_changed(mode);
 }
 
 // the key split setting changed

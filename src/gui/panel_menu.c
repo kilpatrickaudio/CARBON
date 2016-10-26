@@ -413,7 +413,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_SONG_METRONOME_MODE:
             if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
-                    pmstate.menu_submode == PANEL_MENU_CLOCK_METRONOME) {
+                    pmstate.menu_submode == PANEL_MENU_CLOCK_METRONOME_MODE) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = PANEL_MENU_TIMEOUT;
             }
@@ -896,7 +896,7 @@ void panel_menu_display_clock(void) {
                 seq_ctrl_get_first_track()));
             gui_set_menu_value(tempstr);
             break;
-        case PANEL_MENU_CLOCK_METRONOME:
+        case PANEL_MENU_CLOCK_METRONOME_MODE:
             gui_set_menu_subtitle("");
             gui_set_menu_param("Metronome");
             temp = song_get_metronome_mode();
@@ -915,6 +915,12 @@ void panel_menu_display_clock(void) {
                     sprintf(tempstr, "Track 6 %s", tempstr2);
                     break;
             }
+            gui_set_menu_value(tempstr);
+            break;
+        case PANEL_MENU_CLOCK_METRONOME_SOUND_LEN:
+            gui_set_menu_subtitle("");
+            gui_set_menu_param("Metronome Len");
+            sprintf(tempstr, "%dms", song_get_metronome_sound_len());
             gui_set_menu_value(tempstr);            
             break;
         case PANEL_MENU_CLOCK_TX_DIN1:
@@ -1110,8 +1116,11 @@ void panel_menu_edit_clock(int change) {
         case PANEL_MENU_CLOCK_STEP_LEN:
             seq_ctrl_adjust_step_length(change);        
             break;
-        case PANEL_MENU_CLOCK_METRONOME:
+        case PANEL_MENU_CLOCK_METRONOME_MODE:
             seq_ctrl_adjust_metronome_mode(change);
+            break;
+        case PANEL_MENU_CLOCK_METRONOME_SOUND_LEN:
+            seq_ctrl_adjust_metronome_sound_len(change);
             break;
         case PANEL_MENU_CLOCK_TX_DIN1:
             seq_ctrl_adjust_clock_rate(MIDI_PORT_DIN1_OUT, change);

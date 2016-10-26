@@ -135,6 +135,12 @@ int song_get_metronome_mode(void);
 // set the metronome mode
 void song_set_metronome_mode(int mode);
 
+// get the metronome sound length
+int song_get_metronome_sound_len(void);
+
+// set the metronome sound length
+void song_set_metronome_sound_len(int len);
+
 // get the MIDI input key velocity scaling
 int song_get_key_velocity_scale(void);
 

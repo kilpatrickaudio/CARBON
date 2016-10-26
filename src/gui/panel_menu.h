@@ -90,20 +90,21 @@
 #define PANEL_MENU_SYS_CV_SCALING2 8  // per song
 #define PANEL_MENU_SYS_CV_SCALING3 9  // per song
 #define PANEL_MENU_SYS_CV_SCALING4 10  // per song
-#define PANEL_MENU_SYS_CVCAL1 11  // system
-#define PANEL_MENU_SYS_CVCAL2 12  // system
-#define PANEL_MENU_SYS_CVCAL3 13  // system
-#define PANEL_MENU_SYS_CVCAL4 14  // system
+#define PANEL_MENU_SYS_CVCAL1 11  // per song
+#define PANEL_MENU_SYS_CVCAL2 12  // per song
+#define PANEL_MENU_SYS_CVCAL3 13  // per song
+#define PANEL_MENU_SYS_CVCAL4 14  // per song
 
 // clock
 #define PANEL_MENU_CLOCK_NUM_SUBMODES 7
 #define PANEL_MENU_CLOCK_STEP_LEN 0  // per scene / track
-#define PANEL_MENU_CLOCK_METRONOME 1  // per song
-#define PANEL_MENU_CLOCK_TX_DIN1 2  // per song
-#define PANEL_MENU_CLOCK_TX_DIN2 3  // per song
-#define PANEL_MENU_CLOCK_TX_CV 4  // per song
-#define PANEL_MENU_CLOCK_TX_USB_HOST 5  // per song
-#define PANEL_MENU_CLOCK_TX_USB_DEV 6  // per song
+#define PANEL_MENU_CLOCK_METRONOME_MODE 1  // per song
+#define PANEL_MENU_CLOCK_METRONOME_SOUND_LEN 2  // per song
+#define PANEL_MENU_CLOCK_TX_DIN1 3  // per song
+#define PANEL_MENU_CLOCK_TX_DIN2 4  // per song
+#define PANEL_MENU_CLOCK_TX_CV 5  // per song
+#define PANEL_MENU_CLOCK_TX_USB_HOST 6  // per song
+#define PANEL_MENU_CLOCK_TX_USB_DEV 7  // per song
 
 // init the panel menu
 void panel_menu_init(void);

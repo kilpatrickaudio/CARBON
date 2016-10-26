@@ -44,6 +44,7 @@ enum STATE_CHANGE_EVENT {
     SCE_SONG_TEMPO,  // no args - need to get due to float type
     SCE_SONG_SWING,  // arg0 = swing
     SCE_SONG_METRONOME_MODE,  // arg0 = mode
+    SCE_SONG_METRONOME_SOUND_LEN,  // arg0 = len
     SCE_SONG_KEY_VELOCITY_SCALE,  // arg0 = scale
     SCE_SONG_CV_BEND_RANGE,  // arg0 = bend range
     SCE_SONG_CV_GATE_PAIRS,  // arg0 = CV/gate pairs

@@ -30,6 +30,7 @@
 
 struct metronome_state {
     int mode;  // local cache of the metronome mode
+    int len;  // sound len for internal speaker
     int div_count;
     int sound_timeout;  // the timeout for turning off the sound
     int sound_note;  // the note that was most recently used for making a pulse
@@ -43,6 +44,7 @@ void metronome_init(void) {
     mnstate.div_count = 0;
     mnstate.sound_timeout = 0;
     mnstate.mode = song_get_metronome_mode();
+    mnstate.len = song_get_metronome_sound_len();
     mnstate.beat_cross = 0;
 }
 
@@ -79,11 +81,11 @@ void metronome_run(int tick_count) {
                         // no action
                         break;
                     case SONG_METRONOME_INTERNAL:
-                        mnstate.sound_timeout = METRONOME_SOUND_LENGTH;
+                        mnstate.sound_timeout = mnstate.len;
                         analog_out_beep_metronome(1);
                         break;
                     case SONG_METRONOME_CV_RESET:
-                        mnstate.sound_timeout = METRONOME_SOUND_LENGTH;
+                        mnstate.sound_timeout = mnstate.len;
                         analog_out_set_reset(1);
                         break;
                     default:
@@ -92,7 +94,7 @@ void metronome_run(int tick_count) {
                             break;
                         }
                         mnstate.sound_note = mnstate.mode;  // make sure we turn off the same note
-                        mnstate.sound_timeout = METRONOME_SOUND_LENGTH;
+                        mnstate.sound_timeout = mnstate.len;
                         midi_utils_enc_note_on(&send_msg, 0, 0, 
                             mnstate.sound_note, METRONOME_NOTE_VELOCITY);
                         outproc_deliver_msg(seq_ctrl_get_scene(), 
@@ -142,5 +144,10 @@ void metronome_stop_sound(void) {
 void metronome_mode_changed(int mode) {
     mnstate.mode = mode;
     metronome_stop_sound();
+}
+
+// the metronome sound length changed
+void metronome_sound_len_changed(int len) {
+    mnstate.len = len;
 }
 
