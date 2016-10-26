@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 2
+#define CARBON_VERSION_MINOR 3
 
 // memory mapping
 // - while not actual config data this is a nice place to mention it
