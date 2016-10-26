@@ -781,9 +781,9 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
             // step edit wants all MIDI input on the keyboard control channel
             step_edit_handle_input(&send_msg);
         }
-        // MIDI control wants all MIDI input on every channel
-        midi_ctrl_handle_midi_msg(msg);  // send the raw data to preserve channel
     }
+    // MIDI control wants all MIDI input on every channel
+    midi_ctrl_handle_midi_msg(msg);  // send the raw data to preserve channel
 }
 
 //

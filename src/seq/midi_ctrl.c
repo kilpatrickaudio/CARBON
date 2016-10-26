@@ -125,6 +125,21 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
     int chan = msg->status & 0x0f;
     int track;
 
+    // handle system common messages first
+    switch(msg->status) {
+        case MIDI_SONG_SELECT:
+            log_debug("ss");
+        
+            // only allow the song numbers we support
+            if(msg->data0 > (SEQ_NUM_SONGS - 1)) {
+                return;
+            }
+            seq_ctrl_load_song(msg->data0);
+            return;
+        default:  // fall through to channel handling
+            break;
+    }
+
     // ignore stuff we don't care about
     if(!(stat == MIDI_NOTE_ON || stat == MIDI_CONTROL_CHANGE)) {
         return;
