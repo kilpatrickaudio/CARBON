@@ -222,9 +222,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_CONFIG_LOADED:
             log_debug("scrt - config loaded");
-            // set up stuff from config store
-            pattern_load_patterns();
-//            seq_ctrl_load_song(config_store_get_val(CONFIG_STORE_LAST_SONG));
+            // XXX possibly remove?
             break;
         case SCE_CONFIG_CLEARED:
             log_debug("scrt - config cleared");
