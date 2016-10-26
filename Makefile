@@ -5401,6 +5401,6 @@ run:
 # clean target
 clean:
 	@echo 'removing temporary files...'
-	rm -f main main.bin main.elf main.hex $(OUT_DIR)/*.o
+	rm -f main main.bin main.elf main.map main.hex $(OUT_DIR)/*.o
 	@echo done.
 

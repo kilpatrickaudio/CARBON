@@ -700,6 +700,7 @@ void panel_menu_display_save(void) {
 void panel_menu_display_midi(void) {
     char tempstr[64];
     int track = seq_ctrl_get_first_track();
+    int temp;
     gui_set_menu_title("MIDI");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_MIDI_PROGRAM_A:
@@ -712,7 +713,13 @@ void panel_menu_display_midi(void) {
             }
             // MIDI output
             else {
-                sprintf(tempstr, "%d", song_get_midi_program(track, 0) + 1);
+                temp = song_get_midi_program(track, 0);
+                if(temp == 0) {
+                    sprintf(tempstr, "--");
+                }
+                else {
+                    sprintf(tempstr, "%d", temp + 1);
+                }
             }
             gui_set_menu_value(tempstr);
             break; 
@@ -726,7 +733,13 @@ void panel_menu_display_midi(void) {
             }
             // MIDI output
             else {
-                sprintf(tempstr, "%d", song_get_midi_program(track, 1) + 1);
+                temp = song_get_midi_program(track, 1);
+                if(temp == 0) {
+                    sprintf(tempstr, "--");
+                }
+                else {
+                    sprintf(tempstr, "%d", temp + 1);
+                }
             }
             gui_set_menu_value(tempstr);
             break; 

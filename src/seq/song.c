@@ -768,6 +768,7 @@ void song_set_midi_program(int track, int mapnum, int program) {
         return;
     }
     if(program < -1 || program > 127) {
+        log_error("ssmp - program invalid: %d", program);
         return;
     }
     song.trkparam[track].midi_program[mapnum] = program;

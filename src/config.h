@@ -93,8 +93,8 @@
 #define SEQ_TASK_INTERVAL_US 1000  // us interval for realtime sequencer stuff
 
 // display
-//#define GUI_DISP_TYPE_A  // original production - 320x480 3.95" display
-#define GUI_DISP_TYPE_B  // second production - 320x48 3.5" display
+#define GUI_DISP_TYPE_A  // original production - 320x480 3.95" display
+//#define GUI_DISP_TYPE_B  // second production - 320x48 3.5" display
 // 320x480 3.95" display
 #if defined(GUI_DISP_TYPE_A)
 #define LCD_W 320
@@ -233,13 +233,13 @@
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
 
-#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode
 //
-#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread
