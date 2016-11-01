@@ -95,8 +95,8 @@
 #define SEQ_TASK_INTERVAL_US 1000  // us interval for realtime sequencer stuff
 
 // display
-#define GUI_DISP_TYPE_A  // original production - 320x480 3.95" display
-//#define GUI_DISP_TYPE_B  // second production - 320x48 3.5" display
+//#define GUI_DISP_TYPE_A  // original production - 320x480 3.95" display
+#define GUI_DISP_TYPE_B  // second production - 320x48 3.5" display
 // 320x480 3.95" display
 #if defined(GUI_DISP_TYPE_A)
 #define LCD_W 320
