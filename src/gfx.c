@@ -28,12 +28,12 @@
 
 // fonts
 #define GFX_NUM_FONTS 4
-char GFX_FONT_WIDTH[] = {8, 8, 9, 9};
-char GFX_FONT_HEIGHT[] = {8, 12, 9, 13};
-extern const char font_sinclair_8x8_bitmap[95][8];
-extern const char font_system_8x12_bitmap[95][12];
-// sinclair 9x9
-extern const char font_system_8x13_bitmap[95][13];
+char GFX_FONT_WIDTH[] = {8, 8, 8, 9};
+char GFX_FONT_HEIGHT[] = {8, 12, 10, 13};
+extern const uint8_t font_smalltext_8x8_bitmap[95][8];
+extern const uint8_t font_system_8x12_bitmap[95][12];
+extern const uint8_t font_smalltext_8x9_bitmap[95][10];
+extern const uint8_t font_system_8x13_bitmap[95][13];
 
 // LCD macros
 #define LCD_DRV_INIT ILI948x_drv_init
@@ -176,10 +176,12 @@ uint16_t gfx_color_32to16(uint32_t color) {
 // get a row from a font
 uint32_t gfx_get_font_row(int font, char ch, int row) {
     switch(font) {
-        case GFX_FONT_SINCLAIR_8X8:
-            return font_sinclair_8x8_bitmap[(int)ch - 32][row];              
+        case GFX_FONT_SMALLTEXT_8X8:
+            return font_smalltext_8x8_bitmap[(int)ch - 32][row];              
         case GFX_FONT_SYSTEM_8X12:
             return font_system_8x12_bitmap[(int)ch - 32][row];
+        case GFX_FONT_SMALLTEXT_8X9:
+            return font_smalltext_8x9_bitmap[(int)ch - 32][row];              
         case GFX_FONT_SYSTEM_8X13:
             return font_system_8x13_bitmap[(int)ch - 32][row];
         default:
