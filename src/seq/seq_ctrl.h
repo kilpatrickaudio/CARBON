@@ -174,8 +174,11 @@ void seq_ctrl_adjust_cvgate_pair_mode(int pair, int change);
 // adjust the CV output scaling mode
 void seq_ctrl_adjust_cv_output_scaling(int pair, int change);
 
-// adjust the clock rate on a port
-void seq_ctrl_adjust_clock_rate(int port, int change);
+// adjust the clock out rate on a port
+void seq_ctrl_adjust_clock_out_rate(int port, int change);
+
+// adjust the clock in enable setting on a port
+void seq_ctrl_adjust_clock_in_enable(int port, int change);
 
 // adjust the MIDI remote control state
 void seq_ctrl_adjust_midi_remote_ctrl(int change);

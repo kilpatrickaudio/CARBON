@@ -162,17 +162,17 @@ void clock_out_handle_state_change(int event_type, int *data, int data_len) {
     switch(event_type) {
         case SCE_SONG_LOADED:
             clock_out_set_output(MIDI_PORT_DIN1_OUT, 
-                song_get_midi_port_clock(MIDI_PORT_DIN1_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_DIN1_OUT));
             clock_out_set_output(MIDI_PORT_DIN2_OUT, 
-                song_get_midi_port_clock(MIDI_PORT_DIN2_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_DIN2_OUT));
             clock_out_set_output(MIDI_PORT_CV_OUT, 
-                song_get_midi_port_clock(MIDI_PORT_CV_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_CV_OUT));
             clock_out_set_output(MIDI_PORT_USB_HOST_OUT, 
-                song_get_midi_port_clock(MIDI_PORT_USB_HOST_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_USB_HOST_OUT));
             clock_out_set_output(MIDI_PORT_USB_DEV_OUT1, 
-                song_get_midi_port_clock(MIDI_PORT_USB_DEV_OUT1));
+                song_get_midi_port_clock_out(MIDI_PORT_USB_DEV_OUT1));
             break;
-        case SCE_SONG_MIDI_PORT_CLOCK:
+        case SCE_SONG_MIDI_PORT_CLOCK_OUT:
             clock_out_set_output(data[0], data[1]);
             break;
         case SCE_CTRL_RUN_STATE:

@@ -51,7 +51,8 @@ enum STATE_CHANGE_EVENT {
     SCE_SONG_CV_GATE_PAIR_MODE,  // arg0 = CV/gate pair, arg1 = mode
     SCE_SONG_CV_OUTPUT_SCALING,  // arg0 = CV output, arg1 = mode
     SCE_SONG_CVCAL,  // arg0 = channel, arg1 = cal
-    SCE_SONG_MIDI_PORT_CLOCK,  // arg0 = port, arg1 = ppq
+    SCE_SONG_MIDI_PORT_CLOCK_OUT,  // arg0 = port, arg1 = ppq
+    SCE_SONG_MIDI_PORT_CLOCK_IN,  // arg0 = port, arg1 = enable
     SCE_SONG_MIDI_REMOTE_CTRL,  // arg0 = enable
     SCE_SONG_LIST_SCENE,  // arg0 = entry, arg1 = scene
     SCE_SONG_LIST_LENGTH,  // arg0 = entry, arg1 = length

@@ -642,15 +642,27 @@ void seq_ctrl_adjust_cv_output_scaling(int out, int change) {
         0, SONG_CV_SCALING_MAX));
 }
 
-// adjust the clock rate on a port
-void seq_ctrl_adjust_clock_rate(int port, int change) {
+// adjust the clock out rate on a port
+void seq_ctrl_adjust_clock_out_rate(int port, int change) {
     if(port < 0 || port >= MIDI_PORT_NUM_TRACK_OUTPUTS) {
-        log_error("scacr - port invalid: %d", port);
+        log_error("scacor - port invalid: %d", port);
         return;
     }
-    song_set_midi_port_clock(port,
-        seq_utils_clamp(song_get_midi_port_clock(port) + change,
+    song_set_midi_port_clock_out(port,
+        seq_utils_clamp(song_get_midi_port_clock_out(port) + change,
         0, (SEQ_UTILS_CLOCK_PPQS - 1)));
+}
+
+// adjust the clock in enable setting on a port
+void seq_ctrl_adjust_clock_in_enable(int port, int change) {
+    if(port < MIDI_PORT_IN_OFFSET || 
+            port >= (MIDI_PORT_IN_OFFSET + MIDI_PORT_NUM_INPUTS)) {
+        log_error("scacie - port invalid: %d", port);
+        return;  
+    }
+    song_set_midi_port_clock_in(port,
+        seq_utils_clamp(song_get_midi_port_clock_in(port) + change,
+        0, 1));
 }
 
 // adjust the MIDI remote control state
@@ -1319,6 +1331,9 @@ void seq_ctrl_refresh_modules(void) {
     // song version <=1.02
     if(song_ver <= 0x00010002) {
         song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
+        song_set_midi_port_clock_in(MIDI_PORT_DIN1_IN, 0);  // disable
+        song_set_midi_port_clock_in(MIDI_PORT_USB_HOST_IN, 0);  // disable
+        song_set_midi_port_clock_in(MIDI_PORT_USB_DEV_IN1, 0);  // disable
     }
     if(song_ver != CARBON_VERSION_MAJMIN) {
         song_set_version_to_current();  // make sure we save back current ver

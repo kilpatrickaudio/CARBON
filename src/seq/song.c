@@ -118,18 +118,19 @@ struct song_data {
     uint8_t midi_remote_ctrl;  // MIDI remote control - 0 = disabled, 1 = enabled
     // CARBON version 1.03
     uint8_t metronome_sound_len;  // metronome sound length in ms
+    uint8_t midi_clock_in[MIDI_PORT_NUM_INPUTS];  // 0 = clock RX off, 1 = clock RX on
 
     // dummy padding - to make it an even number of 4096 byte sectors in the flash
     // - be VERY careful that this is correct or other RAM could be overwritten
 #ifdef SONG_NOTES_PER_SCENE
     uint8_t dummy0[1024];
-    uint8_t dummy1[477];
+    uint8_t dummy1[474];
 #else
     uint8_t dummy0[1024];
     uint8_t dummy1[1024];
     uint8_t dummy2[1024];
     uint8_t dummy3[1024];
-    uint8_t dummy4[730];
+    uint8_t dummy4[727];
 #endif    
     // token to identify correct loading of file
     uint32_t magic_num;
@@ -225,8 +226,11 @@ void song_clear(void) {
         song_set_cvcal(i, 0);  // no cal
     }
     for(port = 0; port < MIDI_PORT_NUM_TRACK_OUTPUTS; port ++) {
-        song_set_midi_port_clock(port, SEQ_UTILS_CLOCK_OFF);
+        song_set_midi_port_clock_out(port, SEQ_UTILS_CLOCK_OFF);
     }
+    for(port = 0; port < MIDI_PORT_NUM_INPUTS; port ++) {
+        song_set_midi_port_clock_out(port, 0);  // disable
+    }    
     song_set_midi_remote_ctrl(0);  // disable
 
     // song list
@@ -565,28 +569,58 @@ void song_set_cvcal(int out, int val) {
     state_change_fire2(SCE_SONG_CVCAL, out, val);
 }
 
-// get a MIDI port clock enable setting - returns -1 on error
-int song_get_midi_port_clock(int port) {
+// get a MIDI port clock out enable setting - returns -1 on error
+int song_get_midi_port_clock_out(int port) {
     if(port < 0 || port >= MIDI_PORT_NUM_TRACK_OUTPUTS) {
-        log_error("sgmpc - port invalid: %d", port);
+        log_error("sgmpco - port invalid: %d", port);
         return -1;
     }
     return song.midi_clock_out[port];
 }
 
-// set a MIDI port clock enable setting
-void song_set_midi_port_clock(int port, int ppq) {
+// set a MIDI port clock out enable setting
+void song_set_midi_port_clock_out(int port, int ppq) {
     if(port < 0 || port >= MIDI_PORT_NUM_TRACK_OUTPUTS) {
-        log_error("ssmpc - port invalid: %d", port);
+        log_error("ssmpco - port invalid: %d", port);
         return;
     }
     if(ppq < 0 || ppq >= SEQ_UTILS_CLOCK_PPQS) {
-        log_error("ssmpc - ppq invalid: %d", ppq);
+        log_error("ssmpco - ppq invalid: %d", ppq);
         return;
     }
     song.midi_clock_out[port] = ppq;
     // fire event
-    state_change_fire2(SCE_SONG_MIDI_PORT_CLOCK, port, ppq);
+    state_change_fire2(SCE_SONG_MIDI_PORT_CLOCK_OUT, port, ppq);
+}
+
+// get a MIDI port clock in enable setting - returns -1 on error
+// port must be a MIDI input port
+int song_get_midi_port_clock_in(int port) {
+    if(port < MIDI_PORT_IN_OFFSET || 
+            port >= (MIDI_PORT_IN_OFFSET + MIDI_PORT_NUM_INPUTS)) {
+        log_error("sgmpci - port invalid: %d", port);
+        return -1;
+    }
+    return song.midi_clock_in[port - MIDI_PORT_IN_OFFSET];
+}
+
+// set a MIDI port clock in enable setting
+// port must be a MIDI input port
+void song_set_midi_port_clock_in(int port, int enable) {
+    if(port < MIDI_PORT_IN_OFFSET || 
+            port >= (MIDI_PORT_IN_OFFSET + MIDI_PORT_NUM_INPUTS)) {
+        log_error("ssmpci - port invalid: %d", port);
+        return;
+    }
+    if(enable) {
+        song.midi_clock_in[port - MIDI_PORT_IN_OFFSET] = 1;
+    }
+    else {
+        song.midi_clock_in[port - MIDI_PORT_IN_OFFSET] = 0;    
+    }
+    // fire event
+    state_change_fire2(SCE_SONG_MIDI_PORT_CLOCK_IN, 
+        port, song.midi_clock_in[port - MIDI_PORT_IN_OFFSET]);
 }
 
 // get whether MIDI remote control is enabled

@@ -141,12 +141,14 @@
 #define MIDI_PORT_SYSEX_OUT (MIDI_PORT_USB_DEV_OUT1)  // SYSEX output
 #define MIDI_IFACE_PANEL_OUTPUT_PORT (MIDI_PORT_USB_DEV_OUT1)  // interface out (power down)
 // inputs
+#define MIDI_PORT_NUM_INPUTS 3  // number of inputs for external MIDI
 #define MIDI_PORT_DIN1_IN 7  // clock/performance in (seq mode) / to USB host (interface mode)
 #define MIDI_PORT_USB_HOST_IN 8  // clock/performance in (seq mode) / to USB host (interface mode)
 #define MIDI_PORT_USB_DEV_IN1 9  // SYSEX/clock/performance in (seq mode) / panel / CV out (interface mode)
 #define MIDI_PORT_USB_DEV_IN2 10  // disabled (seq mode) / DIN1 out (interface mode)
 #define MIDI_PORT_USB_DEV_IN3 11  // disabled (seq mode) / DIN2 out (interface mode)
 #define MIDI_PORT_USB_DEV_IN4 12  // disabled (seq mode) / USB host OUT (interface mode)
+#define MIDI_PORT_IN_OFFSET (MIDI_PORT_DIN1_IN)  // offset for MIDI input ports
 #define MIDI_PORT_SYSEX_IN (MIDI_PORT_USB_DEV_IN1)  // SYSEX input
 #define MIDI_CHANNEL_KEYBOARD_CONTROL 0  // channel 1
 // CV/gate
@@ -243,7 +245,7 @@
 //
 // development mode
 //
-#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread

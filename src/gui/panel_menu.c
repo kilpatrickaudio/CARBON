@@ -444,7 +444,16 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
-        case SCE_SONG_MIDI_PORT_CLOCK:
+        case SCE_SONG_MIDI_PORT_CLOCK_OUT:
+            if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
+                    (pmstate.menu_submode == PANEL_MENU_CLOCK_RX_DIN ||
+                    pmstate.menu_submode == PANEL_MENU_CLOCK_RX_USB_DEV ||
+                    pmstate.menu_submode == PANEL_MENU_CLOCK_RX_USB_HOST)) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
+            }
+            break;
+        case SCE_SONG_MIDI_PORT_CLOCK_IN:
             if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
                     (pmstate.menu_submode == PANEL_MENU_CLOCK_TX_DIN1 ||
                     pmstate.menu_submode == PANEL_MENU_CLOCK_TX_DIN2 ||
@@ -967,34 +976,60 @@ void panel_menu_display_clock(void) {
             gui_set_menu_value(tempstr);            
             break;
         case PANEL_MENU_CLOCK_TX_DIN1:
+            gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI DIN 1");
             panel_utils_clock_ppq_to_str(tempstr,
-                song_get_midi_port_clock(MIDI_PORT_DIN1_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_DIN1_OUT));
             gui_set_menu_value(tempstr);            
             break;
         case PANEL_MENU_CLOCK_TX_DIN2:
+            gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI DIN 2");
             panel_utils_clock_ppq_to_str(tempstr,
-                song_get_midi_port_clock(MIDI_PORT_DIN2_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_DIN2_OUT));
             gui_set_menu_value(tempstr);            
             break;
         case PANEL_MENU_CLOCK_TX_CV:
+            gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("CV/GATE");
             panel_utils_clock_ppq_to_str(tempstr,
-                song_get_midi_port_clock(MIDI_PORT_CV_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_CV_OUT));
             gui_set_menu_value(tempstr);            
             break;
         case PANEL_MENU_CLOCK_TX_USB_HOST:
+            gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI USB HOST");
             panel_utils_clock_ppq_to_str(tempstr,
-                song_get_midi_port_clock(MIDI_PORT_USB_HOST_OUT));
+                song_get_midi_port_clock_out(MIDI_PORT_USB_HOST_OUT));
             gui_set_menu_value(tempstr);            
             break;
         case PANEL_MENU_CLOCK_TX_USB_DEV:
+            gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI USB DEV");
             panel_utils_clock_ppq_to_str(tempstr,
-                song_get_midi_port_clock(MIDI_PORT_USB_DEV_OUT1));
+                song_get_midi_port_clock_out(MIDI_PORT_USB_DEV_OUT1));
             gui_set_menu_value(tempstr);            
+            break;
+        case PANEL_MENU_CLOCK_RX_DIN:
+            gui_set_menu_subtitle("MIDI Clock IN");
+            gui_set_menu_param("MIDI DIN");
+            panel_utils_onoff_str(tempstr,
+                song_get_midi_port_clock_in(MIDI_PORT_DIN1_IN));
+            gui_set_menu_value(tempstr);
+            break;
+        case PANEL_MENU_CLOCK_RX_USB_HOST:
+            gui_set_menu_subtitle("MIDI Clock IN");
+            gui_set_menu_param("MIDI USB HOST");
+            panel_utils_onoff_str(tempstr,
+                song_get_midi_port_clock_in(MIDI_PORT_USB_HOST_IN));
+            gui_set_menu_value(tempstr);
+            break;
+        case PANEL_MENU_CLOCK_RX_USB_DEV:
+            gui_set_menu_subtitle("MIDI Clock IN");
+            gui_set_menu_param("MIDI USB DEV");
+            panel_utils_onoff_str(tempstr,
+                song_get_midi_port_clock_in(MIDI_PORT_USB_DEV_IN1));
+            gui_set_menu_value(tempstr);
             break;
     }
 }
@@ -1171,19 +1206,28 @@ void panel_menu_edit_clock(int change) {
             seq_ctrl_adjust_metronome_sound_len(change);
             break;
         case PANEL_MENU_CLOCK_TX_DIN1:
-            seq_ctrl_adjust_clock_rate(MIDI_PORT_DIN1_OUT, change);
+            seq_ctrl_adjust_clock_out_rate(MIDI_PORT_DIN1_OUT, change);
             break;
         case PANEL_MENU_CLOCK_TX_DIN2:
-            seq_ctrl_adjust_clock_rate(MIDI_PORT_DIN2_OUT, change);
+            seq_ctrl_adjust_clock_out_rate(MIDI_PORT_DIN2_OUT, change);
             break;
         case PANEL_MENU_CLOCK_TX_USB_DEV:
-            seq_ctrl_adjust_clock_rate(MIDI_PORT_USB_DEV_OUT1, change);
+            seq_ctrl_adjust_clock_out_rate(MIDI_PORT_USB_DEV_OUT1, change);
             break;
         case PANEL_MENU_CLOCK_TX_USB_HOST:
-            seq_ctrl_adjust_clock_rate(MIDI_PORT_USB_HOST_OUT, change);
+            seq_ctrl_adjust_clock_out_rate(MIDI_PORT_USB_HOST_OUT, change);
             break;
         case PANEL_MENU_CLOCK_TX_CV:
-            seq_ctrl_adjust_clock_rate(MIDI_PORT_CV_OUT, change);
+            seq_ctrl_adjust_clock_out_rate(MIDI_PORT_CV_OUT, change);
+            break;
+        case PANEL_MENU_CLOCK_RX_DIN:
+            seq_ctrl_adjust_clock_in_enable(MIDI_PORT_DIN1_IN, change);
+            break;
+        case PANEL_MENU_CLOCK_RX_USB_HOST:
+            seq_ctrl_adjust_clock_in_enable(MIDI_PORT_USB_HOST_IN, change);
+            break;
+        case PANEL_MENU_CLOCK_RX_USB_DEV:
+            seq_ctrl_adjust_clock_in_enable(MIDI_PORT_USB_DEV_IN1, change);
             break;
     }
     panel_menu_update_display();

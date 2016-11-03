@@ -74,6 +74,7 @@ struct seq_engine_active_note {
 //
 struct seq_engine_state {
     // local cache for stuff we need to check a lot
+    int midi_clock_in_enable[MIDI_PORT_NUM_INPUTS];  // 0 = clock RX disable, 1 = clock RX enable
     int beat_cross;  // a downbeat was crossed
     int scene_current;  // current scene (set in engine loop)
     int scene_next;  // next scene to be changed to (set by external control)
@@ -725,17 +726,29 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
             // clock messages
             //
             case MIDI_TIMING_TICK:
-                clock_midi_rx_tick();
+                // only deliver clock msg if port is enabled for clock in
+                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
+                    clock_midi_rx_tick();
+                }
                 break;
             case MIDI_CLOCK_START:
-                seq_ctrl_reset_pos();
-                seq_ctrl_set_run_state(1);
+                // only deliver clock msg if port is enabled for clock in
+                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
+                    seq_ctrl_reset_pos();
+                    seq_ctrl_set_run_state(1);
+                }
                 break;
             case MIDI_CLOCK_CONTINUE:
-                seq_ctrl_set_run_state(1);
+                // only deliver clock msg if port is enabled for clock in
+                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
+                    seq_ctrl_set_run_state(1);
+                }
                 break;
             case MIDI_CLOCK_STOP:
-                seq_ctrl_set_run_state(0);
+                // only deliver clock msg if port is enabled for clock in
+                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
+                    seq_ctrl_set_run_state(0);
+                }
                 break;
         }
     }
@@ -1862,6 +1875,11 @@ void seq_engine_song_loaded(int song) {
 // recalculate the running parameters from the song
 void seq_engine_recalc_params(void) {
     int track, dist_start, dist_end;
+    int port;
+    for(port = 0; port < MIDI_PORT_NUM_INPUTS; port ++) {
+        sestate.midi_clock_in_enable[port] =
+            song_get_midi_port_clock_in(port + MIDI_PORT_IN_OFFSET);
+    }
     sestate.first_track = seq_ctrl_get_first_track();
     sestate.key_velocity_scale = song_get_key_velocity_scale();
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {

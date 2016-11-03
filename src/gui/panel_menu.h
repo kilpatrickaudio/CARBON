@@ -97,7 +97,7 @@
 #define PANEL_MENU_SYS_MENU_TIMEOUT 15 // global
 
 // clock
-#define PANEL_MENU_CLOCK_NUM_SUBMODES 8
+#define PANEL_MENU_CLOCK_NUM_SUBMODES 11
 #define PANEL_MENU_CLOCK_STEP_LEN 0  // per scene / track
 #define PANEL_MENU_CLOCK_METRONOME_MODE 1  // per song
 #define PANEL_MENU_CLOCK_METRONOME_SOUND_LEN 2  // per song
@@ -106,6 +106,9 @@
 #define PANEL_MENU_CLOCK_TX_CV 5  // per song
 #define PANEL_MENU_CLOCK_TX_USB_HOST 6  // per song
 #define PANEL_MENU_CLOCK_TX_USB_DEV 7  // per song
+#define PANEL_MENU_CLOCK_RX_DIN 8  // per song
+#define PANEL_MENU_CLOCK_RX_USB_HOST 9  // per song
+#define PANEL_MENU_CLOCK_RX_USB_DEV 10  // per song
 
 // init the panel menu
 void panel_menu_init(void);

@@ -180,13 +180,21 @@ int song_get_cvcal(int out);
 // set the CV calibration value for an output
 void song_set_cvcal(int out, int val);
 
-// get a MIDI port clock enable setting - returns -1 on error
+// get a MIDI port clock out enable setting - returns -1 on error
 // port must be a MIDI output port
-int song_get_midi_port_clock(int port);
+int song_get_midi_port_clock_out(int port);
 
-// set a MIDI port clock enable setting
+// set a MIDI port clock out enable setting
 // port must be a MIDI output port
-void song_set_midi_port_clock(int port, int ppq);
+void song_set_midi_port_clock_out(int port, int ppq);
+
+// get a MIDI port clock in enable setting - returns -1 on error
+// port must be a MIDI input port
+int song_get_midi_port_clock_in(int port);
+
+// set a MIDI port clock in enable setting
+// port must be a MIDI input port
+void song_set_midi_port_clock_in(int port, int enable);
 
 // get whether MIDI remote control is enabled
 int song_get_midi_remote_ctrl(void);
