@@ -247,7 +247,7 @@
 //
 // development mode
 //
-#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread
