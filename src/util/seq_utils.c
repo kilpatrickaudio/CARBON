@@ -185,4 +185,11 @@ int seq_utils_get_wrapped_range(int pos, int start, int length, int total_len) {
     return 0;
 }
 
+// check if a note is within the supported range - returns 1 on success, 0 on error
+int seq_utils_check_note_range(int note) {
+    if(note < 0 || note > 127) {
+        return 0;
+    }
+    return 1;
+}
 

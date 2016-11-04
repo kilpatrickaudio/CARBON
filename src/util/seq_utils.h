@@ -90,4 +90,7 @@ int seq_utils_clock_pqq_to_divisor(int ppq);
 // check to see if pos is within the start + length range within total_len
 int seq_utils_get_wrapped_range(int pos, int start, int length, int total_len);
 
+// check if a note is within the supported range - returns 1 on success, 0 on error
+int seq_utils_check_note_range(int note);
+
 #endif

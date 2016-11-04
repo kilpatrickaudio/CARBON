@@ -905,7 +905,7 @@ void seq_engine_song_mode_load_entry(int entry) {
 // track event handling
 //
 void seq_engine_track_play_step(int track, int step) {
-    int i, bias;
+    int i, bias, temp;
     struct track_event event;
     struct midi_msg msg;
     
@@ -932,9 +932,11 @@ void seq_engine_track_play_step(int track, int step) {
                     // voice track - bias + kbtrans + songmode.kbtrans
                     else {
                         // scale by keyboard transpose
-                        midi_utils_enc_note_on(&msg, 0, 0, 
-                            seq_utils_clamp(event.data0 + sestate.kbtrans + bias, 
-                            0, 127), event.data1);            
+                        temp = event.data0 + sestate.kbtrans + bias;
+                        if(!seq_utils_check_note_range(temp)) {
+                            return;
+                        }
+                        midi_utils_enc_note_on(&msg, 0, 0, temp, event.data1);            
                     }
                     seq_engine_track_start_note(track, step, event.length, &msg);
                     break;

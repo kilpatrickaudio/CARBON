@@ -25,11 +25,12 @@
 #include "../midi/midi_stream.h"
 #include "../config.h"
 #include "../util/log.h"
+#include "../util/seq_utils.h"
 
 // macros
-#define PROCESS_NOTE(scene, track, send_msg) \
-    send_msg.data0 = scale_quantize(send_msg.data0, opstate.current_tonality[track]); \
-    send_msg.data0 = send_msg.data0 + opstate.current_transpose[track];
+#define PROCESS_NOTE(track, send_msg) \
+    temp = scale_quantize(send_msg.data0, opstate.current_tonality[track]); \
+    temp = temp + opstate.current_transpose[track];
 
 // internal settings
 #define OUTPROC_MAX_NOTES 16  // active notes per track
@@ -62,7 +63,7 @@ void outproc_init(void) {
 
 // the transpose changed on a track
 void outproc_transpose_changed(int scene, int track) {
-    int i, new_transpose;
+    int i, new_transpose, temp;
     struct midi_msg send_msg;    
     if(track < 0 || track >= SEQ_NUM_TRACKS) {
         log_error("otrc - track invalid: %d", track);
@@ -86,23 +87,24 @@ void outproc_transpose_changed(int scene, int track) {
             // turn off existing note
             midi_utils_copy_msg(&send_msg, 
                 &opstate.output_notes[track][i]);  // copy so we can modify
-            // XXX check this
+            // no need to do range checking here
             send_msg.data0 = scale_quantize(send_msg.data0, opstate.current_tonality[track]);
             midi_utils_note_on_to_off(&send_msg);
-            send_msg.data0 = send_msg.data0 + opstate.current_transpose[track];       
+            send_msg.data0 = send_msg.data0 + opstate.current_transpose[track];
             outproc_deliver_msg(scene, track, &send_msg, 
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);
 
             // transpose note
             midi_utils_copy_msg(&send_msg, 
                 &opstate.output_notes[track][i]);  // copy so we can modify
-            send_msg.data0 = scale_quantize(send_msg.data0, opstate.current_tonality[track]);
-            send_msg.data0 = send_msg.data0 + new_transpose;
+            temp = scale_quantize(send_msg.data0, opstate.current_tonality[track]);
+            temp = temp + new_transpose;
             // note became invalid
-            if(send_msg.data0 < 0 || send_msg.data0 > 127) {
+            if(!seq_utils_check_note_range(temp)) {
                 opstate.output_notes[track][i].status = 0;  // free the slot
                 continue;
             }
+            send_msg.data0 = temp;
             outproc_deliver_msg(scene, track, &send_msg, 
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);
         }
@@ -112,7 +114,7 @@ void outproc_transpose_changed(int scene, int track) {
 
 // the tonality changed on a track
 void outproc_tonality_changed(int scene, int track) {
-    int i, new_tonality;
+    int i, new_tonality, temp;
     struct midi_msg send_msg;    
     if(track < 0 || track >= SEQ_NUM_TRACKS) {
         log_error("otoc - track invalid: %d", track);
@@ -139,7 +141,12 @@ void outproc_tonality_changed(int scene, int track) {
             // XXX check this
             send_msg.data0 = scale_quantize(send_msg.data0, opstate.current_tonality[track]);
             midi_utils_note_on_to_off(&send_msg);
-            send_msg.data0 = send_msg.data0 + opstate.current_transpose[track];       
+            temp = send_msg.data0 + opstate.current_transpose[track];
+            // note became invalid
+            if(!seq_utils_check_note_range(temp)) {
+                continue;
+            }
+            send_msg.data0 = temp;
             outproc_deliver_msg(scene, track, &send_msg, 
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);
         }
@@ -151,7 +158,7 @@ void outproc_tonality_changed(int scene, int track) {
 void outproc_deliver_msg(int scene, int track, struct midi_msg *msg, 
         int deliver, int process) {
     struct midi_msg send_msg;
-    int out, port, channel;
+    int out, port, channel, temp;
 
     // generate message for each output port for this track
     for(out = 0; out < SEQ_NUM_TRACK_OUTPUTS; out ++) {
@@ -180,7 +187,12 @@ void outproc_deliver_msg(int scene, int track, struct midi_msg *msg,
                     // dequeue note before processing
                     outproc_dequeue_note(track, &send_msg);
                     // process note
-                    PROCESS_NOTE(scene, track, send_msg);
+                    PROCESS_NOTE(track, send_msg);
+                    // note became invalid
+                    if(!seq_utils_check_note_range(temp)) {
+                        continue;
+                    }
+                    send_msg.data0 = temp;
                 }
                 midi_stream_send_msg(&send_msg);
                 break;
@@ -190,10 +202,15 @@ void outproc_deliver_msg(int scene, int track, struct midi_msg *msg,
                 if(process == OUTPROC_OUTPUT_PROCESSED) {
                     // enqueue note before processing
                     if(outproc_enqueue_note(track, &send_msg) == -1) {
-                        return;  // no free slots
+                        continue;  // no free slots
                     }
                     // process note
-                    PROCESS_NOTE(scene, track, send_msg);
+                    PROCESS_NOTE(track, send_msg);
+                    // note became invalid
+                    if(!seq_utils_check_note_range(temp)) {
+                        continue;
+                    }
+                    send_msg.data0 = temp;
                 }
                 midi_stream_send_msg(&send_msg);
                 break;
@@ -202,7 +219,12 @@ void outproc_deliver_msg(int scene, int track, struct midi_msg *msg,
                 // do quantizing and track transpose
                 if(process == OUTPROC_OUTPUT_PROCESSED) {
                     // process note
-                    PROCESS_NOTE(scene, track, send_msg);
+                    PROCESS_NOTE(track, send_msg);
+                    // note became invalid
+                    if(!seq_utils_check_note_range(temp)) {
+                        continue;
+                    }
+                    send_msg.data0 = temp;
                 }
                 midi_stream_send_msg(&send_msg);                
                 break;

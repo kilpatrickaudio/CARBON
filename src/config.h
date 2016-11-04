@@ -202,6 +202,8 @@
 #define SEQ_TRANSPOSE_CENTRE 60  // the centre note for transposing and bias tracks
 #define SEQ_TRANSPOSE_MIN -24  // min transpose setting for all uses (track, kbtrans, song)
 #define SEQ_TRANSPOSE_MAX 24  // max transpose setting for all uses (track, kbtrans, song)
+#define SEQ_MIN_NOTE 0  // lowest supported MIDI note
+#define SEQ_MAX_NOTE 127  // highest supported MIDI note
 #define SEQ_KEY_VEL_SCALE_MIN -100
 #define SEQ_KEY_VEL_SCALE_MAX 100
 #define SEQ_GATE_TIME_MIN 1  // gate time track override 1%
@@ -216,8 +218,8 @@
 //#define SEQ_START_DELAY_MAX (CLOCK_PPQ * 4)  // max start delay - 1 bar
 #define SEQ_START_DELAY_MAX (CLOCK_PPQ)  // 1 beat
 #define STEP_EDIT_NEW_NOTE_VELOCITY 100
-#define STEP_EDIT_LOWEST_NOTE 24
-#define STEP_EDIT_HIGHEST_NOTE 104
+#define STEP_EDIT_LOWEST_NOTE (SEQ_MIN_NOTE)
+#define STEP_EDIT_HIGHEST_NOTE (SEQ_MAX_NOTE)
 #define STEP_EDIT_SHORTEST_NOTE 1
 #define STEP_EDIT_LONGEST_NOTE (CLOCK_MIDI_UPSAMPLE * 384)
 #define STEP_EDIT_NEW_NOTE 60
@@ -245,7 +247,7 @@
 //
 // development mode
 //
-//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread
