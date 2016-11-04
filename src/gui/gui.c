@@ -1074,6 +1074,8 @@ void gui_update_scene(int scene) {
     // refresh all display info
     // we need this stuff for all tracks
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        gui_update_step_length(scene, track,
+            song_get_step_length(scene, track));
         gui_update_motion_start(scene, track, 
             song_get_motion_start(scene, track));
         gui_update_motion_length(scene, track,
