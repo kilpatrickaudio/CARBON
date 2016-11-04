@@ -152,7 +152,6 @@ void song_init(void) {
     songs.state = SONG_IO_STATE_IDLE;
     songs.loadsave_song = 0;
     song_clear();
-    log_debug("si - song len: %d", sizeof(song));
 }
 
 // run the task to take care of loading or saving

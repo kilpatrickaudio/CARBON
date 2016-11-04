@@ -1321,7 +1321,7 @@ void seq_ctrl_cancel_record(void) {
 
 // refresh modules when the song is loaded or cleared
 void seq_ctrl_refresh_modules(void) {
-    int i;
+    int i, scene, track;
     int song_ver = song_get_song_version();
     
     log_debug("song ver: %x", song_ver);
@@ -1334,6 +1334,16 @@ void seq_ctrl_refresh_modules(void) {
         song_set_midi_port_clock_in(MIDI_PORT_DIN1_IN, 0);  // disable
         song_set_midi_port_clock_in(MIDI_PORT_USB_HOST_IN, 0);  // disable
         song_set_midi_port_clock_in(MIDI_PORT_USB_DEV_IN1, 0);  // disable
+        // remap old step lengths and arp speeds from 1.02 to 1.03 format
+        // this adds support for triplets
+        for(scene = 0; scene < SEQ_NUM_SCENES; scene ++) {
+            for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+                song_set_step_length(scene, track,
+                    seq_utils_remap_step_len_102(song_get_step_length(scene, track)));
+                song_set_arp_speed(scene, track,
+                    seq_utils_remap_step_len_102(song_get_arp_speed(scene, track)));
+            }
+        }
     }
     if(song_ver != CARBON_VERSION_MAJMIN) {
         song_set_version_to_current();  // make sure we save back current ver

@@ -26,17 +26,23 @@
 
 // step length in ticks
 const int seq_utils_step_size[] = {
-    (3 * CLOCK_MIDI_UPSAMPLE), 
-    (4.5 * CLOCK_MIDI_UPSAMPLE), 
-    (6 * CLOCK_MIDI_UPSAMPLE), 
-    (9 * CLOCK_MIDI_UPSAMPLE), 
-    (12 * CLOCK_MIDI_UPSAMPLE), 
-    (18 * CLOCK_MIDI_UPSAMPLE), 
-    (24 * CLOCK_MIDI_UPSAMPLE), 
-    (32 * CLOCK_MIDI_UPSAMPLE), 
-    (48 * CLOCK_MIDI_UPSAMPLE), 
-    (72 * CLOCK_MIDI_UPSAMPLE), 
-    (96 * CLOCK_MIDI_UPSAMPLE)
+    (2 * CLOCK_MIDI_UPSAMPLE),      // 32nd T       - xxx       - new 0
+    (3 * CLOCK_MIDI_UPSAMPLE),      // 32nd         - old 0     - new 1
+    (4 * CLOCK_MIDI_UPSAMPLE),      // 16th T       - xxx       - new 2
+    (4.5 * CLOCK_MIDI_UPSAMPLE),    // .32nd        - old 1     - new 3
+    (6 * CLOCK_MIDI_UPSAMPLE),      // 16th         - old 2     - new 4
+    (8 * CLOCK_MIDI_UPSAMPLE),      // 8th T        - xxx       - new 5
+    (9 * CLOCK_MIDI_UPSAMPLE),      // .16th        - old 3     - new 6
+    (12 * CLOCK_MIDI_UPSAMPLE),     // 8th          - old 4     - new 7
+    (16 * CLOCK_MIDI_UPSAMPLE),     // quarter T    - xxx       - new 8
+    (18 * CLOCK_MIDI_UPSAMPLE),     // .8th         - old 5     - new 9
+    (24 * CLOCK_MIDI_UPSAMPLE),     // quarter      - old 6     - new 10
+    (32 * CLOCK_MIDI_UPSAMPLE),     // half T       - xxx       - new 11
+    (36 * CLOCK_MIDI_UPSAMPLE),     // .quarter     - old 7     - new 12
+    (48 * CLOCK_MIDI_UPSAMPLE),     // half         - old 8     - new 13
+    (64 * CLOCK_MIDI_UPSAMPLE),     // whole T      - xxx       - new 14
+    (72 * CLOCK_MIDI_UPSAMPLE),     // .half        - old 9     - new 15
+    (96 * CLOCK_MIDI_UPSAMPLE)      // whole        - old 10    - new 16
 };
 
 // convert a MIDI-style encoder value to a change amount
@@ -102,6 +108,37 @@ int seq_utils_step_len_to_ticks(int speed) {
         return 0;
     }
     return seq_utils_step_size[speed];
+}
+
+// remap a step len for ver <= 1.02 to the new step len entry
+// this adds support for triplets
+int seq_utils_remap_step_len_102(int oldspeed) {
+    switch(oldspeed) {
+        case 0:  // old 32nd
+            return 1;
+        case 1:  // old .32nd
+            return 3;
+        case 2:  // old 16th
+            return 4;
+        case 3:  // old .16th
+            return 6;
+        case 4:  // old 8th
+            return 7;
+        case 5:  // old .8th
+            return 9;
+        case 6:  // old quarter
+            return 10;
+        case 7:  // old .quarter
+            return 12;
+        case 8:  // old half
+            return 13;
+        case 9:  // old .half
+            return 15;
+        case 10:  // old whole
+            return 16;
+        default:
+            return 4;  // new 16th
+    }
 }
 
 // warp a change so that the change is scaled to be a percentage of oldval

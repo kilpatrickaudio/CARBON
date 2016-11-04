@@ -264,14 +264,23 @@ void panel_utils_key_split_str(char *tempstr, int key_split) {
 // convert a step length to a string
 void panel_utils_step_len_to_str(char *tempstr, int speed) {
     switch(speed) {
+        case SEQ_UTILS_STEP_32ND_T:
+            sprintf(tempstr, "1/32T");
+            break;
         case SEQ_UTILS_STEP_32ND:
             sprintf(tempstr, "1/32");
             break;
+        case SEQ_UTILS_STEP_16TH_T:
+            sprintf(tempstr, "1/16T");        
+            break;            
         case SEQ_UTILS_STEP_DOT_32ND:
             sprintf(tempstr, "1/32.");
             break;
         case SEQ_UTILS_STEP_16TH:
             sprintf(tempstr, "1/16");
+            break;
+        case SEQ_UTILS_STEP_8TH_T:
+            sprintf(tempstr, "1/8T");
             break;
         case SEQ_UTILS_STEP_DOT_16TH:
             sprintf(tempstr, "1/16.");
@@ -279,17 +288,26 @@ void panel_utils_step_len_to_str(char *tempstr, int speed) {
         case SEQ_UTILS_STEP_8TH:
             sprintf(tempstr, "1/8");
             break;
+        case SEQ_UTILS_STEP_QUARTER_T:
+            sprintf(tempstr, "1/4T");
+            break;
         case SEQ_UTILS_STEP_DOT_8TH:
             sprintf(tempstr, "1/8.");
             break;
         case SEQ_UTILS_STEP_QUARTER:
             sprintf(tempstr, "1/4");
             break;
+        case SEQ_UTILS_STEP_HALF_T:
+            sprintf(tempstr, "1/2T");        
+            break;
         case SEQ_UTILS_STEP_DOT_QUARTER:
             sprintf(tempstr, "1/4.");
             break;
         case SEQ_UTILS_STEP_HALF:
             sprintf(tempstr, "1/2");
+            break;
+        case SEQ_UTILS_STEP_WHOLE_T:
+            sprintf(tempstr, "1/1T");        
             break;
         case SEQ_UTILS_STEP_DOT_HALF:
             sprintf(tempstr, "1/2.");
