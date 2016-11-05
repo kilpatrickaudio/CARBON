@@ -685,7 +685,7 @@ void seq_ctrl_adjust_midi_program(int mapnum, int change) {
         if(seq_ctrl_get_track_select(track)) {
             seq_ctrl_set_midi_program(track, mapnum,
                 seq_utils_clamp(song_get_midi_program(sstate.first_track, 
-                    mapnum) + change, SONG_MIDI_PROG_NULL, 0x7f));
+                mapnum) + change, SONG_MIDI_PROG_NULL, 0x7f));
         }
     }
 }
@@ -704,7 +704,8 @@ void seq_ctrl_set_midi_program(int track, int mapnum, int program) {
     if(song_get_midi_port_map(track, mapnum) == MIDI_PORT_CV_OUT) {
         return;
     }
-    song_set_midi_program(track, mapnum, seq_utils_clamp(program, 0, 0x7f));
+    song_set_midi_program(track, mapnum, seq_utils_clamp(program, 
+        SONG_MIDI_PROG_NULL, 0x7f));
 }
 
 // adjust the port mapping of an output on a track

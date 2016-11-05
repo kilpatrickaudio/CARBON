@@ -832,8 +832,6 @@ void song_set_midi_program(int track, int mapnum, int program) {
         log_error("ssmp - program invalid: %d", program);
         return;
     }
-    log_debug("prog: %d", program);
-    
     song.trkparam[track].midi_program[mapnum] = program;
     // fire event
     state_change_fire3(SCE_SONG_MIDI_PROGRAM, track, mapnum, program);
