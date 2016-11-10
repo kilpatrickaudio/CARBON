@@ -32,7 +32,7 @@
 #define GUI_OVERLAY_MED 2
 #define GUI_OVERLAY_HIGH 3
 
-// init the GUI
+// init the GUI - config store must be ready before this is called
 int gui_init(void);
 
 // close the GUI

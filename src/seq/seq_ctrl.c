@@ -74,7 +74,6 @@ void seq_ctrl_init(void) {
     seq_ctrl_set_run_lockout(0);  // not locked out
     // init sequencer modules
     state_change_init();  // run this first
-    gui_init();  // run this before other control stuff
     clock_init();
     song_init();
     seq_engine_init();  // song must be loaded before this
@@ -222,10 +221,12 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_CONFIG_LOADED:
             log_debug("scrt - config loaded");
+            gui_init();
             // XXX possibly remove?
             break;
         case SCE_CONFIG_CLEARED:
             log_debug("scrt - config cleared");
+            gui_init();
             // default config stuff
             seq_ctrl_clear_song();
             seq_ctrl_set_current_song(0);

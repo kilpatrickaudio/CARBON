@@ -23,6 +23,7 @@
 #include "gui.h"
 #include "panel.h"
 #include "../config.h"
+#include "../config_store.h"
 #include "../gfx.h"
 #include "../seq/pattern.h"
 #include "../seq/scale.h"
@@ -124,111 +125,114 @@ uint32_t GUI_GRID_TRACK_COLOR_OFF[][2] = {
 //
 // sizes / positions / fonts
 //
+// screen types
+#define GUI_DISP_NUM_TYPES 2  // number of unique screen types
+#define GUI_DISP_TYPE_A 0  // 320x480 3.95" display (original units)
+#define GUI_DISP_TYPE_B 1  // 320x480 3.5" display (newer type)
+
 // 320x480 3.95" display
-#if defined(GUI_DISP_TYPE_A)
 // font indexes
-#define GUI_FONT_NORMAL GFX_FONT_SMALLTEXT_8X10
-#define GUI_FONT_HEADING GFX_FONT_SYSTEM_8X12
+#define GUI_DISP_A_FONT_NORMAL GFX_FONT_SMALLTEXT_8X10
+#define GUI_DISP_A_FONT_HEADING GFX_FONT_SYSTEM_8X12
 // grid settings
-#define GUI_GRID_X 0
-#define GUI_GRID_Y 50
-#define GUI_GRID_W 238
-#define GUI_GRID_H 238
-#define GUI_GRID_SQUARE_X (GUI_GRID_X + GUI_GRID_SQUARE_SPACE) + 2
-#define GUI_GRID_SQUARE_Y (GUI_GRID_Y + GUI_GRID_SQUARE_SPACE) + 2
-#define GUI_GRID_SQUARE_W 27
-#define GUI_GRID_SQUARE_H 27
-#define GUI_GRID_START_SQUARE_W 3
-#define GUI_GRID_TRACK_H 4
-#define GUI_GRID_SQUARE_SPACE 2
-#define GUI_PREVIEW_X 5
-#define GUI_PREVIEW_Y 291
-#define GUI_PREVIEW_SQUARE_W 4
-#define GUI_PREVIEW_SQUARE_H 4
-#define GUI_PREVIEW_GRID_SPACING 39
-#define GUI_PREVIEW_SELECT_Y 326
-#define GUI_PREVIEW_SELECT_H 4
-#define GUI_PREVIEW_ARP_Y 332
+#define GUI_DISP_A_GRID_X 40
+#define GUI_DISP_A_GRID_Y 90
+#define GUI_DISP_A_GRID_W 238
+#define GUI_DISP_A_GRID_H 238
+#define GUI_DISP_A_GRID_SQUARE_X (GUI_DISP_A_GRID_X + GUI_DISP_A_GRID_SQUARE_SPACE) + 2
+#define GUI_DISP_A_GRID_SQUARE_Y (GUI_DISP_A_GRID_Y + GUI_DISP_A_GRID_SQUARE_SPACE) + 2
+#define GUI_DISP_A_GRID_SQUARE_W 27
+#define GUI_DISP_A_GRID_SQUARE_H 27
+#define GUI_DISP_A_GRID_START_SQUARE_W 3
+#define GUI_DISP_A_GRID_TRACK_H 4
+#define GUI_DISP_A_GRID_SQUARE_SPACE 2
+#define GUI_DISP_A_PREVIEW_X 45
+#define GUI_DISP_A_PREVIEW_Y 331
+#define GUI_DISP_A_PREVIEW_SQUARE_W 4
+#define GUI_DISP_A_PREVIEW_SQUARE_H 4
+#define GUI_DISP_A_PREVIEW_GRID_SPACING 39
+#define GUI_DISP_A_PREVIEW_SELECT_Y 366
+#define GUI_DISP_A_PREVIEW_SELECT_H 4
+#define GUI_DISP_A_PREVIEW_ARP_Y 372
 // text positions
-#define GUI_LABEL_SONG_X 3
-#define GUI_LABEL_SONG_Y 10
-#define GUI_LABEL_TEMPO_X 80
-#define GUI_LABEL_TEMPO_Y 10
-#define GUI_LABEL_SCENE_X 176
-#define GUI_LABEL_SCENE_Y 10
-#define GUI_LABEL_RUN_X 3
-#define GUI_LABEL_RUN_Y 28
-#define GUI_LABEL_REC_X 36
-#define GUI_LABEL_REC_Y 28
-#define GUI_LABEL_CLKSRC_X 80
-#define GUI_LABEL_CLKSRC_Y 28
-#define GUI_LABEL_KEYTRANS_X 130
-#define GUI_LABEL_KEYTRANS_Y 28
-#define GUI_LABEL_LIVE_X 200
-#define GUI_LABEL_LIVE_Y 28
-#define GUI_LABEL_SONG_MODE_X 3
-#define GUI_LABEL_SONG_MODE_Y 40
-#define GUI_LABEL_STATUS_L1_X 8
-#define GUI_LABEL_STATUS_L1_Y 345
-#define GUI_LABEL_STATUS_L2_X 8
-#define GUI_LABEL_STATUS_L2_Y 357
-#define GUI_LABEL_STATUS_L3_X 8
-#define GUI_LABEL_STATUS_L3_Y 369
-#define GUI_LABEL_STATUS_L4_X 8
-#define GUI_LABEL_STATUS_L4_Y 381
+#define GUI_DISP_A_LABEL_SONG_X 43
+#define GUI_DISP_A_LABEL_SONG_Y 50
+#define GUI_DISP_A_LABEL_TEMPO_X 120
+#define GUI_DISP_A_LABEL_TEMPO_Y 50
+#define GUI_DISP_A_LABEL_SCENE_X 216
+#define GUI_DISP_A_LABEL_SCENE_Y 50
+#define GUI_DISP_A_LABEL_RUN_X 43
+#define GUI_DISP_A_LABEL_RUN_Y 68
+#define GUI_DISP_A_LABEL_REC_X 76
+#define GUI_DISP_A_LABEL_REC_Y 68
+#define GUI_DISP_A_LABEL_CLKSRC_X 120
+#define GUI_DISP_A_LABEL_CLKSRC_Y 68
+#define GUI_DISP_A_LABEL_KEYTRANS_X 170
+#define GUI_DISP_A_LABEL_KEYTRANS_Y 68
+#define GUI_DISP_A_LABEL_LIVE_X 240
+#define GUI_DISP_A_LABEL_LIVE_Y 68
+#define GUI_DISP_A_LABEL_SONG_MODE_X 43
+#define GUI_DISP_A_LABEL_SONG_MODE_Y 80
+#define GUI_DISP_A_LABEL_STATUS_L1_X 48
+#define GUI_DISP_A_LABEL_STATUS_L1_Y 385
+#define GUI_DISP_A_LABEL_STATUS_L2_X 48
+#define GUI_DISP_A_LABEL_STATUS_L2_Y 397
+#define GUI_DISP_A_LABEL_STATUS_L3_X 48
+#define GUI_DISP_A_LABEL_STATUS_L3_Y 409
+#define GUI_DISP_A_LABEL_STATUS_L4_X 48
+#define GUI_DISP_A_LABEL_STATUS_L4_Y 421
+
 // 320x48 3.5" display
-#elif defined(GUI_DISP_TYPE_B)
 // font indexes
-#define GUI_FONT_NORMAL GFX_FONT_SMALLTEXT_8X10
-#define GUI_FONT_HEADING GFX_FONT_SYSTEM_8X13
+#define GUI_DISP_B_FONT_NORMAL GFX_FONT_SMALLTEXT_8X10
+#define GUI_DISP_B_FONT_HEADING GFX_FONT_SYSTEM_8X13
 // grid settings
-#define GUI_GRID_X 0
-#define GUI_GRID_Y 55
-#define GUI_GRID_W 238
-#define GUI_GRID_H 238
-#define GUI_GRID_SQUARE_X (GUI_GRID_X + GUI_GRID_SQUARE_SPACE) + 2
-#define GUI_GRID_SQUARE_Y (GUI_GRID_Y + GUI_GRID_SQUARE_SPACE) + 2
-#define GUI_GRID_SQUARE_W 31
-#define GUI_GRID_SQUARE_H 31
-#define GUI_GRID_START_SQUARE_W 3
-#define GUI_GRID_TRACK_H 4
-#define GUI_GRID_SQUARE_SPACE 2
-#define GUI_PREVIEW_X 5
-#define GUI_PREVIEW_Y 329
-#define GUI_PREVIEW_SQUARE_W 5
-#define GUI_PREVIEW_SQUARE_H 5
-#define GUI_PREVIEW_GRID_SPACING 44
-#define GUI_PREVIEW_SELECT_Y 372
-#define GUI_PREVIEW_SELECT_H 5
-#define GUI_PREVIEW_ARP_Y 379
+#define GUI_DISP_B_GRID_X 25
+#define GUI_DISP_B_GRID_Y 80
+#define GUI_DISP_B_GRID_W 238
+#define GUI_DISP_B_GRID_H 238
+#define GUI_DISP_B_GRID_SQUARE_X (GUI_DISP_B_GRID_X + GUI_DISP_B_GRID_SQUARE_SPACE) + 2
+#define GUI_DISP_B_GRID_SQUARE_Y (GUI_DISP_B_GRID_Y + GUI_DISP_B_GRID_SQUARE_SPACE) + 2
+#define GUI_DISP_B_GRID_SQUARE_W 31
+#define GUI_DISP_B_GRID_SQUARE_H 31
+#define GUI_DISP_B_GRID_START_SQUARE_W 3
+#define GUI_DISP_B_GRID_TRACK_H 4
+#define GUI_DISP_B_GRID_SQUARE_SPACE 2
+#define GUI_DISP_B_PREVIEW_X 30
+#define GUI_DISP_B_PREVIEW_Y 354
+#define GUI_DISP_B_PREVIEW_SQUARE_W 5
+#define GUI_DISP_B_PREVIEW_SQUARE_H 5
+#define GUI_DISP_B_PREVIEW_GRID_SPACING 44
+#define GUI_DISP_B_PREVIEW_SELECT_Y 397
+#define GUI_DISP_B_PREVIEW_SELECT_H 5
+#define GUI_DISP_B_PREVIEW_ARP_Y 404
 // text positions
-#define GUI_LABEL_SONG_X 3
-#define GUI_LABEL_SONG_Y 10
-#define GUI_LABEL_TEMPO_X 95
-#define GUI_LABEL_TEMPO_Y 10
-#define GUI_LABEL_SCENE_X 205
-#define GUI_LABEL_SCENE_Y 10
-#define GUI_LABEL_RUN_X 3
-#define GUI_LABEL_RUN_Y 30
-#define GUI_LABEL_REC_X 36
-#define GUI_LABEL_REC_Y 30
-#define GUI_LABEL_CLKSRC_X 90
-#define GUI_LABEL_CLKSRC_Y 30
-#define GUI_LABEL_KEYTRANS_X 160
-#define GUI_LABEL_KEYTRANS_Y 30
-#define GUI_LABEL_LIVE_X 235
-#define GUI_LABEL_LIVE_Y 30
-#define GUI_LABEL_SONG_MODE_X 3
-#define GUI_LABEL_SONG_MODE_Y 43
-#define GUI_LABEL_STATUS_L1_X 8
-#define GUI_LABEL_STATUS_L1_Y 394
-#define GUI_LABEL_STATUS_L2_X 8
-#define GUI_LABEL_STATUS_L2_Y 406
-#define GUI_LABEL_STATUS_L3_X 8
-#define GUI_LABEL_STATUS_L3_Y 418
-#define GUI_LABEL_STATUS_L4_X 8
-#define GUI_LABEL_STATUS_L4_Y 430
-#endif
+#define GUI_DISP_B_LABEL_SONG_X 28
+#define GUI_DISP_B_LABEL_SONG_Y 35
+#define GUI_DISP_B_LABEL_TEMPO_X 120
+#define GUI_DISP_B_LABEL_TEMPO_Y 35
+#define GUI_DISP_B_LABEL_SCENE_X 230
+#define GUI_DISP_B_LABEL_SCENE_Y 35
+#define GUI_DISP_B_LABEL_RUN_X 28
+#define GUI_DISP_B_LABEL_RUN_Y 55
+#define GUI_DISP_B_LABEL_REC_X 61
+#define GUI_DISP_B_LABEL_REC_Y 55
+#define GUI_DISP_B_LABEL_CLKSRC_X 115
+#define GUI_DISP_B_LABEL_CLKSRC_Y 55
+#define GUI_DISP_B_LABEL_KEYTRANS_X 185
+#define GUI_DISP_B_LABEL_KEYTRANS_Y 55
+#define GUI_DISP_B_LABEL_LIVE_X 260
+#define GUI_DISP_B_LABEL_LIVE_Y 55
+#define GUI_DISP_B_LABEL_SONG_MODE_X 28
+#define GUI_DISP_B_LABEL_SONG_MODE_Y 68
+#define GUI_DISP_B_LABEL_STATUS_L1_X 33
+#define GUI_DISP_B_LABEL_STATUS_L1_Y 419
+#define GUI_DISP_B_LABEL_STATUS_L2_X 33
+#define GUI_DISP_B_LABEL_STATUS_L2_Y 431
+#define GUI_DISP_B_LABEL_STATUS_L3_X 33
+#define GUI_DISP_B_LABEL_STATUS_L3_Y 443
+#define GUI_DISP_B_LABEL_STATUS_L4_X 33
+#define GUI_DISP_B_LABEL_STATUS_L4_Y 455
 
 //
 // state
@@ -241,6 +245,26 @@ struct gui_state {
     uint32_t preview_state[SEQ_NUM_TRACKS][SEQ_NUM_STEPS];  // colors of preview grids
     uint32_t track_select_state[SEQ_NUM_TRACKS];  // colors of track select state
     uint32_t arp_enable_state[SEQ_NUM_TRACKS];  // colors of the arp enable state
+    // screen type settings and position cache
+    uint8_t screen_type;  // see lookup
+    uint16_t GUI_GRID_X;
+    uint16_t GUI_GRID_Y;
+    uint16_t GUI_GRID_W;
+    uint16_t GUI_GRID_H;
+    uint16_t GUI_GRID_SQUARE_X;
+    uint16_t GUI_GRID_SQUARE_Y;
+    uint16_t GUI_GRID_SQUARE_W;
+    uint16_t GUI_GRID_SQUARE_H;
+    uint16_t GUI_GRID_SQUARE_SPACE;
+    uint16_t GUI_PREVIEW_X;
+    uint16_t GUI_PREVIEW_Y;
+    uint16_t GUI_PREVIEW_SQUARE_W;
+    uint16_t GUI_PREVIEW_SQUARE_H;
+    uint16_t GUI_PREVIEW_GRID_SPACING;
+    uint16_t GUI_PREVIEW_SELECT_Y;
+    uint16_t GUI_PREVIEW_SELECT_H;
+    uint16_t GUI_PREVIEW_ARP_Y;
+
     //
     // MIDI activity timeouts
     //
@@ -315,10 +339,17 @@ void gui_update_track_type(int scene, int track, int type);
 void gui_update_active_step(int track, int step);
 void gui_update_song_mode(void);
 
-// init the GUI
+// init the GUI - config store must be ready before this is called
 int gui_init(void) {
     int i, j;
 	log_info("starting up GUI...");
+
+    // figure out the screen type
+    gstate.screen_type = config_store_get_val(CONFIG_STORE_GUI_DISP_TYPE);
+    if(gstate.screen_type >= GUI_DISP_NUM_TYPES) {
+        gstate.screen_type = 0;  // reset if invalid
+        config_store_set_val(CONFIG_STORE_GUI_DISP_TYPE, gstate.screen_type);
+    }
 
 #ifdef DEBUG_SIM
 	// load fonts in simulation mode
@@ -354,54 +385,170 @@ int gui_init(void) {
         }
         gstate.glabels[i].dirty = 1;
     }
+
+    // init stuff for screen type A    
+    if(gstate.screen_type == GUI_DISP_TYPE_A) {    
+        // cache some drawing stuff
+        gstate.GUI_GRID_X = GUI_DISP_A_GRID_X;
+        gstate.GUI_GRID_Y = GUI_DISP_A_GRID_Y;
+        gstate.GUI_GRID_W = GUI_DISP_A_GRID_W;
+        gstate.GUI_GRID_H = GUI_DISP_A_GRID_H;
+        gstate.GUI_GRID_SQUARE_X = GUI_DISP_A_GRID_SQUARE_X;
+        gstate.GUI_GRID_SQUARE_Y = GUI_DISP_A_GRID_SQUARE_Y;
+        gstate.GUI_GRID_SQUARE_W = GUI_DISP_A_GRID_SQUARE_W;
+        gstate.GUI_GRID_SQUARE_H = GUI_DISP_A_GRID_SQUARE_H;
+        gstate.GUI_GRID_SQUARE_SPACE = GUI_DISP_A_GRID_SQUARE_SPACE;
+        gstate.GUI_PREVIEW_X = GUI_DISP_A_PREVIEW_X;
+        gstate.GUI_PREVIEW_Y = GUI_DISP_A_PREVIEW_Y;
+        gstate.GUI_PREVIEW_SQUARE_W = GUI_DISP_A_PREVIEW_SQUARE_W;
+        gstate.GUI_PREVIEW_SQUARE_H = GUI_DISP_A_PREVIEW_SQUARE_H;
+        gstate.GUI_PREVIEW_GRID_SPACING = GUI_DISP_A_PREVIEW_GRID_SPACING;
+        gstate.GUI_PREVIEW_SELECT_Y = GUI_DISP_A_PREVIEW_SELECT_Y;
+        gstate.GUI_PREVIEW_SELECT_H = GUI_DISP_A_PREVIEW_SELECT_H;
+        gstate.GUI_PREVIEW_ARP_Y = GUI_DISP_A_PREVIEW_ARP_Y;
     
-    //
-    // set the prefs for each label
-    //
-    gui_set_label_prefs(GUI_LABEL_SONG, GUI_LABEL_SONG_X, GUI_LABEL_SONG_Y, 
-        60, 12, GUI_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+        //
+        // set the prefs for each label
+        //
+        gui_set_label_prefs(GUI_LABEL_SONG, 
+            GUI_DISP_A_LABEL_SONG_X, GUI_DISP_A_LABEL_SONG_Y, 
+            60, 12, GUI_DISP_A_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-    gui_set_label_prefs(GUI_LABEL_TEMPO, GUI_LABEL_TEMPO_X, GUI_LABEL_TEMPO_Y,
-        80, 12, GUI_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);        
+        gui_set_label_prefs(GUI_LABEL_TEMPO, 
+            GUI_DISP_A_LABEL_TEMPO_X, GUI_DISP_A_LABEL_TEMPO_Y,
+            80, 12, GUI_DISP_A_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);        
 
-    gui_set_label_prefs(GUI_LABEL_SCENE, GUI_LABEL_SCENE_X, GUI_LABEL_SCENE_Y,
-        60, 12, GUI_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+        gui_set_label_prefs(GUI_LABEL_SCENE, 
+            GUI_DISP_A_LABEL_SCENE_X, GUI_DISP_A_LABEL_SCENE_Y,
+            60, 12, GUI_DISP_A_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-    gui_set_label_prefs(GUI_LABEL_RUN, GUI_LABEL_RUN_X, GUI_LABEL_RUN_Y, 
-        20, 12, GUI_FONT_NORMAL, GUI_FONT_COLOR_GREEN_DIM, GUI_TEXT_BG_COLOR);
-    gui_set_label(GUI_LABEL_RUN, "RUN");
-    
-    gui_set_label_prefs(GUI_LABEL_REC, GUI_LABEL_REC_X, GUI_LABEL_REC_Y,
-        20, 12, GUI_FONT_NORMAL, GUI_FONT_COLOR_RED_DIM, GUI_TEXT_BG_COLOR);
-    gui_set_label(GUI_LABEL_REC, "REC");
-
-    gui_set_label_prefs(GUI_LABEL_CLKSRC, GUI_LABEL_CLKSRC_X, GUI_LABEL_CLKSRC_Y,
-        20, 12, GUI_FONT_NORMAL, GUI_FONT_COLOR_GREY, GUI_TEXT_BG_COLOR);
-    gui_set_label(GUI_LABEL_CLKSRC, "INT");
-
-    gui_set_label_prefs(GUI_LABEL_KEYTRANS, GUI_LABEL_KEYTRANS_X, GUI_LABEL_KEYTRANS_Y,
-        60, 12, GUI_FONT_NORMAL, GUI_FONT_COLOR_MAGENTA_DIM, GUI_TEXT_BG_COLOR);
-    gui_update_keyboard_transpose(0);
+        gui_set_label_prefs(GUI_LABEL_RUN, 
+            GUI_DISP_A_LABEL_RUN_X, GUI_DISP_A_LABEL_RUN_Y, 
+            20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_GREEN_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_RUN, "RUN");
         
-    gui_set_label_prefs(GUI_LABEL_LIVE, GUI_LABEL_LIVE_X, GUI_LABEL_LIVE_Y,
-        30, 12, GUI_FONT_NORMAL, GUI_FONT_COLOR_CYAN_DIM, GUI_TEXT_BG_COLOR);
-    gui_set_label(GUI_LABEL_LIVE, "LIVE");
+        gui_set_label_prefs(GUI_LABEL_REC, 
+            GUI_DISP_A_LABEL_REC_X, GUI_DISP_A_LABEL_REC_Y,
+            20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_RED_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_REC, "REC");
 
-    gui_set_label_prefs(GUI_LABEL_SONG_MODE, GUI_LABEL_SONG_MODE_X, GUI_LABEL_SONG_MODE_Y,
-        20, 12, GUI_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
-    gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
+        gui_set_label_prefs(GUI_LABEL_CLKSRC, 
+            GUI_DISP_A_LABEL_CLKSRC_X, GUI_DISP_A_LABEL_CLKSRC_Y,
+            20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_GREY, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_CLKSRC, "INT");
 
-    gui_set_label_prefs(GUI_LABEL_STATUS_L1, GUI_LABEL_STATUS_L1_X, GUI_LABEL_STATUS_L1_Y, 
-        224, 10, GUI_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+        gui_set_label_prefs(GUI_LABEL_KEYTRANS, 
+            GUI_DISP_A_LABEL_KEYTRANS_X, GUI_DISP_A_LABEL_KEYTRANS_Y,
+            60, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_MAGENTA_DIM, GUI_TEXT_BG_COLOR);
+        gui_update_keyboard_transpose(0);
+            
+        gui_set_label_prefs(GUI_LABEL_LIVE, 
+            GUI_DISP_A_LABEL_LIVE_X, GUI_DISP_A_LABEL_LIVE_Y,
+            30, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_CYAN_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_LIVE, "LIVE");
+
+        gui_set_label_prefs(GUI_LABEL_SONG_MODE, 
+            GUI_DISP_A_LABEL_SONG_MODE_X, GUI_DISP_A_LABEL_SONG_MODE_Y,
+            20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L1, 
+            GUI_DISP_A_LABEL_STATUS_L1_X, GUI_DISP_A_LABEL_STATUS_L1_Y, 
+            224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+            
+        gui_set_label_prefs(GUI_LABEL_STATUS_L2, 
+            GUI_DISP_A_LABEL_STATUS_L2_X, GUI_DISP_A_LABEL_STATUS_L2_Y,
+            224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L3, 
+            GUI_DISP_A_LABEL_STATUS_L3_X, GUI_DISP_A_LABEL_STATUS_L3_Y,
+            224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L4, 
+            GUI_DISP_A_LABEL_STATUS_L4_X, GUI_DISP_A_LABEL_STATUS_L4_Y,
+            224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+    }
+    // init stuff for screen type B
+    else if(gstate.screen_type == GUI_DISP_TYPE_B) {
+        // cache some drawing stuff
+        gstate.GUI_GRID_X = GUI_DISP_B_GRID_X;
+        gstate.GUI_GRID_Y = GUI_DISP_B_GRID_Y;
+        gstate.GUI_GRID_W = GUI_DISP_B_GRID_W;
+        gstate.GUI_GRID_H = GUI_DISP_B_GRID_H;
+        gstate.GUI_GRID_SQUARE_X = GUI_DISP_B_GRID_SQUARE_X;
+        gstate.GUI_GRID_SQUARE_Y = GUI_DISP_B_GRID_SQUARE_Y;
+        gstate.GUI_GRID_SQUARE_W = GUI_DISP_B_GRID_SQUARE_W;
+        gstate.GUI_GRID_SQUARE_H = GUI_DISP_B_GRID_SQUARE_H;
+        gstate.GUI_GRID_SQUARE_SPACE = GUI_DISP_B_GRID_SQUARE_SPACE;
+        gstate.GUI_PREVIEW_X = GUI_DISP_B_PREVIEW_X;
+        gstate.GUI_PREVIEW_Y = GUI_DISP_B_PREVIEW_Y;
+        gstate.GUI_PREVIEW_SQUARE_W = GUI_DISP_B_PREVIEW_SQUARE_W;
+        gstate.GUI_PREVIEW_SQUARE_H = GUI_DISP_B_PREVIEW_SQUARE_H;
+        gstate.GUI_PREVIEW_GRID_SPACING = GUI_DISP_B_PREVIEW_GRID_SPACING;
+        gstate.GUI_PREVIEW_SELECT_Y = GUI_DISP_B_PREVIEW_SELECT_Y;
+        gstate.GUI_PREVIEW_ARP_Y = GUI_DISP_B_PREVIEW_ARP_Y;
+
+        //
+        // set the prefs for each label
+        //
+        gui_set_label_prefs(GUI_LABEL_SONG, 
+            GUI_DISP_B_LABEL_SONG_X, GUI_DISP_B_LABEL_SONG_Y, 
+            60, 12, GUI_DISP_B_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+
+        gui_set_label_prefs(GUI_LABEL_TEMPO, 
+            GUI_DISP_B_LABEL_TEMPO_X, GUI_DISP_B_LABEL_TEMPO_Y,
+            80, 12, GUI_DISP_B_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);        
+
+        gui_set_label_prefs(GUI_LABEL_SCENE, 
+            GUI_DISP_B_LABEL_SCENE_X, GUI_DISP_B_LABEL_SCENE_Y,
+            60, 12, GUI_DISP_B_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+
+        gui_set_label_prefs(GUI_LABEL_RUN, 
+            GUI_DISP_B_LABEL_RUN_X, GUI_DISP_B_LABEL_RUN_Y, 
+            20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_GREEN_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_RUN, "RUN");
         
-    gui_set_label_prefs(GUI_LABEL_STATUS_L2, GUI_LABEL_STATUS_L2_X, GUI_LABEL_STATUS_L2_Y,
-        224, 10, GUI_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+        gui_set_label_prefs(GUI_LABEL_REC, 
+            GUI_DISP_B_LABEL_REC_X, GUI_DISP_B_LABEL_REC_Y,
+            20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_RED_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_REC, "REC");
 
-    gui_set_label_prefs(GUI_LABEL_STATUS_L3, GUI_LABEL_STATUS_L3_X, GUI_LABEL_STATUS_L3_Y,
-        224, 10, GUI_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+        gui_set_label_prefs(GUI_LABEL_CLKSRC, 
+            GUI_DISP_B_LABEL_CLKSRC_X, GUI_DISP_B_LABEL_CLKSRC_Y,
+            20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_GREY, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_CLKSRC, "INT");
 
-    gui_set_label_prefs(GUI_LABEL_STATUS_L4, GUI_LABEL_STATUS_L4_X, GUI_LABEL_STATUS_L4_Y,
-        224, 10, GUI_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+        gui_set_label_prefs(GUI_LABEL_KEYTRANS, 
+            GUI_DISP_B_LABEL_KEYTRANS_X, GUI_DISP_B_LABEL_KEYTRANS_Y,
+            60, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_MAGENTA_DIM, GUI_TEXT_BG_COLOR);
+        gui_update_keyboard_transpose(0);
+            
+        gui_set_label_prefs(GUI_LABEL_LIVE, 
+            GUI_DISP_B_LABEL_LIVE_X, GUI_DISP_B_LABEL_LIVE_Y,
+            30, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_CYAN_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_LIVE, "LIVE");
+
+        gui_set_label_prefs(GUI_LABEL_SONG_MODE, 
+            GUI_DISP_B_LABEL_SONG_MODE_X, GUI_DISP_B_LABEL_SONG_MODE_Y,
+            20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
+        gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L1, 
+            GUI_DISP_B_LABEL_STATUS_L1_X, GUI_DISP_B_LABEL_STATUS_L1_Y, 
+            224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+            
+        gui_set_label_prefs(GUI_LABEL_STATUS_L2, 
+            GUI_DISP_B_LABEL_STATUS_L2_X, GUI_DISP_B_LABEL_STATUS_L2_Y,
+            224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L3, 
+            GUI_DISP_B_LABEL_STATUS_L3_X, GUI_DISP_B_LABEL_STATUS_L3_Y,
+            224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L4, 
+            GUI_DISP_B_LABEL_STATUS_L4_X, GUI_DISP_B_LABEL_STATUS_L4_Y,
+            224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);    
+    }
 
     // reset the main grid state
     for(i = 0; i < SEQ_NUM_STEPS; i ++) {
@@ -831,8 +978,8 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
 
 // draw the grid background
 void gui_draw_grid_bg(void) {
-    gfx_fill_rect(GUI_GRID_X, GUI_GRID_Y, 
-        GUI_GRID_W, GUI_GRID_H, GUI_GRID_BG_COLOR);
+    gfx_fill_rect(gstate.GUI_GRID_X, gstate.GUI_GRID_Y, 
+        gstate.GUI_GRID_W, gstate.GUI_GRID_H, GUI_GRID_BG_COLOR);
 }
 
 // draw the grid squares if they are dirty
@@ -853,10 +1000,11 @@ int gui_draw_main_grid(void) {
             x = step & 0x07;
             y = (step >> 3) & 0x07;        
             gstate.grid_state[step] = color;
-            gfx_fill_rect(GUI_GRID_SQUARE_X + 
-                ((GUI_GRID_SQUARE_W + GUI_GRID_SQUARE_SPACE) * x), 
-                GUI_GRID_SQUARE_Y + ((GUI_GRID_SQUARE_H + GUI_GRID_SQUARE_SPACE) * y),
-                GUI_GRID_SQUARE_W, GUI_GRID_SQUARE_H,
+            gfx_fill_rect(gstate.GUI_GRID_SQUARE_X + 
+                ((gstate.GUI_GRID_SQUARE_W + gstate.GUI_GRID_SQUARE_SPACE) * x), 
+                gstate.GUI_GRID_SQUARE_Y + 
+                ((gstate.GUI_GRID_SQUARE_H + gstate.GUI_GRID_SQUARE_SPACE) * y),
+                gstate.GUI_GRID_SQUARE_W, gstate.GUI_GRID_SQUARE_H,
                 color);
             dirty = 1;
         }
@@ -910,10 +1058,10 @@ int gui_draw_preview_grids(void) {
             if(gstate.preview_state[track][step] != color) {
                 x = step & 0x07;
                 y = (step >> 3) & 0x07;        
-                gfx_fill_rect(GUI_PREVIEW_X + (GUI_PREVIEW_SQUARE_W * x) +
-                  (GUI_PREVIEW_GRID_SPACING * track), 
-                  GUI_PREVIEW_Y + (GUI_PREVIEW_SQUARE_H * y),
-                  GUI_PREVIEW_SQUARE_W, GUI_PREVIEW_SQUARE_H,
+                gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_SQUARE_W * x) +
+                  (gstate.GUI_PREVIEW_GRID_SPACING * track), 
+                  gstate.GUI_PREVIEW_Y + (gstate.GUI_PREVIEW_SQUARE_H * y),
+                  gstate.GUI_PREVIEW_SQUARE_W, gstate.GUI_PREVIEW_SQUARE_H,
                   color);
                 gstate.preview_state[track][step] = color;
                 dirty = 1;
@@ -928,9 +1076,9 @@ int gui_draw_preview_grids(void) {
         }
         // only redraw if the select bar has changed
         if(color != gstate.track_select_state[track]) {
-            gfx_fill_rect(GUI_PREVIEW_X + (GUI_PREVIEW_GRID_SPACING * track), 
-              GUI_PREVIEW_SELECT_Y,
-              (GUI_PREVIEW_SQUARE_W * 8), GUI_PREVIEW_SELECT_H,
+            gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_GRID_SPACING * track), 
+              gstate.GUI_PREVIEW_SELECT_Y,
+              (gstate.GUI_PREVIEW_SQUARE_W * 8), gstate.GUI_PREVIEW_SELECT_H,
               color);            
             gstate.track_select_state[track] = color;
         }
@@ -943,9 +1091,9 @@ int gui_draw_preview_grids(void) {
         }        
         // only redraw if the arp bar has changed
         if(color != gstate.arp_enable_state[track]) {
-            gfx_fill_rect(GUI_PREVIEW_X + (GUI_PREVIEW_GRID_SPACING * track), 
-              GUI_PREVIEW_ARP_Y,
-              (GUI_PREVIEW_SQUARE_W * 8), GUI_PREVIEW_SELECT_H,
+            gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_GRID_SPACING * track), 
+              gstate.GUI_PREVIEW_ARP_Y,
+              (gstate.GUI_PREVIEW_SQUARE_W * 8), gstate.GUI_PREVIEW_SELECT_H,
               color);            
             gstate.arp_enable_state[track] = color;
         }

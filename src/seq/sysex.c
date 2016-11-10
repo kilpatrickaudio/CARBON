@@ -31,13 +31,23 @@
  *   - 0xbb - error code
  *   - 0xf7 - sysex end
  *
+ * - set LCD display type       - 0x6e  -> to device
+ *   - 0xf0 - sysex start
+ *   - 0x00 - MMA ID
+ *   - 0x01 - MMA ID
+ *   - 0x72 - MMA ID
+ *   - 0x49 - device type
+ *   - 0x6e - set LCD type
+ *   - 0xaa - LCD type number
+ *   - 0xf7 - sysex end
+ *
  * - wipe config store          - 0x6f  -> to device
  *   - 0xf0 - sysex start
  *   - 0x00 - MMA ID
  *   - 0x01 - MMA ID
  *   - 0x72 - MMA ID
  *   - 0x49 - device type
- *   - 0x01 - error response
+ *   - 0x6f - wipe config store
  *   - 0xf7 - sysex end
  *
  * - read ext flash data        - 0x70  -> to device
@@ -160,6 +170,7 @@
 //
 // CARBON commands
 #define SYSEX_CMD_ERROR_CODE 0x01  // from device
+#define SYSEX_CMD_SET_LCD_TYPE 0x6e  // to device
 #define SYSEX_CMD_WIPE_CONFIG_STORE 0x6f  // to device
 #define SYSEX_CMD_READ_EXT_FLASH 0x70  // to device
 #define SYSEX_CMD_READBACK_EXT_FLASH 0x71  // from device
@@ -328,6 +339,17 @@ void sysex_process(void) {
             }
             // process each command
             switch(syxs.rx_buf[5]) {
+                case SYSEX_CMD_SET_LCD_TYPE:
+                    if(syxs.rx_len != 8) {
+                        sysex_send_error_response(syxs.rx_buf[5],
+                            SYSEX_ERROR_MALFORMED_MSG);
+                        return;
+                    }
+                    config_store_set_val(CONFIG_STORE_GUI_DISP_TYPE,
+                        syxs.rx_buf[6]);
+                    sysex_send_error_response(syxs.rx_buf[5],
+                        SYSEX_ERROR_OK);
+                    break;
                 case SYSEX_CMD_WIPE_CONFIG_STORE:
                     if(syxs.rx_len != 7) {
                         sysex_send_error_response(syxs.rx_buf[5],
