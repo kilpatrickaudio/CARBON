@@ -292,9 +292,7 @@ struct gui_state {
     // refresh stuff
     uint8_t force_refresh;  // 0 = no refresh, 1 = force refresh
     uint8_t force_reinit;  // 0 = no reinit, 1 = reinit
-    // override
-    uint8_t enabled;  // 0 = disabled, 1 = enabled
-    uint8_t desired_enable_state;  // 0 = disable, 1 = enable
+    uint8_t started;  // 0 = not started, 1 = started
 };
 // put data into CCMRAM instead of regular RAM
 struct gui_state gstate __attribute__ ((section (".ccm")));
@@ -339,17 +337,10 @@ void gui_update_track_type(int scene, int track, int type);
 void gui_update_active_step(int track, int step);
 void gui_update_song_mode(void);
 
-// init the GUI - config store must be ready before this is called
+// init the GUI and reset all vars
 int gui_init(void) {
     int i, j;
 	log_info("starting up GUI...");
-
-    // figure out the screen type
-    gstate.screen_type = config_store_get_val(CONFIG_STORE_GUI_DISP_TYPE);
-    if(gstate.screen_type >= GUI_DISP_NUM_TYPES) {
-        gstate.screen_type = 0;  // reset if invalid
-        config_store_set_val(CONFIG_STORE_GUI_DISP_TYPE, gstate.screen_type);
-    }
 
 #ifdef DEBUG_SIM
 	// load fonts in simulation mode
@@ -367,9 +358,6 @@ int gui_init(void) {
     //
     // reset stuff
     //
-    gstate.enabled = 1;  // enabled
-    gstate.desired_enable_state = 1;  // enable
-
     // reset all the labels
     for(i = 0; i < GUI_MAX_LABELS; i ++) {
         gstate.glabels[i].x = -1;
@@ -384,6 +372,57 @@ int gui_init(void) {
             gstate.glabels[i].highlight[j] = GFX_HIGHLIGHT_NORMAL;
         }
         gstate.glabels[i].dirty = 1;
+    }
+
+    // reset the main grid state
+    for(i = 0; i < SEQ_NUM_STEPS; i ++) {
+        gstate.grid_state[i] = 0;
+        gstate.grid_overlay[i] = 0;
+    }
+    gstate.grid_overlay_enable = 0;
+    
+    // reset the preview grid states
+    for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+        gstate.track_select_state[i] = 0x00;
+        gstate.arp_enable_state[i] = 0x00;
+        for(j = 0; j < SEQ_NUM_STEPS; j ++) {
+            gstate.preview_state[i][j] = 0x00;
+        }
+    }
+
+    // reset the grid cache
+    for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+        gstate.motion_start[i] = 0;
+        gstate.motion_length[i] = 0;
+        gstate.pattern_type[i] = 0;
+        gstate.active_step[i] = 0;
+        gstate.track_select[i] = 0;
+        gstate.arp_enable[i] = 0;
+        gstate.track_mute[i] = 0;
+        for(j = 0; j < SEQ_NUM_STEPS; j ++) {
+            gstate.motion_step[i][j] = 0;
+        }
+    }
+    
+    // make sure we don't start drawing yet
+    gstate.started = 0;
+    return 0;
+}
+
+// close the GUI
+void gui_close(void) {
+	gfx_close();
+}
+
+// start the GUI and load all layout params - config store must be loaded
+void gui_startup(void) {
+    int i;
+
+    // figure out the screen type
+    gstate.screen_type = config_store_get_val(CONFIG_STORE_GUI_DISP_TYPE);
+    if(gstate.screen_type >= GUI_DISP_NUM_TYPES) {
+        gstate.screen_type = 0;  // reset if invalid
+        config_store_set_val(CONFIG_STORE_GUI_DISP_TYPE, gstate.screen_type);
     }
 
     // init stuff for screen type A    
@@ -551,36 +590,6 @@ int gui_init(void) {
             224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);    
     }
 
-    // reset the main grid state
-    for(i = 0; i < SEQ_NUM_STEPS; i ++) {
-        gstate.grid_state[i] = 0;
-        gstate.grid_overlay[i] = 0;
-    }
-    gstate.grid_overlay_enable = 0;
-    
-    // reset the preview grid states
-    for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
-        gstate.track_select_state[i] = 0x00;
-        gstate.arp_enable_state[i] = 0x00;
-        for(j = 0; j < SEQ_NUM_STEPS; j ++) {
-            gstate.preview_state[i][j] = 0x00;
-        }
-    }
-
-    // reset the grid cache
-    for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
-        gstate.motion_start[i] = 0;
-        gstate.motion_length[i] = 0;
-        gstate.pattern_type[i] = 0;
-        gstate.active_step[i] = 0;
-        gstate.track_select[i] = 0;
-        gstate.arp_enable[i] = 0;
-        gstate.track_mute[i] = 0;
-        for(j = 0; j < SEQ_NUM_STEPS; j ++) {
-            gstate.motion_step[i][j] = 0;
-        }
-    }
-
 	// draw display for the first time
 	gfx_clear_screen(GUI_BG_COLOR);	
 	gui_draw_grid_bg();
@@ -600,31 +609,18 @@ int gui_init(void) {
     state_change_register(gui_handle_state_change, SCEC_CTRL);
     state_change_register(gui_handle_state_change, SCEC_ENG);
     state_change_register(gui_handle_state_change, SCEC_CLK);
-    return 0;
-}
-
-// close the GUI
-void gui_close(void) {
-	gfx_close();
+    
+    // unblock the drawing
+    gstate.started = 1;
 }
 
 // run the refresh task - run on the main polling loop
 void gui_refresh_task(void) {
 	int dirty = 0;
 	int i, track, step;
-    // change enable state
-    if(gstate.enabled != gstate.desired_enable_state) {
-        if(gstate.desired_enable_state) {
-            gui_force_refresh();
-        }
-        else {
-            gui_clear_screen();
-        }
-        gstate.enabled = gstate.desired_enable_state;
-    }
 
-    // don't draw if not enabled
-    if(!gstate.enabled) {
+    // make sure we're started
+    if(!gstate.started) {
         return;
     }
 
@@ -672,11 +668,6 @@ void gui_force_refresh(void) {
 // clear the screen
 void gui_clear_screen(void) {
     gfx_clear_screen(0);
-}
-
-// enable or disable the entire GUI so we can use the screen ourselves
-void gui_set_enable(int enable) {
-    gstate.desired_enable_state = enable;
 }
 
 // set the LCD power state

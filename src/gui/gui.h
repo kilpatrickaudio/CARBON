@@ -32,11 +32,14 @@
 #define GUI_OVERLAY_MED 2
 #define GUI_OVERLAY_HIGH 3
 
-// init the GUI - config store must be ready before this is called
+// init the GUI and reset all vars
 int gui_init(void);
 
 // close the GUI
 void gui_close(void);
+
+// start the GUI and load all layout params - config store must be loaded
+void gui_startup(void);
 
 // run the refresh task - run on the main polling loop
 void gui_refresh_task(void);
@@ -46,9 +49,6 @@ void gui_force_refresh(void);
 
 // clear the screen
 void gui_clear_screen(void);
-
-// enable or disable the entire GUI so we can use the screen ourselves
-void gui_set_enable(int enable);
 
 // set the LCD power state 
 // schedule a power-up and reinit (power on)
