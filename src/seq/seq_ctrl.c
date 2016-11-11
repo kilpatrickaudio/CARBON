@@ -189,7 +189,6 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_LOAD_ERROR:
             log_debug("schsc - song load error: %d", (data[0] + 1));
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
-            seq_ctrl_clear_song();  // clear song instead       
             seq_ctrl_set_current_song(data[0]);
             break;
         case SCE_SONG_SAVED:

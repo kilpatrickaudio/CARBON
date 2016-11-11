@@ -173,6 +173,7 @@ void song_timer_task(void) {
             songs.state = SONG_IO_STATE_IDLE;
             // check magic number to make sure we loaded correctly
             if(song.magic_num != SONG_MAGIC_NUM) {
+                song_clear();  // clear the song instead
                 state_change_fire1(SCE_SONG_LOAD_ERROR, songs.loadsave_song);
             }
             else {
