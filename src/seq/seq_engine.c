@@ -754,48 +754,45 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
     }
     // handle channel messages
     else {
-        // is this the live input channel?
-        if((msg->status & 0x0f) == MIDI_CHANNEL_KEYBOARD_CONTROL) {
-            // do keyboard velocity scaling
-            midi_utils_copy_msg(&send_msg, msg);  // copy so we can modify contents        
-            if((send_msg.status & 0xf0) == MIDI_NOTE_ON) {
-                send_msg.data1 = seq_utils_clamp(send_msg.data1 + 
-                    sestate.key_velocity_scale, 1, 0x7f);
-            }
-
-            // check each track
-            for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-                // is the track unselected?
-                if(seq_ctrl_get_track_select(track) == 0) {
-                    continue;
-                }
-                // handle live mode and recording (handles note list)
-                // this will send even if we are muted since recording
-                // can happen if a track is muted
-                if(seq_ctrl_get_track_select(track) &&
-                        (seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON || 
-                        seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE ||
-                        (step_edit_get_enable() && !seq_ctrl_get_run_state()))) {
-                    seq_engine_live_send_msg(track, &send_msg);
-                }
-                // handle pass-through messages all the time
-                seq_engine_live_passthrough(track, &send_msg);
-            }
-            // handle recording - must be after live send so we can use note list
-            seq_engine_record_event(&send_msg);
-            // handle transposing voice tracks
-            // we can't be recording or in live mode, or editing
-            if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_KBTRANS && 
-                    seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_IDLE &&
-                    !step_edit_get_enable() &&
-                    !sestate.sngmode.enable) {
-                if((send_msg.status & 0xf0) == MIDI_NOTE_ON) {
-                    seq_engine_set_kbtrans(send_msg.data0 - SEQ_TRANSPOSE_CENTRE);
-                }
-            }
-            // step edit wants all MIDI input on the keyboard control channel
-            step_edit_handle_input(&send_msg);
+        // do keyboard velocity scaling
+        midi_utils_copy_msg(&send_msg, msg);  // copy so we can modify contents        
+        if((send_msg.status & 0xf0) == MIDI_NOTE_ON) {
+            send_msg.data1 = seq_utils_clamp(send_msg.data1 + 
+                sestate.key_velocity_scale, 1, 0x7f);
         }
+
+        // check each track
+        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+            // is the track unselected?
+            if(seq_ctrl_get_track_select(track) == 0) {
+                continue;
+            }
+            // handle live mode and recording (handles note list)
+            // this will send even if we are muted since recording
+            // can happen if a track is muted
+            if(seq_ctrl_get_track_select(track) &&
+                    (seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON || 
+                    seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE ||
+                    (step_edit_get_enable() && !seq_ctrl_get_run_state()))) {
+                seq_engine_live_send_msg(track, &send_msg);
+            }
+            // handle pass-through messages all the time
+            seq_engine_live_passthrough(track, &send_msg);
+        }
+        // handle recording - must be after live send so we can use note list
+        seq_engine_record_event(&send_msg);
+        // handle transposing voice tracks
+        // we can't be recording or in live mode, or editing
+        if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_KBTRANS && 
+                seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_IDLE &&
+                !step_edit_get_enable() &&
+                !sestate.sngmode.enable) {
+            if((send_msg.status & 0xf0) == MIDI_NOTE_ON) {
+                seq_engine_set_kbtrans(send_msg.data0 - SEQ_TRANSPOSE_CENTRE);
+            }
+        }
+        // step edit wants all MIDI input on the keyboard control channel
+        step_edit_handle_input(&send_msg);
     }
     // MIDI control wants all MIDI input on every channel
     midi_ctrl_handle_midi_msg(msg);  // send the raw data to preserve channel
@@ -1356,7 +1353,6 @@ void seq_engine_live_passthrough(int track, struct midi_msg *msg) {
 // record the event
 void seq_engine_record_event(struct midi_msg *msg) {
     int i, temp, track;
-    struct midi_msg send_msg;
     struct track_event trkevent;
 
     // see if we need to start recording mode
@@ -1488,15 +1484,14 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 }
                 break;
             case MIDI_NOTE_ON:
-                midi_utils_copy_msg(&send_msg, msg);  // copy so we can modify contents
                 // add note to recording list
                 sestate.record_events[sestate.record_event_count].tick_pos = clock_get_tick_pos();
                 sestate.record_events[sestate.record_event_count].tick_len = 0;
                 sestate.record_events[sestate.record_event_count].msg.port = 0;
                 sestate.record_events[sestate.record_event_count].msg.len = 3;
                 sestate.record_events[sestate.record_event_count].msg.status = MIDI_NOTE_ON;
-                sestate.record_events[sestate.record_event_count].msg.data0 = send_msg.data0;
-                sestate.record_events[sestate.record_event_count].msg.data1 = send_msg.data1;
+                sestate.record_events[sestate.record_event_count].msg.data0 = msg->data0;
+                sestate.record_events[sestate.record_event_count].msg.data1 = msg->data1;
                 sestate.record_event_count ++;
                 break;
             case MIDI_CONTROL_CHANGE:                
@@ -1506,8 +1501,8 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 sestate.record_events[sestate.record_event_count].msg.port = 0;
                 sestate.record_events[sestate.record_event_count].msg.len = 3;
                 sestate.record_events[sestate.record_event_count].msg.status = MIDI_CONTROL_CHANGE;
-                sestate.record_events[sestate.record_event_count].msg.data0 = send_msg.data0;
-                sestate.record_events[sestate.record_event_count].msg.data1 = send_msg.data1;
+                sestate.record_events[sestate.record_event_count].msg.data0 = msg->data0;
+                sestate.record_events[sestate.record_event_count].msg.data1 = msg->data1;
                 sestate.record_event_count ++;
                 break;
             default:

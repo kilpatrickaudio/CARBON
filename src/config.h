@@ -138,7 +138,6 @@
 #define MIDI_PORT_USB_DEV_IN4 12  // disabled (seq mode) / USB host OUT (interface mode)
 #define MIDI_PORT_IN_OFFSET (MIDI_PORT_DIN1_IN)  // offset for MIDI input ports
 #define MIDI_PORT_SYSEX_IN (MIDI_PORT_USB_DEV_IN1)  // SYSEX input
-#define MIDI_CHANNEL_KEYBOARD_CONTROL 0  // channel 1
 // CV/gate
 #define CVPROC_NUM_PAIRS 4
 #define CVPROC_NUM_OUTPUTS 4
