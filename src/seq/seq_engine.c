@@ -55,7 +55,7 @@
 #define SEQ_ENGINE_KEYBOARD_Q_LEN 16  // number of events in the keyboard queue
 
 // setting
-#define SEQ_ENGINE_RECORD_EVENTS_MAX (SEQ_NUM_STEPS * SEQ_TRACK_POLY * 2)  // extra space for CC
+#define SEQ_ENGINE_RECORD_EVENTS_MAX (SEQ_NUM_STEPS * SEQ_TRACK_POLY)  // number of events for recording
 
 // active note state
 struct seq_engine_active_note {
@@ -108,7 +108,7 @@ struct seq_engine_state {
     // note timeouts and event queues
     struct seq_engine_active_note track_active_notes[SEQ_NUM_TRACKS][SEQ_ENGINE_MAX_NOTES];  // active play notes
     struct midi_msg live_active_notes[SEQ_NUM_TRACKS][SEQ_ENGINE_MAX_NOTES];  // stores note on msgs
-    struct midi_event record_events[SEQ_NUM_STEPS * SEQ_TRACK_POLY];  // recording temp notes
+    struct midi_event record_events[SEQ_ENGINE_RECORD_EVENTS_MAX];  // recording temp notes
 };
 struct seq_engine_state sestate;
 
@@ -1463,8 +1463,11 @@ void seq_engine_record_event(struct midi_msg *msg) {
     }
     // handle realtime record
     else if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_RT) {
+        // XXX probably wrong because list is smaller than SEQ_ENGINE_RECORD_EVENTS_MAX
         // make sure there is enough space in the list
+        log_debug("n: %d - m: %d", sestate.record_event_count, SEQ_ENGINE_RECORD_EVENTS_MAX);
         if(sestate.record_event_count == SEQ_ENGINE_RECORD_EVENTS_MAX) {
+            log_debug("full");
             return;
         }
         // handle different message types                        
