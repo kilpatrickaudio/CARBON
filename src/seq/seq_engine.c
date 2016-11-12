@@ -1463,11 +1463,8 @@ void seq_engine_record_event(struct midi_msg *msg) {
     }
     // handle realtime record
     else if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_RT) {
-        // XXX probably wrong because list is smaller than SEQ_ENGINE_RECORD_EVENTS_MAX
         // make sure there is enough space in the list
-        log_debug("n: %d - m: %d", sestate.record_event_count, SEQ_ENGINE_RECORD_EVENTS_MAX);
         if(sestate.record_event_count == SEQ_ENGINE_RECORD_EVENTS_MAX) {
-            log_debug("full");
             return;
         }
         // handle different message types                        
