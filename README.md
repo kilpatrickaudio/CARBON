@@ -8,7 +8,7 @@ Audio. Please see this link for product details:
 
 ## Looking for Binaries?
 
-If you don't want to build the code yourself but just want the latest firmware to install (no programming hardware required) just visit this link: (http://www.kilpatrickaudio.com/?p=firmware_updates)
+If you don't want to build the code yourself but just want the latest firmware to install (no programming hardware required) just visit this link: [Kilpatrick Audio Firmware Updates](http://www.kilpatrickaudio.com/?p=firmware_updates)
 
 ## Licensing / using code in your own projects
 
