@@ -6,6 +6,10 @@ Audio. Please see this link for product details:
 
 [CARBON page at Kilpatrick Audio](http://www.kilpatrickaudio.com/?p=carbon)
 
+## Looking for Binaries?
+
+If you don't want to build the code yourself but just want the latest firmware to install (no programming hardware required) just visit this link: [Kilpatrick Audio Firmware Updates](http://www.kilpatrickaudio.com/?p=firmware_updates)
+
 ## Licensing / using code in your own projects
 
 __THIS CODE IS GPL LICENSED UNLESS SPECIFIED OTHERWISE__
@@ -23,8 +27,6 @@ __IMPORTANT: Do not place multiple feature / bug requests in the same issue!__
 
 ## Changelog:
 
-- __ver. 1.02:__ Initial product release firmware. Code for this version was
-  published on 2016-10-14. No binaries are available at this time as all
-  released hardware already has this version.
+For changes please see the individual release notes.
   
 
