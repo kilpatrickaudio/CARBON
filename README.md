@@ -19,9 +19,12 @@ requirements of each source file you use. Some vendor-supplied files have
 special license restrictions. All other source files are GPL licensed. You
 must understand what this means, especially in regards to commercial projects.
 
-## Reporting bugs and feature requests
+## Reporting bugs
 
-Please use this repository to track bugs and feature requests for CARBON. Only bugs submitted through this system will be considered. All information to reproduce the problem must be provided including your current version number (can be found by looking in the SYS menu) and relavent information that would be needed by a QA person to observe the same issue. Feature requests should be opened as issues.
+Please open an issue for each reproducible bug. Sorry but we are no longer
+accepting new feature requests. If there is something you want or need to
+have please fork the project and have a go at it yourself. Interesting and
+easily integrated pull requests will be considered for official releases.
 
 __IMPORTANT: Do not place multiple feature / bug requests in the same issue!__
 
