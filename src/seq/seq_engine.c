@@ -308,7 +308,7 @@ void seq_engine_run(uint32_t tick_count) {
             if(sestate.sngmode.enable) {
                 seq_engine_song_mode_process();
             }
-            seq_engine_change_scene_synced();        
+            seq_engine_change_scene_synced();
         }
         
         // resolve bias track outputs (before step playback on each track)

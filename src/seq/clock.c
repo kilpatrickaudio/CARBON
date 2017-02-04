@@ -31,7 +31,7 @@
 #define CLOCK_US_PER_TICK_MAX ((uint64_t)(60000000.0 / (CLOCK_TEMPO_MIN * (float)CLOCK_PPQ)))
 #define CLOCK_US_PER_TICK_MIN ((uint64_t)(60000000.0 / (CLOCK_TEMPO_MAX * (float)CLOCK_PPQ)))
 
-#define CLOCK_LOCK_ADJUST 100  // lock adjust amount
+#define CLOCK_LOCK_ADJUST 50  // lock adjust amount
 
 // state
 struct clock_state {
@@ -106,6 +106,14 @@ void clock_timer_task(void) {
             if(clks.run_state == 0) {
                 clks.stop_tick_count = clks.run_tick_count;
             }
+            clks.ext_tick_count = clks.run_tick_count;  // sync ext clock to int
+
+            // XXX debugging
+            log_debug("CHANGE  run: %6d  -  stop: %6d  - ext: %6d - error: %3d",
+                clks.run_tick_count,
+                clks.stop_tick_count,
+                clks.ext_tick_count,
+                ext_error);
         }
         // get the correct tick count
         if(clks.run_state) {
@@ -117,8 +125,7 @@ void clock_timer_task(void) {
         // calculate clock drift for external clock
         // positive drift means internal clock is fast
         if(clks.source == CLOCK_EXTERNAL) {
-            ext_error = (tick_count / CLOCK_MIDI_UPSAMPLE) - 
-                (clks.ext_tick_count + clks.ext_start_tick);
+            ext_error = tick_count - clks.ext_tick_count;
         }
 
         // calculate beat cross before processing sequencer stuff
@@ -128,12 +135,22 @@ void clock_timer_task(void) {
                 clks.current_swing = clks.next_swing;
             }
 
-            // XXX debugging
-            log_debug("tick: %d - ext_tick: %d - ext_error: %d",
-                (tick_count / CLOCK_MIDI_UPSAMPLE),
-                clks.ext_tick_count,
-                ext_error);
-
+            if(clks.run_state) {
+                // XXX debugging
+                log_debug("BEAT - [RUN: %6d] -  stop: %6d  - ext: %6d - error: %3d",
+                    clks.run_tick_count,
+                    clks.stop_tick_count,
+                    clks.ext_tick_count,
+                    ext_error);
+            }
+            else {
+                // XXX debugging
+                log_debug("BEAT -  run: %6d  - [STOP: %6d] - ext: %6d - error: %3d",
+                    clks.run_tick_count,
+                    clks.stop_tick_count,
+                    clks.ext_tick_count,
+                    ext_error);
+            }
             // fire event
             state_change_fire0(SCE_CLK_BEAT);
         }
@@ -148,9 +165,8 @@ void clock_timer_task(void) {
         if(clks.source == CLOCK_INTERNAL) {
             clks.next_tick_time += clks.int_us_per_tick;
         }
-        // external (recovered) clock rate
+        // adjust internal clock based on ext recovered clock
         else {
-//            clks.next_tick_time += clks.ext_us_per_tick;
             if(ext_error > 0) {
                 clks.next_tick_time += clks.ext_us_per_tick + CLOCK_LOCK_ADJUST;
             }
@@ -173,22 +189,23 @@ void clock_timer_task(void) {
     
     //
     // recover external clock
-    // - interval range: 30 to 300 BPM = 83300us to 8330
+    // - interval range: 30 to 300 BPM = 83300us to 8330us per MIDI tick
     //
     if(clks.ext_tickf) {
         clks.ext_tickf = 0;
-        clks.ext_hist[clks.ext_tick_count & (CLOCK_EXTERNAL_HIST_LEN - 1)] =
+        clks.ext_hist[(clks.ext_tick_count / CLOCK_MIDI_UPSAMPLE) & (CLOCK_EXTERNAL_HIST_LEN - 1)] =
             clks.time_count - clks.ext_clock_last_tick;
         clks.ext_clock_last_tick = clks.time_count;
-        clks.ext_tick_count ++;
+        clks.ext_tick_count += CLOCK_MIDI_UPSAMPLE;  // count by internal PPQ rate
         // we've received enough ticks
-        if(clks.ext_tick_count > CLOCK_EXTERNAL_HIST_LEN) {
+        if(clks.ext_tick_count > (CLOCK_EXTERNAL_HIST_LEN * CLOCK_MIDI_UPSAMPLE)) {
             clks.ext_clock_period = 0;
             for(i = 0; i < CLOCK_EXTERNAL_HIST_LEN; i ++) {
                 clks.ext_clock_period += clks.ext_hist[i];
             }
             clks.ext_clock_period /= CLOCK_EXTERNAL_HIST_LEN;
-            temp64 = (clks.ext_clock_period / CLOCK_MIDI_UPSAMPLE);  // XXX possible precision loss
+            // convert measured time into internal higher frequency
+            temp64 = (clks.ext_clock_period / CLOCK_MIDI_UPSAMPLE);
             // ensure that tempo fits in the valid range before accepting
             if(temp64 < CLOCK_US_PER_TICK_MIN) {
                 clks.ext_us_per_tick = CLOCK_US_PER_TICK_MIN;
@@ -204,24 +221,20 @@ void clock_timer_task(void) {
                 clock_set_source(CLOCK_EXTERNAL);
                 // get the correct tick count
                 if(clks.run_state) {
-                    clks.ext_start_tick = clks.run_tick_count / CLOCK_MIDI_UPSAMPLE;
+                    clks.ext_start_tick = clks.run_tick_count;
                 }
                 else {
-                    clks.ext_start_tick = clks.stop_tick_count / CLOCK_MIDI_UPSAMPLE;
+                    clks.ext_start_tick = clks.stop_tick_count;
                 }
-                clks.ext_tick_count = 0;
+                clks.ext_tick_count = clks.ext_start_tick;
             }
         }
     }
     // time out external clock mode
-    if(clks.ext_tick_count &&
+    if(clks.source == CLOCK_EXTERNAL &&
             (clks.time_count - clks.ext_clock_last_tick) > CLOCK_EXTERNAL_TIMEOUT) {
-        clks.ext_tick_count = 0;
-        if(clks.source == CLOCK_EXTERNAL) {
-            clock_set_source(CLOCK_INTERNAL);            
-            clks.ext_start_tick = 0;
-            clks.ext_tick_count = 0;
-        }
+        clock_set_source(CLOCK_INTERNAL);
+        clks.desired_run_state = 0;  // stop clock on external clock loss
     }
     
     //
@@ -254,7 +267,6 @@ void clock_timer_task(void) {
             }
             // fire event
             state_change_fire0(SCE_CLK_TAP_LOCK);
-            log_debug("clk: %f", clock_get_tempo());
         }
     }
     // time out tap tempo history
@@ -315,9 +327,11 @@ int clock_get_running(void) {
 void clock_set_running(int running) {
     if(running) {
         clks.desired_run_state = 1;
+        log_debug("RUN");
     }
     else {
         clks.desired_run_state = 0;
+        log_debug("STOP");
     }
 }
 
