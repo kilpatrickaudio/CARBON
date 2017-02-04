@@ -31,6 +31,8 @@
 #define CLOCK_US_PER_TICK_MAX ((uint64_t)(60000000.0 / (CLOCK_TEMPO_MIN * (float)CLOCK_PPQ)))
 #define CLOCK_US_PER_TICK_MIN ((uint64_t)(60000000.0 / (CLOCK_TEMPO_MAX * (float)CLOCK_PPQ)))
 
+#define CLOCK_LOCK_ADJUST 100  // lock adjust amount
+
 // state
 struct clock_state {
     // state
@@ -50,7 +52,8 @@ struct clock_state {
     int ext_tickf;  // tick was received
     uint64_t ext_clock_last_tick;  // last tick time
     int ext_clock_period;  // ext clock period - averaged
-    int ext_hist_count;  // number of historical ticks
+    int ext_tick_count;  // number of external ticks
+    int ext_start_tick;  // internal tick count when the ext clock was locked
     uint64_t ext_hist[CLOCK_EXTERNAL_HIST_LEN];  // historical ticks
     // tap tempo state
     int tap_beatf;  // tap tempo beat was received
@@ -75,7 +78,8 @@ void clock_init(void) {
     clks.ext_tickf = 0;
     clks.ext_clock_last_tick = 0;
     clks.ext_clock_period = 0;
-    clks.ext_hist_count = 0;
+    clks.ext_tick_count = 0;
+    clks.ext_start_tick = 0;
     clks.tap_beatf = 0;
     clks.tap_clock_last_tap = 0;
     clks.tap_clock_period = 0;
@@ -84,6 +88,7 @@ void clock_init(void) {
 
 // run the clock timer task - 1000us interval
 void clock_timer_task(void) {
+    int ext_error = 0;
     int i;
     uint32_t tick_count;
     uint64_t temp64;
@@ -109,6 +114,12 @@ void clock_timer_task(void) {
         else {
             tick_count = clks.stop_tick_count;
         }
+        // calculate clock drift for external clock
+        // positive drift means internal clock is fast
+        if(clks.source == CLOCK_EXTERNAL) {
+            ext_error = (tick_count / CLOCK_MIDI_UPSAMPLE) - 
+                (clks.ext_tick_count + clks.ext_start_tick);
+        }
 
         // calculate beat cross before processing sequencer stuff
         if((tick_count % CLOCK_PPQ) == 0) {
@@ -116,6 +127,13 @@ void clock_timer_task(void) {
             if(clks.current_swing != clks.next_swing) {
                 clks.current_swing = clks.next_swing;
             }
+
+            // XXX debugging
+            log_debug("tick: %d - ext_tick: %d - ext_error: %d",
+                (tick_count / CLOCK_MIDI_UPSAMPLE),
+                clks.ext_tick_count,
+                ext_error);
+
             // fire event
             state_change_fire0(SCE_CLK_BEAT);
         }
@@ -132,7 +150,16 @@ void clock_timer_task(void) {
         }
         // external (recovered) clock rate
         else {
-            clks.next_tick_time += clks.ext_us_per_tick;        
+//            clks.next_tick_time += clks.ext_us_per_tick;
+            if(ext_error > 0) {
+                clks.next_tick_time += clks.ext_us_per_tick + CLOCK_LOCK_ADJUST;
+            }
+            else if(ext_error < 0) {
+                clks.next_tick_time += clks.ext_us_per_tick - CLOCK_LOCK_ADJUST;
+            }
+            else {
+                clks.next_tick_time += clks.ext_us_per_tick;
+            }
         }
 
         // write back the tick count
@@ -150,18 +177,18 @@ void clock_timer_task(void) {
     //
     if(clks.ext_tickf) {
         clks.ext_tickf = 0;
-        clks.ext_hist[clks.ext_hist_count & (CLOCK_EXTERNAL_HIST_LEN - 1)] =
+        clks.ext_hist[clks.ext_tick_count & (CLOCK_EXTERNAL_HIST_LEN - 1)] =
             clks.time_count - clks.ext_clock_last_tick;
         clks.ext_clock_last_tick = clks.time_count;
-        clks.ext_hist_count ++;
+        clks.ext_tick_count ++;
         // we've received enough ticks
-        if(clks.ext_hist_count > CLOCK_EXTERNAL_HIST_LEN) {
+        if(clks.ext_tick_count > CLOCK_EXTERNAL_HIST_LEN) {
             clks.ext_clock_period = 0;
             for(i = 0; i < CLOCK_EXTERNAL_HIST_LEN; i ++) {
                 clks.ext_clock_period += clks.ext_hist[i];
             }
             clks.ext_clock_period /= CLOCK_EXTERNAL_HIST_LEN;
-            temp64 = (clks.ext_clock_period / CLOCK_MIDI_UPSAMPLE);
+            temp64 = (clks.ext_clock_period / CLOCK_MIDI_UPSAMPLE);  // XXX possible precision loss
             // ensure that tempo fits in the valid range before accepting
             if(temp64 < CLOCK_US_PER_TICK_MIN) {
                 clks.ext_us_per_tick = CLOCK_US_PER_TICK_MIN;
@@ -175,15 +202,25 @@ void clock_timer_task(void) {
             // should we switch clock source to external?
             if(clks.source == CLOCK_INTERNAL) {
                 clock_set_source(CLOCK_EXTERNAL);
+                // get the correct tick count
+                if(clks.run_state) {
+                    clks.ext_start_tick = clks.run_tick_count / CLOCK_MIDI_UPSAMPLE;
+                }
+                else {
+                    clks.ext_start_tick = clks.stop_tick_count / CLOCK_MIDI_UPSAMPLE;
+                }
+                clks.ext_tick_count = 0;
             }
         }
     }
     // time out external clock mode
-    if(clks.ext_hist_count &&
+    if(clks.ext_tick_count &&
             (clks.time_count - clks.ext_clock_last_tick) > CLOCK_EXTERNAL_TIMEOUT) {
-        clks.ext_hist_count = 0;
+        clks.ext_tick_count = 0;
         if(clks.source == CLOCK_EXTERNAL) {
             clock_set_source(CLOCK_INTERNAL);            
+            clks.ext_start_tick = 0;
+            clks.ext_tick_count = 0;
         }
     }
     
@@ -257,6 +294,8 @@ void clock_tap_tempo(void) {
 void clock_reset_pos(void) {
     clks.run_tick_count = 0;
     clks.stop_tick_count = 0;
+    clks.ext_tick_count = 0;
+    clks.ext_start_tick = 0;
 }
 
 // get the current clock tick position

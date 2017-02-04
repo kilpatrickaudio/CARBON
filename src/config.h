@@ -158,6 +158,7 @@
 #define CLOCK_EXTERNAL_HIST_LEN 8  // ticks in the history buffer (power of 2)
 #define CLOCK_TAP_TIMEOUT 2500000  // us (just longer than 30BPM)
 #define CLOCK_TAP_HIST_LEN 2  // taps in history buffer - required taps will be +1
+//#define CLOCK_LOCK_SPEED 1  // drift lock multiplier
 #define BEAT_LED_TIMEOUT 100  // ms
 #define CLOCK_OUT_PULSE_LEN 4  // ms
 
@@ -234,7 +235,7 @@
 //
 // development mode
 //
-//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread
