@@ -734,20 +734,23 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
             case MIDI_CLOCK_START:
                 // only deliver clock msg if port is enabled for clock in
                 if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
-                    seq_ctrl_reset_pos();
-                    seq_ctrl_set_run_state(1);
+                    clock_midi_rx_start();
+//                    seq_ctrl_reset_pos();
+//                    seq_ctrl_set_run_state(1);
                 }
                 break;
             case MIDI_CLOCK_CONTINUE:
                 // only deliver clock msg if port is enabled for clock in
                 if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
-                    seq_ctrl_set_run_state(1);
+                    clock_midi_rx_continue();
+//                    seq_ctrl_set_run_state(1);
                 }
                 break;
             case MIDI_CLOCK_STOP:
                 // only deliver clock msg if port is enabled for clock in
                 if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
-                    seq_ctrl_set_run_state(0);
+                    clock_midi_rx_stop();
+//                    seq_ctrl_set_run_state(0);
                 }
                 break;
         }

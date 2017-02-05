@@ -343,6 +343,22 @@ void clock_midi_rx_tick(void) {
     clks.ext_tickf = 1;
 }
 
+// a MIDI clock start was received
+void clock_midi_rx_start(void) {
+    seq_ctrl_reset_pos();
+    seq_ctrl_set_run_state(1);
+}
+
+// a MIDI clock continue was received
+void clock_midi_rx_continue(void) {
+    seq_ctrl_set_run_state(1);
+}
+
+// a MIDI clock stop was received
+void clock_midi_rx_stop(void) {
+    seq_ctrl_set_run_state(0);
+}
+
 //
 // local functions
 //

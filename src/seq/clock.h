@@ -67,4 +67,13 @@ void clock_set_running(int running);
 // a MIDI tick was received
 void clock_midi_rx_tick(void);
 
+// a MIDI clock start was received
+void clock_midi_rx_start(void);
+
+// a MIDI clock continue was received
+void clock_midi_rx_continue(void);
+
+// a MIDI clock stop was received
+void clock_midi_rx_stop(void);
+
 #endif
