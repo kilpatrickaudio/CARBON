@@ -30,8 +30,7 @@
 // setings
 #define CLOCK_US_PER_TICK_MAX ((uint64_t)(60000000.0 / (CLOCK_TEMPO_MIN * (float)CLOCK_PPQ)))
 #define CLOCK_US_PER_TICK_MIN ((uint64_t)(60000000.0 / (CLOCK_TEMPO_MAX * (float)CLOCK_PPQ)))
-
-#define CLOCK_LOCK_ADJUST 50  // lock adjust amount
+#define CLOCK_LOCK_ADJUST 500  // lock adjust amount
 
 // state
 struct clock_state {
@@ -39,23 +38,39 @@ struct clock_state {
     int source;   // CLOCK_EXTERNAL or CLOCK_INTERNAL
     int desired_run_state;  // 0 = stop, 1 = run
     int run_state;  // 0 = stopped, 1 = running
-    // generated clock state
     int next_swing;  // clock swing to change to on the next beat
     int current_swing;  // clock swing (0-30 = 50-80%)
-    uint32_t run_tick_count;  // running tick count
-    uint32_t stop_tick_count;   // stopped tick count
+    //
+    // general clock state
+    //
     uint64_t time_count;  // running time count
     uint64_t next_tick_time;  // time for the next tick
-    uint64_t int_us_per_tick;  // number of us per tick (internal)
-    uint64_t ext_us_per_tick;  // number of us per tick (external)
-    // clock recovery state
-    int ext_tickf;  // tick was received
-    uint64_t ext_clock_last_tick;  // last tick time
-    int ext_clock_period;  // ext clock period - averaged
-    int ext_tick_count;  // number of external ticks
-    int ext_start_tick;  // internal tick count when the ext clock was locked
-    uint64_t ext_hist[CLOCK_EXTERNAL_HIST_LEN];  // historical ticks
+    //
+    // internal clock state
+    //
+    int32_t run_tick_count;  // running tick count
+    int32_t stop_tick_count;   // stopped tick count
+    int32_t int_us_per_tick;  // number of us per tick (internal)
+    //
+    // external clock state
+    //
+    int32_t ext_us_per_tick;  // number of us per tick (external)
+    int32_t ext_generate_tick_count;  // generated clock ticks (for error adjustment)
+    int32_t ext_generate_run_tick_pos;  // generated running tick pos
+    // clock RX flags
+    int ext_tickf;  // external tick received flag
+    int ext_startf;  // external start received flag
+    int ext_stopf;  // external stop received flag
+    int ext_continuef;  // external continue received flag
+    // recovery state
+    uint64_t ext_recover_last_tick;  // last tick time - for tick period measurement
+    int32_t ext_recover_run_tick_pos;  // recovered running tick pos
+    int32_t ext_recover_tick_count;  // a count of ticks received
+    int32_t ext_recover_hist_pos;  // the position in the history buffer
+    int32_t ext_recover_hist[CLOCK_EXTERNAL_HIST_LEN];  // historical periods for averaging
+    //
     // tap tempo state
+    //
     int tap_beatf;  // tap tempo beat was received
     uint64_t tap_clock_last_tap;  // last tap time
     int tap_clock_period;  // tap clock period - averaged
@@ -70,16 +85,20 @@ void clock_set_source(int source);
 // init the clock
 void clock_init(void) {
     clock_set_source(CLOCK_INTERNAL);
-    clks.run_state = 0;
     clock_set_running(0);
     clock_reset_pos();
     clock_set_tempo(CLOCK_DEFAULT_TEMPO);
     clock_set_swing(50);
+    clks.run_state = 0;
+    clks.time_count = 0;
+    clks.next_tick_time = 0;
     clks.ext_tickf = 0;
-    clks.ext_clock_last_tick = 0;
-    clks.ext_clock_period = 0;
-    clks.ext_tick_count = 0;
-    clks.ext_start_tick = 0;
+    clks.ext_startf = 0;
+    clks.ext_stopf = 0;
+    clks.ext_continuef = 0;
+    clks.ext_recover_last_tick = 0;
+    clks.ext_recover_tick_count = 0;
+    clks.ext_recover_hist_pos = 0;
     clks.tap_beatf = 0;
     clks.tap_clock_last_tap = 0;
     clks.tap_clock_period = 0;
@@ -88,155 +107,169 @@ void clock_init(void) {
 
 // run the clock timer task - 1000us interval
 void clock_timer_task(void) {
-    int ext_error = 0;
     int i;
     uint32_t tick_count;
-    uint64_t temp64;
+    int32_t temp;
+    int error = 0;
 
     //
     // run clock timebase
     //
     clks.time_count += SEQ_TASK_INTERVAL_US;
-    // decide if we should issue a clock
-    if(clks.time_count > clks.next_tick_time) {
-        // if run state changed
-        if(clks.run_state != clks.desired_run_state) {            
-            clks.run_state = clks.desired_run_state;
-            // stopping
-            if(clks.run_state == 0) {
-                clks.stop_tick_count = clks.run_tick_count;
+    // internal clock
+    if(clks.source == CLOCK_INTERNAL) {
+        // decide if we should issue a clock
+        if(clks.time_count > clks.next_tick_time) {
+            // if run state changed
+            if(clks.run_state != clks.desired_run_state) {
+                clks.run_state = clks.desired_run_state;
+                // stopping
+                if(clks.run_state == 0) {
+                    clks.stop_tick_count = clks.run_tick_count;
+                }
             }
-            clks.ext_tick_count = clks.run_tick_count;  // sync ext clock to int
-
-            // XXX debugging
-            log_debug("CHANGE  run: %6d  -  stop: %6d  - ext: %6d - error: %3d",
-                clks.run_tick_count,
-                clks.stop_tick_count,
-                clks.ext_tick_count,
-                ext_error);
-        }
-        // get the correct tick count
-        if(clks.run_state) {
-            tick_count = clks.run_tick_count;
-        }
-        else {
-            tick_count = clks.stop_tick_count;
-        }
-        // calculate clock drift for external clock
-        // positive drift means internal clock is fast
-        if(clks.source == CLOCK_EXTERNAL) {
-            ext_error = tick_count - clks.ext_tick_count;
-        }
-
-        // calculate beat cross before processing sequencer stuff
-        if((tick_count % CLOCK_PPQ) == 0) {
-            // if the swing is adjusting we change it now
-            if(clks.current_swing != clks.next_swing) {
-                clks.current_swing = clks.next_swing;
-            }
-
+            // get the correct tick count
             if(clks.run_state) {
-                // XXX debugging
-                log_debug("BEAT - [RUN: %6d] -  stop: %6d  - ext: %6d - error: %3d",
-                    clks.run_tick_count,
-                    clks.stop_tick_count,
-                    clks.ext_tick_count,
-                    ext_error);
+                tick_count = clks.run_tick_count;
             }
             else {
-                // XXX debugging
-                log_debug("BEAT -  run: %6d  - [STOP: %6d] - ext: %6d - error: %3d",
-                    clks.run_tick_count,
-                    clks.stop_tick_count,
-                    clks.ext_tick_count,
-                    ext_error);
+                tick_count = clks.stop_tick_count;
             }
-            // fire event
-            state_change_fire0(SCE_CLK_BEAT);
-        }
-        
-        // generate correct number of pulses for current swing mode
-        for(i = 0; i < swing[clks.current_swing][tick_count % CLOCK_PPQ]; i ++) {
-            seq_ctrl_clock_tick(tick_count);
-        }
-        tick_count ++;
-
-        // internal clock rate
-        if(clks.source == CLOCK_INTERNAL) {
+            // calculate beat cross before processing sequencer stuff
+            if((tick_count % CLOCK_PPQ) == 0) {
+                // if the swing is adjusting we change it now
+                if(clks.current_swing != clks.next_swing) {
+                    clks.current_swing = clks.next_swing;
+                }
+                // fire event
+                state_change_fire0(SCE_CLK_BEAT);
+            }            
+            // generate correct number of pulses for current swing mode
+            for(i = 0; i < swing[clks.current_swing][tick_count % CLOCK_PPQ]; i ++) {
+                seq_ctrl_clock_tick(tick_count);
+            }
+            tick_count ++;
             clks.next_tick_time += clks.int_us_per_tick;
-        }
-        // adjust internal clock based on ext recovered clock
-        else {
-            if(ext_error > 0) {
-                clks.next_tick_time += clks.ext_us_per_tick + CLOCK_LOCK_ADJUST;
+            // write back the tick count
+            if(clks.run_state) {
+                clks.run_tick_count = tick_count;
             }
-            else if(ext_error < 0) {
+            else {
+                clks.stop_tick_count = tick_count;
+            }
+        }
+    }
+    // external clock
+    else {
+        // decide if we should issue a clock
+        if(clks.time_count > clks.next_tick_time) {
+            // generate correct number of pulses for current swing mode
+            for(i = 0; i < swing[clks.current_swing][clks.ext_generate_run_tick_pos % CLOCK_PPQ]; i ++) {
+                if(clks.run_state) {
+                    seq_ctrl_clock_tick(clks.ext_generate_run_tick_pos);
+                }
+                else {
+                    seq_ctrl_clock_tick(clks.ext_generate_tick_count);
+                }
+            }
+            // running
+            if(clks.run_state) {
+                // calculate beat cross before processing sequencer stuff
+                if((clks.ext_generate_run_tick_pos % CLOCK_PPQ) == 0) {
+                    // if the swing is adjusting we change it now
+                    if(clks.current_swing != clks.next_swing) {
+                        clks.current_swing = clks.next_swing;
+                    }
+                    // fire event
+                    state_change_fire0(SCE_CLK_BEAT);
+                }            
+                clks.ext_generate_run_tick_pos ++;
+                // calculate error
+                error = clks.ext_recover_run_tick_pos - clks.ext_generate_run_tick_pos;
+            }
+            // stopped
+            else {
+                clks.ext_generate_tick_count ++;
+                // calculate error
+                error = clks.ext_recover_tick_count - clks.ext_generate_tick_count;
+            }
+
+            // calculate next tick time and adjust for error
+            if(error > 0) {
                 clks.next_tick_time += clks.ext_us_per_tick - CLOCK_LOCK_ADJUST;
+            }
+            else if(error < 0) {
+                clks.next_tick_time += clks.ext_us_per_tick + CLOCK_LOCK_ADJUST;
             }
             else {
                 clks.next_tick_time += clks.ext_us_per_tick;
             }
         }
-
-        // write back the tick count
-        if(clks.run_state) {
-            clks.run_tick_count = tick_count;
-        }
-        else {
-            clks.stop_tick_count = tick_count;
-        }
     }
-    
+
     //
     // recover external clock
     // - interval range: 30 to 300 BPM = 83300us to 8330us per MIDI tick
     //
+    // MIDI tick was received
     if(clks.ext_tickf) {
         clks.ext_tickf = 0;
-        clks.ext_hist[(clks.ext_tick_count / CLOCK_MIDI_UPSAMPLE) & (CLOCK_EXTERNAL_HIST_LEN - 1)] =
-            clks.time_count - clks.ext_clock_last_tick;
-        clks.ext_clock_last_tick = clks.time_count;
-        clks.ext_tick_count += CLOCK_MIDI_UPSAMPLE;  // count by internal PPQ rate
+        // manage clock timing
+        clks.ext_recover_hist[clks.ext_recover_hist_pos & 
+            (CLOCK_EXTERNAL_HIST_LEN - 1)] = 
+            clks.time_count - clks.ext_recover_last_tick;
+        clks.ext_recover_last_tick = clks.time_count;
+        clks.ext_recover_hist_pos ++;
+        clks.ext_recover_tick_count += CLOCK_MIDI_UPSAMPLE;
         // we've received enough ticks
-        if(clks.ext_tick_count > (CLOCK_EXTERNAL_HIST_LEN * CLOCK_MIDI_UPSAMPLE)) {
-            clks.ext_clock_period = 0;
+        if(clks.ext_recover_hist_pos > CLOCK_EXTERNAL_HIST_LEN) {
+            // average the received clock periods
+            temp = 0;
             for(i = 0; i < CLOCK_EXTERNAL_HIST_LEN; i ++) {
-                clks.ext_clock_period += clks.ext_hist[i];
+                temp += clks.ext_recover_hist[i];
             }
-            clks.ext_clock_period /= CLOCK_EXTERNAL_HIST_LEN;
-            // convert measured time into internal higher frequency
-            temp64 = (clks.ext_clock_period / CLOCK_MIDI_UPSAMPLE);
+            temp /= CLOCK_EXTERNAL_HIST_LEN;  // average
+            temp /= CLOCK_MIDI_UPSAMPLE;  // upsample
             // ensure that tempo fits in the valid range before accepting
-            if(temp64 < CLOCK_US_PER_TICK_MIN) {
+            if(temp < CLOCK_US_PER_TICK_MIN) {
                 clks.ext_us_per_tick = CLOCK_US_PER_TICK_MIN;
             }
-            else if(temp64 > CLOCK_US_PER_TICK_MAX) {
+            else if(temp > CLOCK_US_PER_TICK_MAX) {
                 clks.ext_us_per_tick = CLOCK_US_PER_TICK_MAX;
             }
             else {
-                clks.ext_us_per_tick = temp64;
+                clks.ext_us_per_tick = temp;
             }
             // should we switch clock source to external?
             if(clks.source == CLOCK_INTERNAL) {
                 clock_set_source(CLOCK_EXTERNAL);
-                // get the correct tick count
-                if(clks.run_state) {
-                    clks.ext_start_tick = clks.run_tick_count;
-                }
-                else {
-                    clks.ext_start_tick = clks.stop_tick_count;
-                }
-                clks.ext_tick_count = clks.ext_start_tick;
+                clks.next_tick_time = clks.time_count;  // issue tick right away
+                clks.ext_generate_tick_count = clks.ext_recover_tick_count;  // jam
+                clks.ext_generate_run_tick_pos = 0;
+                clks.ext_recover_run_tick_pos = 0;
             }
+        }
+        // MIDI continue received
+        if(clks.ext_continuef) {
+            clks.ext_continuef = 0;
+            clks.run_state = 1;
+            // dispatch run state since this came from outside
+            seq_ctrl_set_run_state(1);
+        }
+        // generate run ticks
+        else if(clks.run_state) {
+            clks.ext_recover_run_tick_pos += CLOCK_MIDI_UPSAMPLE;
         }
     }
     // time out external clock mode
     if(clks.source == CLOCK_EXTERNAL &&
-            (clks.time_count - clks.ext_clock_last_tick) > CLOCK_EXTERNAL_TIMEOUT) {
+            (clks.time_count - clks.ext_recover_last_tick) > CLOCK_EXTERNAL_TIMEOUT) {
         clock_set_source(CLOCK_INTERNAL);
-        clks.desired_run_state = 0;  // stop clock on external clock loss
+        clks.run_state = 0;  // stop clock on external clock loss
+        // dispatch run state since this came from outside
+        seq_ctrl_set_run_state(0);
     }
-    
+
     //
     // recover tap tempo input
     //
@@ -254,16 +287,16 @@ void clock_timer_task(void) {
                 clks.tap_clock_period += clks.tap_hist[i];
             }
             clks.tap_clock_period /= CLOCK_TAP_HIST_LEN;
-            temp64 = (clks.tap_clock_period / CLOCK_PPQ);            
+            temp = (clks.tap_clock_period / CLOCK_PPQ);            
             // ensure that tempo fits in the valid range before accepting
-            if(temp64 < CLOCK_US_PER_TICK_MIN) {
+            if(temp < CLOCK_US_PER_TICK_MIN) {
                 clks.int_us_per_tick = CLOCK_US_PER_TICK_MIN;
             }
-            else if(temp64 > CLOCK_US_PER_TICK_MAX) {
+            else if(temp > CLOCK_US_PER_TICK_MAX) {
                 clks.int_us_per_tick = CLOCK_US_PER_TICK_MAX;
             }
             else {
-                clks.int_us_per_tick = temp64;
+                clks.int_us_per_tick = temp;
             }
             // fire event
             state_change_fire0(SCE_CLK_TAP_LOCK);
@@ -306,8 +339,8 @@ void clock_tap_tempo(void) {
 void clock_reset_pos(void) {
     clks.run_tick_count = 0;
     clks.stop_tick_count = 0;
-    clks.ext_tick_count = 0;
-    clks.ext_start_tick = 0;
+    clks.ext_generate_run_tick_pos = 0;
+    clks.ext_recover_run_tick_pos = 0;
 }
 
 // get the current clock tick position
@@ -325,13 +358,14 @@ int clock_get_running(void) {
 
 // start and stop the clock
 void clock_set_running(int running) {
-    if(running) {
-        clks.desired_run_state = 1;
-        log_debug("RUN");
+    if(clks.source == CLOCK_INTERNAL) {
+        clks.desired_run_state = running;
     }
-    else {
-        clks.desired_run_state = 0;
-        log_debug("STOP");
+    // can only stop from the panel when in ext clock mode
+    else if(!running) {
+        clks.ext_stopf = 0;
+        clks.run_state = 0;
+        clks.ext_generate_tick_count = clks.ext_recover_tick_count;
     }
 }
 
@@ -345,18 +379,23 @@ void clock_midi_rx_tick(void) {
 
 // a MIDI clock start was received
 void clock_midi_rx_start(void) {
+    clks.ext_startf = 0;
+    clks.run_state = 1;
     seq_ctrl_reset_pos();
     seq_ctrl_set_run_state(1);
 }
 
 // a MIDI clock continue was received
 void clock_midi_rx_continue(void) {
-    seq_ctrl_set_run_state(1);
+    clks.ext_continuef = 1;
 }
 
 // a MIDI clock stop was received
 void clock_midi_rx_stop(void) {
+    clks.ext_stopf = 0;
+    clks.run_state = 0;
     seq_ctrl_set_run_state(0);
+    clks.ext_generate_tick_count = clks.ext_recover_tick_count;
 }
 
 //

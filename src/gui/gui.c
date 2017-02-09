@@ -404,6 +404,9 @@ int gui_init(void) {
         }
     }
     
+    gstate.first_track = 0;
+    gstate.current_scene = 0;
+
     // make sure we don't start drawing yet
     gstate.started = 0;
     return 0;
