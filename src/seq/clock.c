@@ -379,23 +379,35 @@ void clock_midi_rx_tick(void) {
 
 // a MIDI clock start was received
 void clock_midi_rx_start(void) {
-    clks.ext_startf = 0;
-    clks.run_state = 1;
+    if(clks.source == CLOCK_EXTERNAL) {
+        clks.ext_startf = 0;
+        clks.run_state = 1;
+    }
     seq_ctrl_reset_pos();
     seq_ctrl_set_run_state(1);
 }
 
 // a MIDI clock continue was received
 void clock_midi_rx_continue(void) {
-    clks.ext_continuef = 1;
+    if(clks.source == CLOCK_EXTERNAL) {
+        clks.ext_continuef = 1;
+    }
+    else {
+        seq_ctrl_set_run_state(1);
+    }
 }
 
 // a MIDI clock stop was received
 void clock_midi_rx_stop(void) {
-    clks.ext_stopf = 0;
-    clks.run_state = 0;
-    seq_ctrl_set_run_state(0);
-    clks.ext_generate_tick_count = clks.ext_recover_tick_count;
+    if(clks.source == CLOCK_EXTERNAL) {
+        clks.ext_stopf = 0;
+        clks.run_state = 0;
+        seq_ctrl_set_run_state(0);
+        clks.ext_generate_tick_count = clks.ext_recover_tick_count;
+    }
+    else {
+        seq_ctrl_set_run_state(0);
+    }
 }
 
 //
