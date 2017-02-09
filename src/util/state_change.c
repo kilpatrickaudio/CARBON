@@ -62,10 +62,10 @@ void state_change_fire(int event_type, int *data, int data_len) {
     int i;
     int cls = event_type & 0xff0000;
 
-    // search for a free slot and insert it
+    // search through registered handlers and fire
     for(i = 0; i < STATE_CHANGE_NUM_REGISTERS; i ++) {
         if(schstate.handler[i] == NULL) {
-            return;
+            continue;
         }
         else if(schstate.event_class_map[i] == cls) {
             (*schstate.handler[i])(event_type, data, data_len);  // call the stored callback
