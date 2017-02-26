@@ -67,6 +67,7 @@
 #include "midi_ctrl.h"
 #include "arp_progs.h"
 #include "seq_ctrl.h"
+#include "song.h"
 #include "../midi/midi_protocol.h"
 #include "../util/log.h"
 #include "../util/seq_utils.h"
@@ -124,6 +125,11 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
     int stat = msg->status & 0xf0;
     int chan = msg->status & 0x0f;
     int track;
+
+    // should we do this?
+    if(!song_get_midi_remote_ctrl()) {
+        return;
+    }
 
     // handle system common messages first
     switch(msg->status) {
