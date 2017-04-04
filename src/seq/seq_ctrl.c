@@ -23,7 +23,6 @@
 #include "seq_ctrl.h"
 #include "seq_engine.h"
 #include "arp.h"
-#include "clock.h"
 #include "metronome.h"
 #include "outproc.h"
 #include "pattern.h"
@@ -39,6 +38,7 @@
 #include "../gui/song_edit.h"
 #include "../iface/iface_panel.h"
 #include "../iface/iface_midi_router.h"
+#include "../midi/midi_clock.h"
 #include "../util/log.h"
 #include "../util/seq_utils.h"
 #include "../util/state_change.h"
@@ -75,7 +75,7 @@ void seq_ctrl_init(void) {
     // init sequencer modules
     state_change_init();  // run this first
     gui_init();
-    clock_init();
+    midi_clock_init();
     song_init();
     seq_engine_init();  // song must be loaded before this
     step_edit_init();
@@ -90,14 +90,13 @@ void seq_ctrl_init(void) {
     state_change_register(seq_ctrl_handle_state_change, SCEC_SONG);
     state_change_register(seq_ctrl_handle_state_change, SCEC_CONFIG);
     state_change_register(seq_ctrl_handle_state_change, SCEC_POWER);
-    state_change_register(seq_ctrl_handle_state_change, SCEC_CLK);
 }
 
 // run the sequencer control realtime task - run on RT interrupt at 1000us interval
 void seq_ctrl_rt_task(void) {
     // only run this if we are on
     if(power_ctrl_get_power_state() == POWER_CTRL_STATE_ON) {
-        clock_timer_task();  // all music timing starts here - seq_ctrl_clock_tick() called here
+        midi_clock_timer_task();  // all music timing starts here
         seq_engine_timer_task();  // must run after clock for correct timing
         step_edit_timer_task();  // handle timeout of step edit mode
         song_edit_timer_task();  // handle timeout of song edit mode
@@ -118,11 +117,6 @@ void seq_ctrl_ui_task(void) {
         return;
     }
     gui_refresh_task();
-}
-
-// the clock ticked - do all sequencer music processing
-void seq_ctrl_clock_tick(uint32_t tick_count) {
-    seq_engine_run(tick_count);
 }
 
 // handle a control from the panel
@@ -151,7 +145,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             seq_ctrl_set_current_song(data[0]);
             seq_ctrl_refresh_modules();  // make sure all song data is updatd in the system
-            clock_reset_pos();  // cause the engine to be reset
+            midi_clock_request_reset_pos();  // reset the clock position
             // turn off modes 
             seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
             step_edit_set_enable(0);
@@ -169,7 +163,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_CLEARED:
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             seq_ctrl_refresh_modules();  // make sure all song data is updatd in the system
-            clock_reset_pos();  // cause the engine to be reset
+            midi_clock_request_reset_pos();  // reset the clock position
             // turn off modes 
             seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
             step_edit_set_enable(0);
@@ -202,7 +196,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             break;
         case SCE_SONG_TEMPO:
-            clock_set_tempo(song_get_tempo());
+            midi_clock_set_tempo(song_get_tempo());
             break;
         case SCE_SONG_CV_BEND_RANGE:
             cvproc_set_bend_range(data[0]);
@@ -245,9 +239,6 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
                 default:
                     break;
             }
-            break;
-        case SCE_CLK_TAP_LOCK:
-            song_set_tempo(clock_get_tempo());
             break;
     }
 }
@@ -330,41 +321,23 @@ void seq_ctrl_copy_scene(int dest_scene) {
 
 // get the sequencer run state
 int seq_ctrl_get_run_state(void) {
-    return clock_get_running();
+    return midi_clock_get_running();
 }
 
 // set the sequencer run state
 void seq_ctrl_set_run_state(int run) {
-    clock_set_running(run);
-    seq_engine_set_run_state(run);
-    // starting
+    log_debug("moo: %d", run);
     if(run) {
-        // if we were already in step record we should cancel recording
-        if(sstate.record_mode == SEQ_CTRL_RECORD_STEP) {        
-            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
-        }        
+        midi_clock_request_continue();
     }
-    // stopping
     else {
-        // cancel recording when stopping
-        if(sstate.record_mode != SEQ_CTRL_RECORD_IDLE) {
-            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
-        }
+        midi_clock_request_stop();
     }
-    // fire event
-    state_change_fire1(SCE_CTRL_RUN_STATE, run);
 }
 
 // reset the playback to the start - does not change playback state
 void seq_ctrl_reset_pos(void) {
-    // cancel recording if active
-    seq_ctrl_cancel_record();
-    // if we are in song mode, reset the song position too
-    if(sstate.song_mode) {
-        seq_engine_song_mode_reset();
-    }
-    // reset the clock position
-    clock_reset_pos();
+    midi_clock_request_reset_pos();  // reset the clock position
 }
 
 // reset a single track
@@ -553,7 +526,7 @@ void seq_ctrl_adjust_cvcal(int channel, int change) {
 
 // set the tempo
 void seq_ctrl_set_tempo(float tempo) {
-    song_set_tempo(clock_get_tempo());
+    song_set_tempo(midi_clock_get_tempo());
 }
 
 // adjust the tempo by a number of single units, fine = 0.1 changes
@@ -568,14 +541,14 @@ void seq_ctrl_adjust_tempo(int change, int fine) {
 
 // the tempo was tapped from the panel
 void seq_ctrl_tap_tempo(void) {
-    clock_tap_tempo();
+   midi_clock_tap_tempo();
 }
 
 // adjust the swing setting
 void seq_ctrl_adjust_swing(int change) {
     song_set_swing(seq_utils_clamp(song_get_swing() + change, 
         SEQ_SWING_MIN, SEQ_SWING_MAX));
-    clock_set_swing(song_get_swing());
+    midi_clock_set_swing(song_get_swing());
 }
 
 // adjust the metronome mode
@@ -653,16 +626,10 @@ void seq_ctrl_adjust_clock_out_rate(int port, int change) {
         0, (SEQ_UTILS_CLOCK_PPQS - 1)));
 }
 
-// adjust the clock in enable setting on a port
-void seq_ctrl_adjust_clock_in_enable(int port, int change) {
-    if(port < MIDI_PORT_IN_OFFSET || 
-            port >= (MIDI_PORT_IN_OFFSET + MIDI_PORT_NUM_INPUTS)) {
-        log_error("scacie - port invalid: %d", port);
-        return;  
-    }
-    song_set_midi_port_clock_in(port,
-        seq_utils_clamp(song_get_midi_port_clock_in(port) + change,
-        0, 1));
+// adjust the clock source
+void seq_ctrl_adjust_clock_source(int change) {
+    song_set_midi_clock_source(seq_utils_clamp(song_get_midi_clock_source() + change,
+        SONG_MIDI_CLOCK_SOURCE_INT, SONG_MIDI_CLOCK_SOURCE_USB_DEV_IN));
 }
 
 // adjust the MIDI remote control state
@@ -1311,6 +1278,61 @@ void seq_ctrl_make_clear(void) {
 }
 
 //
+// callbacks
+//
+// a beat was crossed
+void midi_clock_beat_crossed(void) {
+    state_change_fire0(SCE_CTRL_CLOCK_BEAT);
+}
+
+// the run state changed
+void midi_clock_run_state_changed(int running) {
+    seq_engine_set_run_state(running);
+    // starting
+    if(running) {
+        // if we were already in step record we should cancel recording
+        if(sstate.record_mode == SEQ_CTRL_RECORD_STEP) {        
+            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
+        }        
+    }
+    // stopping
+    else {
+        // cancel recording when stopping
+        if(sstate.record_mode != SEQ_CTRL_RECORD_IDLE) {
+            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
+        }
+    }
+    // fire event
+    state_change_fire1(SCE_CTRL_RUN_STATE, running);
+}
+
+// the clock source changed
+void midi_clock_source_changed(int source) {
+    state_change_fire1(SCE_CTRL_CLOCK_SOURCE, source);
+}
+
+// the tap tempo locked
+void midi_clock_tap_locked(void) {
+    song_set_tempo(midi_clock_get_tempo());
+}
+
+// the clock ticked
+void midi_clock_ticked(uint32_t tick_count) {
+    //do all sequencer music processing
+    seq_engine_run(tick_count);
+}
+
+// the clock position was reset
+void midi_clock_pos_reset(void) {
+    // cancel recording if active
+    seq_ctrl_cancel_record();
+    // if we are in song mode, reset the song position too
+    if(sstate.song_mode) {
+        seq_engine_song_mode_reset();
+    }
+}
+
+//
 // local functions
 //
 // cancel record if we do something that would conflict with record
@@ -1332,9 +1354,10 @@ void seq_ctrl_refresh_modules(void) {
     // song version <=1.02
     if(song_ver <= 0x00010002) {
         song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
-        song_set_midi_port_clock_in(MIDI_PORT_DIN1_IN, 0);  // disable
-        song_set_midi_port_clock_in(MIDI_PORT_USB_HOST_IN, 0);  // disable
-        song_set_midi_port_clock_in(MIDI_PORT_USB_DEV_IN1, 0);  // disable
+        // deprecated in ver. 1.08 and above
+//        song_set_midi_port_clock_in(MIDI_PORT_DIN1_IN, 0);  // disable
+//        song_set_midi_port_clock_in(MIDI_PORT_USB_HOST_IN, 0);  // disable
+//        song_set_midi_port_clock_in(MIDI_PORT_USB_DEV_IN1, 0);  // disable
         // remap old step lengths and arp speeds from 1.02 to 1.03 format
         // this adds support for triplets
         for(scene = 0; scene < SEQ_NUM_SCENES; scene ++) {
@@ -1346,13 +1369,20 @@ void seq_ctrl_refresh_modules(void) {
             }
         }
     }
+    // song version <= 1.07
+    if(song_ver <= 0x00010007) {
+        // fix the MIDI clock source stuff - default to internal clock
+        song_set_midi_clock_source(SONG_MIDI_CLOCK_SOURCE_INT);
+    }
+
+    // make sure we save back the current version
     if(song_ver != CARBON_VERSION_MAJMIN) {
-        song_set_version_to_current();  // make sure we save back current ver
+        song_set_version_to_current();
     }
     
     // set up clock / reset position
-    clock_set_tempo(song_get_tempo());   
-    clock_set_swing(song_get_swing());     
+    midi_clock_set_tempo(song_get_tempo());   
+    midi_clock_set_swing(song_get_swing());     
     metronome_mode_changed(song_get_metronome_mode());
     metronome_sound_len_changed(song_get_metronome_sound_len());
     cvproc_set_bend_range(song_get_cv_bend_range());

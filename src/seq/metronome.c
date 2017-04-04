@@ -19,13 +19,13 @@
  *
  */
 #include "metronome.h"
-#include "clock.h"
 #include "outproc.h"
 #include "seq_ctrl.h"
 #include "song.h"
 #include "../config.h"
 #include "../analog_out.h"
 #include "../gui/panel.h"
+#include "../midi/midi_clock.h"
 #include "../midi/midi_utils.h"
 
 struct metronome_state {
@@ -72,7 +72,7 @@ void metronome_run(int tick_count) {
         mnstate.beat_cross = 0;
         panel_blink_beat_led();
         // only play metronome while running
-        if(clock_get_running()) {
+        if(midi_clock_get_running()) {
             panel_blink_beat_led();
             // if we're recording make the sound
             if(seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE) {

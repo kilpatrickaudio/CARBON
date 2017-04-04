@@ -33,6 +33,11 @@
 // MIDI / CV/gate settings
 #define SONG_PORT_DISABLE -1
 #define SONG_MIDI_PROG_NULL -1
+// MIDI clock source
+#define SONG_MIDI_CLOCK_SOURCE_INT -1  // internal clock
+#define SONG_MIDI_CLOCK_SOURCE_DIN1_IN (MIDI_PORT_DIN1_IN - MIDI_PORT_IN_OFFSET)  // DIN1 in
+#define SONG_MIDI_CLOCK_SOURCE_USB_HOST_IN (MIDI_PORT_USB_HOST_IN - MIDI_PORT_IN_OFFSET)  // USB host in
+#define SONG_MIDI_CLOCK_SOURCE_USB_DEV_IN (MIDI_PORT_USB_DEV_IN1 - MIDI_PORT_IN_OFFSET)  // USB device in
 // CV outputs
 #define SONG_CVGATE_NUM_OUTPUTS (CVPROC_NUM_OUTPUTS)
 // CV/gate pairs
@@ -188,13 +193,11 @@ int song_get_midi_port_clock_out(int port);
 // port must be a MIDI output port
 void song_set_midi_port_clock_out(int port, int ppq);
 
-// get a MIDI port clock in enable setting - returns -1 on error
-// port must be a MIDI input port
-int song_get_midi_port_clock_in(int port);
+// get the MIDI clock source - see lookup in song.h
+int song_get_midi_clock_source(void);
 
-// set a MIDI port clock in enable setting
-// port must be a MIDI input port
-void song_set_midi_port_clock_in(int port, int enable);
+// set the MIDI clock source - see lookup in song.h
+void song_set_midi_clock_source(int source);
 
 // get whether MIDI remote control is enabled
 int song_get_midi_remote_ctrl(void);

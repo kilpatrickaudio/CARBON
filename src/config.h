@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 7
+#define CARBON_VERSION_MINOR 8
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -148,17 +148,15 @@
 #define CVPROC_BEND_RANGE_MIN 1  // min setting for CV bend range
 #define CVPROC_BEND_RANGE_MAX 12  // max setting for CV bend range
 
-// clock
-#define CLOCK_DEFAULT_TEMPO 60.0
-#define CLOCK_TEMPO_MIN 30.0
-#define CLOCK_TEMPO_MAX 300.0
-#define CLOCK_PPQ 96
-#define CLOCK_MIDI_UPSAMPLE (CLOCK_PPQ / 24)
-#define CLOCK_EXTERNAL_TIMEOUT 250000  // us
-#define CLOCK_EXTERNAL_HIST_LEN 8  // ticks in the history buffer (power of 2)
-#define CLOCK_TAP_TIMEOUT 2500000  // us (just longer than 30BPM)
-#define CLOCK_TAP_HIST_LEN 2  // taps in history buffer - required taps will be +1
-//#define CLOCK_LOCK_SPEED 1  // drift lock multiplier
+// MIDI clock
+#define MIDI_CLOCK_TASK_INTERVAL_US (SEQ_TASK_INTERVAL_US)
+#define MIDI_CLOCK_DEFAULT_TEMPO 60.0
+#define MIDI_CLOCK_TEMPO_MIN 30.0  // BPM
+#define MIDI_CLOCK_TEMPO_MAX 300.0  // BPM
+#define MIDI_CLOCK_SWING_MIN 50  // percent
+#define MIDI_CLOCK_SWING_MAX 80  // percent
+#define MIDI_CLOCK_PPQ 96
+#define MIDI_CLOCK_UPSAMPLE (MIDI_CLOCK_PPQ / 24)
 #define BEAT_LED_TIMEOUT 100  // ms
 #define CLOCK_OUT_PULSE_LEN 4  // ms
 
@@ -185,8 +183,8 @@
 #define SEQ_NUM_TRACKS 6
 #define SEQ_NUM_STEPS 64
 #define SEQ_TRACK_POLY 6
-#define SEQ_SWING_MIN 50  // percent
-#define SEQ_SWING_MAX 80  // percent
+#define SEQ_SWING_MIN (MIDI_CLOCK_SWING_MIN)  // percent
+#define SEQ_SWING_MAX (MIDI_CLOCK_SWING_MAX)  // percent
 #define SEQ_TRANSPOSE_CENTRE 60  // the centre note for transposing and bias tracks
 #define SEQ_TRANSPOSE_MIN -24  // min transpose setting for all uses (track, kbtrans, song)
 #define SEQ_TRANSPOSE_MAX 24  // max transpose setting for all uses (track, kbtrans, song)
@@ -203,13 +201,12 @@
 #define SEQ_RATCHET_MIN 1  // min ratchet setting
 #define SEQ_RATCHET_MAX 8  // max ratchet setting
 #define SEQ_START_DELAY_MIN 0  // min start delay
-//#define SEQ_START_DELAY_MAX (CLOCK_PPQ * 4)  // max start delay - 1 bar
-#define SEQ_START_DELAY_MAX (CLOCK_PPQ)  // 1 beat
+#define SEQ_START_DELAY_MAX (MIDI_CLOCK_PPQ)  // 1 beat
 #define STEP_EDIT_NEW_NOTE_VELOCITY 100
 #define STEP_EDIT_LOWEST_NOTE (SEQ_MIN_NOTE)
 #define STEP_EDIT_HIGHEST_NOTE (SEQ_MAX_NOTE)
 #define STEP_EDIT_SHORTEST_NOTE 1
-#define STEP_EDIT_LONGEST_NOTE (CLOCK_MIDI_UPSAMPLE * 384)
+#define STEP_EDIT_LONGEST_NOTE (MIDI_CLOCK_UPSAMPLE * 384)
 #define STEP_EDIT_NEW_NOTE 60
 #define STEP_EDIT_NEW_CC 1
 #define STEP_EDIT_NEW_CC_VAL 64
@@ -246,3 +243,4 @@
 #define POWER_CTRL_POWER_ON_AUTO  // uncomment to make power come up automatically
 #endif
 #endif
+

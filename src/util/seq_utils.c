@@ -26,23 +26,23 @@
 
 // step length in ticks
 const int seq_utils_step_size[] = {
-    (2 * CLOCK_MIDI_UPSAMPLE),      // 32nd T       - xxx       - new 0
-    (3 * CLOCK_MIDI_UPSAMPLE),      // 32nd         - old 0     - new 1
-    (4 * CLOCK_MIDI_UPSAMPLE),      // 16th T       - xxx       - new 2
-    (4.5 * CLOCK_MIDI_UPSAMPLE),    // .32nd        - old 1     - new 3
-    (6 * CLOCK_MIDI_UPSAMPLE),      // 16th         - old 2     - new 4
-    (8 * CLOCK_MIDI_UPSAMPLE),      // 8th T        - xxx       - new 5
-    (9 * CLOCK_MIDI_UPSAMPLE),      // .16th        - old 3     - new 6
-    (12 * CLOCK_MIDI_UPSAMPLE),     // 8th          - old 4     - new 7
-    (16 * CLOCK_MIDI_UPSAMPLE),     // quarter T    - xxx       - new 8
-    (18 * CLOCK_MIDI_UPSAMPLE),     // .8th         - old 5     - new 9
-    (24 * CLOCK_MIDI_UPSAMPLE),     // quarter      - old 6     - new 10
-    (32 * CLOCK_MIDI_UPSAMPLE),     // half T       - xxx       - new 11
-    (36 * CLOCK_MIDI_UPSAMPLE),     // .quarter     - old 7     - new 12
-    (48 * CLOCK_MIDI_UPSAMPLE),     // half         - old 8     - new 13
-    (64 * CLOCK_MIDI_UPSAMPLE),     // whole T      - xxx       - new 14
-    (72 * CLOCK_MIDI_UPSAMPLE),     // .half        - old 9     - new 15
-    (96 * CLOCK_MIDI_UPSAMPLE)      // whole        - old 10    - new 16
+    (2 * MIDI_CLOCK_UPSAMPLE),      // 32nd T       - xxx       - new 0
+    (3 * MIDI_CLOCK_UPSAMPLE),      // 32nd         - old 0     - new 1
+    (4 * MIDI_CLOCK_UPSAMPLE),      // 16th T       - xxx       - new 2
+    (4.5 * MIDI_CLOCK_UPSAMPLE),    // .32nd        - old 1     - new 3
+    (6 * MIDI_CLOCK_UPSAMPLE),      // 16th         - old 2     - new 4
+    (8 * MIDI_CLOCK_UPSAMPLE),      // 8th T        - xxx       - new 5
+    (9 * MIDI_CLOCK_UPSAMPLE),      // .16th        - old 3     - new 6
+    (12 * MIDI_CLOCK_UPSAMPLE),     // 8th          - old 4     - new 7
+    (16 * MIDI_CLOCK_UPSAMPLE),     // quarter T    - xxx       - new 8
+    (18 * MIDI_CLOCK_UPSAMPLE),     // .8th         - old 5     - new 9
+    (24 * MIDI_CLOCK_UPSAMPLE),     // quarter      - old 6     - new 10
+    (32 * MIDI_CLOCK_UPSAMPLE),     // half T       - xxx       - new 11
+    (36 * MIDI_CLOCK_UPSAMPLE),     // .quarter     - old 7     - new 12
+    (48 * MIDI_CLOCK_UPSAMPLE),     // half         - old 8     - new 13
+    (64 * MIDI_CLOCK_UPSAMPLE),     // whole T      - xxx       - new 14
+    (72 * MIDI_CLOCK_UPSAMPLE),     // .half        - old 9     - new 15
+    (96 * MIDI_CLOCK_UPSAMPLE)      // whole        - old 10    - new 16
 };
 
 // convert a MIDI-style encoder value to a change amount
@@ -152,21 +152,21 @@ int seq_utils_warp_change(int oldval, int change, int divisor) {
 int seq_utils_clock_pqq_to_divisor(int ppq) {
     switch(ppq) {
         case SEQ_UTILS_CLOCK_1PPQ:
-            return (CLOCK_PPQ / 1);
+            return (MIDI_CLOCK_PPQ / 1);
         case SEQ_UTILS_CLOCK_2PPQ:
-            return (CLOCK_PPQ / 2);
+            return (MIDI_CLOCK_PPQ / 2);
         case SEQ_UTILS_CLOCK_3PPQ:
-            return (CLOCK_PPQ / 3);
+            return (MIDI_CLOCK_PPQ / 3);
         case SEQ_UTILS_CLOCK_4PPQ:
-            return (CLOCK_PPQ / 4);
+            return (MIDI_CLOCK_PPQ / 4);
         case SEQ_UTILS_CLOCK_6PPQ:
-            return (CLOCK_PPQ / 6);
+            return (MIDI_CLOCK_PPQ / 6);
         case SEQ_UTILS_CLOCK_8PPQ:
-            return (CLOCK_PPQ / 8);
+            return (MIDI_CLOCK_PPQ / 8);
         case SEQ_UTILS_CLOCK_12PPQ:
-            return (CLOCK_PPQ / 12);
+            return (MIDI_CLOCK_PPQ / 12);
         case SEQ_UTILS_CLOCK_24PPQ:
-            return (CLOCK_PPQ / 24);
+            return (MIDI_CLOCK_PPQ / 24);
         default:
             return 0;
     }

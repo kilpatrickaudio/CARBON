@@ -23,7 +23,6 @@
 #include "seq_engine.h"
 #include "seq_ctrl.h"
 #include "arp.h"
-#include "clock.h"
 #include "clock_out.h"
 #include "metronome.h"
 #include "midi_ctrl.h"
@@ -34,6 +33,7 @@
 #include "../gui/gui.h"
 #include "../gui/panel.h"
 #include "../gui/step_edit.h"
+#include "../midi/midi_clock.h"
 #include "../midi/midi_stream.h"
 #include "../midi/midi_utils.h"
 #include "../util/log.h"
@@ -74,7 +74,7 @@ struct seq_engine_active_note {
 //
 struct seq_engine_state {
     // local cache for stuff we need to check a lot
-    int midi_clock_in_enable[MIDI_PORT_NUM_INPUTS];  // 0 = clock RX disable, 1 = clock RX enable
+    int midi_clock_source;  // see lookup in song.h
     int beat_cross;  // a downbeat was crossed
     int scene_current;  // current scene (set in engine loop)
     int scene_next;  // next scene to be changed to (set by external control)
@@ -221,7 +221,6 @@ void seq_engine_init(void) {
     // register for events    
     state_change_register(seq_engine_handle_state_change, SCEC_SONG);
     state_change_register(seq_engine_handle_state_change, SCEC_CTRL);
-    state_change_register(seq_engine_handle_state_change, SCEC_CLK);
 }
 
 // realtime tasks for the engine - handling keyboard input
@@ -300,7 +299,7 @@ void seq_engine_run(uint32_t tick_count) {
     step_edit_run(tick_count);
     
     // only process events if the clock is running
-    if(clock_get_running()) {
+    if(midi_clock_get_running()) {
         // if we crossed a beat it might be time to change scenes
         if(sestate.beat_cross) {
             sestate.beat_cross = 0;
@@ -522,7 +521,7 @@ void seq_engine_change_scene(int scene) {
     }
     sestate.scene_next = scene;
     // if we're stopped we need to change right away
-    if(!clock_get_running()) {
+    if(!midi_clock_get_running()) {
         seq_engine_change_scene_synced();    
     }
 }
@@ -551,6 +550,10 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_CTRL_SONG_MODE:
             seq_engine_song_mode_enable_changed(data[0]);
             break;
+        case SCE_CTRL_CLOCK_BEAT:
+            sestate.beat_cross = 1;
+            metronome_beat_cross();
+            break;    
         case SCE_SONG_METRONOME_MODE:
             metronome_mode_changed(data[0]);
             break;
@@ -575,10 +578,6 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_MIDI_PROGRAM:
             seq_engine_send_program(data[0], data[1]);
             break;
-        case SCE_CLK_BEAT:
-            sestate.beat_cross = 1;
-            metronome_beat_cross();
-            break;    
         default:
             break;
     }
@@ -597,7 +596,7 @@ void seq_engine_step_rec_pos_changed(int change) {
         // this might be the first event that enables recording
         if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
             // no clock - time for step mode
-            if(!clock_get_running()) {
+            if(!midi_clock_get_running()) {
                 seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);        
                 sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_RUN;  // force run
             }
@@ -645,7 +644,7 @@ void seq_engine_record_mode_changed(int newval) {
                 // only set up selected tracks
                 if(seq_ctrl_get_track_select(track)) {
                     sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_RUN;
-                    sestate.record_pos[track] = clock_get_tick_pos();
+                    sestate.record_pos[track] = midi_clock_get_tick_pos();
                 }
                 sestate.record_event_count = 0;  // reset note count
             }            
@@ -727,26 +726,26 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
             //
             case MIDI_TIMING_TICK:
                 // only deliver clock msg if port is enabled for clock in
-                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
-                    clock_midi_rx_tick();
+                if(sestate.midi_clock_source == msg->port - MIDI_PORT_IN_OFFSET) {
+                    midi_clock_midi_rx_tick();
                 }
                 break;
             case MIDI_CLOCK_START:
                 // only deliver clock msg if port is enabled for clock in
-                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
-                    clock_midi_rx_start();
+                if(sestate.midi_clock_source == msg->port - MIDI_PORT_IN_OFFSET) {
+                    midi_clock_midi_rx_start();
                 }
                 break;
             case MIDI_CLOCK_CONTINUE:
                 // only deliver clock msg if port is enabled for clock in
-                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
-                    clock_midi_rx_continue();
+                if(sestate.midi_clock_source == msg->port - MIDI_PORT_IN_OFFSET) {
+                    midi_clock_midi_rx_continue();
                 }
                 break;
             case MIDI_CLOCK_STOP:
                 // only deliver clock msg if port is enabled for clock in
-                if(sestate.midi_clock_in_enable[msg->port - MIDI_PORT_IN_OFFSET]) {
-                    clock_midi_rx_stop();
+                if(sestate.midi_clock_source == msg->port - MIDI_PORT_IN_OFFSET) {
+                    midi_clock_midi_rx_stop();
                 }
                 break;
         }
@@ -1358,7 +1357,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
     // this might be the first event that enables recording
     if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
         // no clock - time for step mode
-        if(!clock_get_running()) {
+        if(!midi_clock_get_running()) {
             seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);        
         }
     }
@@ -1476,7 +1475,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                             sestate.record_events[i].msg.status == MIDI_NOTE_ON &&
                             sestate.record_events[i].msg.data0 == msg->data0) {
                         // record the note length to the existing data
-                        sestate.record_events[i].tick_len = clock_get_tick_pos() - 
+                        sestate.record_events[i].tick_len = midi_clock_get_tick_pos() - 
                             sestate.record_events[i].tick_pos;
                         break;
                     }
@@ -1484,7 +1483,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 break;
             case MIDI_NOTE_ON:
                 // add note to recording list
-                sestate.record_events[sestate.record_event_count].tick_pos = clock_get_tick_pos();
+                sestate.record_events[sestate.record_event_count].tick_pos = midi_clock_get_tick_pos();
                 sestate.record_events[sestate.record_event_count].tick_len = 0;
                 sestate.record_events[sestate.record_event_count].msg.port = 0;
                 sestate.record_events[sestate.record_event_count].msg.len = 3;
@@ -1495,7 +1494,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 break;
             case MIDI_CONTROL_CHANGE:                
                 // add CC to recording list
-                sestate.record_events[sestate.record_event_count].tick_pos = clock_get_tick_pos();
+                sestate.record_events[sestate.record_event_count].tick_pos = midi_clock_get_tick_pos();
                 sestate.record_events[sestate.record_event_count].tick_len = 0;  // unused
                 sestate.record_events[sestate.record_event_count].msg.port = 0;
                 sestate.record_events[sestate.record_event_count].msg.len = 3;
@@ -1871,11 +1870,7 @@ void seq_engine_song_loaded(int song) {
 // recalculate the running parameters from the song
 void seq_engine_recalc_params(void) {
     int track, dist_start, dist_end;
-    int port;
-    for(port = 0; port < MIDI_PORT_NUM_INPUTS; port ++) {
-        sestate.midi_clock_in_enable[port] =
-            song_get_midi_port_clock_in(port + MIDI_PORT_IN_OFFSET);
-    }
+    sestate.midi_clock_source = song_get_midi_clock_source();
     sestate.first_track = seq_ctrl_get_first_track();
     sestate.key_velocity_scale = song_get_key_velocity_scale();
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {

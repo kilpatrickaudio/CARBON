@@ -446,20 +446,18 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_SONG_MIDI_PORT_CLOCK_OUT:
             if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
-                    (pmstate.menu_submode == PANEL_MENU_CLOCK_RX_DIN ||
-                    pmstate.menu_submode == PANEL_MENU_CLOCK_RX_USB_DEV ||
-                    pmstate.menu_submode == PANEL_MENU_CLOCK_RX_USB_HOST)) {
-                panel_menu_update_display();
-                pmstate.menu_timeout_count = pmstate.menu_timeout;
-            }
-            break;
-        case SCE_SONG_MIDI_PORT_CLOCK_IN:
-            if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
                     (pmstate.menu_submode == PANEL_MENU_CLOCK_TX_DIN1 ||
                     pmstate.menu_submode == PANEL_MENU_CLOCK_TX_DIN2 ||
                     pmstate.menu_submode == PANEL_MENU_CLOCK_TX_USB_DEV ||
                     pmstate.menu_submode == PANEL_MENU_CLOCK_TX_USB_HOST ||
                     pmstate.menu_submode == PANEL_MENU_CLOCK_TX_CV)) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
+            }
+            break;
+        case SCE_SONG_MIDI_CLOCK_SOURCE:
+            if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
+                    pmstate.menu_submode == PANEL_MENU_CLOCK_SOURCE) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
@@ -1010,26 +1008,26 @@ void panel_menu_display_clock(void) {
                 song_get_midi_port_clock_out(MIDI_PORT_USB_DEV_OUT1));
             gui_set_menu_value(tempstr);            
             break;
-        case PANEL_MENU_CLOCK_RX_DIN:
-            gui_set_menu_subtitle("MIDI Clock IN");
-            gui_set_menu_param("MIDI DIN");
-            panel_utils_onoff_str(tempstr,
-                song_get_midi_port_clock_in(MIDI_PORT_DIN1_IN));
-            gui_set_menu_value(tempstr);
-            break;
-        case PANEL_MENU_CLOCK_RX_USB_HOST:
-            gui_set_menu_subtitle("MIDI Clock IN");
-            gui_set_menu_param("MIDI USB HOST");
-            panel_utils_onoff_str(tempstr,
-                song_get_midi_port_clock_in(MIDI_PORT_USB_HOST_IN));
-            gui_set_menu_value(tempstr);
-            break;
-        case PANEL_MENU_CLOCK_RX_USB_DEV:
-            gui_set_menu_subtitle("MIDI Clock IN");
-            gui_set_menu_param("MIDI USB DEV");
-            panel_utils_onoff_str(tempstr,
-                song_get_midi_port_clock_in(MIDI_PORT_USB_DEV_IN1));
-            gui_set_menu_value(tempstr);
+        case PANEL_MENU_CLOCK_SOURCE:
+            gui_set_menu_subtitle("MIDI Clock Source");
+            gui_set_menu_param("Source");
+            switch(song_get_midi_clock_source()) {
+                case SONG_MIDI_CLOCK_SOURCE_INT:
+                    gui_set_menu_value("INT");
+                    break;
+                case SONG_MIDI_CLOCK_SOURCE_DIN1_IN:
+                    gui_set_menu_value("MIDI DIN IN");
+                    break;
+                case SONG_MIDI_CLOCK_SOURCE_USB_HOST_IN:
+                    gui_set_menu_value("MIDI USB HOST");
+                    break;
+                case SONG_MIDI_CLOCK_SOURCE_USB_DEV_IN:
+                    gui_set_menu_value("MIDI USB DEV");
+                    break;
+                default:
+                    gui_set_menu_value("---");
+                    break;
+            }
             break;
     }
 }
@@ -1220,14 +1218,8 @@ void panel_menu_edit_clock(int change) {
         case PANEL_MENU_CLOCK_TX_CV:
             seq_ctrl_adjust_clock_out_rate(MIDI_PORT_CV_OUT, change);
             break;
-        case PANEL_MENU_CLOCK_RX_DIN:
-            seq_ctrl_adjust_clock_in_enable(MIDI_PORT_DIN1_IN, change);
-            break;
-        case PANEL_MENU_CLOCK_RX_USB_HOST:
-            seq_ctrl_adjust_clock_in_enable(MIDI_PORT_USB_HOST_IN, change);
-            break;
-        case PANEL_MENU_CLOCK_RX_USB_DEV:
-            seq_ctrl_adjust_clock_in_enable(MIDI_PORT_USB_DEV_IN1, change);
+        case PANEL_MENU_CLOCK_SOURCE:
+            seq_ctrl_adjust_clock_source(change);
             break;
     }
     panel_menu_update_display();

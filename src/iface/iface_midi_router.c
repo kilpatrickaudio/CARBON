@@ -414,7 +414,7 @@ void iface_midi_router_set_clock_div(int div) {
     }
     config_store_set_val(CONFIG_STORE_IFACE_ANALOG_CLOCK_DIV, div);
     ifacemrs.analog_clock_div = seq_utils_clock_pqq_to_divisor(div) / 
-        CLOCK_MIDI_UPSAMPLE;
+        MIDI_CLOCK_UPSAMPLE;
 }
 
 // handle CC messages for controlling interface functions

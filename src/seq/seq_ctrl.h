@@ -48,9 +48,6 @@ void seq_ctrl_rt_task(void);
 // run the sequencer control UI task
 void seq_ctrl_ui_task(void);
 
-// the clock ticked - do all sequencer music processing
-void seq_ctrl_clock_tick(uint32_t tick_count);
-
 // handle a control from the panel
 void seq_ctrl_panel_input(int ctrl, int val);
 
@@ -177,8 +174,8 @@ void seq_ctrl_adjust_cv_output_scaling(int pair, int change);
 // adjust the clock out rate on a port
 void seq_ctrl_adjust_clock_out_rate(int port, int change);
 
-// adjust the clock in enable setting on a port
-void seq_ctrl_adjust_clock_in_enable(int port, int change);
+// adjust the clock source
+void seq_ctrl_adjust_clock_source(int change);
 
 // adjust the MIDI remote control state
 void seq_ctrl_adjust_midi_remote_ctrl(int change);

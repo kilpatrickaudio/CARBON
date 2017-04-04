@@ -28,9 +28,8 @@ enum STATE_CHANGE_EVENT_CLASS {
     SCEC_SONG = 0x010000,
     SCEC_CTRL = 0x020000,
     SCEC_ENG = 0x030000,
-    SCEC_CLK = 0x040000,
-    SCEC_CONFIG = 0x050000,
-    SCEC_POWER = 0x060000
+    SCEC_CONFIG = 0x040000,
+    SCEC_POWER = 0x050000
 };
 
 // event types
@@ -52,7 +51,7 @@ enum STATE_CHANGE_EVENT {
     SCE_SONG_CV_OUTPUT_SCALING,  // arg0 = CV output, arg1 = mode
     SCE_SONG_CVCAL,  // arg0 = channel, arg1 = cal
     SCE_SONG_MIDI_PORT_CLOCK_OUT,  // arg0 = port, arg1 = ppq
-    SCE_SONG_MIDI_PORT_CLOCK_IN,  // arg0 = port, arg1 = enable
+    SCE_SONG_MIDI_CLOCK_SOURCE,  // arg0 = source
     SCE_SONG_MIDI_REMOTE_CTRL,  // arg0 = enable
     SCE_SONG_LIST_SCENE,  // arg0 = entry, arg1 = scene
     SCE_SONG_LIST_LENGTH,  // arg0 = entry, arg1 = length
@@ -89,15 +88,13 @@ enum STATE_CHANGE_EVENT {
     SCE_CTRL_SONG_MODE,  // arg0 = song mode
     SCE_CTRL_LIVE_MODE,  // arg0 = live mode
     SCE_CTRL_RECORD_MODE,  // arg0 = record mode
+    SCE_CTRL_CLOCK_BEAT,  // no args
+    SCE_CTRL_CLOCK_SOURCE,  // arg0 = source
     // engine events
     SCE_ENG_CURRENT_SCENE = SCEC_ENG,  // arg0 = scene
     SCE_ENG_ACTIVE_STEP,  // arg0 = track, arg1 = step
     SCE_ENG_SONG_MODE_STATUS,  // arg0 = none
     SCE_ENG_KBTRANS,  // arg0 = trans
-    // clock events
-    SCE_CLK_BEAT = SCEC_CLK,  // no args
-    SCE_CLK_SOURCE,  // arg0 = source
-    SCE_CLK_TAP_LOCK,  // no args
     // config events
     SCE_CONFIG_LOADED = SCEC_CONFIG,  // no args
     SCE_CONFIG_CLEARED,  // no args

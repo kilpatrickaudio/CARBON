@@ -25,12 +25,12 @@
 #include "../config.h"
 #include "../config_store.h"
 #include "../gfx.h"
+#include "../midi/midi_clock.h"
 #include "../seq/pattern.h"
 #include "../seq/scale.h"
 #include "../seq/seq_ctrl.h"
 #include "../seq/seq_engine.h"
 #include "../seq/song.h"
-#include "../seq/clock.h"
 #include "../util/log.h"
 #include "../util/panel_utils.h"
 #include "../util/seq_utils.h"
@@ -611,7 +611,6 @@ void gui_startup(void) {
     state_change_register(gui_handle_state_change, SCEC_SONG);
     state_change_register(gui_handle_state_change, SCEC_CTRL);
     state_change_register(gui_handle_state_change, SCEC_ENG);
-    state_change_register(gui_handle_state_change, SCEC_CLK);
     
     // unblock the drawing
     gstate.started = 1;
@@ -917,6 +916,9 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_CTRL_LIVE_MODE:
             gui_update_live_mode(data[0]);
             break;
+        case SCE_CTRL_CLOCK_SOURCE:
+            gui_update_clock_source(data[0]);
+            break;
         case SCE_CTRL_SONG_MODE:
         case SCE_ENG_SONG_MODE_STATUS:
             gui_update_song_mode();
@@ -962,9 +964,6 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_ENG_KBTRANS:
             gui_update_keyboard_transpose(data[0]);            
-            break;
-        case SCE_CLK_SOURCE:
-            gui_update_clock_source(data[0]);
             break;
         default: 
             break;
@@ -1334,12 +1333,12 @@ void gui_update_rec_mode(int mode) {
 // update the clock source mode
 void gui_update_clock_source(int source) {
     switch(source) {
-        case CLOCK_EXTERNAL:
+        case MIDI_CLOCK_EXTERNAL:
             gui_set_label(GUI_LABEL_CLKSRC, "EXT");
             gui_set_label_color(GUI_LABEL_TEMPO,
                 GUI_FONT_COLOR_DARK_GREY, GUI_TEXT_BG_COLOR);    
             break;
-        case CLOCK_INTERNAL:
+        case MIDI_CLOCK_INTERNAL:
             gui_set_label(GUI_LABEL_CLKSRC, "INT");
             gui_set_label_color(GUI_LABEL_TEMPO,
                 GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);    

@@ -353,7 +353,7 @@ void panel_utils_clock_ppq_to_str(char *tempstr, int ppq) {
 
 // convert a gate length to a string by rounding down
 void panel_utils_gate_time_to_str(char *tempstr, int time) {
-    int tm = time / CLOCK_MIDI_UPSAMPLE;  // normalize to 24ppq
+    int tm = time / MIDI_CLOCK_UPSAMPLE;  // normalize to 24ppq
     if(tm >= 192) {
         sprintf(tempstr, "w+");
         return;    
