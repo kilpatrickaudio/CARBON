@@ -30,8 +30,9 @@
 //#define MIDI_CLOCK_LOCK_ADJUST 500  // lock adjust amount
 #define MIDI_CLOCK_TAP_TIMEOUT 2500000  // us (just longer than 30BPM)
 #define MIDI_CLOCK_TAP_HIST_LEN 2  // taps in history buffer - required taps will be +1
-//#define MIDI_CLOCK_EXTERNAL_TIMEOUT 250000  // us
-//#define MIDI_CLOCK_EXTERNAL_HIST_LEN 8  // ticks in the history buffer (power of 2)
+#define MIDI_CLOCK_EXT_HIST_LEN 8  // number of historical intervals to average
+#define MIDI_CLOCK_EXT_HIST_MASK (MIDI_CLOCK_EXT_HIST_LEN - 1)
+#define MIDI_CLOCK_EXT_SYNC_TIMEOUT 125000  // timeout for receiving external sync (us)
 
 enum {
     MIDI_CLOCK_RUNSTOP_IDLE,  // no action
@@ -42,7 +43,7 @@ enum {
 
 // state
 struct midi_clock_state {
-    // state
+    // general clock state
     int desired_source;  // 0 = external, 1 = internal
     int source;   // 0 = external, 1 = internal
     int desired_run_state;  // 0 = stopped, 1 = running
@@ -51,40 +52,20 @@ struct midi_clock_state {
     int swing;  // (50-80 = 50-80%)
     int runstop_f;  // flag indicates we want to change the playback state
     int reset_f;  // flag to signal we want to reset playback (but not change playback state)
-    int ext_tickf;  // external tick received flag
-    //
-    // general clock state
-    //
+    int ext_tick_f;  // external tick received flag
     uint64_t time_count;  // running time count
     uint64_t next_tick_time;  // time for the next tick
-    //
     // internal clock state
-    //
     int32_t run_tick_count;  // running tick count
     int32_t stop_tick_count;   // stopped tick count
     int32_t int_us_per_tick;  // number of us per tick (internal)
-/*
-    //
-    // external clock state
-    //
-    int32_t ext_us_per_tick;  // number of us per tick (external)
-    int32_t ext_generate_tick_count;  // generated clock ticks (for error adjustment)
-    int32_t ext_generate_run_tick_pos;  // generated running tick pos
-    // clock RX flags
-    int ext_tickf;  // external tick received flag
-    int ext_startf;  // external start received flag
-    int ext_stopf;  // external stop received flag
-    int ext_continuef;  // external continue received flag
-    // recovery state
-    uint64_t ext_recover_last_tick;  // last tick time - for tick period measurement
-    int32_t ext_recover_run_tick_pos;  // recovered running tick pos
-    int32_t ext_recover_tick_count;  // a count of ticks received
-    int32_t ext_recover_hist_pos;  // the position in the history buffer
-    int32_t ext_recover_hist[MIDI_CLOCK_EXTERNAL_HIST_LEN];  // historical periods for averaging
-*/
-    //
+    // external clock recovery state
+    int32_t ext_interval_hist[MIDI_CLOCK_EXT_HIST_LEN];  // historical interval history
+    int32_t ext_interval_count;  // number of historical intervals measured
+    int ext_sync_timeout;  // countdown for invalidating clock
+    uint64_t ext_last_tick_time;  // time of the last tick received
+    int32_t ext_run_tick_count;  // count of external ticks
     // tap tempo state
-    //
     int tap_beat_f;  // tap tempo beat was received
     uint64_t tap_clock_last_tap;  // last tap time
     int tap_clock_period;  // tap clock period - averaged
@@ -99,7 +80,7 @@ void midi_clock_change_run_state(int run);
 
 // init the clock
 void midi_clock_init(void) {
-    // general / internal clock
+    // general clock state
     mcs.desired_source = MIDI_CLOCK_INTERNAL;
     mcs.source = MIDI_CLOCK_INTERNAL;
     mcs.desired_run_state = 0;
@@ -108,12 +89,18 @@ void midi_clock_init(void) {
     midi_clock_set_swing(MIDI_CLOCK_SWING_MIN);
     mcs.runstop_f = MIDI_CLOCK_RUNSTOP_IDLE;
     mcs.reset_f = 0;
-    mcs.ext_tickf = 0;
+    mcs.ext_tick_f = 0;
+    mcs.time_count = 0;
+    mcs.next_tick_time = 0;
+    // internal clock state
     mcs.run_tick_count = 0;
     mcs.stop_tick_count = 0;
     midi_clock_set_tempo(MIDI_CLOCK_DEFAULT_TEMPO);
-    mcs.time_count = 0;
-    mcs.next_tick_time = 0;
+    // external clock recovery state
+    mcs.ext_interval_count = 0;
+    mcs.ext_sync_timeout = 0;  // timed out
+    mcs.ext_last_tick_time = 0;
+    mcs.ext_run_tick_count = 0;
     // tap tempo
     mcs.tap_beat_f = 0;
     mcs.tap_clock_last_tap = 0;
@@ -158,10 +145,7 @@ void midi_clock_timer_task(void) {
         midi_clock_change_run_state(0);  // force stop
     }
 
-
-    //
     // run clock timebase
-    //
     mcs.time_count += MIDI_CLOCK_TASK_INTERVAL_US;
     // decide if we should issue a clock
     if(mcs.time_count > mcs.next_tick_time) {
@@ -187,6 +171,10 @@ void midi_clock_timer_task(void) {
                 mcs.swing = mcs.desired_swing;
             }
             midi_clock_beat_crossed();
+            // XXX debug
+            log_debug("run_tick: %d - ext_run_tick: %d - diff: %d",
+                mcs.run_tick_count, mcs.ext_run_tick_count,
+                (mcs.run_tick_count - mcs.ext_run_tick_count));
         }            
         // generate correct number of pulses for current swing mode
         for(i = 0; i < swing[mcs.swing][tick_count % MIDI_CLOCK_PPQ]; i ++) {
@@ -203,16 +191,56 @@ void midi_clock_timer_task(void) {
         }
     }
 
-    //
     // recover external clock and drive the internal clock
-    //
+    if(mcs.source == MIDI_CLOCK_EXTERNAL) {
+        // a tick was received
+        if(mcs.ext_tick_f) {
+            mcs.ext_tick_f = 0;
+            // XXX debug
+            if(!mcs.ext_sync_timeout) {
+                log_debug("ext sync start");
+            }
+            mcs.ext_sync_timeout = MIDI_CLOCK_EXT_SYNC_TIMEOUT;
+            // measure interval - skip the very first time since it will be wrong
+            mcs.ext_interval_hist[(mcs.ext_interval_count - 1) & MIDI_CLOCK_EXT_HIST_MASK] =
+                mcs.time_count - mcs.ext_last_tick_time;
+            // average the number of samples we have
+            temp = 0;
+            for(i = 0; i < MIDI_CLOCK_EXT_HIST_LEN && i < mcs.ext_interval_count; i ++) {
+                temp += mcs.ext_interval_hist[i];
+            }
+            // if we have at least 1 sample let's use it
+            if(i > 0) {
+                temp /= i;
+                // set the internal clock to this value
+                mcs.int_us_per_tick = temp / MIDI_CLOCK_UPSAMPLE;  // convert to 96PPQ
+                // XXX debug
+//                log_debug("i: %d - avg: %d - time: %lld - last: %lld - diff: %lld", i, temp,
+//                    mcs.time_count, mcs.ext_last_tick_time, 
+//                    (mcs.time_count - mcs.ext_last_tick_time));
+            }
+            // count external ticks if running
+            if(mcs.run_state) {
+                mcs.ext_run_tick_count += MIDI_CLOCK_UPSAMPLE;
+            }
+            mcs.ext_last_tick_time = mcs.time_count;
+            mcs.ext_interval_count ++;
+        }
+    }
 
+    // timeout external sync
+    if(mcs.ext_sync_timeout) {
+        mcs.ext_sync_timeout -= MIDI_CLOCK_TASK_INTERVAL_US;
+        if(mcs.ext_sync_timeout <= 0) {
+            // XXX debug
+            log_debug("ext sync lost");
+            mcs.ext_interval_count = 0;  // reset
+        }
+    }
 
-    //
     // recover tap tempo input
-    //
-    // we can't do this when we're running on external clock
-    if(mcs.tap_beat_f && mcs.source == MIDI_CLOCK_INTERNAL) {
+    // we can't do this when we're locked to external clock
+    if(mcs.tap_beat_f && !mcs.ext_sync_timeout) {
         mcs.tap_beat_f = 0;
         mcs.tap_hist[mcs.tap_hist_count % MIDI_CLOCK_TAP_HIST_LEN] =
             mcs.time_count - mcs.tap_clock_last_tap;
@@ -293,16 +321,28 @@ void midi_clock_tap_tempo(void) {
 
 // handle a request to continue playback
 void midi_clock_request_continue(void) {
+    // ignore request while sync is received
+    if(mcs.ext_sync_timeout) {
+        return;
+    }
     mcs.runstop_f = MIDI_CLOCK_RUNSTOP_CONTINUE;
 }
 
 // handle a request to stop playback
 void midi_clock_request_stop(void) {
+    // ignore request while sync is received
+    if(mcs.ext_sync_timeout) {
+        return;
+    }
     mcs.runstop_f = MIDI_CLOCK_RUNSTOP_STOP;
 }
 
 // handle a request to reset the playback position
 void midi_clock_request_reset_pos(void) {
+    // ignore request while sync is received
+    if(mcs.ext_sync_timeout) {
+        return;
+    }
     mcs.reset_f = 1;
 }
 
@@ -324,7 +364,7 @@ int midi_clock_get_running(void) {
 //
 // a MIDI tick was received
 void midi_clock_midi_rx_tick(void) {
-    mcs.ext_tickf = 1;
+    mcs.ext_tick_f = 1;
 }
 
 // a MIDI clock start was received
@@ -382,6 +422,7 @@ __weak void midi_clock_pos_reset(void) {
 void midi_clock_reset_pos(void) {
     mcs.run_tick_count = 0;
     mcs.stop_tick_count = 0;
+    mcs.ext_run_tick_count = 0;
 }
 
 // change the run state

@@ -218,7 +218,6 @@ int spi_flash_start_cmd(int cmd, uint32_t addr, uint8_t *tx_data, int len) {
             ret = spi_flash_start_xfer(sflashs.tx_buf, sflashs.rx_buf, 
                 sflashs.xfer_len);
             if(ret != SPI_FLASH_ERROR_OK) {
-                log_debug("boo");
                 sflashs.state = SPI_FLASH_STATE_IDLE;
                 return ret;
             }            

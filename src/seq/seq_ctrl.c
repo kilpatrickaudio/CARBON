@@ -158,6 +158,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_song_mode(0);
             seq_ctrl_set_scene(0);
             seq_ctrl_set_track_select(0, 1);
+            seq_ctrl_adjust_clock_source(0);  // force clock update
             state_change_fire1(SCE_CTRL_FIRST_TRACK, sstate.first_track);  // force update
             break;
         case SCE_SONG_CLEARED:
@@ -179,6 +180,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_track_select(0, 0);  // reset so we can update 
             sstate.first_track = (SEQ_NUM_TRACKS - 1);  // cause force update
             seq_ctrl_set_track_select(0, 1);  // select first track            
+            seq_ctrl_adjust_clock_source(0);  // force clock update
             seq_ctrl_set_song_mode(0);
             break;
         case SCE_SONG_LOAD_ERROR:
@@ -326,7 +328,6 @@ int seq_ctrl_get_run_state(void) {
 
 // set the sequencer run state
 void seq_ctrl_set_run_state(int run) {
-    log_debug("moo: %d", run);
     if(run) {
         midi_clock_request_continue();
     }
