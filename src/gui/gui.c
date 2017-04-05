@@ -905,7 +905,10 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_CTRL_FIRST_TRACK:
             gui_update_first_track(data[0]);
-            break;            
+            break;          
+        case SCE_CTRL_EXT_TEMPO:
+            gui_update_tempo(midi_clock_get_tempo());
+            break;
         case SCE_SONG_TEMPO:
             gui_update_tempo(song_get_tempo());
             break;
@@ -1291,9 +1294,7 @@ void gui_update_first_track(int first) {
 
 // update the tempo display
 void gui_update_tempo(float tempo) {
-    int whole = (int)tempo;
-    int fract = (int)(tempo * 10) % 10;
-    sprintf(tempstr, "%d.%d BPM", whole, fract);
+    sprintf(tempstr, "%d.%d BPM", (int)tempo, ((int)(tempo * 10) % 10));
     gui_set_label(GUI_LABEL_TEMPO, tempstr);
 }
 

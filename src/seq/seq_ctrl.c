@@ -198,7 +198,9 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             break;
         case SCE_SONG_TEMPO:
-            midi_clock_set_tempo(song_get_tempo());
+            if(!midi_clock_is_ext_synced()) {
+                midi_clock_set_tempo(song_get_tempo());   
+            }
             break;
         case SCE_SONG_CV_BEND_RANGE:
             cvproc_set_bend_range(data[0]);
@@ -1314,11 +1316,6 @@ void midi_clock_run_state_changed(int running) {
     state_change_fire1(SCE_CTRL_RUN_STATE, running);
 }
 
-//// the clock source changed
-//void midi_clock_source_changed(int source) {
-//    state_change_fire1(SCE_CTRL_CLOCK_SOURCE, source);
-//}
-
 // the tap tempo locked
 void midi_clock_tap_locked(void) {
     song_set_tempo(midi_clock_get_tempo());
@@ -1339,6 +1336,13 @@ void midi_clock_pos_reset(void) {
         seq_engine_song_mode_reset();
     }
 }
+
+// the externally locked tempo changed
+void midi_clock_ext_tempo_changed(void) {
+    // fire event
+    state_change_fire0(SCE_CTRL_EXT_TEMPO);
+}
+
 
 //
 // local functions
@@ -1389,7 +1393,9 @@ void seq_ctrl_refresh_modules(void) {
     }
     
     // set up clock / reset position
-    midi_clock_set_tempo(song_get_tempo());   
+    if(!midi_clock_is_ext_synced()) {
+        midi_clock_set_tempo(song_get_tempo());   
+    }
     midi_clock_set_swing(song_get_swing());     
     metronome_mode_changed(song_get_metronome_mode());
     metronome_sound_len_changed(song_get_metronome_sound_len());

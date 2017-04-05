@@ -46,6 +46,9 @@ int midi_clock_get_source(void);
 // set the MIDI clock source
 void midi_clock_set_source(int source);
 
+// check if the external clock is synced
+int midi_clock_is_ext_synced(void);
+
 // get the clock tempo (internal clock)
 float midi_clock_get_tempo(void);
 
@@ -111,5 +114,8 @@ void midi_clock_ticked(uint32_t tick_count);
 
 // the clock position was reset
 void midi_clock_pos_reset(void);
+
+// the externally locked tempo changed
+void midi_clock_ext_tempo_changed(void);
 
 #endif

@@ -23,16 +23,19 @@
 #include "../config.h"
 #include "../util/log.h"
 #include "../util/seq_utils.h"
+#include <math.h>
 
 // setings
 #define MIDI_CLOCK_US_PER_TICK_MAX ((uint64_t)(60000000.0 / (MIDI_CLOCK_TEMPO_MIN * (float)MIDI_CLOCK_PPQ)))
 #define MIDI_CLOCK_US_PER_TICK_MIN ((uint64_t)(60000000.0 / (MIDI_CLOCK_TEMPO_MAX * (float)MIDI_CLOCK_PPQ)))
-//#define MIDI_CLOCK_LOCK_ADJUST 500  // lock adjust amount
 #define MIDI_CLOCK_TAP_TIMEOUT 2500000  // us (just longer than 30BPM)
 #define MIDI_CLOCK_TAP_HIST_LEN 2  // taps in history buffer - required taps will be +1
-#define MIDI_CLOCK_EXT_HIST_LEN 8  // number of historical intervals to average
+#define MIDI_CLOCK_EXT_HIST_LEN 8  // number of historical intervals to average (must be a power of 2)
 #define MIDI_CLOCK_EXT_HIST_MASK (MIDI_CLOCK_EXT_HIST_LEN - 1)
+#define MIDI_CLOCK_EXT_MIN_HIST 3  // number of interval samples needed before changing internal clock
 #define MIDI_CLOCK_EXT_SYNC_TIMEOUT 125000  // timeout for receiving external sync (us)
+#define MIDI_CLOCK_EXT_ERROR_ADJ 500  // lock adjust amount
+#define MIDI_CLOCK_EXT_SYNC_TEMPO_FILTER 0.9  // tempo average filter coeff
 
 enum {
     MIDI_CLOCK_RUNSTOP_IDLE,  // no action
@@ -65,6 +68,7 @@ struct midi_clock_state {
     int ext_sync_timeout;  // countdown for invalidating clock
     uint64_t ext_last_tick_time;  // time of the last tick received
     int32_t ext_run_tick_count;  // count of external ticks
+    int ext_sync_tempo_average;  // average tempo for display
     // tap tempo state
     int tap_beat_f;  // tap tempo beat was received
     uint64_t tap_clock_last_tap;  // last tap time
@@ -101,6 +105,7 @@ void midi_clock_init(void) {
     mcs.ext_sync_timeout = 0;  // timed out
     mcs.ext_last_tick_time = 0;
     mcs.ext_run_tick_count = 0;
+    mcs.ext_sync_tempo_average = mcs.int_us_per_tick;  // default
     // tap tempo
     mcs.tap_beat_f = 0;
     mcs.tap_clock_last_tap = 0;
@@ -111,7 +116,7 @@ void midi_clock_init(void) {
 // run the MIDI clock timer task
 // call at MIDI_CLOCK_TASK_INTERVAL_US interval
 void midi_clock_timer_task(void) {
-    int i;
+    int i, error;
     uint32_t tick_count;
     int32_t temp;
 
@@ -171,10 +176,16 @@ void midi_clock_timer_task(void) {
                 mcs.swing = mcs.desired_swing;
             }
             midi_clock_beat_crossed();
+            // update the recovered tempo display
+            if(midi_clock_is_ext_synced()) {
+//                log_debug("avg: %d - tempo: %f", mcs.ext_sync_tempo_average, midi_clock_get_tempo());
+                midi_clock_ext_tempo_changed();
+            }
             // XXX debug
-            log_debug("run_tick: %d - ext_run_tick: %d - diff: %d",
-                mcs.run_tick_count, mcs.ext_run_tick_count,
-                (mcs.run_tick_count - mcs.ext_run_tick_count));
+//            log_debug("us: %d - run_tick: %d - ext_run_tick: %d - diff: %d",
+//                mcs.int_us_per_tick,
+//                mcs.run_tick_count, mcs.ext_run_tick_count,
+//                (mcs.run_tick_count - mcs.ext_run_tick_count));
         }            
         // generate correct number of pulses for current swing mode
         for(i = 0; i < swing[mcs.swing][tick_count % MIDI_CLOCK_PPQ]; i ++) {
@@ -209,8 +220,8 @@ void midi_clock_timer_task(void) {
             for(i = 0; i < MIDI_CLOCK_EXT_HIST_LEN && i < mcs.ext_interval_count; i ++) {
                 temp += mcs.ext_interval_hist[i];
             }
-            // if we have at least 1 sample let's use it
-            if(i > 0) {
+            // if we have at least MIDI_CLOCK_EXT_MIN_HIST samples let's update the internal clock
+            if(i >= MIDI_CLOCK_EXT_MIN_HIST) {
                 temp /= i;
                 // set the internal clock to this value
                 mcs.int_us_per_tick = temp / MIDI_CLOCK_UPSAMPLE;  // convert to 96PPQ
@@ -218,10 +229,21 @@ void midi_clock_timer_task(void) {
 //                log_debug("i: %d - avg: %d - time: %lld - last: %lld - diff: %lld", i, temp,
 //                    mcs.time_count, mcs.ext_last_tick_time, 
 //                    (mcs.time_count - mcs.ext_last_tick_time));
+                mcs.ext_sync_tempo_average = ((float)mcs.ext_sync_tempo_average * 
+                    MIDI_CLOCK_EXT_SYNC_TEMPO_FILTER) +
+                    ((float)mcs.int_us_per_tick * (1.0 - MIDI_CLOCK_EXT_SYNC_TEMPO_FILTER ));
             }
             // count external ticks if running
             if(mcs.run_state) {
                 mcs.ext_run_tick_count += MIDI_CLOCK_UPSAMPLE;
+                // compensate for error
+                error = mcs.run_tick_count - mcs.ext_run_tick_count;
+                if(error < 0) {
+                    mcs.int_us_per_tick -= MIDI_CLOCK_EXT_ERROR_ADJ;
+                }
+                else if(error > 0) {
+                    mcs.int_us_per_tick += MIDI_CLOCK_EXT_ERROR_ADJ;
+                }
             }
             mcs.ext_last_tick_time = mcs.time_count;
             mcs.ext_interval_count ++;
@@ -235,6 +257,7 @@ void midi_clock_timer_task(void) {
             // XXX debug
             log_debug("ext sync lost");
             mcs.ext_interval_count = 0;  // reset
+            mcs.runstop_f = MIDI_CLOCK_RUNSTOP_STOP;
         }
     }
 
@@ -289,8 +312,21 @@ void midi_clock_set_source(int source) {
     }
 }
 
+// check if the external clock is synced
+int midi_clock_is_ext_synced(void) {
+    if(mcs.source == MIDI_CLOCK_EXTERNAL && mcs.ext_sync_timeout) {
+        return 1;
+    }
+    return 0;
+}
+
 // get the clock tempo (internal clock)
 float midi_clock_get_tempo(void) {
+    // external sync
+    if(midi_clock_is_ext_synced()) {
+        return 60000000.0 / (float)MIDI_CLOCK_PPQ / (float)mcs.ext_sync_tempo_average;
+    }
+    // internal clock
     return 60000000.0 / (float)MIDI_CLOCK_PPQ / (float)mcs.int_us_per_tick;
 }
 
@@ -414,6 +450,12 @@ __weak void midi_clock_ticked(uint32_t tick_count) {
 __weak void midi_clock_pos_reset(void) {
     // unimplemented stub
 }
+
+// the externally locked tempo changed
+__weak void midi_clock_ext_tempo_changed(void) {
+    // unimplemented stub
+}
+
 
 //
 // local functions
