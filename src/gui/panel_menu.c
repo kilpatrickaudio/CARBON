@@ -1011,24 +1011,9 @@ void panel_menu_display_clock(void) {
         case PANEL_MENU_CLOCK_SOURCE:
             gui_set_menu_subtitle("MIDI Clock Source");
             gui_set_menu_param("Source");
-            switch(song_get_midi_clock_source()) {
-                case SONG_MIDI_CLOCK_SOURCE_INT:
-                    gui_set_menu_value("INT");
-                    break;
-                case SONG_MIDI_CLOCK_SOURCE_DIN1_IN:
-                    gui_set_menu_value("MIDI DIN IN");
-                    break;
-                case SONG_MIDI_CLOCK_SOURCE_USB_HOST_IN:
-                    gui_set_menu_value("MIDI USB HOST");
-                    break;
-                case SONG_MIDI_CLOCK_SOURCE_USB_DEV_IN:
-                    gui_set_menu_value("MIDI USB DEV");
-                    break;
-                default:
-                    gui_set_menu_value("---");
-                    break;
-            }
-            break;
+            panel_utils_clock_source_str(tempstr, 
+                song_get_midi_clock_source());
+            gui_set_menu_value(tempstr);
     }
 }
 

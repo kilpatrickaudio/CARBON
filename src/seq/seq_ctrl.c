@@ -1313,10 +1313,10 @@ void midi_clock_run_state_changed(int running) {
     state_change_fire1(SCE_CTRL_RUN_STATE, running);
 }
 
-// the clock source changed
-void midi_clock_source_changed(int source) {
-    state_change_fire1(SCE_CTRL_CLOCK_SOURCE, source);
-}
+//// the clock source changed
+//void midi_clock_source_changed(int source) {
+//    state_change_fire1(SCE_CTRL_CLOCK_SOURCE, source);
+//}
 
 // the tap tempo locked
 void midi_clock_tap_locked(void) {

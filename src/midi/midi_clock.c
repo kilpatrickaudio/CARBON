@@ -127,7 +127,6 @@ void midi_clock_timer_task(void) {
     int i;
     uint32_t tick_count;
     int32_t temp;
-//    int error = 0;
 
     // handle playback state change flags
     switch(mcs.runstop_f) {
@@ -155,6 +154,7 @@ void midi_clock_timer_task(void) {
     // handle source change
     if(mcs.source != mcs.desired_source) {
         mcs.source = mcs.desired_source;
+        midi_clock_source_changed(mcs.source);
         midi_clock_change_run_state(0);  // force stop
     }
 
@@ -163,162 +163,50 @@ void midi_clock_timer_task(void) {
     // run clock timebase
     //
     mcs.time_count += MIDI_CLOCK_TASK_INTERVAL_US;
-    // internal clock
-    if(mcs.source == MIDI_CLOCK_INTERNAL) {
-        // decide if we should issue a clock
-        if(mcs.time_count > mcs.next_tick_time) {
-            // if run state changed
-            if(mcs.run_state != mcs.desired_run_state) {
-                // stopping
-                if(mcs.desired_run_state == 0) {
-                    mcs.stop_tick_count = mcs.run_tick_count;
-                }
-                midi_clock_change_run_state(mcs.desired_run_state);
+    // decide if we should issue a clock
+    if(mcs.time_count > mcs.next_tick_time) {
+        // if run state changed
+        if(mcs.run_state != mcs.desired_run_state) {
+            // stopping
+            if(mcs.desired_run_state == 0) {
+                mcs.stop_tick_count = mcs.run_tick_count;
             }
-            // get the correct tick count
-            if(mcs.run_state) {
-                tick_count = mcs.run_tick_count;
-            }
-            else {
-                tick_count = mcs.stop_tick_count;
-            }
-            // calculate beat cross before processing sequencer stuff
-            if((tick_count % MIDI_CLOCK_PPQ) == 0) {
-                // if the swing is adjusting we change it now
-                if(mcs.desired_swing != mcs.swing) {
-                    mcs.swing = mcs.desired_swing;
-                }
-                midi_clock_beat_crossed();
-            }            
-            // generate correct number of pulses for current swing mode
-            for(i = 0; i < swing[mcs.swing][tick_count % MIDI_CLOCK_PPQ]; i ++) {
-                midi_clock_ticked(tick_count);
-            }
-            tick_count ++;
-            mcs.next_tick_time += mcs.int_us_per_tick;
-            // write back the tick count
-            if(mcs.run_state) {
-                mcs.run_tick_count = tick_count;
-            }
-            else {
-                mcs.stop_tick_count = tick_count;
-            }
+            midi_clock_change_run_state(mcs.desired_run_state);
         }
-    }
-
-
-/*
-    // external clock
-    else {
-        // decide if we should issue a clock
-        if(mcs.time_count > mcs.next_tick_time) {
-            // generate correct number of pulses for current swing mode
-            for(i = 0; i < swing[mcs.current_swing][mcs.ext_generate_run_tick_pos % MIDI_CLOCK_PPQ]; i ++) {
-                if(mcs.run_state) {
-//                    seq_ctrl_clock_tick(mcs.ext_generate_run_tick_pos);
-                }
-                else {
-//                    seq_ctrl_clock_tick(mcs.ext_generate_tick_count);
-                }
+        // get the correct tick count
+        if(mcs.run_state) {
+            tick_count = mcs.run_tick_count;
+        }
+        else {
+            tick_count = mcs.stop_tick_count;
+        }
+        // calculate beat cross before processing sequencer stuff
+        if((tick_count % MIDI_CLOCK_PPQ) == 0) {
+            // if the swing is adjusting we change it now
+            if(mcs.desired_swing != mcs.swing) {
+                mcs.swing = mcs.desired_swing;
             }
-            // running
-            if(mcs.run_state) {
-                // calculate beat cross before processing sequencer stuff
-                if((mcs.ext_generate_run_tick_pos % MIDI_CLOCK_PPQ) == 0) {
-                    // if the swing is adjusting we change it now
-                    if(mcs.current_swing != mcs.next_swing) {
-                        mcs.current_swing = mcs.next_swing;
-                    }
-                    // fire event
-//                    state_change_fire0(SCE_CLK_BEAT);
-                }            
-                mcs.ext_generate_run_tick_pos ++;
-                // calculate error
-                error = mcs.ext_recover_run_tick_pos - mcs.ext_generate_run_tick_pos;
-            }
-            // stopped
-            else {
-                mcs.ext_generate_tick_count ++;
-                // calculate error
-                error = mcs.ext_recover_tick_count - mcs.ext_generate_tick_count;
-            }
-
-            // calculate next tick time and adjust for error
-            if(error > 0) {
-                mcs.next_tick_time += mcs.ext_us_per_tick - MIDI_CLOCK_LOCK_ADJUST;
-            }
-            else if(error < 0) {
-                mcs.next_tick_time += mcs.ext_us_per_tick + MIDI_CLOCK_LOCK_ADJUST;
-            }
-            else {
-                mcs.next_tick_time += mcs.ext_us_per_tick;
-            }
+            midi_clock_beat_crossed();
+        }            
+        // generate correct number of pulses for current swing mode
+        for(i = 0; i < swing[mcs.swing][tick_count % MIDI_CLOCK_PPQ]; i ++) {
+            midi_clock_ticked(tick_count);
+        }
+        tick_count ++;
+        mcs.next_tick_time += mcs.int_us_per_tick;
+        // write back the tick count
+        if(mcs.run_state) {
+            mcs.run_tick_count = tick_count;
+        }
+        else {
+            mcs.stop_tick_count = tick_count;
         }
     }
 
     //
-    // recover external clock
-    // - interval range: 30 to 300 BPM = 83300us to 8330us per MIDI tick
+    // recover external clock and drive the internal clock
     //
-    // MIDI tick was received
-    if(mcs.ext_tickf) {
-        mcs.ext_tickf = 0;
-        // manage clock timing
-        mcs.ext_recover_hist[mcs.ext_recover_hist_pos & 
-            (MIDI_CLOCK_EXTERNAL_HIST_LEN - 1)] = 
-            mcs.time_count - mcs.ext_recover_last_tick;
-        mcs.ext_recover_last_tick = mcs.time_count;
-        mcs.ext_recover_hist_pos ++;
-        mcs.ext_recover_tick_count += MIDI_CLOCK_UPSAMPLE;
-        // we've received enough ticks
-        if(mcs.ext_recover_hist_pos > MIDI_CLOCK_EXTERNAL_HIST_LEN) {
-            // average the received clock periods
-            temp = 0;
-            for(i = 0; i < MIDI_CLOCK_EXTERNAL_HIST_LEN; i ++) {
-                temp += mcs.ext_recover_hist[i];
-            }
-            temp /= MIDI_CLOCK_EXTERNAL_HIST_LEN;  // average
-            temp /= MIDI_CLOCK_UPSAMPLE;  // upsample
-            // ensure that tempo fits in the valid range before accepting
-            if(temp < MIDI_CLOCK_US_PER_TICK_MIN) {
-                mcs.ext_us_per_tick = MIDI_CLOCK_US_PER_TICK_MIN;
-            }
-            else if(temp > MIDI_CLOCK_US_PER_TICK_MAX) {
-                mcs.ext_us_per_tick = MIDI_CLOCK_US_PER_TICK_MAX;
-            }
-            else {
-                mcs.ext_us_per_tick = temp;
-            }
-            // should we switch clock source to external?
-            if(mcs.source == MIDI_CLOCK_INTERNAL) {
-                midi_clock_set_source(MIDI_CLOCK_EXTERNAL);
-                mcs.next_tick_time = mcs.time_count;  // issue tick right away
-                mcs.ext_generate_tick_count = mcs.ext_recover_tick_count;  // jam
-                mcs.ext_generate_run_tick_pos = 0;
-                mcs.ext_recover_run_tick_pos = 0;
-            }
-        }
-        // MIDI continue received
-        if(mcs.ext_continuef) {
-            mcs.ext_continuef = 0;
-            mcs.run_state = 1;
-            // dispatch run state since this came from outside
-//            seq_ctrl_set_run_state(1);
-        }
-        // generate run ticks
-        else if(mcs.run_state) {
-            mcs.ext_recover_run_tick_pos += MIDI_CLOCK_UPSAMPLE;
-        }
-    }
-    // time out external clock mode
-    if(mcs.source == MIDI_CLOCK_EXTERNAL &&
-            (mcs.time_count - mcs.ext_recover_last_tick) > MIDI_CLOCK_EXTERNAL_TIMEOUT) {
-        midi_clock_set_source(MIDI_CLOCK_INTERNAL);
-        mcs.run_state = 0;  // stop clock on external clock loss
-        // dispatch run state since this came from outside
-//        seq_ctrl_set_run_state(0);
-    }
-*/
+
 
     //
     // recover tap tempo input

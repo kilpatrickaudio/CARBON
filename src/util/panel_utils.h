@@ -35,6 +35,9 @@ void panel_utils_port_str(char *tempstr, int port);
 // make a channel name
 void panel_utils_channel_str(char *tempstr, int port, int channel);
 
+// make a clock source name
+void panel_utils_clock_source_str(char *tempstr, int source);
+
 // convert a MIDI note number to a name
 void panel_utils_note_to_name(char *tempstr, int note, 
     int octdisp, int padding);

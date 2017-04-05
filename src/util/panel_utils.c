@@ -108,8 +108,28 @@ void panel_utils_channel_str(char *tempstr, int port, int channel) {
         default:
             panel_utils_get_blank_str(tempstr);
             break;
-    }    
+    }
+}
 
+// make a clock source name
+void panel_utils_clock_source_str(char *tempstr, int source) {
+        switch(source) {
+        case SONG_MIDI_CLOCK_SOURCE_INT:
+            sprintf(tempstr, "INT");
+            break;
+        case SONG_MIDI_CLOCK_SOURCE_DIN1_IN:
+            sprintf(tempstr, "DIN IN");
+            break;
+        case SONG_MIDI_CLOCK_SOURCE_USB_HOST_IN:
+            sprintf(tempstr, "USB HOST");
+            break;
+        case SONG_MIDI_CLOCK_SOURCE_USB_DEV_IN:
+            sprintf(tempstr, "USB DEV");
+            break;
+        default:
+            sprintf(tempstr, "---");
+            break;
+    }
 }
 
 // convert a MIDI note number to a name

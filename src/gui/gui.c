@@ -888,12 +888,14 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             gui_update_tempo(song_get_tempo());
             gui_update_scene(seq_ctrl_get_scene());
             gui_update_song_mode();
+            gui_update_clock_source(song_get_midi_clock_source());
             break;
         case SCE_SONG_LOADED:
             gui_update_song(data[0]);
             gui_update_tempo(song_get_tempo());
             gui_update_scene(seq_ctrl_get_scene());
             gui_update_song_mode();
+            gui_update_clock_source(song_get_midi_clock_source());
             break;        
         case SCE_SONG_SAVED:
             gui_update_song(data[0]);
@@ -916,7 +918,7 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_CTRL_LIVE_MODE:
             gui_update_live_mode(data[0]);
             break;
-        case SCE_CTRL_CLOCK_SOURCE:
+        case SCE_SONG_MIDI_CLOCK_SOURCE:
             gui_update_clock_source(data[0]);
             break;
         case SCE_CTRL_SONG_MODE:
@@ -1333,17 +1335,15 @@ void gui_update_rec_mode(int mode) {
 // update the clock source mode
 void gui_update_clock_source(int source) {
     switch(source) {
-        case MIDI_CLOCK_EXTERNAL:
-            gui_set_label(GUI_LABEL_CLKSRC, "EXT");
-            gui_set_label_color(GUI_LABEL_TEMPO,
-                GUI_FONT_COLOR_DARK_GREY, GUI_TEXT_BG_COLOR);    
-            break;
-        case MIDI_CLOCK_INTERNAL:
+        case SONG_MIDI_CLOCK_SOURCE_INT:
             gui_set_label(GUI_LABEL_CLKSRC, "INT");
             gui_set_label_color(GUI_LABEL_TEMPO,
                 GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);    
             break;
         default:
+            gui_set_label(GUI_LABEL_CLKSRC, "EXT");
+            gui_set_label_color(GUI_LABEL_TEMPO,
+                GUI_FONT_COLOR_DARK_GREY, GUI_TEXT_BG_COLOR);    
             break;
     }
 }
