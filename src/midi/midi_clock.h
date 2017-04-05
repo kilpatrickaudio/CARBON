@@ -44,7 +44,7 @@ void midi_clock_timer_task(void);
 int midi_clock_get_source(void);
 
 // set the MIDI clock source
-int midi_clock_set_source(int source);
+void midi_clock_set_source(int source);
 
 // get the clock tempo (internal clock)
 float midi_clock_get_tempo(void);

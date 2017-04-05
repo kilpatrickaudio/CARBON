@@ -630,6 +630,13 @@ void seq_ctrl_adjust_clock_out_rate(int port, int change) {
 void seq_ctrl_adjust_clock_source(int change) {
     song_set_midi_clock_source(seq_utils_clamp(song_get_midi_clock_source() + change,
         SONG_MIDI_CLOCK_SOURCE_INT, SONG_MIDI_CLOCK_SOURCE_USB_DEV_IN));
+    // update the MIDI clock
+    if(song_get_midi_clock_source() == SONG_MIDI_CLOCK_SOURCE_INT) {
+        midi_clock_set_source(MIDI_CLOCK_INTERNAL);
+    }
+    else {
+        midi_clock_set_source(MIDI_CLOCK_EXTERNAL);
+    }
 }
 
 // adjust the MIDI remote control state
@@ -1318,7 +1325,7 @@ void midi_clock_tap_locked(void) {
 
 // the clock ticked
 void midi_clock_ticked(uint32_t tick_count) {
-    //do all sequencer music processing
+    // do all sequencer music processing
     seq_engine_run(tick_count);
 }
 

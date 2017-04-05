@@ -95,6 +95,7 @@ struct midi_clock_state mcs;
 
 // local functions
 void midi_clock_reset_pos(void);
+void midi_clock_change_run_state(int run);
 
 // init the clock
 void midi_clock_init(void) {
@@ -103,8 +104,8 @@ void midi_clock_init(void) {
     mcs.source = MIDI_CLOCK_INTERNAL;
     mcs.desired_run_state = 0;
     mcs.run_state = 0;
-    mcs.desired_swing = MIDI_CLOCK_SWING_MIN;
-    mcs.swing = MIDI_CLOCK_SWING_MIN;
+    mcs.desired_swing = MIDI_CLOCK_SWING_MIN + 1;
+    midi_clock_set_swing(MIDI_CLOCK_SWING_MIN);
     mcs.runstop_f = MIDI_CLOCK_RUNSTOP_IDLE;
     mcs.reset_f = 0;
     mcs.ext_tickf = 0;
@@ -151,6 +152,13 @@ void midi_clock_timer_task(void) {
         mcs.reset_f = 0;
     }
 
+    // handle source change
+    if(mcs.source != mcs.desired_source) {
+        mcs.source = mcs.desired_source;
+        midi_clock_change_run_state(0);  // force stop
+    }
+
+
     //
     // run clock timebase
     //
@@ -161,12 +169,11 @@ void midi_clock_timer_task(void) {
         if(mcs.time_count > mcs.next_tick_time) {
             // if run state changed
             if(mcs.run_state != mcs.desired_run_state) {
-                mcs.run_state = mcs.desired_run_state;
                 // stopping
-                if(mcs.run_state == 0) {
+                if(mcs.desired_run_state == 0) {
                     mcs.stop_tick_count = mcs.run_tick_count;
                 }
-                midi_clock_run_state_changed(mcs.run_state);
+                midi_clock_change_run_state(mcs.desired_run_state);
             }
             // get the correct tick count
             if(mcs.run_state) {
@@ -179,9 +186,8 @@ void midi_clock_timer_task(void) {
             if((tick_count % MIDI_CLOCK_PPQ) == 0) {
                 // if the swing is adjusting we change it now
                 if(mcs.desired_swing != mcs.swing) {
-                    mcs.desired_swing = mcs.swing;
+                    mcs.swing = mcs.desired_swing;
                 }
-                log_debug("beat! - runstate: %d", mcs.run_state);
                 midi_clock_beat_crossed();
             }            
             // generate correct number of pulses for current swing mode
@@ -199,6 +205,8 @@ void midi_clock_timer_task(void) {
             }
         }
     }
+
+
 /*
     // external clock
     else {
@@ -355,6 +363,16 @@ int midi_clock_get_source(void) {
     return mcs.source;
 }
 
+// set the MIDI clock source
+void midi_clock_set_source(int source) {
+    if(source == MIDI_CLOCK_EXTERNAL) {
+        mcs.desired_source = source;
+    }
+    else {
+        mcs.desired_source = MIDI_CLOCK_INTERNAL;
+    }
+}
+
 // get the clock tempo (internal clock)
 float midi_clock_get_tempo(void) {
     return 60000000.0 / (float)MIDI_CLOCK_PPQ / (float)mcs.int_us_per_tick;
@@ -372,8 +390,12 @@ int midi_clock_get_swing(void) {
 
 // set the clock swing
 void midi_clock_set_swing(int swing) {
-    mcs.desired_swing = (seq_utils_clamp(swing, 
-        MIDI_CLOCK_SWING_MIN, MIDI_CLOCK_SWING_MAX) - MIDI_CLOCK_SWING_MIN);
+    if(swing < MIDI_CLOCK_SWING_MIN || swing > MIDI_CLOCK_SWING_MAX) {
+        return;
+    }
+    mcs.desired_swing = seq_utils_clamp(swing, 
+        MIDI_CLOCK_SWING_MIN, MIDI_CLOCK_SWING_MAX) - 
+        MIDI_CLOCK_SWING_MIN;
 }
 
 // handle tap tempo
@@ -472,5 +494,12 @@ __weak void midi_clock_pos_reset(void) {
 void midi_clock_reset_pos(void) {
     mcs.run_tick_count = 0;
     mcs.stop_tick_count = 0;
+}
+
+// change the run state
+void midi_clock_change_run_state(int run) {
+    mcs.desired_run_state = run;
+    mcs.run_state = run;
+    midi_clock_run_state_changed(mcs.run_state);
 }
 
