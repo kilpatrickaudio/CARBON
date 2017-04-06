@@ -109,6 +109,12 @@ void midi_clock_source_changed(int source);
 // the tap tempo locked
 void midi_clock_tap_locked(void);
 
+// the clock ticked for a swing count
+void midi_clock_ticked_swing(uint32_t tick_count);
+
+// the clock ticked for a straight count
+void midi_clock_ticked_straight(uint32_t tick_count);
+
 // the clock ticked
 void midi_clock_ticked(uint32_t tick_count);
 

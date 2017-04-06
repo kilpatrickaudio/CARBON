@@ -23,7 +23,6 @@
 #include "seq_engine.h"
 #include "seq_ctrl.h"
 #include "arp.h"
-#include "clock_out.h"
 #include "metronome.h"
 #include "midi_ctrl.h"
 #include "song.h"
@@ -172,7 +171,6 @@ void seq_engine_init(void) {
     arp_init();
     metronome_init();
     outproc_init();
-    clock_out_init();
     midi_ctrl_init();
     
     // reset the note lists
@@ -273,7 +271,6 @@ void seq_engine_timer_task(void) {
                 
     // other tasks
     metronome_timer_task();
-    clock_out_timer_task();
     // recalculate stuff often - must be responsive enough to work well in
     // performance but not too often to create a huge CPU overhead
     if((count & 0x3f) == 0) {
@@ -294,7 +291,6 @@ void seq_engine_run(uint32_t tick_count) {
     }
     
     // other engine music tasks
-    clock_out_run(tick_count);
     metronome_run(tick_count);
     step_edit_run(tick_count);
     

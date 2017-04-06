@@ -23,6 +23,7 @@
 #include "seq_ctrl.h"
 #include "seq_engine.h"
 #include "arp.h"
+#include "clock_out.h"
 #include "metronome.h"
 #include "outproc.h"
 #include "pattern.h"
@@ -78,6 +79,7 @@ void seq_ctrl_init(void) {
     midi_clock_init();
     song_init();
     seq_engine_init();  // song must be loaded before this
+    clock_out_init();
     step_edit_init();
     song_edit_init();
     sysex_init();
@@ -98,6 +100,7 @@ void seq_ctrl_rt_task(void) {
     if(power_ctrl_get_power_state() == POWER_CTRL_STATE_ON) {
         midi_clock_timer_task();  // all music timing starts here
         seq_engine_timer_task();  // must run after clock for correct timing
+        clock_out_timer_task();  // runs separately from sequencer due to straight time
         step_edit_timer_task();  // handle timeout of step edit mode
         song_edit_timer_task();  // handle timeout of song edit mode
         sysex_timer_task();  // handle processing of SYSEX messages
@@ -1321,10 +1324,16 @@ void midi_clock_tap_locked(void) {
     song_set_tempo(midi_clock_get_tempo());
 }
 
-// the clock ticked
-void midi_clock_ticked(uint32_t tick_count) {
+// the clock ticked for a swing count
+void midi_clock_ticked_swing(uint32_t tick_count) {
     // do all sequencer music processing
     seq_engine_run(tick_count);
+}
+
+// the clock ticked for a straight count
+void midi_clock_ticked_straight(uint32_t tick_count) {
+    // do clock out processing
+    clock_out_run(tick_count);
 }
 
 // the clock position was reset
