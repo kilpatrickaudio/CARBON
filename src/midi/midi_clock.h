@@ -124,4 +124,7 @@ void midi_clock_pos_reset(void);
 // the externally locked tempo changed
 void midi_clock_ext_tempo_changed(void);
 
+// the external sync state changed
+void midi_clock_ext_sync_changed(int synced);
+
 #endif

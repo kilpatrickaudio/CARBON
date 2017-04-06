@@ -908,6 +908,10 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             break;          
         case SCE_CTRL_EXT_TEMPO:
             gui_update_tempo(midi_clock_get_tempo());
+            gui_update_clock_source(song_get_midi_clock_source());  // sync color
+            break;
+        case SCE_CTRL_EXT_SYNC:
+            gui_update_clock_source(song_get_midi_clock_source());  // sync color
             break;
         case SCE_SONG_TEMPO:
             gui_update_tempo(song_get_tempo());
@@ -1338,13 +1342,19 @@ void gui_update_clock_source(int source) {
     switch(source) {
         case SONG_MIDI_CLOCK_SOURCE_INT:
             gui_set_label(GUI_LABEL_CLKSRC, "INT");
-            gui_set_label_color(GUI_LABEL_TEMPO,
+            gui_set_label_color(GUI_LABEL_CLKSRC,
                 GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);    
             break;
         default:
             gui_set_label(GUI_LABEL_CLKSRC, "EXT");
-            gui_set_label_color(GUI_LABEL_TEMPO,
-                GUI_FONT_COLOR_DARK_GREY, GUI_TEXT_BG_COLOR);    
+            if(midi_clock_is_ext_synced()) {
+                gui_set_label_color(GUI_LABEL_CLKSRC,
+                    GUI_FONT_COLOR_GREEN, GUI_TEXT_BG_COLOR);
+            }
+            else {
+                gui_set_label_color(GUI_LABEL_CLKSRC,
+                    GUI_FONT_COLOR_DARK_GREY, GUI_TEXT_BG_COLOR);
+            }
             break;
     }
 }

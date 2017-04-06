@@ -25,12 +25,6 @@
 #include "../util/seq_utils.h"
 #include <math.h>
 
-// debugging
-//#define MIDI_CLOCK_DEBUG_PRINT  // uncomment to enable debugging of the timing
-#ifdef MIDI_CLOCK_DEBUG_PRINT
-#warning MIDI_CLOCK_DEBUG_PRINT enabled
-#endif
-
 // setings
 #define MIDI_CLOCK_US_PER_TICK_MAX ((uint64_t)(60000000.0 / (MIDI_CLOCK_TEMPO_MIN * (float)MIDI_CLOCK_PPQ)))
 #define MIDI_CLOCK_US_PER_TICK_MIN ((uint64_t)(60000000.0 / (MIDI_CLOCK_TEMPO_MAX * (float)MIDI_CLOCK_PPQ)))
@@ -186,13 +180,11 @@ void midi_clock_timer_task(void) {
             if(midi_clock_is_ext_synced()) {
                 midi_clock_ext_tempo_changed();
             }
-#ifdef MIDI_CLOCK_DEBUG_PRINT
-            // XXX debug
-            log_debug("us: %d - run_tick: %d - ext_run_tick: %d - diff: %d",
-                mcs.int_us_per_tick,
-                mcs.run_tick_count, mcs.ext_run_tick_count,
-                (mcs.run_tick_count - mcs.ext_run_tick_count));
-#endif
+//            // XXX debug
+//            log_debug("us: %d - run_tick: %d - ext_run_tick: %d - diff: %d",
+//                mcs.int_us_per_tick,
+//                mcs.run_tick_count, mcs.ext_run_tick_count,
+//                (mcs.run_tick_count - mcs.ext_run_tick_count));
         }            
         // XXX the tick count should probably vary for swing?
         // generate correct number of pulses for current swing mode
@@ -218,9 +210,9 @@ void midi_clock_timer_task(void) {
         // a tick was received
         if(mcs.ext_tick_f) {
             mcs.ext_tick_f = 0;
-            // XXX debug
+            // ext sync started
             if(!mcs.ext_sync_timeout) {
-                log_debug("ext sync start");
+                midi_clock_ext_sync_changed(1);
             }
             mcs.ext_sync_timeout = MIDI_CLOCK_EXT_SYNC_TIMEOUT;
             // measure interval - skip the very first time since it will be wrong
@@ -236,12 +228,10 @@ void midi_clock_timer_task(void) {
                 temp /= i;
                 // set the internal clock to this value
                 mcs.int_us_per_tick = temp / MIDI_CLOCK_UPSAMPLE;  // convert to 96PPQ
-#ifdef MIDI_CLOCK_DEBUG_PRINT
-                // XXX debug
-                log_debug("i: %d - avg: %d - time: %lld - last: %lld - diff: %lld", i, temp,
-                    mcs.time_count, mcs.ext_last_tick_time, 
-                    (mcs.time_count - mcs.ext_last_tick_time));
-#endif
+//                // XXX debug
+//                log_debug("i: %d - avg: %d - time: %lld - last: %lld - diff: %lld", i, temp,
+//                    mcs.time_count, mcs.ext_last_tick_time, 
+//                    (mcs.time_count - mcs.ext_last_tick_time));
                 mcs.ext_sync_tempo_average = ((float)mcs.ext_sync_tempo_average * 
                     MIDI_CLOCK_EXT_SYNC_TEMPO_FILTER) +
                     ((float)mcs.int_us_per_tick * (1.0 - MIDI_CLOCK_EXT_SYNC_TEMPO_FILTER ));
@@ -266,9 +256,9 @@ void midi_clock_timer_task(void) {
     // timeout external sync
     if(mcs.ext_sync_timeout) {
         mcs.ext_sync_timeout -= MIDI_CLOCK_TASK_INTERVAL_US;
+        // ext sync lost
         if(mcs.ext_sync_timeout <= 0) {
-            // XXX debug
-            log_debug("ext sync lost");
+            midi_clock_ext_sync_changed(0);
             mcs.ext_interval_count = 0;  // reset
             mcs.runstop_f = MIDI_CLOCK_RUNSTOP_STOP;
         }
@@ -471,6 +461,11 @@ __weak void midi_clock_pos_reset(void) {
 
 // the externally locked tempo changed
 __weak void midi_clock_ext_tempo_changed(void) {
+    // unimplemented stub
+}
+
+// the external sync state changed
+__weak void midi_clock_ext_sync_changed(int synced) {
     // unimplemented stub
 }
 

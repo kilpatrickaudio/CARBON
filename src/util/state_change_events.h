@@ -90,6 +90,7 @@ enum STATE_CHANGE_EVENT {
     SCE_CTRL_RECORD_MODE,  // arg0 = record mode
     SCE_CTRL_CLOCK_BEAT,  // no args
     SCE_CTRL_EXT_TEMPO,  // no args
+    SCE_CTRL_EXT_SYNC,  // arg0: ext synced
     // engine events
     SCE_ENG_CURRENT_SCENE = SCEC_ENG,  // arg0 = scene
     SCE_ENG_ACTIVE_STEP,  // arg0 = track, arg1 = step

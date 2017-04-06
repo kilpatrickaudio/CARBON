@@ -1352,6 +1352,13 @@ void midi_clock_ext_tempo_changed(void) {
     state_change_fire0(SCE_CTRL_EXT_TEMPO);
 }
 
+// the external sync state changed
+void midi_clock_ext_sync_changed(int synced) {
+    // fire event
+    state_change_fire1(SCE_CTRL_EXT_SYNC, synced);
+}
+
+
 
 //
 // local functions
@@ -1375,10 +1382,6 @@ void seq_ctrl_refresh_modules(void) {
     // song version <=1.02
     if(song_ver <= 0x00010002) {
         song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
-        // deprecated in ver. 1.08 and above
-//        song_set_midi_port_clock_in(MIDI_PORT_DIN1_IN, 0);  // disable
-//        song_set_midi_port_clock_in(MIDI_PORT_USB_HOST_IN, 0);  // disable
-//        song_set_midi_port_clock_in(MIDI_PORT_USB_DEV_IN1, 0);  // disable
         // remap old step lengths and arp speeds from 1.02 to 1.03 format
         // this adds support for triplets
         for(scene = 0; scene < SEQ_NUM_SCENES; scene ++) {
