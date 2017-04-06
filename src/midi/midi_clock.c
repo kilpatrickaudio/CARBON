@@ -360,28 +360,16 @@ void midi_clock_tap_tempo(void) {
 
 // handle a request to continue playback
 void midi_clock_request_continue(void) {
-    // ignore request while sync is received
-    if(mcs.ext_sync_timeout) {
-        return;
-    }
     mcs.runstop_f = MIDI_CLOCK_RUNSTOP_CONTINUE;
 }
 
 // handle a request to stop playback
 void midi_clock_request_stop(void) {
-    // ignore request while sync is received
-    if(mcs.ext_sync_timeout) {
-        return;
-    }
     mcs.runstop_f = MIDI_CLOCK_RUNSTOP_STOP;
 }
 
 // handle a request to reset the playback position
 void midi_clock_request_reset_pos(void) {
-    // ignore request while sync is received
-    if(mcs.ext_sync_timeout) {
-        return;
-    }
     mcs.reset_f = 1;
 }
 
