@@ -21,10 +21,8 @@ must understand what this means, especially in regards to commercial projects.
 
 ## Reporting bugs
 
-Please open an issue for each reproducible bug. Sorry but we are no longer
-accepting new feature requests. If there is something you want or need to
-have please fork the project and have a go at it yourself. Interesting and
-easily integrated pull requests will be considered for official releases.
+Please open an issue for each reproducible bug. Interesting and
+easily integrated pull requests will be considered for official releases. Feature requests should be added but please be prepared to wait a bit as we prioritize bug fixes.
 
 __IMPORTANT: Do not place multiple feature / bug requests in the same issue!__
 
