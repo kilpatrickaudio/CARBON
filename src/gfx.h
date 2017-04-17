@@ -26,6 +26,13 @@
 #include <inttypes.h>
 #include "config.h"
 
+// stuff needed for the remote LCD mode
+#ifdef GFX_REMLCD_MODE
+#define GFX_REMLCD_CMD_BUFLEN 16384
+#define GFX_REMLCD_CMD_BUFMASK (GFX_REMLCD_CMD_BUFLEN - 1)
+#endif
+
+// gfx label struct
 struct gfx_label {
     uint16_t x;
     uint16_t y;
@@ -81,6 +88,11 @@ int gfx_load_font(int num, char *font_filename, int size);
 
 // draw text to the screen
 void gfx_draw_string(struct gfx_label *label);
+
+#ifdef GFX_REMLCD_MODE
+// get a command byte from the remote LCD queue or -1 if no data is available
+int gfx_remlcd_get_byte(void);
+#endif
 
 #endif
 

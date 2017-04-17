@@ -241,6 +241,16 @@
 #define DEBUG_OVER_MIDI  // uncomment to route log messages to MIDI / enable active sensing
 // power control at startup (for debugging)
 #define POWER_CTRL_POWER_ON_AUTO  // uncomment to make power come up automatically
+
 #endif
+
+//
+// remote LCD mode - for demonstration / development purposes 
+//
+// WARNING: DO NOT ENABLE THIS IN PRODUCTION CODE
+// The remote LCD mode will send large amounts of data over the USB dev port.
+//
+#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
+
 #endif
 
