@@ -317,7 +317,7 @@ void cvproc_mono_handler(int pair, struct midi_msg *msg) {
                     // note
                     if(cvstate.pair_mode[pair] == CVPROC_MODE_NOTE) {
                         cvproc_set_note(cvstate.out_offset[pair], 
-                            cvstate.mono_voice_prio[pair][i], 1); 
+                            cvstate.mono_voice_prio[pair][i], CVPROC_GATE_ON); 
                     }
                     // do not change velo when releasing held notes
                     cvstate.mono_voice_pos[pair] = i;
@@ -332,7 +332,11 @@ void cvproc_mono_handler(int pair, struct midi_msg *msg) {
                     cvproc_set_note(cvstate.out_offset[pair], 
                         msg->data0, CVPROC_GATE_OFF);
                 }
-                // do not change velo when releasing notes
+                // velo
+                else if(cvstate.pair_mode[pair] == CVPROC_MODE_VELO) {
+                    cvproc_set_velo(cvstate.out_offset[pair], msg->data1, 
+                        CVPROC_GATE_OFF);
+                }
             }
             break;
         case MIDI_NOTE_ON:
@@ -362,7 +366,8 @@ void cvproc_mono_handler(int pair, struct midi_msg *msg) {
             }
             // velo - only update if it's the first note
             else if(cvstate.pair_mode[pair] == CVPROC_MODE_VELO && !held) {
-                cvproc_set_velo(cvstate.out_offset[pair], msg->data1, CVPROC_GATE_ON);            
+                cvproc_set_velo(cvstate.out_offset[pair], msg->data1, 
+                    CVPROC_GATE_ON);            
             }
             break;
         case MIDI_CONTROL_CHANGE:
@@ -387,7 +392,11 @@ void cvproc_mono_handler(int pair, struct midi_msg *msg) {
                         cvproc_set_note(cvstate.out_offset[pair], 
                             cvstate.out_note[pair], CVPROC_GATE_OFF);
                     }
-                    // do not change velo when releasing notes
+                    // velo
+                    else if(cvstate.pair_mode[pair] == CVPROC_MODE_VELO) {
+                        cvproc_set_velo(cvstate.out_offset[pair], msg->data1, 
+                            CVPROC_GATE_OFF);
+                    }
                 }
             }
             break;
@@ -423,7 +432,11 @@ void cvproc_poly_handler(int pair, struct midi_msg *msg) {
                             cvproc_set_note(cvstate.out_offset[pair] + i, 
                                 msg->data0, CVPROC_GATE_OFF);
                         }
-                        // do not change velo when releasing notes
+                        // velo
+                        else if(cvstate.pair_mode[pair] == CVPROC_MODE_VELO) {
+                            cvproc_set_velo(cvstate.out_offset[pair] + i, 
+                                msg->data1, CVPROC_GATE_OFF);
+                        }
                     }
                 }
             }
@@ -471,9 +484,17 @@ void cvproc_poly_handler(int pair, struct midi_msg *msg) {
                         }
                     }
                     for(i = 0; i < cvstate.poly_num_voices[pair]; i ++) {
-                        cvproc_set_note(cvstate.out_offset[pair] + i, 
-                            cvstate.out_note[pair + i],
-                            CVPROC_GATE_OFF);
+                        // kill output
+                        // note
+                        if(cvstate.pair_mode[pair] + i == CVPROC_MODE_NOTE) {        
+                            cvproc_set_note(cvstate.out_offset[pair] + i, 
+                                cvstate.out_note[pair + i], CVPROC_GATE_OFF);
+                        }
+                        // velo
+                        else if(cvstate.pair_mode[pair] == CVPROC_MODE_VELO) {
+                            cvproc_set_velo(cvstate.out_offset[pair] + i,
+                                msg->data1, CVPROC_GATE_OFF);
+                        }
                     }
                 }
             }
@@ -642,7 +663,10 @@ void cvproc_set_velo(int out, int velo, int gate) {
         log_error("csv - velo invalid: %d", velo);
         return;
     }
-    analog_out_set_cv(out, velo << 5);  // convert to 12 bit
+    // only update velo for note on
+    if(gate == CVPROC_GATE_ON) {
+        analog_out_set_cv(out, velo << 5);  // convert to 12 bit
+    }
     analog_out_set_gate(out, gate);
 }
 

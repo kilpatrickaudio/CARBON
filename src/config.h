@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 8
+#define CARBON_VERSION_MINOR 9
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -250,7 +250,7 @@
 // WARNING: DO NOT ENABLE THIS IN PRODUCTION CODE
 // The remote LCD mode will send large amounts of data over the USB dev port.
 //
-#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
+//#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
 
 #endif
 
