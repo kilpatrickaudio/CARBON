@@ -50,6 +50,9 @@ void gui_force_refresh(void);
 // clear the screen
 void gui_clear_screen(void);
 
+// get the currently loaded screen type
+int gui_get_screen_type(void);
+
 // set the LCD power state 
 // schedule a power-up and reinit (power on)
 // turns off power immediately (power off)

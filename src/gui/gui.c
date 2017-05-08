@@ -672,6 +672,11 @@ void gui_clear_screen(void) {
     gfx_clear_screen(0);
 }
 
+// get the currently loaded screen type
+int gui_get_screen_type(void) {
+    return gstate.screen_type;
+}
+
 // set the LCD power state
 // schedule a power-up and reinit (power on)
 // turns off power immediately (power off)

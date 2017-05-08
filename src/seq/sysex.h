@@ -25,6 +25,13 @@
 
 #include "../midi/midi_utils.h"
 
+// settings (possible shared by other modules)
+// MMA ID
+#define SYSEX_MMA_ID0 0x00
+#define SYSEX_MMA_ID1 0x01
+#define SYSEX_MMA_ID2 0x72
+
+
 // init the sysex handler
 void sysex_init(void);
 

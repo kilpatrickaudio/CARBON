@@ -90,6 +90,10 @@ void debug_send_active_sensing(void) {
     struct midi_msg msg;
     midi_utils_enc_active_sensing(&msg, DEBUG_MIDI_PORT);
     midi_stream_send_msg(&msg);
+#ifdef GFX_REMLCD_MODE
+    midi_utils_enc_active_sensing(&msg, GFX_REMLCD_MIDI_PORT);
+    midi_stream_send_msg(&msg);
+#endif
 #endif
 }
 

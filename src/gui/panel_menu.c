@@ -845,9 +845,10 @@ void panel_menu_display_sys(void) {
         case PANEL_MENU_SYS_VERSION:
             gui_set_menu_subtitle("Firmware Release");
             gui_set_menu_param("Ver:");
-            sprintf(tempstr, "%d.%02d", 
+            sprintf(tempstr, "%d.%02d LCD: %c", 
                 CARBON_VERSION_MAJOR,
-                CARBON_VERSION_MINOR);
+                CARBON_VERSION_MINOR,
+                (gui_get_screen_type() + 65));
             gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_SYS_CVGATE_PAIRS:

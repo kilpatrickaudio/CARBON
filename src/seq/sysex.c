@@ -170,6 +170,7 @@
 //
 // CARBON commands
 #define SYSEX_CMD_ERROR_CODE 0x01  // from device
+// 0x60, 0x61 and 0x62 are used by the remlcd function
 #define SYSEX_CMD_SET_LCD_TYPE 0x6e  // to device
 #define SYSEX_CMD_WIPE_CONFIG_STORE 0x6f  // to device
 #define SYSEX_CMD_READ_EXT_FLASH 0x70  // to device
@@ -186,10 +187,6 @@
 #define SYSEX_ERROR_BAD_LENGTH 0x03
 #define SYSEX_ERROR_MALFORMED_MSG 0x04
 #define SYSEX_ERROR_EXT_FLASH_ERROR 0x05
-// MMA ID
-#define SYSEX_MMA_ID0 0x00
-#define SYSEX_MMA_ID1 0x01
-#define SYSEX_MMA_ID2 0x72
 
 // settings
 #define SYSEX_MAX_LEN 200

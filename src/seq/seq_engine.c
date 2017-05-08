@@ -29,6 +29,7 @@
 #include "pattern.h"
 #include "outproc.h"
 #include "sysex.h"
+#include "../gfx.h"
 #include "../gui/gui.h"
 #include "../gui/panel.h"
 #include "../gui/step_edit.h"
@@ -225,6 +226,9 @@ void seq_engine_init(void) {
 void seq_engine_timer_task(void) {
     struct midi_msg msg;
     static int count = 0;
+#ifdef GFX_REMLCD_MODE
+    int tx_byte, tx_count;
+#endif
 
     //
     // handle MIDI inputs
@@ -277,6 +281,17 @@ void seq_engine_timer_task(void) {
         seq_engine_recalc_params();
     }    
     count ++;
+
+#ifdef GFX_REMLCD_MODE
+    // deliver bytes destined for the remote LCD port
+    for(tx_count = 0; tx_count < GFX_REMLCD_BYTES_PER_MS; tx_count ++) {
+        tx_byte = gfx_remlcd_get_byte();
+        if(tx_byte == -1) {
+            break;
+        }
+        midi_stream_send_byte(GFX_REMLCD_MIDI_PORT, tx_byte);
+    }
+#endif
 }
 
 // run the sequencer - called on each clock tick
