@@ -293,6 +293,7 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_ENG_CURRENT_SCENE:
             panel_update_arp_led();
+            panel_update_dir_led();
             break;
         case SCE_POWER_STATE:
             switch(data[0]) {

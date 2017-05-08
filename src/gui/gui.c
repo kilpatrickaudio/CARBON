@@ -1237,9 +1237,8 @@ void gui_update_scene(int scene) {
             song_get_arp_enable(scene, track));
         gui_update_track_mute(scene, track,
             song_get_mute(scene, track));
-        gui_update_track_select(track, 
-            seq_ctrl_get_track_select(track));
     }
+    gui_update_first_track(seq_ctrl_get_first_track());
 }
 
 // update the track select state
