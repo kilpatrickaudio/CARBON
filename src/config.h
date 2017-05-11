@@ -232,7 +232,7 @@
 //
 // development mode
 //
-#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread
@@ -250,7 +250,7 @@
 // WARNING: DO NOT ENABLE THIS IN PRODUCTION CODE
 // The remote LCD mode will send large amounts of data over the USB dev port.
 //
-#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
+//#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
 #define GFX_REMLCD_MIDI_PORT (MIDI_PORT_USB_DEV_OUT2)  // spare port for remlcd mode
 #define GFX_REMLCD_BYTES_PER_MS 16  // number of bytes that will be sent per ms
 
