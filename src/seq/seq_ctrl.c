@@ -343,6 +343,12 @@ void seq_ctrl_set_run_state(int run) {
 
 // reset the playback to the start - does not change playback state
 void seq_ctrl_reset_pos(void) {
+    // cancel recording if active
+    seq_ctrl_cancel_record();
+    // if we are in song mode, reset the song position too
+    if(sstate.song_mode) {
+        seq_engine_song_mode_reset();
+    }
     midi_clock_request_reset_pos();  // reset the clock position
 }
 
