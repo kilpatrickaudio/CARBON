@@ -85,7 +85,7 @@ void seq_ctrl_init(void) {
     sysex_init();
     panel_init();
     pattern_init();
-    // init interface (power down) modules
+    // init interface (power down) modulesscene_current =
     iface_panel_init();
     iface_midi_router_init();
     // register for events    
@@ -156,7 +156,6 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             // set selections
             for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
                 seq_ctrl_set_track_select(i, 0);
-                seq_ctrl_set_mute_select(i, 0);
             }
             seq_ctrl_set_song_mode(0);
             seq_ctrl_set_scene(0);
