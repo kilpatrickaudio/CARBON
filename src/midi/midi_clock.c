@@ -61,6 +61,7 @@ struct midi_clock_state {
     // internal clock state
     int32_t run_tick_count;  // running tick count
     int32_t stop_tick_count;   // stopped tick count
+    int32_t int_us_per_beat;  // master tempo setting value - to match MIDI file format
     int32_t int_us_per_tick;  // number of us per tick (internal)
     // external clock recovery state
     int32_t ext_interval_hist[MIDI_CLOCK_EXT_HIST_LEN];  // historical interval history
@@ -153,7 +154,7 @@ void midi_clock_timer_task(void) {
     // run clock timebase
     mcs.time_count += MIDI_CLOCK_TASK_INTERVAL_US;
     // decide if we should issue a clock
-    if(mcs.time_count > mcs.next_tick_time) {
+    while(mcs.time_count > mcs.next_tick_time) {
         // if run state changed
         if(mcs.run_state != mcs.desired_run_state) {
             // stopping
@@ -290,6 +291,7 @@ void midi_clock_timer_task(void) {
             else {
                 mcs.int_us_per_tick = temp;
             }
+            mcs.int_us_per_beat = mcs.int_us_per_tick * MIDI_CLOCK_PPQ;
             midi_clock_tap_locked();
         }
     }
@@ -330,12 +332,15 @@ float midi_clock_get_tempo(void) {
         return 60000000.0 / (float)MIDI_CLOCK_PPQ / (float)mcs.ext_sync_tempo_average;
     }
     // internal clock
-    return 60000000.0 / (float)MIDI_CLOCK_PPQ / (float)mcs.int_us_per_tick;
+//    return 60000000.0 / (float)MIDI_CLOCK_PPQ / (float)mcs.int_us_per_tick;
+    return 60000000.0 / (float)mcs.int_us_per_beat;
 }
 
 // set the clock tempo (internal clock)
 void midi_clock_set_tempo(float tempo) {
-    mcs.int_us_per_tick = (uint64_t)(60000000.0 / (tempo * (float)MIDI_CLOCK_PPQ));
+    mcs.int_us_per_beat = (int32_t)(60000000.0 / tempo);
+//    mcs.int_us_per_tick = (int32_t)(60000000.0 / (tempo * (float)MIDI_CLOCK_PPQ));
+    mcs.int_us_per_tick = mcs.int_us_per_beat / MIDI_CLOCK_PPQ;
 }
 
 // get the clock swing

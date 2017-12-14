@@ -24,7 +24,7 @@
 #define SCALE_H
  
  // tonalities
-#define SCALE_NUM_TONALITIES 8
+#define SCALE_NUM_TONALITIES 16
 #define SCALE_CHROMATIC 0
 #define SCALE_MAJOR 1
 #define SCALE_NAT_MINOR 2
@@ -33,6 +33,16 @@
 #define SCALE_WHOLE 5
 #define SCALE_PENT 6
 #define SCALE_DIM 7
+// new scales added in ver. 1.12
+// provided by Bill Butler, checked/tweaked by Andrew Kilpatrick
+#define SCALE_PHRYGIAN 8
+#define SCALE_LYDIAN 9
+#define SCALE_MIXOLYDIAN 10
+#define SCALE_LOCRIAN 11
+#define SCALE_PENT_MINOR 12
+#define SCALE_BLUES 13
+#define SCALE_HALF_DIM 14
+#define SCALE_SEVEN_CHORD 15
 
 // convert a scale type to a name
 void scale_type_to_name(char *str, unsigned char scale);

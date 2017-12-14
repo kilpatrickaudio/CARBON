@@ -120,6 +120,9 @@ struct song_data {
     uint8_t metronome_sound_len;  // metronome sound length in ms
     int8_t midi_clock_source;  // see lookup table
     uint8_t dummy999[2];  // DO NOT REMOVE THIS - fills in old MIDI clock in space
+    // CARBON version 1.12
+    int16_t cvoffset[SONG_CVGATE_NUM_OUTPUTS];  // CV output offset
+    uint8_t midi_autolive;  // autolive function - 0 = off, 1 = on
 
     // dummy padding - to make it an even number of 4096 byte sectors in the flash
     // - be VERY careful that this is correct or other RAM could be overwritten
@@ -131,7 +134,8 @@ struct song_data {
     uint8_t dummy1[1024];
     uint8_t dummy2[1024];
     uint8_t dummy3[1024];
-    uint8_t dummy4[727];
+    uint8_t dummy4[700];
+    uint8_t dummy5[16];
 #endif    
     // token to identify correct loading of file
     uint32_t magic_num;
@@ -225,6 +229,7 @@ void song_clear(void) {
     song_set_cv_output_scaling(3, SONG_CV_SCALING_1VOCT);
     for(i = 0; i < SONG_CVGATE_NUM_OUTPUTS; i ++) {
         song_set_cvcal(i, 0);  // no cal
+        song_set_cvoffset(i, 0);  // no offset
     }
     for(port = 0; port < MIDI_PORT_NUM_TRACK_OUTPUTS; port ++) {
         song_set_midi_port_clock_out(port, SEQ_UTILS_CLOCK_OFF);
@@ -234,6 +239,7 @@ void song_clear(void) {
     }
     song_set_midi_clock_source(SONG_MIDI_CLOCK_SOURCE_INT);
     song_set_midi_remote_ctrl(0);  // disable
+    song_set_midi_autolive(1);  // enable on new songs
 
     // song list
     for(i = 0; i < SEQ_SONG_LIST_ENTRIES; i ++) {
@@ -526,7 +532,7 @@ void song_set_cvgate_pair_mode(int pair, int mode) {
 // get the CV output scaling for an output
 int song_get_cv_output_scaling(int out) {
     if(out < 0 || out >= SONG_CVGATE_NUM_OUTPUTS) {
-        log_error("sgcosm - out invalid: %d", out);
+        log_error("sgcos - out invalid: %d", out);
         return -1;
     }
     return song.cv_output_scaling[out];
@@ -535,11 +541,11 @@ int song_get_cv_output_scaling(int out) {
 // set the CV output scaling for an output
 void song_set_cv_output_scaling(int out, int mode) {
     if(out < 0 || out >= SONG_CVGATE_NUM_OUTPUTS) {
-        log_error("sscosm - out invalid: %d", out);
+        log_error("sscos - out invalid: %d", out);
         return;
     }
     if(mode < 0 || mode > SONG_CV_SCALING_MAX) {
-        log_error("sscosm - mode invalid: %d", mode);
+        log_error("sscos - mode invalid: %d", mode);
         return;
     }
     song.cv_output_scaling[out] = mode;
@@ -569,6 +575,30 @@ void song_set_cvcal(int out, int val) {
     song.cvcal[out] = val;
     // fire event
     state_change_fire2(SCE_SONG_CVCAL, out, val);
+}
+
+// get the CV offset for an output
+int song_get_cvoffset(int out) {
+    if(out < 0 || out >= SONG_CVGATE_NUM_OUTPUTS) {
+        log_error("sgco - out invalid: %d", out);
+        return -1;
+    }
+    return song.cvoffset[out];
+}
+
+// set the CV offset for an output
+void song_set_cvoffset(int out, int offset) {
+    if(out < 0 || out >= SONG_CVGATE_NUM_OUTPUTS) {
+        log_error("ssco - out invalid: %d", out);
+        return;
+    }
+    if(offset < CVPROC_CVOFFSET_MIN || offset > CVPROC_CVOFFSET_MAX) {
+        log_error("ssco - offset invalid: %d", offset);
+        return;
+    }
+    song.cvoffset[out] = offset;
+    // fire event
+    state_change_fire2(SCE_SONG_CVOFFSET, out, offset);
 }
 
 // get a MIDI port clock out enable setting - returns -1 on error
@@ -627,6 +657,23 @@ void song_set_midi_remote_ctrl(int enable) {
     }
     // fire event
     state_change_fire1(SCE_SONG_MIDI_REMOTE_CTRL, song.midi_remote_ctrl);
+}
+
+// get whether autolive is enabled
+int song_get_midi_autolive(void) {
+    return song.midi_autolive;
+}
+
+// set whether autolive is enable
+void song_set_midi_autolive(int enable) {
+    if(enable) {
+        song.midi_autolive = 1;
+    }
+    else {
+        song.midi_autolive = 0;
+    }
+    // fire event
+    state_change_fire1(SCE_SONG_MIDI_AUTOLIVE, song.midi_autolive);
 }
 
 //

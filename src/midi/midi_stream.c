@@ -77,8 +77,8 @@ int midi_stream_send_msg(struct midi_msg *msg) {
         return -2;
     }
     // check if the buffer is full
-    if(((midi_stream_queue_inp[msg->port] - midi_stream_queue_outp[msg->port]) &&
-            MIDI_STREAM_BUFMASK) == MIDI_STREAM_BUFSIZE) {
+    if(((midi_stream_queue_inp[msg->port] - midi_stream_queue_outp[msg->port]) &
+            MIDI_STREAM_BUFMASK) == (MIDI_STREAM_BUFSIZE - 1)) {
         return -1;
     }
     midi_utils_copy_msg(&midi_stream_queue[msg->port][midi_stream_queue_inp[msg->port]], msg);
@@ -325,7 +325,7 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
                     break;
                 case MIDI_PITCH_BEND:
                     midi_utils_enc_pitch_bend(&msg, port, rx_chan[port], 
-                        ((rx_data1[port] << 7) | rx_data1[port]) - 8192);
+                        ((rx_data1[port] << 7) | rx_data0[port]) - 8192);
                     midi_stream_send_msg(&msg); 
                     break;
                 case MIDI_SONG_POSITION:

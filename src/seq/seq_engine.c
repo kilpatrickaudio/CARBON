@@ -95,6 +95,7 @@ struct seq_engine_state {
     int step_pos[SEQ_NUM_TRACKS];  // current step position
     int bias_track_output[SEQ_NUM_TRACKS];  // bias track output
     int kbtrans;  // keyboard transpose state for tracks (no effect during song mode)
+    int autolive;  // the autolive state
     // song mode
     struct song_mode_state sngmode;  // the song mode current data
     // record state
@@ -142,6 +143,7 @@ void seq_engine_step_sequence_shuttle(int track, int change);
 void seq_engine_record_write_tracks(void);
 // change event handlers
 void seq_engine_live_mode_changed(int newval);
+void seq_engine_autolive_mode_changed(int newval);
 void seq_engine_track_select_changed(int track, int newval);
 void seq_engine_mute_select_changed(int scene, int track, int newval);
 void seq_engine_cvgate_mode_changed(void);
@@ -200,6 +202,7 @@ void seq_engine_init(void) {
         sestate.live_damper_pedal[j] = 0;
     }
     seq_engine_set_kbtrans(0);
+    sestate.autolive = 0;
 
     // reset song mode info
     sestate.sngmode.enable = 0;
@@ -589,6 +592,9 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_MIDI_PROGRAM:
             seq_engine_send_program(data[0], data[1]);
             break;
+        case SCE_SONG_MIDI_AUTOLIVE:
+            seq_engine_autolive_mode_changed(data[0]);
+            break;
         default:
             break;
     }
@@ -763,11 +769,19 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
     }
     // handle channel messages
     else {
-        // do keyboard velocity scaling
-        midi_utils_copy_msg(&send_msg, msg);  // copy so we can modify contents        
-        if((send_msg.status & 0xf0) == MIDI_NOTE_ON) {
-            send_msg.data1 = seq_utils_clamp(send_msg.data1 + 
-                sestate.key_velocity_scale, 1, 0x7f);
+        midi_utils_copy_msg(&send_msg, msg);  // copy so we can modify contents
+        switch(send_msg.status & 0xf0) {
+            case MIDI_NOTE_ON:
+                // do keyboard velocity scaling
+                send_msg.data1 = seq_utils_clamp(send_msg.data1 + 
+                    sestate.key_velocity_scale, 1, 0x7f);
+                break;
+            case MIDI_CONTROL_CHANGE:
+                // ignore CC >= 120
+                if(send_msg.data0 >= MIDI_CONTROLLER_ALL_SOUNDS_OFF) {
+                    return;
+                }
+                break;
         }
 
         // check each track
@@ -781,6 +795,7 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
             // can happen if a track is muted
             if(seq_ctrl_get_track_select(track) &&
                     (seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON || 
+                    sestate.autolive ||
                     seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE ||
                     (step_edit_get_enable() && !seq_ctrl_get_run_state()))) {
                 seq_engine_live_send_msg(track, &send_msg);
@@ -1050,7 +1065,7 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
     }
 }
 
-// manage notes - do ratcheting and delayed start
+// manage notes - do ratcheting, delayed start and timeout
 void seq_engine_track_manage_notes(int track) {
     struct midi_msg msg;
     int note;
@@ -1734,6 +1749,18 @@ void seq_engine_live_mode_changed(int newval) {
     }
 }
 
+// the autolive mode changed
+void seq_engine_autolive_mode_changed(int newval) {
+    // disabling
+    if(!newval) {
+        // if we are not also in LIVE mode we should force notes to stop
+        if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_OFF) {
+            seq_engine_live_mode_changed(SEQ_CTRL_LIVE_OFF);
+        }
+    }
+    sestate.autolive = newval;
+}
+
 // track select changed on a track
 void seq_engine_track_select_changed(int track, int newval) {
     if(track < 0 || track >= SEQ_NUM_TRACKS) {
@@ -1875,6 +1902,7 @@ void seq_engine_song_loaded(int song) {
             seq_engine_send_program(track, mapnum);
         }
     }    
+    sestate.autolive = song_get_midi_autolive();
     seq_engine_recalc_params();
 }
 

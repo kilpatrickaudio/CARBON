@@ -67,6 +67,9 @@ void cvproc_set_output_scaling(int out, int mode);
 // set the scale of an output
 void cvproc_set_cvcal(int out, int scale);
 
+// set the offset for an output
+void cvproc_set_cvoffset(int out, int offset);
+
 #endif
 
 

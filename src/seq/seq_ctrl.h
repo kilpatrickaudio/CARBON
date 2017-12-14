@@ -138,6 +138,9 @@ void seq_ctrl_set_kbtrans(int kbtrans);
 // adjust the CV cal on a channel
 void seq_ctrl_adjust_cvcal(int channel, int change);
 
+// adjust the CV offset on a channel
+void seq_ctrl_adjust_cvoffset(int channel, int change);
+
 // set the tempo
 void seq_ctrl_set_tempo(float tempo);
 
@@ -179,6 +182,9 @@ void seq_ctrl_adjust_clock_source(int change);
 
 // adjust the MIDI remote control state
 void seq_ctrl_adjust_midi_remote_ctrl(int change);
+
+// adjust the MIDI autolive state
+void seq_ctrl_adjust_midi_autolive(int change);
 
 //
 // track params (per track)

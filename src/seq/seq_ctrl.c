@@ -219,6 +219,9 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_CVCAL:
             cvproc_set_cvcal(data[0], data[1]);
             break;
+        case SCE_SONG_CVOFFSET:
+            cvproc_set_cvoffset(data[0], data[1]);
+            break;
         case SCE_CONFIG_LOADED:
             log_debug("scrt - config loaded");
             gui_startup();  // start the GUI now that we know which LCD type we have
@@ -535,6 +538,16 @@ void seq_ctrl_adjust_cvcal(int channel, int change) {
         CVPROC_CVCAL_MIN, CVPROC_CVCAL_MAX));
 }
 
+// adjust the CV offset on a channel
+void seq_ctrl_adjust_cvoffset(int channel, int change) {
+    if(channel < 0 || channel >= CVPROC_NUM_OUTPUTS) {
+        log_error("scaco - channel invalid: %d", channel);
+        return;
+    }
+    song_set_cvoffset(channel, seq_utils_clamp(song_get_cvoffset(channel) + change,
+        CVPROC_CVOFFSET_MIN, CVPROC_CVOFFSET_MAX));
+}
+
 // set the tempo
 void seq_ctrl_set_tempo(float tempo) {
     song_set_tempo(midi_clock_get_tempo());
@@ -653,6 +666,12 @@ void seq_ctrl_adjust_clock_source(int change) {
 // adjust the MIDI remote control state
 void seq_ctrl_adjust_midi_remote_ctrl(int change) {
     song_set_midi_remote_ctrl(seq_utils_clamp(song_get_midi_remote_ctrl() + change,
+        0, 1));
+}
+
+// adjust the MIDI autolive state
+void seq_ctrl_adjust_midi_autolive(int change) {
+    song_set_midi_autolive(seq_utils_clamp(song_get_midi_autolive() + change,
         0, 1));
 }
 
@@ -1403,6 +1422,15 @@ void seq_ctrl_refresh_modules(void) {
         // fix the MIDI clock source stuff - default to internal clock
         song_set_midi_clock_source(SONG_MIDI_CLOCK_SOURCE_INT);
     }
+    // song version <= 1.11
+    if(song_ver <= 0x0001000b) {
+        // reset CV offset
+        song_set_cvoffset(0, 0);
+        song_set_cvoffset(1, 0);
+        song_set_cvoffset(2, 0);
+        song_set_cvoffset(3, 0);
+        song_set_midi_autolive(0);  // default to old behaviour
+    }
 
     // make sure we save back the current version
     if(song_ver != CARBON_VERSION_MAJMIN) {
@@ -1425,6 +1453,7 @@ void seq_ctrl_refresh_modules(void) {
     // set up CV cal based on saved song data
     for(i = 0; i < CVPROC_NUM_OUTPUTS; i ++) {
         cvproc_set_cvcal(i, song_get_cvcal(i));
+        cvproc_set_cvoffset(i, song_get_cvoffset(i));
     }
 }
 

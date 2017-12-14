@@ -67,7 +67,7 @@
 #define PANEL_MENU_SAVE_SAVE_CONFIRM 1  // not selectable - used when saving
 #define PANEL_MENU_SAVE_SAVE_ERROR 2  // not selectable - used when saving
 // MIDI
-#define PANEL_MENU_MIDI_NUM_SUBMODES 9
+#define PANEL_MENU_MIDI_NUM_SUBMODES 10
 #define PANEL_MENU_MIDI_PROGRAM_A 0  // per track
 #define PANEL_MENU_MIDI_PROGRAM_B 1  // per track
 #define PANEL_MENU_MIDI_TRACK_OUTA_PORT 2  // per track
@@ -77,8 +77,9 @@
 #define PANEL_MENU_MIDI_KEY_SPLIT 6  // per track
 #define PANEL_MENU_MIDI_KEY_VELOCITY 7  // per song
 #define PANEL_MENU_MIDI_REMOTE_CTRL 8  // per song
+#define PANEL_MENU_MIDI_AUTOLIVE 9  // per song
 // sys
-#define PANEL_MENU_SYS_NUM_SUBMODES 16
+#define PANEL_MENU_SYS_NUM_SUBMODES 20
 #define PANEL_MENU_SYS_VERSION 0  // global
 #define PANEL_MENU_SYS_CVGATE_PAIRS 1  // per song
 #define PANEL_MENU_SYS_CV_BEND_RANGE 2  // per song
@@ -94,7 +95,11 @@
 #define PANEL_MENU_SYS_CVCAL2 12  // per song
 #define PANEL_MENU_SYS_CVCAL3 13  // per song
 #define PANEL_MENU_SYS_CVCAL4 14  // per song
-#define PANEL_MENU_SYS_MENU_TIMEOUT 15 // global
+#define PANEL_MENU_SYS_CVOFFSET1 15  // per song
+#define PANEL_MENU_SYS_CVOFFSET2 16  // per song
+#define PANEL_MENU_SYS_CVOFFSET3 17  // per song
+#define PANEL_MENU_SYS_CVOFFSET4 18  // per song
+#define PANEL_MENU_SYS_MENU_TIMEOUT 19 // global
 
 // clock
 #define PANEL_MENU_CLOCK_NUM_SUBMODES 9

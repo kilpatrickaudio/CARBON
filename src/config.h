@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 11
+#define CARBON_VERSION_MINOR 12
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -147,6 +147,8 @@
 #define CVPROC_CVCAL_MAX 100  // max setting for CV calibration
 #define CVPROC_BEND_RANGE_MIN 1  // min setting for CV bend range
 #define CVPROC_BEND_RANGE_MAX 12  // max setting for CV bend range
+#define CVPROC_CVOFFSET_MIN -450  // min setting for CV offset
+#define CVPROC_CVOFFSET_MAX 450  // max setting for CV offset
 
 // MIDI clock
 #define MIDI_CLOCK_TASK_INTERVAL_US (SEQ_TASK_INTERVAL_US)
@@ -250,7 +252,7 @@
 // WARNING: DO NOT ENABLE THIS IN PRODUCTION CODE
 // The remote LCD mode will send large amounts of data over the USB dev port.
 //
-//#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
+#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
 #define GFX_REMLCD_MIDI_PORT (MIDI_PORT_USB_DEV_OUT2)  // spare port for remlcd mode
 #define GFX_REMLCD_BYTES_PER_MS 16  // number of bytes that will be sent per ms
 

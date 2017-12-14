@@ -430,6 +430,17 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;                    
             }
+            break;
+        case SCE_SONG_CVOFFSET:
+            if(pmstate.menu_mode == PANEL_MENU_SYS &&
+                    (pmstate.menu_submode == PANEL_MENU_SYS_CVOFFSET1 ||
+                    pmstate.menu_submode == PANEL_MENU_SYS_CVOFFSET2 ||
+                    pmstate.menu_submode == PANEL_MENU_SYS_CVOFFSET3 ||
+                    pmstate.menu_submode == PANEL_MENU_SYS_CVOFFSET4)) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;                    
+            }
+            break;
         case SCE_SONG_STEP_LEN:
             if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
                     pmstate.menu_submode == PANEL_MENU_CLOCK_STEP_LEN) {
@@ -833,6 +844,12 @@ void panel_menu_display_midi(void) {
             panel_utils_onoff_str(tempstr, song_get_midi_remote_ctrl());
             gui_set_menu_value(tempstr);
             break;
+        case PANEL_MENU_MIDI_AUTOLIVE:
+            gui_set_menu_param("MIDI Autolive");
+            gui_set_menu_subtitle("");
+            panel_utils_onoff_str(tempstr, song_get_midi_autolive());
+            gui_set_menu_value(tempstr);
+            break;
     }    
 }
 
@@ -910,9 +927,20 @@ void panel_menu_display_sys(void) {
         case PANEL_MENU_SYS_CVCAL4:
             temp = pmstate.menu_submode - PANEL_MENU_SYS_CVCAL1;
             gui_set_menu_subtitle("CV Span Calibrate");
-            sprintf(tempstr, "CV Output %d", (temp + 1));
+            sprintf(tempstr, "CV Span %d", (temp + 1));
             gui_set_menu_param(tempstr);
             sprintf(tempstr, "%d", song_get_cvcal(temp));
+            gui_set_menu_value(tempstr);
+            break;
+        case PANEL_MENU_SYS_CVOFFSET1:
+        case PANEL_MENU_SYS_CVOFFSET2:
+        case PANEL_MENU_SYS_CVOFFSET3:
+        case PANEL_MENU_SYS_CVOFFSET4:
+            temp = pmstate.menu_submode - PANEL_MENU_SYS_CVOFFSET1;
+            gui_set_menu_subtitle("CV Output Offset");
+            sprintf(tempstr, "CV Offset %d", (temp + 1));
+            gui_set_menu_param(tempstr);
+            sprintf(tempstr, "%d", song_get_cvoffset(temp));
             gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_SYS_MENU_TIMEOUT:
@@ -1131,6 +1159,9 @@ void panel_menu_edit_midi(int change) {
         case PANEL_MENU_MIDI_REMOTE_CTRL:
             seq_ctrl_adjust_midi_remote_ctrl(change);
             break;
+        case PANEL_MENU_MIDI_AUTOLIVE:
+            seq_ctrl_adjust_midi_autolive(change);
+            break;
     }
     panel_menu_update_display();
 }
@@ -1167,6 +1198,13 @@ void panel_menu_edit_sys(int change) {
         case PANEL_MENU_SYS_CVCAL4:
             temp = pmstate.menu_submode - PANEL_MENU_SYS_CVCAL1;
             seq_ctrl_adjust_cvcal(temp, change);
+            break;
+        case PANEL_MENU_SYS_CVOFFSET1:
+        case PANEL_MENU_SYS_CVOFFSET2:
+        case PANEL_MENU_SYS_CVOFFSET3:
+        case PANEL_MENU_SYS_CVOFFSET4:
+            temp = pmstate.menu_submode - PANEL_MENU_SYS_CVOFFSET1;
+            seq_ctrl_adjust_cvoffset(temp, change);
             break;
         case PANEL_MENU_SYS_MENU_TIMEOUT:
             panel_menu_set_timeout(seq_utils_clamp(pmstate.menu_timeout + 

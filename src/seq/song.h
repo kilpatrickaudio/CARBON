@@ -185,6 +185,12 @@ int song_get_cvcal(int out);
 // set the CV calibration value for an output
 void song_set_cvcal(int out, int val);
 
+// get the CV offset for an output
+int song_get_cvoffset(int out);
+
+// set the CV offset for an output
+void song_set_cvoffset(int out, int offset);
+
 // get a MIDI port clock out enable setting - returns -1 on error
 // port must be a MIDI output port
 int song_get_midi_port_clock_out(int port);
@@ -204,6 +210,12 @@ int song_get_midi_remote_ctrl(void);
 
 // set whether MIDI remote control is enabled
 void song_set_midi_remote_ctrl(int enable);
+
+// get whether autolive is enabled
+int song_get_midi_autolive(void);
+
+// set whether autolive is enable
+void song_set_midi_autolive(int enable);
 
 //
 // song list params (per song)

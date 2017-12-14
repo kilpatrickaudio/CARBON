@@ -27,14 +27,57 @@
 
 // convert a scale type to a name
 void scale_type_to_name(char *str, unsigned char scale) {
-	if(scale == SCALE_CHROMATIC) sprintf(str, "Chromatic");
-	else if(scale == SCALE_MAJOR) sprintf(str, "Major");
-	else if(scale == SCALE_NAT_MINOR) sprintf(str, "Nat Minor");
-	else if(scale == SCALE_HAR_MINOR) sprintf(str, "Har Minor");
-	else if(scale == SCALE_DORIAN) sprintf(str, "Dorian");
-	else if(scale == SCALE_WHOLE) sprintf(str, "Whole");
-	else if(scale == SCALE_PENT) sprintf(str, "Pentatonic");
-	else if(scale == SCALE_DIM) sprintf(str, "Diminished");
+    switch(scale) {
+        case SCALE_CHROMATIC:
+            sprintf(str, "Chromatic");
+            break;
+        case SCALE_MAJOR:
+            sprintf(str, "Major");
+            break;
+        case SCALE_NAT_MINOR:
+            sprintf(str, "Nat Minor");
+            break;
+        case SCALE_HAR_MINOR:
+            sprintf(str, "Har Minor");
+            break;
+        case SCALE_DORIAN:
+            sprintf(str, "Dorian");
+            break;
+        case SCALE_WHOLE:
+            sprintf(str, "Whole");
+            break;
+        case SCALE_PENT:
+            sprintf(str, "Pentatonic");
+            break;
+        case SCALE_DIM:
+            sprintf(str, "Diminished");
+            break;
+        // new scales added in ver. 1.12
+        case SCALE_PHRYGIAN:
+            sprintf(str, "Phrygian");
+            break;
+        case SCALE_LYDIAN:
+            sprintf(str, "Lydian");
+            break;
+        case SCALE_MIXOLYDIAN:
+            sprintf(str, "Mixolydian");
+            break;
+        case SCALE_LOCRIAN:
+            sprintf(str, "Locrian");
+            break;
+        case SCALE_PENT_MINOR:
+            sprintf(str, "Min Pent");
+            break;
+        case SCALE_BLUES:
+            sprintf(str, "Blues");
+            break;
+        case SCALE_HALF_DIM:
+            sprintf(str, "Half Dim");
+            break;
+        case SCALE_SEVEN_CHORD:
+            sprintf(str, "Seven Chord");
+            break;
+    }
 }
 
 // quantize a note to the current scale
@@ -100,6 +143,71 @@ unsigned char scale_quantize(unsigned char note, unsigned char scale) {
 				}
 			}
 		    break;
+        // new scales added in ver. 1.12
+        case SCALE_PHRYGIAN:
+			for(i = SCALE_LEN_PHRYGIAN - 1; i >= 0; i --) {
+				if(scale_phrygian[i] <= nt) {
+					nt = scale_phrygian[i];
+					break;
+				}
+			}
+            break;
+        case SCALE_LYDIAN:
+			for(i = SCALE_LEN_LYDIAN - 1; i >= 0; i --) {
+				if(scale_lydian[i] <= nt) {
+					nt = scale_lydian[i];
+					break;
+				}
+			}
+            break;
+        case SCALE_MIXOLYDIAN:
+			for(i = SCALE_LEN_MIXOLYDIAN - 1; i >= 0; i --) {
+				if(scale_mixolydian[i] <= nt) {
+					nt = scale_mixolydian[i];
+					break;
+				}
+			}
+            break;
+        case SCALE_LOCRIAN:
+			for(i = SCALE_LEN_LOCRIAN - 1; i >= 0; i --) {
+				if(scale_locrian[i] <= nt) {
+					nt = scale_locrian[i];
+					break;
+				}
+			}
+            break;
+        case SCALE_PENT_MINOR:
+			for(i = SCALE_LEN_PENT_MINOR - 1; i >= 0; i --) {
+				if(scale_pent_minor[i] <= nt) {
+					nt = scale_pent_minor[i];
+					break;
+				}
+			}
+            break;
+        case SCALE_BLUES:
+			for(i = SCALE_LEN_BLUES - 1; i >= 0; i --) {
+				if(scale_blues[i] <= nt) {
+					nt = scale_blues[i];
+					break;
+				}
+			}
+            break;
+        case SCALE_HALF_DIM:
+			for(i = SCALE_LEN_HALF_DIM - 1; i >= 0; i --) {
+				if(scale_half_dim[i] <= nt) {
+					nt = scale_half_dim[i];
+					break;
+				}
+			}
+            break;
+        case SCALE_SEVEN_CHORD:
+			for(i = SCALE_LEN_SEVEN_CHORD - 1; i >= 0; i --) {
+				if(scale_seven_chord[i] <= nt) {
+					nt = scale_seven_chord[i];
+					break;
+				}
+			}
+            break;
 	}
 	return nt + shift;
 }

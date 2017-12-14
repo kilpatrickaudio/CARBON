@@ -49,6 +49,7 @@ struct cvproc_state {
     int pairs;  // the output pairing arrangement 
     int pair_mode[CVPROC_NUM_PAIRS];  // pair mode (NOTE or CC)
     int cvcal[CVPROC_NUM_OUTPUTS];  // calibration (octave span) for output
+    int cvoffset[CVPROC_NUM_OUTPUTS];  // offset for output
     int output_scaling[CVPROC_NUM_OUTPUTS];  // output scaling
     int bend_range;  // pitch bend range
     // common state
@@ -95,6 +96,7 @@ void cvproc_init(void) {
     // make scale lookup table
     for(i = 0; i < CVPROC_NUM_OUTPUTS; i ++) {
         cvstate.cvcal[i] = 0;
+        cvstate.cvoffset[i] = 0;
         cvstate.output_scaling[i] = CVPROC_CV_SCALING_1VOCT;
         cvproc_build_scale(i);
     }
@@ -271,17 +273,30 @@ void cvproc_set_output_scaling(int out, int mode) {
 // set the scale of an output
 void cvproc_set_cvcal(int out, int scale) {
     if(out < 0 || out >= CVPROC_NUM_OUTPUTS) {
-        log_error("csc - out invalid: %d", out);
+        log_error("cscc - out invalid: %d", out);
         return;
     }
     if(scale < CVPROC_CVCAL_MIN || scale > CVPROC_CVCAL_MAX) {
-        log_error("csc - scale invalid: %d", scale);
+        log_error("cscc - scale invalid: %d", scale);
         return;
     }
     cvstate.cvcal[out] = scale;
     cvproc_build_scale(out);    
 }
     
+// set the offset for an output
+void cvproc_set_cvoffset(int out, int offset) {
+    if(out < 0 || out >= CVPROC_NUM_OUTPUTS) {
+        log_error("csco - out invalid: %d", out);
+        return;
+    }
+    if(offset < CVPROC_CVOFFSET_MIN || offset > CVPROC_CVOFFSET_MAX) {
+        log_error("csco - offset invalid: %d", offset);
+        return;
+    }
+    cvstate.cvoffset[out] = offset;
+    cvproc_build_scale(out);    
+}
 
 //
 // local functions
@@ -717,7 +732,7 @@ void cvproc_build_scale(int out) {
     // go from middle C up
     val = 0x800 << 4;
     for(i = 60; i < CVPROC_SCALE_NUM_NOTES; i ++) {
-        temp = val >> 4;
+        temp = (val >> 4) + cvstate.cvoffset[out];
         // hit endpoint
         if(temp > 0xfff) {
             cvstate.cvproc_scale[out][i] = 0xfff;  // clamp
@@ -732,7 +747,7 @@ void cvproc_build_scale(int out) {
     val = 0x800 << 4;
     val -= step_size;
     for(i = 59; i >= 0; i --) {
-        temp = val >> 4;
+        temp = (val >> 4) + cvstate.cvoffset[out];
         if(temp < 0) {
             cvstate.cvproc_scale[out][i] = 0;  // clamp
         }
