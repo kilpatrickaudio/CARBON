@@ -160,7 +160,7 @@ int seq_engine_move_to_next_step(int track);
 int seq_engine_compute_next_pos(int track, int *pos, int change);
 void seq_engine_change_scene_synced(void);
 void seq_engine_cancel_pending_scene_change(void);
-void seq_engine_reset_all_tracks_pos(void); 
+void seq_engine_reset_all_tracks_pos(void);
 void seq_engine_send_program(int track, int mapnum);
 void seq_engine_send_all_notes_off(int track);
 void seq_engine_highlight_step_record_pos();
@@ -169,13 +169,13 @@ int seq_engine_check_key_split_range(int mode, int note);
 // init the sequencer engine
 void seq_engine_init(void) {
     int i, j;
-    
+
     // init submodules
     arp_init();
     metronome_init();
     outproc_init();
     midi_ctrl_init();
-    
+
     // reset the note lists
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
         for(i = 0; i < SEQ_ENGINE_MAX_NOTES; i ++) {
@@ -184,19 +184,19 @@ void seq_engine_init(void) {
         }
         sestate.live_active_bend[j] = 0;
     }
-    
+
     // reset record info
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
         sestate.record_pos[j] = 0;
         sestate.record_state[j] = SEQ_ENGINE_TRACK_RECORD_IDLE;
-    }    
+    }
     sestate.record_event_count = 0;
-    
+
     // reset playback info
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
         sestate.bias_track_output[j] = 0;
     }
-    
+
     // reset live info
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
         sestate.live_damper_pedal[j] = 0;
@@ -213,14 +213,14 @@ void seq_engine_init(void) {
 
     // make sure the first scene is selected
     sestate.scene_current = SEQ_NUM_SCENES - 1;  // force scene to change later
-    
+
     // reset misc stuff
     sestate.beat_cross = 0;
-    
-    // build the cache
-    seq_engine_recalc_params();  
 
-    // register for events    
+    // build the cache
+    seq_engine_recalc_params();
+
+    // register for events
     state_change_register(seq_engine_handle_state_change, SCEC_SONG);
     state_change_register(seq_engine_handle_state_change, SCEC_CTRL);
 }
@@ -275,14 +275,14 @@ void seq_engine_timer_task(void) {
             seq_engine_handle_midi_msg(&msg);
         }
     }
-                
+
     // other tasks
     metronome_timer_task();
     // recalculate stuff often - must be responsive enough to work well in
     // performance but not too often to create a huge CPU overhead
     if((count & 0x3f) == 0) {
         seq_engine_recalc_params();
-    }    
+    }
     count ++;
 
 #ifdef GFX_REMLCD_MODE
@@ -307,11 +307,11 @@ void seq_engine_run(uint32_t tick_count) {
         seq_engine_recalc_params();
         seq_engine_reset_all_tracks_pos();
     }
-    
+
     // other engine music tasks
     metronome_run(tick_count);
     step_edit_run(tick_count);
-    
+
     // only process events if the clock is running
     if(midi_clock_get_running()) {
         // if we crossed a beat it might be time to change scenes
@@ -323,18 +323,18 @@ void seq_engine_run(uint32_t tick_count) {
             }
             seq_engine_change_scene_synced();
         }
-        
+
         // resolve bias track outputs (before step playback on each track)
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             // run the step
             if(sestate.clock_div_count[track] == 0) {
                 // get events that are on this step
-                if(pattern_get_step_enable(sestate.scene_current, track, 
-                        song_get_pattern_type(sestate.scene_current, track), 
+                if(pattern_get_step_enable(sestate.scene_current, track,
+                        song_get_pattern_type(sestate.scene_current, track),
                         sestate.step_pos[track])) {
                     // use first note on a step as the bias track value
-                    for(i = 0; i < SEQ_TRACK_POLY; i ++) {                        
-                        if(song_get_step_event(sestate.scene_current, track, 
+                    for(i = 0; i < SEQ_TRACK_POLY; i ++) {
+                        if(song_get_step_event(sestate.scene_current, track,
                                 sestate.step_pos[track], i, &event) != -1) {
                             if(event.type == SONG_EVENT_NOTE) {
                                 seq_engine_track_set_bias_output(track, event.data0);
@@ -344,19 +344,19 @@ void seq_engine_run(uint32_t tick_count) {
                     }
                 }
             }
-        }        
+        }
 
         // process track notes / recording start/stop
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             // precompute live state on the track
-            if(seq_ctrl_get_track_select(track) && 
+            if(seq_ctrl_get_track_select(track) &&
                     seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON) {
-                live_active = 1;        
+                live_active = 1;
             }
             else {
                 live_active = 0;
             }
-        
+
             // manage notes on this track - check on every tick
             seq_engine_track_manage_notes(track);
 
@@ -367,7 +367,7 @@ void seq_engine_run(uint32_t tick_count) {
             if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM &&
                     seq_ctrl_get_track_select(track) &&
                     seq_engine_is_first_step(track) &&
-                    (sestate.clock_div_count[track] > 
+                    (sestate.clock_div_count[track] >
                     (sestate.step_size[track] >> 1))) {
                 // all selected tracks will go into run mode
                 seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT);
@@ -383,7 +383,7 @@ void seq_engine_run(uint32_t tick_count) {
                     // this would only be triggered if we start running while
                     // record is already armed
                     if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
-                        sestate.record_pos[track] = tick_count - 
+                        sestate.record_pos[track] = tick_count -
                             (sestate.step_size[track] >> 1);
                         // all selected tracks will go into run mode
                         seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT);
@@ -395,21 +395,21 @@ void seq_engine_run(uint32_t tick_count) {
                         (!live_active ||
                         (live_active && seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE) ||
                         sestate.track_type[track] == SONG_TRACK_TYPE_DRUM) &&
-                        pattern_get_step_enable(sestate.scene_current, track, 
-                            song_get_pattern_type(sestate.scene_current, track), 
+                        pattern_get_step_enable(sestate.scene_current, track,
+                            song_get_pattern_type(sestate.scene_current, track),
                             sestate.step_pos[track])) {
                     // play the events on this step
-                    seq_engine_track_play_step(track, sestate.step_pos[track]);   
+                    seq_engine_track_play_step(track, sestate.step_pos[track]);
                 }
 
                 // fire event
-                state_change_fire2(SCE_ENG_ACTIVE_STEP, track, 
+                state_change_fire2(SCE_ENG_ACTIVE_STEP, track,
                     sestate.step_pos[track]);
 
                 // manage step position
                 temp = seq_engine_move_to_next_step(track);
             }
-            
+
             // give half step lead-out to RT recording
             if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_RT &&
                     seq_ctrl_get_track_select(track) &&
@@ -434,14 +434,14 @@ void seq_engine_run(uint32_t tick_count) {
                     // handle record finalizing if we actually got some notes
                     if(sestate.record_event_count > 0) {
                         seq_engine_record_write_tracks();
-                        // call up "as recorded" pattern                  
+                        // call up "as recorded" pattern
                         seq_ctrl_set_pattern_type(track, PATTERN_AS_RECORDED);
                         // cancel live mode so we will hear the track right away
                         seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
                     }
                 }
             }
-            // handle step timing            
+            // handle step timing
             sestate.clock_div_count[track] ++;
             if(sestate.clock_div_count[track] >= sestate.step_size[track]) {
                 sestate.clock_div_count[track] = 0;
@@ -467,7 +467,7 @@ void seq_engine_set_run_state(int run) {
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             seq_engine_track_stop_all_notes(track);
             // if live is not on then we send all notes off
-            if(!(seq_ctrl_get_track_select(track) && 
+            if(!(seq_ctrl_get_track_select(track) &&
                     seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON)) {
                 seq_engine_send_all_notes_off(track);
             }
@@ -536,7 +536,7 @@ void seq_engine_change_scene(int scene) {
     sestate.scene_next = scene;
     // if we're stopped we need to change right away
     if(!midi_clock_get_running()) {
-        seq_engine_change_scene_synced();    
+        seq_engine_change_scene_synced();
     }
 }
 
@@ -547,7 +547,7 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
             seq_engine_song_loaded(data[0]);
             break;
         case SCE_SONG_TONALITY:
-            outproc_tonality_changed(data[0], data[1]);        
+            outproc_tonality_changed(data[0], data[1]);
             break;
         case SCE_SONG_TRANSPOSE:
             outproc_transpose_changed(data[0], data[1]);
@@ -567,7 +567,7 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_CTRL_CLOCK_BEAT:
             sestate.beat_cross = 1;
             metronome_beat_cross();
-            break;    
+            break;
         case SCE_SONG_METRONOME_MODE:
             metronome_mode_changed(data[0]);
             break;
@@ -576,12 +576,12 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_SONG_KEY_SPLIT:
             seq_engine_key_split_changed(data[0], data[1]);
-            break;    
+            break;
         case SCE_SONG_ARP_TYPE:
             seq_engine_arp_type_changed(data[0], data[1], data[2]);
             break;
         case SCE_SONG_ARP_SPEED:
-            seq_engine_arp_speed_changed(data[0], data[1], data[2]);        
+            seq_engine_arp_speed_changed(data[0], data[1], data[2]);
             break;
         case SCE_SONG_ARP_GATE_TIME:
             seq_engine_arp_gate_time_changed(data[0], data[1], data[2]);
@@ -614,14 +614,14 @@ void seq_engine_step_rec_pos_changed(int change) {
         if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
             // no clock - time for step mode
             if(!midi_clock_get_running()) {
-                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);        
+                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);
                 sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_RUN;  // force run
             }
         }
         // make sure we can record on this track
         if(sestate.record_state[track] == SEQ_ENGINE_TRACK_RECORD_IDLE) {
             continue;
-        }                   
+        }
         seq_engine_step_sequence_shuttle(track, change);
     }
 }
@@ -664,7 +664,7 @@ void seq_engine_record_mode_changed(int newval) {
                     sestate.record_pos[track] = midi_clock_get_tick_pos();
                 }
                 sestate.record_event_count = 0;  // reset note count
-            }            
+            }
             break;
         default:
             break;
@@ -714,13 +714,13 @@ void seq_engine_set_kbtrans(int kbtrans) {
 //
 // start an arp note on a track
 void seq_engine_arp_start_note(int track, struct midi_msg *msg) {
-    outproc_deliver_msg(sestate.scene_current, track, 
+    outproc_deliver_msg(sestate.scene_current, track,
         msg, OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);  // send note
 }
 
 // stop an arp note on a track
 void seq_engine_arp_stop_note(int track, struct midi_msg *msg) {
-    outproc_deliver_msg(sestate.scene_current, track, 
+    outproc_deliver_msg(sestate.scene_current, track,
         msg, OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);  // send note
 }
 
@@ -734,9 +734,9 @@ void seq_engine_arp_stop_note(int track, struct midi_msg *msg) {
 void seq_engine_handle_midi_msg(struct midi_msg *msg) {
     struct midi_msg send_msg;
     int track;
-    
+
     // handle system command and realtime
-    if((msg->status & 0xf0) == 0xf0) {   
+    if((msg->status & 0xf0) == 0xf0) {
         switch(msg->status) {
             //
             // clock messages
@@ -773,7 +773,7 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
         switch(send_msg.status & 0xf0) {
             case MIDI_NOTE_ON:
                 // do keyboard velocity scaling
-                send_msg.data1 = seq_utils_clamp(send_msg.data1 + 
+                send_msg.data1 = seq_utils_clamp(send_msg.data1 +
                     sestate.key_velocity_scale, 1, 0x7f);
                 break;
             case MIDI_CONTROL_CHANGE:
@@ -794,7 +794,7 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
             // this will send even if we are muted since recording
             // can happen if a track is muted
             if(seq_ctrl_get_track_select(track) &&
-                    (seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON || 
+                    (seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON ||
                     sestate.autolive ||
                     seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE ||
                     (step_edit_get_enable() && !seq_ctrl_get_run_state()))) {
@@ -807,7 +807,7 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
         seq_engine_record_event(&send_msg);
         // handle transposing voice tracks
         // we can't be recording or in live mode, or editing
-        if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_KBTRANS && 
+        if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_KBTRANS &&
                 seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_IDLE &&
                 !step_edit_get_enable() &&
                 !sestate.sngmode.enable) {
@@ -868,7 +868,7 @@ void seq_engine_song_mode_enable_changed(int enable) {
     }
     entry = sestate.sngmode.current_entry;
     // don't change the current entry except if it has become null
-    if(song_get_song_list_scene(sestate.sngmode.current_entry) == 
+    if(song_get_song_list_scene(sestate.sngmode.current_entry) ==
             SONG_LIST_SCENE_NULL) {
         entry = seq_engine_song_mode_find_next_scene(entry);
     }
@@ -907,12 +907,12 @@ void seq_engine_song_mode_load_entry(int entry) {
     // invalid entry
     if(entry < 0 || entry >= SEQ_SONG_LIST_ENTRIES) {
         // invalid entry - just turn off song mode
-        seq_ctrl_set_song_mode(0);  // this will cause us to get called again        
+        seq_ctrl_set_song_mode(0);  // this will cause us to get called again
         return;
     }
     // set state
     sestate.sngmode.current_entry = entry;
-    sestate.sngmode.current_scene = 
+    sestate.sngmode.current_scene =
         song_get_song_list_scene(sestate.sngmode.current_entry);
     sestate.sngmode.beat_count = 0;  // reset the current scene playback
     sestate.sngmode.total_beats =
@@ -929,9 +929,9 @@ void seq_engine_track_play_step(int track, int step) {
     int i, bias, temp;
     struct track_event event;
     struct midi_msg msg;
-    
+
     // play each event on the step
-    for(i = 0; i < SEQ_TRACK_POLY; i ++) { 
+    for(i = 0; i < SEQ_TRACK_POLY; i ++) {
         // get the event and make sure it's valid
         if(song_get_step_event(sestate.scene_current, track, step, i, &event) != -1) {
             // handle event types
@@ -943,10 +943,10 @@ void seq_engine_track_play_step(int track, int step) {
                             sestate.bias_track_map[track] != SONG_TRACK_BIAS_NULL) {
                         bias = sestate.bias_track_output[sestate.bias_track_map[track]];
                     }
-                    
+
                     // drum track - bias / no kbtrans
                     if(sestate.track_type[track] == SONG_TRACK_TYPE_DRUM) {
-                        midi_utils_enc_note_on(&msg, 0, 0, 
+                        midi_utils_enc_note_on(&msg, 0, 0,
                             seq_utils_clamp(event.data0 + bias, 0, 127),
                             event.data1);
                     }
@@ -957,21 +957,21 @@ void seq_engine_track_play_step(int track, int step) {
                         if(!seq_utils_check_note_range(temp)) {
                             return;
                         }
-                        midi_utils_enc_note_on(&msg, 0, 0, temp, event.data1);            
+                        midi_utils_enc_note_on(&msg, 0, 0, temp, event.data1);
                     }
                     seq_engine_track_start_note(track, step, event.length, &msg);
                     break;
                 case SONG_EVENT_CC:
                     // send event directly
                     midi_utils_enc_control_change(&msg, 0, 0, event.data0, event.data1);
-                    outproc_deliver_msg(sestate.scene_current, track, &msg, 
+                    outproc_deliver_msg(sestate.scene_current, track, &msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
                     break;
                 case SONG_EVENT_NULL:
                 default:
                     log_warn("sese - unknown event type: %d", event.type);
                     return;
-            } 
+            }
         }
     }
 }
@@ -997,13 +997,13 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
     if(free_slot == -1) {
         // arp input
         if(sestate.arp_enable[track]) {
-            arp_handle_input(track, 
+            arp_handle_input(track,
                 &sestate.track_active_notes[track][min_time_remain_slot].note.msg);
         }
         // normal playback
-        else {  
-            outproc_deliver_msg(sestate.scene_current, track, 
-                &sestate.track_active_notes[track][min_time_remain_slot].note.msg, 
+        else {
+            outproc_deliver_msg(sestate.scene_current, track,
+                &sestate.track_active_notes[track][min_time_remain_slot].note.msg,
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
         }
         free_slot = min_time_remain_slot;
@@ -1038,7 +1038,7 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
         // gate length - based on the note length scaled by the gate time
         // made to be 50% duty cycle by default (at 100% gate length override)
         sestate.track_active_notes[track][free_slot].ratchet_gate_length =
-            (sestate.track_active_notes[track][free_slot].ratchet_note_length * 
+            (sestate.track_active_notes[track][free_slot].ratchet_note_length *
             sestate.gate_time[track]) >> 8;
         // make sure gate length is not longer than note length
         if(sestate.track_active_notes[track][free_slot].ratchet_gate_length >
@@ -1049,7 +1049,7 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
         sestate.track_active_notes[track][free_slot].ratchet_gate_length_countdown =
             sestate.track_active_notes[track][free_slot].ratchet_gate_length;
     }
-    
+
     // arp tracks always play immediately regardless of start delay
     if(sestate.arp_enable[track]) {
         arp_handle_input(track, on_msg);
@@ -1060,7 +1060,7 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
     }
     // normal notes play now if the start delay is zero
     else if(sestate.track_active_notes[track][free_slot].start_delay_countdown == 0) {
-        outproc_deliver_msg(sestate.scene_current, track, on_msg, 
+        outproc_deliver_msg(sestate.scene_current, track, on_msg,
             OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
     }
 }
@@ -1078,9 +1078,9 @@ void seq_engine_track_manage_notes(int track) {
                 sestate.track_active_notes[track][note].start_delay_countdown --;
                 // time to start the note for reals - everything else is set up
                 if(sestate.track_active_notes[track][note].start_delay_countdown == 0) {
-                    outproc_deliver_msg(sestate.scene_current, track, 
+                    outproc_deliver_msg(sestate.scene_current, track,
                         &sestate.track_active_notes[track][note].note.msg,
-                        OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);                
+                        OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
                 }
             }
             // ratcheting is enabled so let's deal with that
@@ -1091,7 +1091,7 @@ void seq_engine_track_manage_notes(int track) {
                     // make a copy and convert to note off
                     midi_utils_copy_msg(&msg, &sestate.track_active_notes[track][note].note.msg);
                     midi_utils_note_on_to_off(&msg);
-                    outproc_deliver_msg(sestate.scene_current, track, &msg, 
+                    outproc_deliver_msg(sestate.scene_current, track, &msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
                 }
                 sestate.track_active_notes[track][note].ratchet_note_length_countdown --;
@@ -1100,26 +1100,26 @@ void seq_engine_track_manage_notes(int track) {
                     // see if we should start the note again
                     sestate.track_active_notes[track][note].ratchet_note_countdown --;
                     if(sestate.track_active_notes[track][note].ratchet_note_countdown > 0) {
-                        outproc_deliver_msg(sestate.scene_current, track, 
-                            &sestate.track_active_notes[track][note].note.msg, 
+                        outproc_deliver_msg(sestate.scene_current, track,
+                            &sestate.track_active_notes[track][note].note.msg,
                             OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
                         // reset stuff for the next note
                         sestate.track_active_notes[track][note].ratchet_note_length_countdown =
-                            sestate.track_active_notes[track][note].ratchet_note_length;                    
+                            sestate.track_active_notes[track][note].ratchet_note_length;
                         sestate.track_active_notes[track][note].ratchet_gate_length_countdown =
-                            sestate.track_active_notes[track][note].ratchet_gate_length;                    
+                            sestate.track_active_notes[track][note].ratchet_gate_length;
                     }
                     // no more ratchet notes to play - just free the slot
                     else {
                         sestate.track_active_notes[track][note].note.msg.status = 0;  // free slot
                     }
-                }       
-            }            
+                }
+            }
             // the note is playing without ratcheting so let's just time it out
             else {
                 sestate.track_active_notes[track][note].note.tick_len --;
                 // time to kill the note and free the slot
-                if(sestate.track_active_notes[track][note].note.tick_len == 0) {            
+                if(sestate.track_active_notes[track][note].note.tick_len == 0) {
                     // make a copy and convert to note off
                     midi_utils_copy_msg(&msg, &sestate.track_active_notes[track][note].note.msg);
                     midi_utils_note_on_to_off(&msg);
@@ -1128,7 +1128,7 @@ void seq_engine_track_manage_notes(int track) {
                         arp_handle_input(track, &msg);
                     }
                     // normal playback
-                    else {  
+                    else {
                         outproc_deliver_msg(sestate.scene_current, track, &msg,
                             OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
                     }
@@ -1136,7 +1136,7 @@ void seq_engine_track_manage_notes(int track) {
                 }
             }
         }
-    }  
+    }
 }
 
 // stop all playing notes
@@ -1155,8 +1155,8 @@ void seq_engine_track_stop_all_notes(int track) {
                 arp_handle_input(track, &msg);
             }
             // normal playback
-            else {  
-                outproc_deliver_msg(sestate.scene_current, track, &msg, 
+            else {
+                outproc_deliver_msg(sestate.scene_current, track, &msg,
                     OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
             }
             sestate.track_active_notes[track][note].note.msg.status = 0;  // free note
@@ -1206,10 +1206,10 @@ void seq_engine_live_send_msg(int track, struct midi_msg *msg) {
                 // otherwise play it live
                 else {
                     seq_engine_live_dequeue_note(track, msg);  // remove unprocessed pitch
-                    outproc_deliver_msg(sestate.scene_current, track, msg, 
+                    outproc_deliver_msg(sestate.scene_current, track, msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);  // send note
                 }
-            }            
+            }
             break;
         case MIDI_NOTE_ON:
             // figure out key split mode - we care about this note if:
@@ -1232,7 +1232,7 @@ void seq_engine_live_send_msg(int track, struct midi_msg *msg) {
                     outproc_deliver_msg(sestate.scene_current, track, msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);  // send note
                 }
-            }            
+            }
             break;
         case MIDI_POLY_KEY_PRESSURE:
             // figure out key split mode - we care about this note if:
@@ -1242,9 +1242,9 @@ void seq_engine_live_send_msg(int track, struct midi_msg *msg) {
             if(seq_ctrl_get_num_tracks_selected() < 2 ||
                     seq_engine_check_key_split_range(sestate.key_split[track],
                     msg->data0)) {
-                outproc_deliver_msg(sestate.scene_current, track, msg, 
+                outproc_deliver_msg(sestate.scene_current, track, msg,
                     OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
-            }            
+            }
             break;
         case MIDI_CONTROL_CHANGE:
             // keep track of damper pedal
@@ -1253,18 +1253,18 @@ void seq_engine_live_send_msg(int track, struct midi_msg *msg) {
                     sestate.live_damper_pedal[track] = 1;
                 }
                 else {
-                    sestate.live_damper_pedal[track] = 0;             
+                    sestate.live_damper_pedal[track] = 0;
                 }
             }
-            outproc_deliver_msg(sestate.scene_current, track, msg, 
+            outproc_deliver_msg(sestate.scene_current, track, msg,
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
             break;
         case MIDI_CHANNEL_PRESSURE:
-            outproc_deliver_msg(sestate.scene_current, track, msg, 
+            outproc_deliver_msg(sestate.scene_current, track, msg,
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
             break;
         default:
-            break;    
+            break;
     }
 }
 
@@ -1299,7 +1299,7 @@ void seq_engine_live_dequeue_note(int track, struct midi_msg *off_msg) {
             break;
         }
     }
-}    
+}
 
 // get the number of currently held live notes on a track
 int seq_engine_live_get_num_notes(int track) {
@@ -1321,9 +1321,9 @@ void seq_engine_live_stop_all_notes(int track) {
     for(i = 0; i < SEQ_ENGINE_MAX_NOTES; i ++) {
         if(sestate.live_active_notes[track][i].status != 0) {
             midi_utils_note_on_to_off(&sestate.live_active_notes[track][i]);
-            outproc_deliver_msg(sestate.scene_current, track, 
-                &sestate.live_active_notes[track][i], 
-                OUTPROC_DELIVER_BOTH, 
+            outproc_deliver_msg(sestate.scene_current, track,
+                &sestate.live_active_notes[track][i],
+                OUTPROC_DELIVER_BOTH,
                 OUTPROC_OUTPUT_PROCESSED);
             sestate.live_active_notes[track][i].status = 0;  // free the slot
         }
@@ -1331,14 +1331,14 @@ void seq_engine_live_stop_all_notes(int track) {
     // turn off the damper pedal if we had it down
     if(sestate.live_damper_pedal[track]) {
         midi_utils_enc_control_change(&msg, 0, 0, MIDI_CONTROLLER_DAMPER, 0);
-        outproc_deliver_msg(sestate.scene_current, track, &msg, 
+        outproc_deliver_msg(sestate.scene_current, track, &msg,
             OUTPROC_DELIVER_BOTH,
             OUTPROC_OUTPUT_PROCESSED);
     }
     // reset pitch bend if we used it
     if(sestate.live_active_bend[track]) {
         midi_utils_enc_pitch_bend(&msg, 0, 0, 0);
-        outproc_deliver_msg(sestate.scene_current, track, &msg, 
+        outproc_deliver_msg(sestate.scene_current, track, &msg,
             OUTPROC_DELIVER_BOTH,
             OUTPROC_OUTPUT_PROCESSED);
         sestate.live_active_bend[track] = 0;
@@ -1351,7 +1351,7 @@ void seq_engine_live_passthrough(int track, struct midi_msg *msg) {
         case MIDI_CONTROL_CHANGE:
             switch(msg->data0) {
                 case MIDI_CONTROLLER_ALL_SOUNDS_OFF:
-                    outproc_deliver_msg(sestate.scene_current, track, msg, 
+                    outproc_deliver_msg(sestate.scene_current, track, msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
                     break;
             }
@@ -1362,7 +1362,7 @@ void seq_engine_live_passthrough(int track, struct midi_msg *msg) {
             break;
         case MIDI_PITCH_BEND:
             // echo to the track
-            outproc_deliver_msg(sestate.scene_current, track, msg, 
+            outproc_deliver_msg(sestate.scene_current, track, msg,
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
             sestate.live_active_bend[track] = 1;  // mark that we bent
             break;
@@ -1384,10 +1384,10 @@ void seq_engine_record_event(struct midi_msg *msg) {
     if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
         // no clock - time for step mode
         if(!midi_clock_get_running()) {
-            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);        
+            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);
         }
     }
-        
+
     // handle step record mode
     // make sure we're still recording on this track
     if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_STEP) {
@@ -1415,14 +1415,14 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 }
                 break;
         }
-    
+
         // put data in each track
-        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {    
+        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             // make sure we can record on this track
             if(sestate.record_state[track] == SEQ_ENGINE_TRACK_RECORD_IDLE) {
                 continue;
             }
-            // handle different message types                        
+            // handle different message types
             switch(msg->status & 0xf0) {
                 case MIDI_NOTE_OFF:
                     // time to advance
@@ -1443,7 +1443,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                         trkevent.data0 = msg->data0;
                         trkevent.data1 = msg->data1;
                         trkevent.length = sestate.step_size[track];
-                        song_add_step_event(sestate.scene_current, track, 
+                        song_add_step_event(sestate.scene_current, track,
                             sestate.record_pos[track], &trkevent);
                     }
                     break;
@@ -1453,7 +1453,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                             sestate.record_event_count == 0) {
                         song_clear_step(sestate.scene_current, track, sestate.record_pos[track]);
                         // move ahead to skip step
-                        seq_engine_step_sequence_advance(track);                        
+                        seq_engine_step_sequence_advance(track);
                     }
                     // other kinds of CC
                     else if(msg->data0 < MIDI_CONTROLLER_ALL_SOUNDS_OFF) {
@@ -1461,8 +1461,8 @@ void seq_engine_record_event(struct midi_msg *msg) {
                         trkevent.type = SONG_EVENT_CC;
                         trkevent.data0 = msg->data0;
                         trkevent.data1 = msg->data1;
-                        song_add_step_event(sestate.scene_current, track, 
-                            sestate.record_pos[track], &trkevent);                       
+                        song_add_step_event(sestate.scene_current, track,
+                            sestate.record_pos[track], &trkevent);
                     }
                     break;
                 default:
@@ -1470,7 +1470,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                     break;
             }
         }
-        // check if we should end record mode (all tracks have reached their ends)    
+        // check if we should end record mode (all tracks have reached their ends)
         temp = 0;
         for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
             // track is still active
@@ -1491,7 +1491,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
         if(sestate.record_event_count == SEQ_ENGINE_RECORD_EVENTS_MAX) {
             return;
         }
-        // handle different message types                        
+        // handle different message types
         switch(msg->status & 0xf0) {
             case MIDI_NOTE_OFF:
                 // search for note on already in recording list
@@ -1501,7 +1501,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                             sestate.record_events[i].msg.status == MIDI_NOTE_ON &&
                             sestate.record_events[i].msg.data0 == msg->data0) {
                         // record the note length to the existing data
-                        sestate.record_events[i].tick_len = midi_clock_get_tick_pos() - 
+                        sestate.record_events[i].tick_len = midi_clock_get_tick_pos() -
                             sestate.record_events[i].tick_pos;
                         break;
                     }
@@ -1518,7 +1518,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 sestate.record_events[sestate.record_event_count].msg.data1 = msg->data1;
                 sestate.record_event_count ++;
                 break;
-            case MIDI_CONTROL_CHANGE:                
+            case MIDI_CONTROL_CHANGE:
                 // add CC to recording list
                 sestate.record_events[sestate.record_event_count].tick_pos = midi_clock_get_tick_pos();
                 sestate.record_events[sestate.record_event_count].tick_len = 0;  // unused
@@ -1531,17 +1531,17 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 break;
             default:
                 break;
-        }        
+        }
     }
 }
 
 // advance the step sequencer position and possibly end recording
 void seq_engine_step_sequence_advance(int track) {
-    sestate.record_pos[track] = 
+    sestate.record_pos[track] =
         (sestate.record_pos[track] + 1) & (SEQ_NUM_STEPS - 1);
     sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_START;
     // end the sequence
-    if(sestate.record_pos[track] == 
+    if(sestate.record_pos[track] ==
             ((sestate.motion_start[track] + sestate.motion_len[track]) &
             (SEQ_NUM_STEPS - 1))) {
         sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_IDLE;
@@ -1564,7 +1564,7 @@ void seq_engine_record_write_tracks(void) {
     int damper_held;
     int used_notes[128];  // note numbers
     struct track_event trkevent;
-    
+
     // ignore blank recording
     if(sestate.record_event_count == 0) {
         return;
@@ -1579,30 +1579,30 @@ void seq_engine_record_write_tracks(void) {
             continue;
         }
         // for drum track mode we need to figure out which notes are in our
-        // recording and then clear them from the existing recording (selective 
+        // recording and then clear them from the existing recording (selective
         // overdub) mode
         if(sestate.track_type[track] == SONG_TRACK_TYPE_DRUM) {
             // clear the used notes list
             for(i = 0; i < 128; i ++) {
                 used_notes[i] = 0;
-            }        
+            }
             // scan the note list and figure out which pitches are in use
             for(rn = 0; rn < sestate.record_event_count; rn ++) {
                 // make sure this event fits within our desired step range
                 if(sestate.record_events[rn].tick_pos < sestate.record_pos[track] ||
-                        sestate.record_events[rn].tick_pos >= 
-                        (sestate.record_pos[track] + (sestate.motion_len[track] * 
+                        sestate.record_events[rn].tick_pos >=
+                        (sestate.record_pos[track] + (sestate.motion_len[track] *
                         sestate.step_size[track]))) {
                     continue;
                 }
                 // flag the note
                 if(sestate.record_events[rn].msg.status == MIDI_NOTE_ON) {
                     used_notes[sestate.record_events[rn].msg.data0 & 0x7f] = 1;
-                }   
-            }       
+                }
+            }
             // scan the existing track and remove notes as necessary
             for(i = 0; i < sestate.motion_len[track]; i ++) {
-                step = (sestate.motion_start[track] + i) & 
+                step = (sestate.motion_start[track] + i) &
                     (SEQ_NUM_STEPS - 1);
                 // check events on step that match a note that exists in our recording
                 for(j = 0; j < SEQ_TRACK_POLY; j ++) {
@@ -1619,13 +1619,13 @@ void seq_engine_record_write_tracks(void) {
         for(rn = 0; rn < sestate.record_event_count; rn ++) {
             // make sure this event fits within our desired step range
             if(sestate.record_events[rn].tick_pos < sestate.record_pos[track] ||
-                    sestate.record_events[rn].tick_pos >= 
-                    (sestate.record_pos[track] + (sestate.motion_len[track] * 
+                    sestate.record_events[rn].tick_pos >=
+                    (sestate.record_pos[track] + (sestate.motion_len[track] *
                     sestate.step_size[track]))) {
                 continue;
             }
             // calculate actual step on track
-            step = (((sestate.record_events[rn].tick_pos - sestate.record_pos[track]) / 
+            step = (((sestate.record_events[rn].tick_pos - sestate.record_pos[track]) /
                 sestate.step_size[track]) + sestate.motion_start[track]) & (SEQ_NUM_STEPS - 1);
             // insert event
             switch(sestate.record_events[rn].msg.status) {
@@ -1641,15 +1641,15 @@ void seq_engine_record_write_tracks(void) {
                     trkevent.data1 = sestate.record_events[rn].msg.data1;
                     // note was held down past loop end (tick_len is 0)
                     if(sestate.record_events[rn].tick_len == 0) {
-                        trkevent.length = (((sestate.motion_start[track] + 
-                            sestate.motion_len[track]) - step) & 
+                        trkevent.length = (((sestate.motion_start[track] +
+                            sestate.motion_len[track]) - step) &
                             (SEQ_NUM_STEPS - 1)) * sestate.step_size[track];
                     }
                     // proper note length
                     else {
                         trkevent.length = sestate.record_events[rn].tick_len;
                     }
-                    song_add_step_event(sestate.scene_current, track, step, &trkevent);                    
+                    song_add_step_event(sestate.scene_current, track, step, &trkevent);
                     break;
                 case MIDI_CONTROL_CHANGE:
                     temp = 0;  // update flag
@@ -1660,7 +1660,7 @@ void seq_engine_record_write_tracks(void) {
                             continue;
                         }
                         // CC matches - update value
-                        if(trkevent.type == SONG_EVENT_CC && 
+                        if(trkevent.type == SONG_EVENT_CC &&
                                 trkevent.data0 == sestate.record_events[rn].msg.data0) {
                             trkevent.data1 = sestate.record_events[rn].msg.data1;  // update value
                             song_set_step_event(sestate.scene_current, track, step, i, &trkevent);
@@ -1671,7 +1671,7 @@ void seq_engine_record_write_tracks(void) {
                                     damper_held = 1;
                                 }
                                 else {
-                                    damper_held = 0;                                
+                                    damper_held = 0;
                                 }
                             }
                             break;
@@ -1689,14 +1689,14 @@ void seq_engine_record_write_tracks(void) {
                                 damper_held = 1;
                             }
                             else {
-                                damper_held = 0;                                
+                                damper_held = 0;
                             }
                         }
-                    }                    
+                    }
                     break;
                 default:
                     break;
-            }            
+            }
         }
         // if the damper is still down at the end of the track
         // turn it off on the last step
@@ -1769,7 +1769,7 @@ void seq_engine_track_select_changed(int track, int newval) {
     }
     if(!newval) {
         // if live mode is active get rid of all live notes
-        if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON) {
+        if(sestate.autolive || seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON) {
             // if arp enabled make sure we clear its input
             if(sestate.arp_enable[track]) {
                 arp_clear_input(track);
@@ -1795,7 +1795,7 @@ void seq_engine_mute_select_changed(int scene, int track, int newval) {
         seq_engine_live_stop_all_notes(track);
     }
     else {
-        sestate.track_mute[track] = 0;    
+        sestate.track_mute[track] = 0;
     }
 }
 
@@ -1805,7 +1805,7 @@ void seq_engine_key_split_changed(int track, int mode) {
     // stop all notes because we might not be able to turn them off now
     for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
         seq_engine_live_stop_all_notes(i);
-    }    
+    }
 }
 
 // the arp type changed on a track
@@ -1858,12 +1858,12 @@ void seq_engine_arp_enable_changed(int scene, int track, int enable) {
         log_error("seaec - track invalid: %d", track);
         return;
     }
-    
+
     // arp is enabled
     if(enable) {
         arp_set_arp_enable(track, 1);  // enable arp
         // if live is enabled on the track
-        if(seq_ctrl_get_track_select(track) && 
+        if(seq_ctrl_get_track_select(track) &&
                seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON) {
             // let's transfer notes to the arp
             for(i = 0; i < SEQ_ENGINE_MAX_NOTES; i ++) {
@@ -1873,7 +1873,7 @@ void seq_engine_arp_enable_changed(int scene, int track, int enable) {
                 }
             }
             // turn off live notes
-            seq_engine_live_stop_all_notes(track);                    
+            seq_engine_live_stop_all_notes(track);
         }
         // if we're doing playback then stop all the playback notes on the track
         else {
@@ -1882,7 +1882,7 @@ void seq_engine_arp_enable_changed(int scene, int track, int enable) {
     }
     // arp is disabled
     else {
-        arp_set_arp_enable(track, 0);  // disable arp        
+        arp_set_arp_enable(track, 0);  // disable arp
     }
     outproc_stop_all_notes(track);  // make sure notes are off
 }
@@ -1901,7 +1901,7 @@ void seq_engine_song_loaded(int song) {
         for(mapnum = 0; mapnum < SEQ_NUM_TRACK_OUTPUTS; mapnum ++) {
             seq_engine_send_program(track, mapnum);
         }
-    }    
+    }
     sestate.autolive = song_get_midi_autolive();
     seq_engine_recalc_params();
 }
@@ -1919,15 +1919,15 @@ void seq_engine_recalc_params(void) {
             song_get_bias_track(sestate.scene_current, track);
         sestate.arp_enable[track] =
             song_get_arp_enable(sestate.scene_current, track);
-        sestate.step_size[track] = 
+        sestate.step_size[track] =
             seq_utils_step_len_to_ticks(song_get_step_length(sestate.scene_current, track));
-        sestate.motion_start[track] = 
+        sestate.motion_start[track] =
             song_get_motion_start(sestate.scene_current, track);
-        sestate.motion_len[track] = 
+        sestate.motion_len[track] =
             song_get_motion_length(sestate.scene_current, track);
-        sestate.dir_reverse[track] = 
+        sestate.dir_reverse[track] =
             song_get_motion_dir(sestate.scene_current, track);
-        sestate.gate_time[track] = 
+        sestate.gate_time[track] =
             song_get_gate_time(sestate.scene_current, track);
         sestate.track_type[track] =
             song_get_track_type(track);
@@ -1936,7 +1936,7 @@ void seq_engine_recalc_params(void) {
         // if we're stopped we need to check if the playback position is
         // outside of the new motion range and correct it if so
         if(!seq_ctrl_get_run_state()) {
-            // check the range 
+            // check the range
             if(!seq_utils_get_wrapped_range(sestate.step_pos[track],
                     sestate.motion_start[track], sestate.motion_len[track],
                     SEQ_NUM_STEPS)) {
@@ -1946,15 +1946,15 @@ void seq_engine_recalc_params(void) {
                     sestate.motion_len[track] + 1) & (SEQ_NUM_STEPS - 1);
                 // we moved to before
                 if(dist_end > dist_start) {
-                    sestate.step_pos[track] = sestate.motion_start[track];                        
+                    sestate.step_pos[track] = sestate.motion_start[track];
                 }
                 // we moved to after
                 else {
                     sestate.step_pos[track] = (sestate.motion_start[track] +
-                        sestate.motion_len[track] - 1) & (SEQ_NUM_STEPS - 1);                
+                        sestate.motion_len[track] - 1) & (SEQ_NUM_STEPS - 1);
                 }
                 // fire event
-                state_change_fire2(SCE_ENG_ACTIVE_STEP, track, 
+                state_change_fire2(SCE_ENG_ACTIVE_STEP, track,
                     sestate.step_pos[track]);
             }
         }
@@ -1965,8 +1965,8 @@ void seq_engine_recalc_params(void) {
 // this handles direction of playback
 int seq_engine_is_first_step(int track) {
     // backwards
-    if(sestate.dir_reverse[track] && 
-            sestate.step_pos[track] == ((sestate.motion_start[track] + 
+    if(sestate.dir_reverse[track] &&
+            sestate.step_pos[track] == ((sestate.motion_start[track] +
             sestate.motion_len[track] - 1) & (SEQ_NUM_STEPS - 1))) {
         return 1;
     }
@@ -1983,11 +1983,11 @@ int seq_engine_is_first_step(int track) {
 int seq_engine_move_to_next_step(int track) {
     // backwards
     if(sestate.dir_reverse[track]) {
-        return seq_engine_compute_next_pos(track, 
+        return seq_engine_compute_next_pos(track,
             &sestate.step_pos[track], -1);
     }
     // forwards
-    return seq_engine_compute_next_pos(track, 
+    return seq_engine_compute_next_pos(track,
         &sestate.step_pos[track], 1);
 }
 
@@ -1999,7 +1999,7 @@ int seq_engine_compute_next_pos(int track, int *pos, int change) {
         return 0;  // didn't wrap
     }
     // get new pos
-    newpos = (*pos + change) & (SEQ_NUM_STEPS - 1);    
+    newpos = (*pos + change) & (SEQ_NUM_STEPS - 1);
     // check if we wrapped forward
     if(change > 0 && ((newpos - sestate.motion_start[track]) & (SEQ_NUM_STEPS - 1)) >=
             sestate.motion_len[track]) {
@@ -2009,8 +2009,8 @@ int seq_engine_compute_next_pos(int track, int *pos, int change) {
     // check if we wrapped backward
     if(change < 0 && ((newpos - sestate.motion_start[track]) & (SEQ_NUM_STEPS - 1)) >=
             sestate.motion_len[track]) {
-        *pos = (sestate.motion_start[track] + 
-            sestate.motion_len[track] - 1) & (SEQ_NUM_STEPS - 1);      
+        *pos = (sestate.motion_start[track] +
+            sestate.motion_len[track] - 1) & (SEQ_NUM_STEPS - 1);
         return 1;
     }
     *pos = newpos;
@@ -2027,10 +2027,10 @@ void seq_engine_change_scene_synced(void) {
     sestate.scene_current = sestate.scene_next;
     seq_engine_recalc_params();
     seq_engine_reset_all_tracks_pos();
-    
+
     // fire event
     state_change_fire1(SCE_ENG_CURRENT_SCENE, sestate.scene_current);
-    
+
     // update engine with new transpose info
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         // update outproc for tonality and transpose
@@ -2077,7 +2077,7 @@ void seq_engine_send_program(int track, int mapnum) {
     prog = song_get_midi_program(track, mapnum);
     if(prog != SONG_MIDI_PROG_NULL) {
         midi_utils_enc_program_change(&send_msg, 0, 0, prog);
-        outproc_deliver_msg(sestate.scene_current, track, &send_msg, 
+        outproc_deliver_msg(sestate.scene_current, track, &send_msg,
             mapnum, OUTPROC_OUTPUT_PROCESSED);
     }
 }
@@ -2085,7 +2085,7 @@ void seq_engine_send_program(int track, int mapnum) {
 // send all notes off on a track
 void seq_engine_send_all_notes_off(int track) {
     struct midi_msg send_msg;
-    midi_utils_enc_control_change(&send_msg, 0, 0, 
+    midi_utils_enc_control_change(&send_msg, 0, 0,
         MIDI_CONTROLLER_ALL_NOTES_OFF, 0);
     outproc_deliver_msg(sestate.scene_current, track, &send_msg,
         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);
@@ -2117,4 +2117,3 @@ int seq_engine_check_key_split_range(int mode, int note) {
             return 1;
     }
 }
-

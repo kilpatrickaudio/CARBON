@@ -113,6 +113,8 @@ void pattern_load_patterns(void) {
     // check the valid token first
     valid_token = config_store_get_val(CONFIG_STORE_PATTERN_BANK + 
         PATTERN_VALID_TOKEN_OFFSET);
+    log_debug("pattern token: 0x%08x", valid_token);
+
     // token not found - let's use the ROM patterns and store them back
     if(valid_token != PATTERN_VALID_TOKEN) {
         log_debug("plp - token not found - using ROM patterns");

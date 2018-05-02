@@ -63,6 +63,7 @@ internal tool but this is not available at this time.
 Makefile generator:
 - makegen - Makefile Generator - by: Andrew Kilpatrick
   - https://github.com/kilpatrickaudio/Makegen
+  - The path to your build tool (gnuarm tools) must be set in makegen-run.sh.
 
 Compiler:
 - gcc version 4.9.3 20150303 (release) [ARM/embedded-4_9-branch 

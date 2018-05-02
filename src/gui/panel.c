@@ -680,6 +680,10 @@ void panel_handle_seq_input(int ctrl, int val) {
                 break;                
             case PANEL_SW_SONG_MODE:
                 seq_ctrl_toggle_song_mode();
+#ifdef GFX_REMLCD_MODE
+                // allow screen to be redrawn for client
+                gui_force_refresh();
+#endif
                 break;
             case PANEL_ENC_SPEED:
                 // step edit mode is active

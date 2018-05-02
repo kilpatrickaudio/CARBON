@@ -31,6 +31,24 @@
  *   - 0xbb - error code
  *   - 0xf7 - sysex end
  *
+ * - set config store data val  - 0x6d  -> to device (no response)
+ *   - 0xf0 - sysex start
+ *   - 0x00 - MMA ID
+ *   - 0x01 - MMA ID
+ *   - 0x72 - MMA ID
+ *   - 0x49 - device type
+ *   - 0x6d - set config store
+ *   - 0xaa - addr - address stride is 4 bytes
+ *   - 0x0b - data bits 31-28
+ *   - 0x0c - data bits 27-24
+ *   - 0x0d - data bits 23-20
+ *   - 0x0e - data bits 19-16
+ *   - 0x0f - data bits 15-12
+ *   - 0x0g - data bits 11-8
+ *   - 0x0h - data bits 7-4
+ *   - 0x0i - data bits 3-0
+ *   - 0xf7 - sysex end
+ *
  * - set LCD display type       - 0x6e  -> to device
  *   - 0xf0 - sysex start
  *   - 0x00 - MMA ID
@@ -171,6 +189,7 @@
 // CARBON commands
 #define SYSEX_CMD_ERROR_CODE 0x01  // from device
 // 0x60, 0x61 and 0x62 are used by the remlcd function
+#define SYSEX_CMD_SET_CONFIG_STORE 0x6d  // to device - no response
 #define SYSEX_CMD_SET_LCD_TYPE 0x6e  // to device
 #define SYSEX_CMD_WIPE_CONFIG_STORE 0x6f  // to device
 #define SYSEX_CMD_READ_EXT_FLASH 0x70  // to device
@@ -290,6 +309,7 @@ void sysex_handle_msg(struct midi_msg *msg) {
 //
 // process a SYSEX message that has been completely received
 void sysex_process(void) {
+    int32_t addr, val;
     if(syxs.rx_len < 6) {
         return;
     }
@@ -336,6 +356,22 @@ void sysex_process(void) {
             }
             // process each command
             switch(syxs.rx_buf[5]) {
+                case SYSEX_CMD_SET_CONFIG_STORE:
+                    if(syxs.rx_len != 16) {
+                        // no response
+                        return;
+                    }
+                    addr = syxs.rx_buf[6];
+                    val = (syxs.rx_buf[7] & 0x0f) << 28;
+                    val |= (syxs.rx_buf[8] & 0x0f) << 24;
+                    val |= (syxs.rx_buf[9] & 0x0f) << 20;
+                    val |= (syxs.rx_buf[10] & 0x0f) << 16;
+                    val |= (syxs.rx_buf[11] & 0x0f) << 12;
+                    val |= (syxs.rx_buf[12] & 0x0f) << 8;
+                    val |= (syxs.rx_buf[13] & 0x0f) << 4;
+                    val |= syxs.rx_buf[14] & 0x0f;
+                    config_store_set_val(addr, val);
+                    break;
                 case SYSEX_CMD_SET_LCD_TYPE:
                     if(syxs.rx_len != 8) {
                         sysex_send_error_response(syxs.rx_buf[5],
@@ -407,7 +443,8 @@ void sysex_process(void) {
                         len = syxs.rx_buf[12];
                         if(offset + len > EXT_FLASH_SECTOR_SIZE) {
                             sysex_send_error_response(syxs.rx_buf[5],
-                                SYSEX_ERROR_BAD_LENGTH);                            
+                                SYSEX_ERROR_BAD_LENGTH);   
+                            return;                         
                         }
                         // convert nibbles to bytes / copy to io_buf
                         sysex_nibbles_to_bytes(syxs.rx_buf + 13, 

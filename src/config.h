@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 12
+#define CARBON_VERSION_MINOR 13
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -228,13 +228,13 @@
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
 
-//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode
 //
-//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread
@@ -243,7 +243,6 @@
 #define DEBUG_OVER_MIDI  // uncomment to route log messages to MIDI / enable active sensing
 // power control at startup (for debugging)
 #define POWER_CTRL_POWER_ON_AUTO  // uncomment to make power come up automatically
-
 #endif
 
 //
@@ -254,7 +253,7 @@
 //
 #define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
 #define GFX_REMLCD_MIDI_PORT (MIDI_PORT_USB_DEV_OUT2)  // spare port for remlcd mode
-#define GFX_REMLCD_BYTES_PER_MS 16  // number of bytes that will be sent per ms
+#define GFX_REMLCD_BYTES_PER_MS 48  // number of bytes that will be sent per ms
 
 #endif
 
