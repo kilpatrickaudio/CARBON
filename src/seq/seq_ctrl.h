@@ -186,6 +186,15 @@ void seq_ctrl_adjust_midi_remote_ctrl(int change);
 // adjust the MIDI autolive state
 void seq_ctrl_adjust_midi_autolive(int change);
 
+// adjust the scene sync mode
+void seq_ctrl_adjust_scene_sync(int change);
+
+// adjust the magic range
+void seq_ctrl_adjust_magic_range(int change);
+
+// adjust the magic chance
+void seq_ctrl_adjust_magic_chance(int change);
+
 //
 // track params (per track)
 //
@@ -298,4 +307,3 @@ void seq_ctrl_make_magic(void);
 void seq_ctrl_make_clear(void);
 
 #endif
-

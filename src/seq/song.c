@@ -100,7 +100,7 @@ struct song_data {
     // track/scene params
     struct track_param trkparam[SEQ_NUM_TRACKS];  // params for tracks
     struct track_scene trkscene[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];  // scene data for tracks
-#ifdef SONG_NOTES_PER_SCENE    
+#ifdef SONG_NOTES_PER_SCENE
 #warning song compiled with notes per scene
     struct track_step_param trkstepparam[SEQ_NUM_TRACKS][SEQ_NUM_SCENES][SEQ_NUM_STEPS];  // step params
     struct track_event trkevents[SEQ_NUM_TRACKS][SEQ_NUM_SCENES][SEQ_NUM_STEPS][SEQ_TRACK_POLY];  // events
@@ -110,8 +110,8 @@ struct song_data {
     struct track_event trkevents[SEQ_NUM_TRACKS][SEQ_NUM_STEPS][SEQ_TRACK_POLY];  // events
 #endif
     //
-    // additional data (from original song layout 
-    //  - do not move this up or you will break existing songs 
+    // additional data (from original song layout
+    //  - do not move this up or you will break existing songs
     //  - new data here must be checked against the song version number
     //
     // CARBON version 1.01
@@ -123,20 +123,24 @@ struct song_data {
     // CARBON version 1.12
     int16_t cvoffset[SONG_CVGATE_NUM_OUTPUTS];  // CV output offset
     uint8_t midi_autolive;  // autolive function - 0 = off, 1 = on
+    // CARBON version 1.14
+    uint8_t scene_sync;  // scene sync type - 0 = beat, 1 = track 1 end
+    uint8_t magic_range;  // magic seed range in semitones
+    uint8_t magic_chance;  // magic change amount in percent
 
     // dummy padding - to make it an even number of 4096 byte sectors in the flash
     // - be VERY careful that this is correct or other RAM could be overwritten
 #ifdef SONG_NOTES_PER_SCENE
     uint8_t dummy0[1024];
-    uint8_t dummy1[474];
+    uint8_t dummy1[473];
 #else
     uint8_t dummy0[1024];
     uint8_t dummy1[1024];
     uint8_t dummy2[1024];
     uint8_t dummy3[1024];
     uint8_t dummy4[700];
-    uint8_t dummy5[16];
-#endif    
+    uint8_t dummy5[13];
+#endif
     // token to identify correct loading of file
     uint32_t magic_num;
 };
@@ -182,7 +186,7 @@ void song_timer_task(void) {
                 state_change_fire1(SCE_SONG_LOAD_ERROR, songs.loadsave_song);
             }
             else {
-                state_change_fire1(SCE_SONG_LOADED, songs.loadsave_song);            
+                state_change_fire1(SCE_SONG_LOADED, songs.loadsave_song);
             }
             break;
         case EXT_FLASH_STATE_SAVE:
@@ -240,6 +244,9 @@ void song_clear(void) {
     song_set_midi_clock_source(SONG_MIDI_CLOCK_SOURCE_INT);
     song_set_midi_remote_ctrl(0);  // disable
     song_set_midi_autolive(1);  // enable on new songs
+    song_set_scene_sync(SONG_SCENE_SYNC_BEAT);  // default to previous behaviour
+    song_set_magic_range(12);  // +/- 1 octave
+    song_set_magic_chance(100);  // 100% chance
 
     // song list
     for(i = 0; i < SEQ_SONG_LIST_ENTRIES; i ++) {
@@ -248,14 +255,14 @@ void song_clear(void) {
         song.snglist[i].length_beats = SEQ_SONG_LIST_DEFAULT_LENGTH;
         song.snglist[i].kbtrans = SEQ_SONG_LIST_DEFAULT_KBTRANS;
     }
-    
+
     // track params (per track)
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         // default all outs
         for(mapnum = 0; mapnum < SEQ_NUM_TRACK_OUTPUTS; mapnum ++) {
             song_set_midi_program(track, mapnum, SONG_MIDI_PROG_NULL);
             song_set_midi_port_map(track, mapnum, MIDI_PORT_DIN1_OUT);
-            song_set_midi_channel_map(track, mapnum, track); 
+            song_set_midi_channel_map(track, mapnum, track);
         }
         // disable the second port
         song_set_midi_port_map(track, 1, SONG_PORT_DISABLE);
@@ -279,21 +286,21 @@ void song_clear(void) {
             song_set_arp_type(scene, track, ARP_TYPE_UP1);  // first selection
             song_set_arp_speed(scene, track, SEQ_UTILS_STEP_16TH);  // default
             song_set_arp_gate_time(scene, track,
-                seq_utils_step_len_to_ticks(song_get_arp_speed(scene, 
+                seq_utils_step_len_to_ticks(song_get_arp_speed(scene,
                 track)) >> 1);  // step length / 2
             song_set_arp_enable(scene, track, 0);  // disable arp
         }
     }
 
     // reset track events
-    for(scene = 0; scene < SEQ_NUM_SCENES; scene ++) {    
+    for(scene = 0; scene < SEQ_NUM_SCENES; scene ++) {
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             // put some notes in the tracks
             for(step = 0; step < SEQ_NUM_STEPS; step ++) {
                 song_clear_step(scene, track, step);
                 event.type = SONG_EVENT_NOTE;
                 event.data0 = song_reset_scale[step % 8];  // seed with notes
-                event.data1 = 40;  // velocity
+                event.data1 = 0x60;  // velocity
                 event.length = 20;  // length in ticks
                 song_add_step_event(scene, track, step, &event);
                 // clear step modes
@@ -304,6 +311,10 @@ void song_clear(void) {
     }
     song_set_version_to_current();
     song.magic_num = SONG_MAGIC_NUM;
+
+    // XXX debug
+//    log_debug("sc - song len: %d", sizeof(struct song_data));
+
     // fire event
     state_change_fire1(SCE_SONG_CLEARED, songs.loadsave_song);
 }
@@ -430,7 +441,7 @@ int song_get_metronome_mode(void) {
 
 // set the metronome mode
 void song_set_metronome_mode(int mode) {
-    if(mode < 0 || mode > SONG_METRONOME_NOTE_HIGH || 
+    if(mode < 0 || mode > SONG_METRONOME_NOTE_HIGH ||
         (mode > SONG_METRONOME_CV_RESET && mode < SONG_METRONOME_NOTE_LOW)) {
         log_error("ssm - mode invalid: %d", mode);
         return;
@@ -550,7 +561,7 @@ void song_set_cv_output_scaling(int out, int mode) {
     }
     song.cv_output_scaling[out] = mode;
     // fire event
-    state_change_fire2(SCE_SONG_CV_OUTPUT_SCALING, out, mode);    
+    state_change_fire2(SCE_SONG_CV_OUTPUT_SCALING, out, mode);
 }
 
 // get the CV calibration value for an output - returns -1 on error
@@ -676,6 +687,54 @@ void song_set_midi_autolive(int enable) {
     state_change_fire1(SCE_SONG_MIDI_AUTOLIVE, song.midi_autolive);
 }
 
+// get the scene sync mode
+int song_get_scene_sync(void) {
+    return song.scene_sync;
+}
+
+// set the scene sync mode
+void song_set_scene_sync(int mode) {
+    if(mode < SONG_SCENE_SYNC_BEAT || mode > SONG_SCENE_SYNC_TRACK1) {
+        log_error("ssss - mode invalid: %d", mode);
+        return;
+    }
+    song.scene_sync = mode;
+    // fire event
+    state_change_fire1(SCE_SONG_SCENE_SYNC, song.scene_sync);
+}
+
+// get the magic range
+int song_get_magic_range(void) {
+    return song.magic_range;
+}
+
+// set the magic range
+void song_set_magic_range(int range) {
+    if(range < SONG_MAGIC_RANGE_MIN || range > SONG_MAGIC_RANGE_MAX) {
+        log_error("ssmr - range invalid: %d", range);
+        return;
+    }
+    song.magic_range = range;
+    // fire event
+    state_change_fire1(SCE_SONG_MAGIC_RANGE, song.magic_range);
+}
+
+// get the magic chance
+int song_get_magic_chance(void) {
+    return song.magic_chance;
+}
+
+// set the magic chance
+void song_set_magic_chance(int chance) {
+    if(chance < SONG_MAGIC_CHANCE_MIN || chance > SONG_MAGIC_CHANCE_MAX) {
+        log_error("ssmc - chance invalid: %d", chance);
+        return;
+    }
+    song.magic_chance = chance;
+    // fire event
+    state_change_fire1(SCE_SONG_MAGIC_CHANCE, song.magic_chance);
+}
+
 //
 // song list params (per song)
 //
@@ -699,8 +758,8 @@ void song_add_song_list_entry(int entry) {
             // notify listeners that our slot has changed
             state_change_fire2(SCE_SONG_LIST_SCENE, i, song.snglist[i].scene);
             state_change_fire2(SCE_SONG_LIST_LENGTH, i, song.snglist[i].length_beats);
-            state_change_fire2(SCE_SONG_LIST_KBTRANS, i, song.snglist[i].kbtrans);        
-        }    
+            state_change_fire2(SCE_SONG_LIST_KBTRANS, i, song.snglist[i].kbtrans);
+        }
     }
     song.snglist[entry].scene = SONG_LIST_SCENE_NULL;
     song.snglist[entry].length_beats = SEQ_SONG_LIST_DEFAULT_LENGTH;
@@ -708,7 +767,7 @@ void song_add_song_list_entry(int entry) {
     // notify listeners that our slot has changed
     state_change_fire2(SCE_SONG_LIST_SCENE, entry, song.snglist[entry].scene);
     state_change_fire2(SCE_SONG_LIST_LENGTH, entry, song.snglist[entry].length_beats);
-    state_change_fire2(SCE_SONG_LIST_KBTRANS, entry, song.snglist[entry].kbtrans);        
+    state_change_fire2(SCE_SONG_LIST_KBTRANS, entry, song.snglist[entry].kbtrans);
 }
 
 // remove an entry in the song list
@@ -731,7 +790,7 @@ void song_remove_song_list_entry(int entry) {
             // notify listeners that our slot has changed
             state_change_fire2(SCE_SONG_LIST_SCENE, i, song.snglist[i].scene);
             state_change_fire2(SCE_SONG_LIST_LENGTH, i, song.snglist[i].length_beats);
-            state_change_fire2(SCE_SONG_LIST_KBTRANS, i, song.snglist[i].kbtrans);        
+            state_change_fire2(SCE_SONG_LIST_KBTRANS, i, song.snglist[i].kbtrans);
         }
     }
 }
@@ -820,7 +879,7 @@ void song_set_song_list_kbtrans(int entry, int kbtrans) {
         log_error("ssslkt - entry invalid: %d", entry);
         return;
     }
-    if(kbtrans < SEQ_ENGINE_KEY_TRANSPOSE_MIN || 
+    if(kbtrans < SEQ_ENGINE_KEY_TRANSPOSE_MIN ||
             kbtrans > SEQ_ENGINE_KEY_TRANSPOSE_MAX) {
         log_error("ssslkt - kbtrans invalid: %d", kbtrans);
         return;
@@ -1279,7 +1338,7 @@ void song_set_motion_dir(int scene, int track, int reverse) {
         song.trkscene[scene][track].dir_reverse = 0;
     }
     // fire event
-    state_change_fire3(SCE_SONG_MOTION_DIR, scene, track, 
+    state_change_fire3(SCE_SONG_MOTION_DIR, scene, track,
         song.trkscene[scene][track].dir_reverse);
 }
 
@@ -1313,7 +1372,7 @@ void song_set_mute(int scene, int track, int mute) {
         song.trkscene[scene][track].mute = 0;
     }
     // fire event
-    state_change_fire3(SCE_SONG_MUTE, scene, track, 
+    state_change_fire3(SCE_SONG_MUTE, scene, track,
         song.trkscene[scene][track].mute);
 }
 
@@ -1466,7 +1525,7 @@ void song_clear_step(int scene, int track, int step) {
         return;
     }
     for(poly = 0; poly < SEQ_TRACK_POLY; poly ++) {
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
         song.trkevents[scene][track][step][poly].type = SONG_EVENT_NULL;
 #else
         song.trkevents[track][step][poly].type = SONG_EVENT_NULL;
@@ -1496,11 +1555,11 @@ void song_clear_step_event(int scene, int track, int step, int slot) {
         log_error("scse - slot invalid: %d", slot);
         return;
     }
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     song.trkevents[scene][track][step][slot].type = SONG_EVENT_NULL;
 #else
     song.trkevents[track][step][slot].type = SONG_EVENT_NULL;
-#endif    
+#endif
     // fire event
     state_change_fire3(SCE_SONG_CLEAR_STEP_EVENT, scene, track, step);
 }
@@ -1523,7 +1582,7 @@ int song_get_num_step_events(int scene, int track, int step) {
     }
     num_events = 0;
     for(poly = 0; poly < SEQ_TRACK_POLY; poly ++) {
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
         if(song.trkevents[scene][track][step][poly].type != SONG_EVENT_NULL) {
 #else
         if(song.trkevents[track][step][poly].type != SONG_EVENT_NULL) {
@@ -1536,7 +1595,7 @@ int song_get_num_step_events(int scene, int track, int step) {
 
 // add an event to a step - returns -1 on error (no more slots)
 // the event data is copied into the song
-int song_add_step_event(int scene, int track, int step, 
+int song_add_step_event(int scene, int track, int step,
         struct track_event *event) {
     int poly, existing_slot, blank_slot, slot;
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
@@ -1556,7 +1615,7 @@ int song_add_step_event(int scene, int track, int step,
     blank_slot = -1;
     for(poly = 0; poly < SEQ_TRACK_POLY; poly ++) {
         // a blank slot was found
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
         if(song.trkevents[scene][track][step][poly].type == SONG_EVENT_NULL &&
 #else
         if(song.trkevents[track][step][poly].type == SONG_EVENT_NULL &&
@@ -1565,7 +1624,7 @@ int song_add_step_event(int scene, int track, int step,
             blank_slot = poly;
         }
         // an existing slot was found with the same note or CC
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
         if(song.trkevents[scene][track][step][poly].type == event->type &&
                 song.trkevents[scene][track][step][poly].data0 == event->data0) {
 #else
@@ -1589,11 +1648,11 @@ int song_add_step_event(int scene, int track, int step,
         return -1;
     }
     // copy the data to the song
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     song.trkevents[scene][track][step][slot].type = event->type;
     song.trkevents[scene][track][step][slot].data0 = event->data0;
     song.trkevents[scene][track][step][slot].data1 = event->data1;
-    song.trkevents[scene][track][step][slot].length = event->length;    
+    song.trkevents[scene][track][step][slot].length = event->length;
 #else
     song.trkevents[track][step][slot].type = event->type;
     song.trkevents[track][step][slot].data0 = event->data0;
@@ -1606,7 +1665,7 @@ int song_add_step_event(int scene, int track, int step,
 }
 
 // set/replace the value of a slot - returns -1 on error (invalid slot)
-int song_set_step_event(int scene, int track, int step, 
+int song_set_step_event(int scene, int track, int step,
         int slot, struct track_event *event) {
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
         log_error("ssse - scene invalid: %d", scene);
@@ -1624,7 +1683,7 @@ int song_set_step_event(int scene, int track, int step,
         log_error("ssse - slot invalid: %d", slot);
         return -1;
     }
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     song.trkevents[scene][track][step][slot].type = event->type;
     song.trkevents[scene][track][step][slot].data0 = event->data0;
     song.trkevents[scene][track][step][slot].data1 = event->data1;
@@ -1633,7 +1692,7 @@ int song_set_step_event(int scene, int track, int step,
     song.trkevents[track][step][slot].type = event->type;
     song.trkevents[track][step][slot].data0 = event->data0;
     song.trkevents[track][step][slot].data1 = event->data1;
-    song.trkevents[track][step][slot].length = event->length;    
+    song.trkevents[track][step][slot].length = event->length;
 #endif
     // fire event
     state_change_fire3(SCE_SONG_SET_STEP_EVENT, scene, track, step);
@@ -1642,7 +1701,7 @@ int song_set_step_event(int scene, int track, int step,
 
 // get an event from a step - returns -1 on error (invalid / blank slot)
 // the event data is copied into the pointed to struct - returns -1 on error
-int song_get_step_event(int scene, int track, int step, int slot, 
+int song_get_step_event(int scene, int track, int step, int slot,
         struct track_event *event) {
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
         log_error("sgse - scene invalid: %d", scene);
@@ -1661,7 +1720,7 @@ int song_get_step_event(int scene, int track, int step, int slot,
         return -1;
     }
     // copy the data from the song
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     event->type = song.trkevents[scene][track][step][slot].type;
     event->data0 = song.trkevents[scene][track][step][slot].data0;
     event->data1 = song.trkevents[scene][track][step][slot].data1;
@@ -1693,7 +1752,7 @@ int song_get_start_delay(int scene, int track, int step) {
         log_error("sgsd - step invalid: %d", step);
         return -1;
     }
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     return song.trkstepparam[scene][track][step].start_delay;
 #else
     return song.trkstepparam[track][step].start_delay;
@@ -1718,11 +1777,11 @@ void song_set_start_delay(int scene, int track, int step, int delay) {
         log_error("sssd - delay invalid: %d", delay);
         return;
     }
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     song.trkstepparam[scene][track][step].start_delay = delay;
 #else
     song.trkstepparam[track][step].start_delay = delay;
-#endif    
+#endif
     // fire event
     state_change_fire3(SCE_SONG_START_DELAY, scene, track, step);
 }
@@ -1741,11 +1800,11 @@ int song_get_ratchet_mode(int scene, int track, int step) {
         log_error("sgrm - step invalid: %d", step);
         return -1;
     }
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     return song.trkstepparam[scene][track][step].ratchet;
 #else
     return song.trkstepparam[track][step].ratchet;
-#endif    
+#endif
 }
 
 // set the ratchet mode for a step
@@ -1766,12 +1825,11 @@ void song_set_ratchet_mode(int scene, int track, int step, int ratchet) {
         log_error("ssrm - ratchet invalid: %d", ratchet);
         return;
     }
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
     song.trkstepparam[scene][track][step].ratchet = ratchet;
 #else
     song.trkstepparam[track][step].ratchet = ratchet;
-#endif    
+#endif
     // fire event
     state_change_fire3(SCE_SONG_RATCHET_MODE, scene, track, step);
 }
-

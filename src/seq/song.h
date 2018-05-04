@@ -66,6 +66,14 @@
 #define SONG_METRONOME_CV_RESET 2  // CV reset output
 #define SONG_METRONOME_NOTE_LOW 24  // values of 24-84 are note numbers C1-C6
 #define SONG_METRONOME_NOTE_HIGH 84
+// scene sync mode
+#define SONG_SCENE_SYNC_BEAT 0  // scene changes on beat
+#define SONG_SCENE_SYNC_TRACK1 1  // scene changes on track 1 loop end
+// magic
+#define SONG_MAGIC_RANGE_MIN 0  // min magic range +/- this amount
+#define SONG_MAGIC_RANGE_MAX 36  // max magic range +/- this amount
+#define SONG_MAGIC_CHANCE_MIN 1  // min magic chance in percent
+#define SONG_MAGIC_CHANCE_MAX 100 // max magic chance in percent
 // song track types
 #define SONG_TRACK_TYPE_VOICE 0  // transpose affects this track
 #define SONG_TRACK_TYPE_DRUM 1  // transpose does not affect this track
@@ -216,6 +224,24 @@ int song_get_midi_autolive(void);
 
 // set whether autolive is enable
 void song_set_midi_autolive(int enable);
+
+// get the scene sync mode
+int song_get_scene_sync(void);
+
+// set the scene sync mode
+void song_set_scene_sync(int mode);
+
+// get the magic range
+int song_get_magic_range(void);
+
+// set the magic range
+void song_set_magic_range(int range);
+
+// get the magic chance
+int song_get_magic_chance(void);
+
+// set the magic chance
+void song_set_magic_chance(int chance);
 
 //
 // song list params (per song)
@@ -379,16 +405,16 @@ int song_get_num_step_events(int scene, int track, int step);
 
 // add an event to a step - returns -1 on error (no more slots)
 // the event data is copied into the song
-int song_add_step_event(int scene, int track, int step, 
+int song_add_step_event(int scene, int track, int step,
     struct track_event *event);
 
 // set/replace the value of a slot - returns -1 on error (invalid slot)
-int song_set_step_event(int scene, int track, int step, int slot, 
+int song_set_step_event(int scene, int track, int step, int slot,
     struct track_event *event);
 
 // get an event from a step - returns -1 on error (invalid / blank slot)
 // the event data is copied into the pointed to struct - returns -1 on error
-int song_get_step_event(int scene, int track, int step, int slot, 
+int song_get_step_event(int scene, int track, int step, int slot,
     struct track_event *event);
 
 // get the start delay for a step - returns -1 on error
@@ -404,6 +430,3 @@ int song_get_ratchet_mode(int scene, int track, int step);
 void song_set_ratchet_mode(int scene, int track, int step, int ratchet);
 
 #endif
-
-
-

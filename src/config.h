@@ -25,13 +25,13 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 13
+#define CARBON_VERSION_MINOR 14
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
 // - while not actual config data this is a nice place to mention it
 // - the STM32F407 has 128K (RAM) + 64K (CCMRAM)
-// - due to large block required by the song in RAM some blocks 
+// - due to large block required by the song in RAM some blocks
 //   are placed specifically in CCMRAM instead:
 // - CCMRAM blocks:
 //   - config_store.c       - cfgss
@@ -67,7 +67,7 @@
 
 // external flash storage (on SPI flash)
 #define EXT_FLASH_SONG_OFFSET 0x000000
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
   #define EXT_FLASH_SONG_SIZE 0x16000
 #else
   #define EXT_FLASH_SONG_SIZE 0x5000
@@ -176,7 +176,7 @@
 #define SEQ_SONG_LIST_DEFAULT_KBTRANS 0
 #define SEQ_SONG_LIST_MIN_LENGTH 1
 #define SEQ_SONG_LIST_MAX_LENGTH 256
-#ifdef SONG_NOTES_PER_SCENE 
+#ifdef SONG_NOTES_PER_SCENE
   #define SEQ_NUM_SONGS 16
 #else
   #define SEQ_NUM_SONGS 64
@@ -246,7 +246,7 @@
 #endif
 
 //
-// remote LCD mode - for demonstration / development purposes 
+// remote LCD mode - for demonstration / development purposes
 //
 // WARNING: DO NOT ENABLE THIS IN PRODUCTION CODE
 // The remote LCD mode will send large amounts of data over the USB dev port.
@@ -256,4 +256,3 @@
 #define GFX_REMLCD_BYTES_PER_MS 48  // number of bytes that will be sent per ms
 
 #endif
-

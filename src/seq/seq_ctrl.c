@@ -88,7 +88,7 @@ void seq_ctrl_init(void) {
     // init interface (power down) modulesscene_current =
     iface_panel_init();
     iface_midi_router_init();
-    // register for events    
+    // register for events
     state_change_register(seq_ctrl_handle_state_change, SCEC_SONG);
     state_change_register(seq_ctrl_handle_state_change, SCEC_CONFIG);
     state_change_register(seq_ctrl_handle_state_change, SCEC_POWER);
@@ -149,7 +149,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_current_song(data[0]);
             seq_ctrl_refresh_modules();  // make sure all song data is updatd in the system
             midi_clock_request_reset_pos();  // reset the clock position
-            // turn off modes 
+            // turn off modes
             seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
             step_edit_set_enable(0);
             song_edit_set_enable(0);
@@ -167,7 +167,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             seq_ctrl_refresh_modules();  // make sure all song data is updatd in the system
             midi_clock_request_reset_pos();  // reset the clock position
-            // turn off modes 
+            // turn off modes
             seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
             step_edit_set_enable(0);
             song_edit_set_enable(0);
@@ -179,9 +179,9 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             // final startup
             seq_ctrl_set_run_state(0);
             seq_ctrl_set_scene(0);
-            seq_ctrl_set_track_select(0, 0);  // reset so we can update 
+            seq_ctrl_set_track_select(0, 0);  // reset so we can update
             sstate.first_track = (SEQ_NUM_TRACKS - 1);  // cause force update
-            seq_ctrl_set_track_select(0, 1);  // select first track            
+            seq_ctrl_set_track_select(0, 1);  // select first track
             seq_ctrl_adjust_clock_source(0);  // force clock update
             seq_ctrl_set_song_mode(0);
             break;
@@ -201,7 +201,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_SONG_TEMPO:
             if(!midi_clock_is_ext_synced()) {
-                midi_clock_set_tempo(song_get_tempo());   
+                midi_clock_set_tempo(song_get_tempo());
             }
             break;
         case SCE_SONG_CV_BEND_RANGE:
@@ -403,7 +403,7 @@ void seq_ctrl_set_track_select(int track, int select) {
     if(temp != sstate.track_select[track]) {
         sstate.track_select[track] = temp;
         // fire event
-        state_change_fire2(SCE_CTRL_TRACK_SELECT, track, 
+        state_change_fire2(SCE_CTRL_TRACK_SELECT, track,
             sstate.track_select[track]);
     }
 
@@ -437,7 +437,7 @@ void seq_ctrl_set_song_mode(int enable) {
         sstate.song_mode = 0;
     }
     // fire event
-    state_change_fire1(SCE_CTRL_SONG_MODE, sstate.song_mode);    
+    state_change_fire1(SCE_CTRL_SONG_MODE, sstate.song_mode);
 }
 
 // toggle the song mode state
@@ -570,7 +570,7 @@ void seq_ctrl_tap_tempo(void) {
 
 // adjust the swing setting
 void seq_ctrl_adjust_swing(int change) {
-    song_set_swing(seq_utils_clamp(song_get_swing() + change, 
+    song_set_swing(seq_utils_clamp(song_get_swing() + change,
         SEQ_SWING_MIN, SEQ_SWING_MAX));
     midi_clock_set_swing(song_get_swing());
 }
@@ -623,7 +623,7 @@ void seq_ctrl_adjust_cvgate_pair_mode(int pair, int change) {
         log_error("scacpm - pair invalid: %d", pair);
         return;
     }
-    song_set_cvgate_pair_mode(pair, 
+    song_set_cvgate_pair_mode(pair,
         seq_utils_clamp(song_get_cvgate_pair_mode(pair) + change,
         SONG_CVGATE_MODE_VELO, SONG_CVGATE_MODE_MAX));
 }
@@ -675,6 +675,24 @@ void seq_ctrl_adjust_midi_autolive(int change) {
         0, 1));
 }
 
+// adjust the scene sync mode
+void seq_ctrl_adjust_scene_sync(int change) {
+    song_set_scene_sync(seq_utils_clamp(song_get_scene_sync() + change,
+        SONG_SCENE_SYNC_BEAT, SONG_SCENE_SYNC_TRACK1));
+}
+
+// adjust the magic range
+void seq_ctrl_adjust_magic_range(int change) {
+    song_set_magic_range(seq_utils_clamp(song_get_magic_range() + change,
+        SONG_MAGIC_RANGE_MIN, SONG_MAGIC_RANGE_MAX));
+}
+
+// adjust the magic chance
+void seq_ctrl_adjust_magic_chance(int change) {
+    song_set_magic_chance(seq_utils_clamp(song_get_magic_chance() + change,
+        SONG_MAGIC_CHANCE_MIN, SONG_MAGIC_CHANCE_MAX));
+}
+
 //
 // track params (per track)
 //
@@ -688,7 +706,7 @@ void seq_ctrl_adjust_midi_program(int mapnum, int change) {
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         if(seq_ctrl_get_track_select(track)) {
             seq_ctrl_set_midi_program(track, mapnum,
-                seq_utils_clamp(song_get_midi_program(sstate.first_track, 
+                seq_utils_clamp(song_get_midi_program(sstate.first_track,
                 mapnum) + change, SONG_MIDI_PROG_NULL, 0x7f));
         }
     }
@@ -708,7 +726,7 @@ void seq_ctrl_set_midi_program(int track, int mapnum, int program) {
     if(song_get_midi_port_map(track, mapnum) == MIDI_PORT_CV_OUT) {
         return;
     }
-    song_set_midi_program(track, mapnum, seq_utils_clamp(program, 
+    song_set_midi_program(track, mapnum, seq_utils_clamp(program,
         SONG_MIDI_PROG_NULL, 0x7f));
 }
 
@@ -720,7 +738,7 @@ void seq_ctrl_adjust_midi_port(int mapnum, int change) {
         return;
     }
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        if(seq_ctrl_get_track_select(track)) {    
+        if(seq_ctrl_get_track_select(track)) {
             val = seq_utils_clamp(song_get_midi_port_map(track, mapnum) + change,
                 SONG_PORT_DISABLE, (MIDI_PORT_NUM_TRACK_OUTPUTS - 1));
             // only process if port has actually changed
@@ -743,7 +761,7 @@ void seq_ctrl_adjust_midi_channel(int mapnum, int change) {
         return;
     }
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        if(seq_ctrl_get_track_select(track)) {    
+        if(seq_ctrl_get_track_select(track)) {
             switch(song_get_midi_port_map(track, mapnum)) {
                 case MIDI_PORT_DIN1_OUT:
                 case MIDI_PORT_DIN2_OUT:
@@ -770,20 +788,20 @@ void seq_ctrl_adjust_midi_channel(int mapnum, int change) {
 // adjust the key split on the input
 void seq_ctrl_adjust_key_split(int change) {
     int track;
-    seq_engine_stop_live_notes();    
+    seq_engine_stop_live_notes();
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        if(seq_ctrl_get_track_select(track)) {        
-            song_set_key_split(track, 
-                seq_utils_clamp(song_get_key_split(track) + change, 
+        if(seq_ctrl_get_track_select(track)) {
+            song_set_key_split(track,
+                seq_utils_clamp(song_get_key_split(track) + change,
                 SONG_KEY_SPLIT_OFF, SONG_KEY_SPLIT_RIGHT));
         }
     }
 }
 
 // adjust the track type of selected tracks
-void seq_ctrl_adjust_track_type(int change) {     
-    int track;   
-    int val = seq_utils_clamp(song_get_track_type(sstate.first_track) + 
+void seq_ctrl_adjust_track_type(int change) {
+    int track;
+    int val = seq_utils_clamp(song_get_track_type(sstate.first_track) +
         change, 0, 1);
 
     // edit all selected tracks based on value of the first track
@@ -800,7 +818,7 @@ void seq_ctrl_adjust_track_type(int change) {
 // set the step length of a track - supports SEQ_CTRL_TRACK_OMNI
 void seq_ctrl_set_step_length(int track, int length) {
     int i, val;
-    val = seq_utils_clamp(length, 0, (SEQ_UTILS_STEP_LENS - 1));    
+    val = seq_utils_clamp(length, 0, (SEQ_UTILS_STEP_LENS - 1));
     // modify all tracks
     if(track == SEQ_CTRL_TRACK_OMNI) {
         for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
@@ -820,8 +838,8 @@ void seq_ctrl_set_step_length(int track, int length) {
 // adjust the step length of the selected scene and track(s)
 void seq_ctrl_adjust_step_length(int change) {
     int track, val;
-    val = seq_utils_clamp(song_get_step_length(seq_engine_get_current_scene(), 
-        sstate.first_track) + change, 
+    val = seq_utils_clamp(song_get_step_length(seq_engine_get_current_scene(),
+        sstate.first_track) + change,
         0, (SEQ_UTILS_STEP_LENS - 1));
     // update selected track values
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
@@ -869,14 +887,14 @@ void seq_ctrl_set_transpose(int track, int transpose) {
 void seq_ctrl_adjust_transpose(int change) {
     int track;
     int transpose;
-    transpose = seq_utils_clamp(song_get_transpose(seq_engine_get_current_scene(), 
-        sstate.first_track) + change, 
+    transpose = seq_utils_clamp(song_get_transpose(seq_engine_get_current_scene(),
+        sstate.first_track) + change,
         SEQ_TRANSPOSE_MIN, SEQ_TRANSPOSE_MAX);
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         if(sstate.track_select[track]) {
             song_set_transpose(seq_engine_get_current_scene(), track, transpose);
         }
-    }        
+    }
 }
 
 // adjust the bias track of selected tracks
@@ -898,7 +916,7 @@ void seq_ctrl_set_motion_start(int track, int start) {
     // modify all tracks
     if(track == SEQ_CTRL_TRACK_OMNI) {
         for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
-            song_set_motion_start(seq_engine_get_current_scene(), i, val);            
+            song_set_motion_start(seq_engine_get_current_scene(), i, val);
         }
     }
     // modify a single track
@@ -916,7 +934,7 @@ void seq_ctrl_adjust_motion_start(int change) {
     int track, val;
     // cancel recording if active
     seq_ctrl_cancel_record();
-    val = seq_utils_wrap(song_get_motion_start(seq_engine_get_current_scene(), 
+    val = seq_utils_wrap(song_get_motion_start(seq_engine_get_current_scene(),
         sstate.first_track) + change,
         0, SEQ_NUM_STEPS - 1);
     // update selected track values
@@ -952,7 +970,7 @@ void seq_ctrl_adjust_motion_length(int change) {
     int track, val;
     // cancel recording if active
     seq_ctrl_cancel_record();
-    val = seq_utils_clamp(song_get_motion_length(seq_engine_get_current_scene(), 
+    val = seq_utils_clamp(song_get_motion_length(seq_engine_get_current_scene(),
         sstate.first_track) + change,
         1, SEQ_NUM_STEPS);
     // update selected track values
@@ -981,15 +999,15 @@ void seq_ctrl_set_gate_time(int track, int time) {
             return;
         }
         song_set_gate_time(seq_engine_get_current_scene(), track, val);
-    }    
+    }
 }
 
 // adjust the gate time of the selected scene and track(s)
 void seq_ctrl_adjust_gate_time(int change) {
     int track, val;
     // XXX is this being calculated properly?
-    val = seq_utils_clamp(song_get_gate_time(seq_engine_get_current_scene(), 
-        sstate.first_track) + 
+    val = seq_utils_clamp(song_get_gate_time(seq_engine_get_current_scene(),
+        sstate.first_track) +
         (change * SEQ_GATE_TIME_STEP_SIZE),
         SEQ_GATE_TIME_MIN, SEQ_GATE_TIME_MAX);
     // update selected track values
@@ -1025,7 +1043,7 @@ void seq_ctrl_set_pattern_type(int track, int pattern) {
 // adjust the pattern type of the selected scene and track(s)
 void seq_ctrl_adjust_pattern_type(int change) {
     int track, val;
-    val = seq_utils_clamp(song_get_pattern_type(seq_engine_get_current_scene(), 
+    val = seq_utils_clamp(song_get_pattern_type(seq_engine_get_current_scene(),
         sstate.first_track) + change,
         0, SEQ_NUM_PATTERNS - 1);
     // update selected track values
@@ -1050,7 +1068,7 @@ void seq_ctrl_set_motion_dir(int track, int dir) {
     // modify all tracks
     if(track == SEQ_CTRL_TRACK_OMNI) {
         for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
-            song_set_motion_dir(seq_engine_get_current_scene(), i, val);            
+            song_set_motion_dir(seq_engine_get_current_scene(), i, val);
         }
     }
     // modify a single track
@@ -1059,7 +1077,7 @@ void seq_ctrl_set_motion_dir(int track, int dir) {
             log_error("scsmd - track invalid: %d", track);
             return;
         }
-        song_set_motion_dir(seq_engine_get_current_scene(), track, val);        
+        song_set_motion_dir(seq_engine_get_current_scene(), track, val);
     }
 }
 
@@ -1068,7 +1086,7 @@ void seq_ctrl_flip_motion_dir(void) {
     int track, val;
     // cancel recording if active
     seq_ctrl_cancel_record();
-    val = song_get_motion_dir(seq_engine_get_current_scene(), 
+    val = song_get_motion_dir(seq_engine_get_current_scene(),
         sstate.first_track);
     if(val) {
         val = 0;
@@ -1103,7 +1121,7 @@ void seq_ctrl_set_mute_select(int track, int mute) {
     // modify all tracks
     if(track == SEQ_CTRL_TRACK_OMNI) {
         for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
-            song_set_mute(seq_engine_get_current_scene(), i, val);                       
+            song_set_mute(seq_engine_get_current_scene(), i, val);
         }
     }
     // modify a single track
@@ -1112,7 +1130,7 @@ void seq_ctrl_set_mute_select(int track, int mute) {
             log_error("scsms - track invalid: %d", track);
             return;
         }
-        song_set_mute(seq_engine_get_current_scene(), track, val);       
+        song_set_mute(seq_engine_get_current_scene(), track, val);
     }
 }
 
@@ -1132,20 +1150,20 @@ void seq_ctrl_set_arp_type(int track, int type) {
             log_error("scsat - track invalid: %d", track);
             return;
         }
-        song_set_arp_type(seq_engine_get_current_scene(), track, val);       
+        song_set_arp_type(seq_engine_get_current_scene(), track, val);
     }
 }
 
 // adjust the arp type on selected tracks
 void seq_ctrl_adjust_arp_type(int change) {
     int track, val;
-    val = seq_utils_clamp(song_get_arp_type(seq_engine_get_current_scene(), 
+    val = seq_utils_clamp(song_get_arp_type(seq_engine_get_current_scene(),
         sstate.first_track) + change, 0, (ARP_NUM_TYPES - 1));
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        if(sstate.track_select[track]) {    
+        if(sstate.track_select[track]) {
             song_set_arp_type(seq_engine_get_current_scene(), track, val);
         }
-    }        
+    }
 }
 
 // set the arp speed on a track - supports SEQ_CTRL_TRACK_OMNI
@@ -1174,7 +1192,7 @@ void seq_ctrl_adjust_arp_speed(int change) {
     val = seq_utils_clamp(song_get_arp_speed(seq_engine_get_current_scene(),
         sstate.first_track) + change, 0, (SEQ_UTILS_STEP_LENS - 1));
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        if(sstate.track_select[track]) {            
+        if(sstate.track_select[track]) {
             song_set_arp_speed(seq_engine_get_current_scene(), track, val);
         }
     }
@@ -1196,7 +1214,7 @@ void seq_ctrl_set_arp_gate_time(int track, int time) {
             log_error("scsagt - track invalid: %d", track);
             return;
         }
-        song_set_arp_gate_time(seq_engine_get_current_scene(), track, val);        
+        song_set_arp_gate_time(seq_engine_get_current_scene(), track, val);
     }
 }
 
@@ -1206,7 +1224,7 @@ void seq_ctrl_adjust_arp_gate_time(int change) {
     val = seq_utils_clamp(song_get_arp_gate_time(seq_engine_get_current_scene(),
         sstate.first_track) + change, ARP_GATE_TIME_MIN, ARP_GATE_TIME_MAX);
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        if(sstate.track_select[track]) {        
+        if(sstate.track_select[track]) {
             song_set_arp_gate_time(seq_engine_get_current_scene(), track, val);
         }
     }
@@ -1247,7 +1265,7 @@ void seq_ctrl_flip_arp_enable(void) {
     int track, val;
     // cancel recording if active
     seq_ctrl_cancel_record();
-    val = song_get_arp_enable(seq_engine_get_current_scene(), 
+    val = song_get_arp_enable(seq_engine_get_current_scene(),
         sstate.first_track);
     if(val) {
         val = 0;
@@ -1265,7 +1283,7 @@ void seq_ctrl_flip_arp_enable(void) {
 
 // make magic on tracks - affects the current active tracks / region
 void seq_ctrl_make_magic(void) {
-    int track, i, start, len, step;
+    int track, i, start, len, step, temp;
     struct track_event event;
     // cancel recording if active
     seq_ctrl_cancel_record();
@@ -1279,16 +1297,26 @@ void seq_ctrl_make_magic(void) {
         len = song_get_motion_length(seq_engine_get_current_scene(), track);
         // check each step
         for(i = 0; i < len; i ++) {
-            step = (start + i) & (SEQ_NUM_STEPS - 1);
-            song_clear_step(seq_engine_get_current_scene(), track, step);
-            // make a new random note
-            event.type = SONG_EVENT_NOTE;
-            event.data0 = (rand() & 0x1f) + 48;  // 32 note range
-            event.data1 = (rand() & 0x3f) + 64;  // top half
-            event.length = seq_utils_step_len_to_ticks(
-                song_get_step_length(seq_engine_get_current_scene(), track)) >> 1;
-            song_set_step_event(seq_engine_get_current_scene(), track, 
-                step, 0, &event);
+            // figure out if we touch this note or not
+            if(song_get_magic_chance() > (rand() % SONG_MAGIC_CHANCE_MAX)) {
+                step = (start + i) & (SEQ_NUM_STEPS - 1);
+                song_clear_step(seq_engine_get_current_scene(), track, step);
+                // make a new random note
+                event.type = SONG_EVENT_NOTE;
+                temp = song_get_magic_range();
+                if(temp == 0) {
+                    event.data0 = 60;  // middle C
+                }
+                else {
+                    event.data0 = 60 +
+                        (rand() % ((temp << 1) + 1)) - temp;  // +/- range
+                }
+                event.data1 = 0x60;  // default
+                event.length = seq_utils_step_len_to_ticks(
+                    song_get_step_length(seq_engine_get_current_scene(), track)) >> 1;
+                song_set_step_event(seq_engine_get_current_scene(), track,
+                    step, 0, &event);
+            }
         }
     }
 }
@@ -1328,9 +1356,9 @@ void midi_clock_run_state_changed(int running) {
     // starting
     if(running) {
         // if we were already in step record we should cancel recording
-        if(sstate.record_mode == SEQ_CTRL_RECORD_STEP) {        
+        if(sstate.record_mode == SEQ_CTRL_RECORD_STEP) {
             seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
-        }        
+        }
     }
     // stopping
     else {
@@ -1382,8 +1410,6 @@ void midi_clock_ext_sync_changed(int synced) {
     state_change_fire1(SCE_CTRL_EXT_SYNC, synced);
 }
 
-
-
 //
 // local functions
 //
@@ -1398,7 +1424,7 @@ void seq_ctrl_cancel_record(void) {
 void seq_ctrl_refresh_modules(void) {
     int i, scene, track;
     int song_ver = song_get_song_version();
-    
+
     log_debug("song ver: %x", song_ver);
     //
     // do song version upgrades based on song version and system version
@@ -1431,17 +1457,23 @@ void seq_ctrl_refresh_modules(void) {
         song_set_cvoffset(3, 0);
         song_set_midi_autolive(0);  // default to old behaviour
     }
+    // song version <= 1.13
+    if(song_ver <= 0x0001000d) {
+        song_set_scene_sync(SONG_SCENE_SYNC_BEAT);
+        song_set_magic_range(12);
+        song_set_magic_chance(100);
+    }
 
     // make sure we save back the current version
     if(song_ver != CARBON_VERSION_MAJMIN) {
         song_set_version_to_current();
     }
-    
+
     // set up clock / reset position
     if(!midi_clock_is_ext_synced()) {
-        midi_clock_set_tempo(song_get_tempo());   
+        midi_clock_set_tempo(song_get_tempo());
     }
-    midi_clock_set_swing(song_get_swing());     
+    midi_clock_set_swing(song_get_swing());
     metronome_mode_changed(song_get_metronome_mode());
     metronome_sound_len_changed(song_get_metronome_sound_len());
     cvproc_set_bend_range(song_get_cv_bend_range());
@@ -1475,7 +1507,6 @@ void seq_ctrl_set_run_lockout(int lockout) {
         panel_handle_input(PANEL_SW_SHIFT, 0);
     }
     else {
-        sstate.run_lockout = 0;    
+        sstate.run_lockout = 0;
     }
 }
-

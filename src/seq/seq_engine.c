@@ -320,7 +320,18 @@ void seq_engine_run(uint32_t tick_count) {
             // recording and playback processing of song mode
             if(sestate.sngmode.enable) {
                 seq_engine_song_mode_process();
+                seq_engine_change_scene_synced();
             }
+            // scene sync beat mode
+            if(song_get_scene_sync() == SONG_SCENE_SYNC_BEAT) {
+                seq_engine_change_scene_synced();
+            }
+        }
+
+        // scene sync mode loop 1 - not necessarily beat synced
+        if(song_get_scene_sync() == SONG_SCENE_SYNC_TRACK1 &&
+                sestate.clock_div_count[0] == 0 &&
+                sestate.step_pos[0] == sestate.motion_start[0]) {
             seq_engine_change_scene_synced();
         }
 

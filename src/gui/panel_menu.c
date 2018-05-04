@@ -112,7 +112,7 @@ void panel_menu_set_mode(int mode) {
             case PANEL_MENU_NONE:
             case PANEL_MENU_SWING:
             case PANEL_MENU_TONALITY:
-            case PANEL_MENU_ARP:            
+            case PANEL_MENU_ARP:
             case PANEL_MENU_MIDI:
             case PANEL_MENU_SYS:
             case PANEL_MENU_CLOCK:
@@ -135,12 +135,12 @@ void panel_menu_set_mode(int mode) {
                     seq_ctrl_save_song(pmstate.load_save_song);
                 }
                 pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;
-                panel_menu_update_display();                
+                panel_menu_update_display();
                 break;
             default:
                 log_error("pmsm - invalid mode: %d", mode);
                 return;
-        }    
+        }
     }
     // a different / new menu was requested - call it up
     else {
@@ -159,7 +159,7 @@ void panel_menu_set_mode(int mode) {
                 break;
             case PANEL_MENU_ARP:
                 pmstate.num_submodes = PANEL_MENU_ARP_NUM_SUBMODES;
-                break;                
+                break;
             case PANEL_MENU_LOAD:
                 pmstate.num_submodes = PANEL_MENU_LOAD_NUM_SUBMODES;
                 pmstate.load_save_song = seq_ctrl_get_current_song();
@@ -171,7 +171,7 @@ void panel_menu_set_mode(int mode) {
             case PANEL_MENU_MIDI:
                 pmstate.num_submodes = PANEL_MENU_MIDI_NUM_SUBMODES;
                 break;
-            case PANEL_MENU_SYS:            
+            case PANEL_MENU_SYS:
                 pmstate.num_submodes = PANEL_MENU_SYS_NUM_SUBMODES;
                 break;
             case PANEL_MENU_CLOCK:
@@ -238,7 +238,7 @@ void panel_menu_adjust_value(int change, int shift) {
             break;
         default:
             return;
-    }        
+    }
     pmstate.menu_timeout_count = pmstate.menu_timeout;
 }
 
@@ -276,7 +276,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
                     pmstate.menu_submode == PANEL_MENU_TONALITY_SCALE) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = pmstate.menu_timeout;                    
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_TRANSPOSE:
@@ -284,49 +284,49 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     pmstate.menu_submode == PANEL_MENU_TONALITY_TRANSPOSE) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
-            }            
+            }
             break;
         case SCE_SONG_BIAS_TRACK:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
                     pmstate.menu_submode == PANEL_MENU_TONALITY_BIAS_TRACK) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
-            }            
-            break;            
+            }
+            break;
         case SCE_SONG_TRACK_TYPE:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
                     pmstate.menu_submode == PANEL_MENU_TONALITY_TRACK_TYPE) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
-            }            
+            }
             break;
         case SCE_SONG_ARP_TYPE:
             if(pmstate.menu_mode == PANEL_MENU_ARP &&
                     pmstate.menu_submode == PANEL_MENU_ARP_TYPE) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
-            }            
+            }
             break;
         case SCE_SONG_ARP_SPEED:
             if(pmstate.menu_mode == PANEL_MENU_ARP &&
                     pmstate.menu_submode == PANEL_MENU_ARP_SPEED) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
-            }            
+            }
             break;
         case SCE_SONG_ARP_GATE_TIME:
             if(pmstate.menu_mode == PANEL_MENU_ARP &&
                     pmstate.menu_submode == PANEL_MENU_ARP_GATE_TIME) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
-            }            
+            }
             break;
         case SCE_SONG_LOADED:
             if(pmstate.menu_mode != PANEL_MENU_LOAD) {
                 return;
             }
             pmstate.menu_submode = PANEL_MENU_LOAD_LOAD_CONFIRM;
-            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;            
+            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;
             panel_menu_update_display();
             break;
         case SCE_SONG_LOAD_ERROR:
@@ -334,8 +334,8 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 return;
             }
             pmstate.menu_submode = PANEL_MENU_LOAD_LOAD_ERROR;
-            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;            
-            panel_menu_update_display();        
+            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;
+            panel_menu_update_display();
             break;
         case SCE_SONG_CLEARED:
             if(pmstate.menu_mode != PANEL_MENU_LOAD) {
@@ -344,13 +344,13 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             // if we were trying to load instead of clear show the load error
             if(pmstate.menu_submode == PANEL_MENU_LOAD_LOAD ||
                     pmstate.menu_submode == PANEL_MENU_LOAD_LOAD_ERROR) {
-                pmstate.menu_submode = PANEL_MENU_LOAD_LOAD_ERROR;            
+                pmstate.menu_submode = PANEL_MENU_LOAD_LOAD_ERROR;
             }
             else {
                 pmstate.menu_submode = PANEL_MENU_LOAD_CLEAR_CONFIRM;
             }
-            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;            
-            panel_menu_update_display();                
+            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;
+            panel_menu_update_display();
             break;
         case SCE_SONG_SAVED:
             if(pmstate.menu_mode != PANEL_MENU_SAVE) {
@@ -358,7 +358,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             }
             pmstate.menu_mode = PANEL_MENU_SAVE;
             pmstate.menu_submode = PANEL_MENU_SAVE_SAVE_CONFIRM;
-            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;            
+            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;
             panel_menu_update_display();
             break;
         case SCE_SONG_SAVE_ERROR:
@@ -366,14 +366,14 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 return;
             }
             pmstate.menu_submode = PANEL_MENU_SAVE_SAVE_ERROR;
-            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;            
+            pmstate.menu_timeout_count = PANEL_MENU_CONFIRM_TIMEOUT;
             panel_menu_update_display();
             break;
         case SCE_SONG_MIDI_PROGRAM:
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     (pmstate.menu_submode == PANEL_MENU_MIDI_PROGRAM_A ||
                     pmstate.menu_submode == PANEL_MENU_MIDI_PROGRAM_B)) {
-                panel_menu_update_display();        
+                panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
@@ -381,7 +381,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     (pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTA_PORT ||
                     pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTB_PORT)) {
-                panel_menu_update_display();        
+                panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
@@ -389,21 +389,21 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     (pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTA_CHAN ||
                     pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTB_CHAN)) {
-                panel_menu_update_display();        
+                panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_KEY_SPLIT:
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     pmstate.menu_submode == PANEL_MENU_MIDI_KEY_SPLIT) {
-                panel_menu_update_display();        
+                panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_KEY_VELOCITY_SCALE:
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     pmstate.menu_submode == PANEL_MENU_MIDI_KEY_VELOCITY) {
-                panel_menu_update_display();        
+                panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
@@ -428,7 +428,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     pmstate.menu_submode == PANEL_MENU_SYS_CVCAL3 ||
                     pmstate.menu_submode == PANEL_MENU_SYS_CVCAL4)) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = pmstate.menu_timeout;                    
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_CVOFFSET:
@@ -438,7 +438,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                     pmstate.menu_submode == PANEL_MENU_SYS_CVOFFSET3 ||
                     pmstate.menu_submode == PANEL_MENU_SYS_CVOFFSET4)) {
                 panel_menu_update_display();
-                pmstate.menu_timeout_count = pmstate.menu_timeout;                    
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
         case SCE_SONG_STEP_LEN:
@@ -473,6 +473,27 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
+        case SCE_SONG_SCENE_SYNC:
+            if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
+                    pmstate.menu_submode == PANEL_MENU_CLOCK_SCENE_SYNC) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
+            }
+            break;
+        case SCE_SONG_MAGIC_RANGE:
+            if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
+                    pmstate.menu_submode == PANEL_MENU_TONALITY_MAGIC_RANGE) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
+            }
+            break;
+        case SCE_SONG_MAGIC_CHANCE:
+            if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
+                    pmstate.menu_submode == PANEL_MENU_TONALITY_MAGIC_CHANCE) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
+            }
+            break;
         case SCE_CTRL_FIRST_TRACK:
         case SCE_ENG_CURRENT_SCENE:
             panel_menu_track_select_changed();
@@ -481,7 +502,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
             panel_menu_set_timeout(config_store_get_val(CONFIG_STORE_MENU_TIMEOUT));
             break;
         case SCE_CONFIG_CLEARED:
-            panel_menu_set_timeout(PANEL_MENU_TIMEOUT_DEFAULT);                
+            panel_menu_set_timeout(PANEL_MENU_TIMEOUT_DEFAULT);
             break;
         default:
             break;
@@ -554,7 +575,7 @@ void panel_menu_update_display(void) {
             break;
         case PANEL_MENU_CLOCK:
             panel_menu_display_clock();
-            break;     
+            break;
         default:
             log_error("pmud - invalid mode: %d", pmstate.menu_mode);
             return;
@@ -582,63 +603,75 @@ void panel_menu_display_tonality(void) {
     gui_set_menu_title("TONALITY");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_TONALITY_SCALE:
-            sprintf(tempstr, "Scene %d Track %d", 
-                (seq_ctrl_get_scene() + 1), 
+            sprintf(tempstr, "Scene %d Track %d",
+                (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             gui_set_menu_param("Scale");
-            scale_type_to_name(tempstr, 
-                song_get_tonality(seq_ctrl_get_scene(), 
+            scale_type_to_name(tempstr,
+                song_get_tonality(seq_ctrl_get_scene(),
                 seq_ctrl_get_first_track()));
-            gui_set_menu_value(tempstr);                
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_TONALITY_TRANSPOSE:
-            sprintf(tempstr, "Scene %d Track %d", 
-                (seq_ctrl_get_scene() + 1), 
+            sprintf(tempstr, "Scene %d Track %d",
+                (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             gui_set_menu_param("Transpose");
             // drum mode
-            if(song_get_track_type(seq_ctrl_get_first_track()) == 
+            if(song_get_track_type(seq_ctrl_get_first_track()) ==
                     SONG_TRACK_TYPE_DRUM) {
                 gui_set_menu_value("-- (DRUM)");
             }
             // voice mode
-            else {        
-                panel_utils_transpose_to_str(tempstr, 
+            else {
+                panel_utils_transpose_to_str(tempstr,
                     song_get_transpose(seq_ctrl_get_scene(),
-                    seq_ctrl_get_first_track()));       
+                    seq_ctrl_get_first_track()));
                 gui_set_menu_value(tempstr);
             }
             break;
         case PANEL_MENU_TONALITY_BIAS_TRACK:
-            sprintf(tempstr, "Scene %d Track %d", 
-                (seq_ctrl_get_scene() + 1), 
+            sprintf(tempstr, "Scene %d Track %d",
+                (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             gui_set_menu_param("Bias Track");
-            temp = song_get_bias_track(seq_ctrl_get_scene(), 
+            temp = song_get_bias_track(seq_ctrl_get_scene(),
                 seq_ctrl_get_first_track());
             if(temp == SONG_TRACK_BIAS_NULL) {
-                gui_set_menu_value("DISABLED");            
+                gui_set_menu_value("DISABLED");
             }
             else {
-                sprintf(tempstr, "%d", (temp + 1));           
+                sprintf(tempstr, "%d", (temp + 1));
                 gui_set_menu_value(tempstr);
             }
             break;
         case PANEL_MENU_TONALITY_TRACK_TYPE:
-            sprintf(tempstr, "Track %d", 
+            sprintf(tempstr, "Track %d",
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             gui_set_menu_param("Track Type");
-            if(song_get_track_type(seq_ctrl_get_first_track()) == 
+            if(song_get_track_type(seq_ctrl_get_first_track()) ==
                     SONG_TRACK_TYPE_DRUM) {
                 gui_set_menu_value("DRUM");
             }
             else {
                 gui_set_menu_value("VOICE");
             }
+            break;
+        case PANEL_MENU_TONALITY_MAGIC_RANGE:
+            gui_set_menu_subtitle("Magic Range");
+            gui_set_menu_param("Range");
+            sprintf(tempstr, "%2d", song_get_magic_range());
+            gui_set_menu_value(tempstr);
+            break;
+        case PANEL_MENU_TONALITY_MAGIC_CHANCE:
+            gui_set_menu_subtitle("Magic Chance");
+            gui_set_menu_param("Chance");
+            sprintf(tempstr, "%3d%%", song_get_magic_chance());
+            gui_set_menu_value(tempstr);
             break;
     }
 }
@@ -649,44 +682,44 @@ void panel_menu_display_arp(void) {
     gui_set_menu_title("ARP");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_ARP_TYPE:
-            sprintf(tempstr, "Scene %d Track %d", 
-                (seq_ctrl_get_scene() + 1), 
+            sprintf(tempstr, "Scene %d Track %d",
+                (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
-            gui_set_menu_param("Arp Type");                          
-            arp_type_to_name(tempstr, 
+            gui_set_menu_param("Arp Type");
+            arp_type_to_name(tempstr,
                 song_get_arp_type(seq_ctrl_get_scene(),
                 seq_ctrl_get_first_track()));
             gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_ARP_SPEED:
-            sprintf(tempstr, "Scene %d Track %d", 
-                (seq_ctrl_get_scene() + 1), 
+            sprintf(tempstr, "Scene %d Track %d",
+                (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             gui_set_menu_param("Arp Speed");
-            panel_utils_step_len_to_str(tempstr, 
+            panel_utils_step_len_to_str(tempstr,
                 song_get_arp_speed(seq_ctrl_get_scene(),
                 seq_ctrl_get_first_track()));
             gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_ARP_GATE_TIME:
-            sprintf(tempstr, "Scene %d Track %d", 
-                (seq_ctrl_get_scene() + 1), 
+            sprintf(tempstr, "Scene %d Track %d",
+                (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             gui_set_menu_param("Arp Gate Len");
             sprintf(tempstr, "%d",
                  song_get_arp_gate_time(seq_ctrl_get_scene(),
                  seq_ctrl_get_first_track()));
-            gui_set_menu_value(tempstr);        
+            gui_set_menu_value(tempstr);
             break;
     }
 }
 
 // display the load menu
 void panel_menu_display_load(void) {
-    char tempstr[64];    
+    char tempstr[64];
     gui_set_menu_title("LOAD");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_LOAD_LOAD:
@@ -715,14 +748,14 @@ void panel_menu_display_load(void) {
         case PANEL_MENU_LOAD_CLEAR_CONFIRM:
             gui_set_menu_subtitle("Clear Current Song");
             gui_set_menu_param("Song");
-            gui_set_menu_value("Cleared");            
+            gui_set_menu_value("Cleared");
             break;
-    }    
+    }
 }
 
 // display the save menu
 void panel_menu_display_save(void) {
-    char tempstr[64];    
+    char tempstr[64];
     gui_set_menu_title("SAVE");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_SAVE_SAVE:
@@ -743,7 +776,7 @@ void panel_menu_display_save(void) {
             sprintf(tempstr, "%d Save Error", (pmstate.load_save_song + 1));
             gui_set_menu_value(tempstr);
             break;
-    }    
+    }
 }
 
 // display the MIDI menu
@@ -772,7 +805,7 @@ void panel_menu_display_midi(void) {
                 }
             }
             gui_set_menu_value(tempstr);
-            break; 
+            break;
         case PANEL_MENU_MIDI_PROGRAM_B:
             sprintf(tempstr, "Track %d", (track + 1));
             gui_set_menu_subtitle(tempstr);
@@ -792,7 +825,7 @@ void panel_menu_display_midi(void) {
                 }
             }
             gui_set_menu_value(tempstr);
-            break; 
+            break;
         case PANEL_MENU_MIDI_TRACK_OUTA_PORT:
             sprintf(tempstr, "Track %d", (track + 1));
             gui_set_menu_subtitle(tempstr);
@@ -824,7 +857,7 @@ void panel_menu_display_midi(void) {
                 song_get_midi_port_map(track, 1),
                 song_get_midi_channel_map(track, 1));
             gui_set_menu_value(tempstr);
-            break;    
+            break;
         case PANEL_MENU_MIDI_KEY_SPLIT:
             sprintf(tempstr, "Track %d", (track + 1));
             gui_set_menu_subtitle(tempstr);
@@ -850,7 +883,7 @@ void panel_menu_display_midi(void) {
             panel_utils_onoff_str(tempstr, song_get_midi_autolive());
             gui_set_menu_value(tempstr);
             break;
-    }    
+    }
 }
 
 // display the system menu
@@ -862,7 +895,7 @@ void panel_menu_display_sys(void) {
         case PANEL_MENU_SYS_VERSION:
             gui_set_menu_subtitle("Firmware Release");
             gui_set_menu_param("Ver:");
-            sprintf(tempstr, "%d.%02d LCD: %c", 
+            sprintf(tempstr, "%d.%02d LCD: %c",
                 CARBON_VERSION_MAJOR,
                 CARBON_VERSION_MINOR,
                 (gui_get_screen_type() + 65));
@@ -886,14 +919,14 @@ void panel_menu_display_sys(void) {
                     break;
                 default:
                     gui_set_menu_value(" ");
-                    break; 
+                    break;
             }
             break;
         case PANEL_MENU_SYS_CV_BEND_RANGE:
             gui_set_menu_subtitle("");
             gui_set_menu_param("CV Bend Range");
             sprintf(tempstr, "%d", song_get_cv_bend_range());
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
             break;
         case PANEL_MENU_SYS_CVGATE_OUTPUT_MODE1:
@@ -904,9 +937,9 @@ void panel_menu_display_sys(void) {
             gui_set_menu_subtitle("CV Output Mode");
             panel_utils_cvgate_pair_to_str(tempstr, temp);
             gui_set_menu_param(tempstr);
-            panel_utils_cvgate_pair_mode_to_str(tempstr, 
+            panel_utils_cvgate_pair_mode_to_str(tempstr,
                 song_get_cvgate_pair_mode(temp));
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_SYS_CV_SCALING1:
         case PANEL_MENU_SYS_CV_SCALING2:
@@ -918,9 +951,9 @@ void panel_menu_display_sys(void) {
             gui_set_menu_param(tempstr);
             panel_utills_cv_output_scaling_to_str(tempstr,
                 song_get_cv_output_scaling(temp));
-            gui_set_menu_value(tempstr);            
-            
-            break;        
+            gui_set_menu_value(tempstr);
+
+            break;
         case PANEL_MENU_SYS_CVCAL1:
         case PANEL_MENU_SYS_CVCAL2:
         case PANEL_MENU_SYS_CVCAL3:
@@ -952,7 +985,7 @@ void panel_menu_display_sys(void) {
             else {
                 sprintf(tempstr, "%ds", (pmstate.menu_timeout / 1000));
             }
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
     }
 }
@@ -965,13 +998,13 @@ void panel_menu_display_clock(void) {
     gui_set_menu_title("CLOCK");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_CLOCK_STEP_LEN:
-            sprintf(tempstr, "Scene %d Track %d", 
-                (seq_ctrl_get_scene() + 1), 
+            sprintf(tempstr, "Scene %d Track %d",
+                (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             gui_set_menu_param("Step Length");
-            panel_utils_step_len_to_str(tempstr, 
-                song_get_step_length(seq_ctrl_get_scene(), 
+            panel_utils_step_len_to_str(tempstr,
+                song_get_step_length(seq_ctrl_get_scene(),
                 seq_ctrl_get_first_track()));
             gui_set_menu_value(tempstr);
             break;
@@ -1000,49 +1033,62 @@ void panel_menu_display_clock(void) {
             gui_set_menu_subtitle("");
             gui_set_menu_param("Metronome Len");
             sprintf(tempstr, "%dms", song_get_metronome_sound_len());
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_CLOCK_TX_DIN1:
             gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI DIN 1");
             panel_utils_clock_ppq_to_str(tempstr,
                 song_get_midi_port_clock_out(MIDI_PORT_DIN1_OUT));
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_CLOCK_TX_DIN2:
             gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI DIN 2");
             panel_utils_clock_ppq_to_str(tempstr,
                 song_get_midi_port_clock_out(MIDI_PORT_DIN2_OUT));
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_CLOCK_TX_CV:
             gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("CV/GATE");
             panel_utils_clock_ppq_to_str(tempstr,
                 song_get_midi_port_clock_out(MIDI_PORT_CV_OUT));
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_CLOCK_TX_USB_HOST:
             gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI USB HOST");
             panel_utils_clock_ppq_to_str(tempstr,
                 song_get_midi_port_clock_out(MIDI_PORT_USB_HOST_OUT));
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_CLOCK_TX_USB_DEV:
             gui_set_menu_subtitle("MIDI Clock OUT");
             gui_set_menu_param("MIDI USB DEV");
             panel_utils_clock_ppq_to_str(tempstr,
                 song_get_midi_port_clock_out(MIDI_PORT_USB_DEV_OUT1));
-            gui_set_menu_value(tempstr);            
+            gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_CLOCK_SOURCE:
             gui_set_menu_subtitle("MIDI Clock Source");
             gui_set_menu_param("Source");
-            panel_utils_clock_source_str(tempstr, 
+            panel_utils_clock_source_str(tempstr,
                 song_get_midi_clock_source());
             gui_set_menu_value(tempstr);
+            break;
+        case PANEL_MENU_CLOCK_SCENE_SYNC:
+            gui_set_menu_subtitle("Scene Change Sync");
+            gui_set_menu_param("Mode");
+            switch(song_get_scene_sync()) {
+                case SONG_SCENE_SYNC_BEAT:
+                    gui_set_menu_value("Beat");
+                    break;
+                case SONG_SCENE_SYNC_TRACK1:
+                    gui_set_menu_value("Track 1 End");
+                    break;
+            }
+            break;
     }
 }
 
@@ -1083,6 +1129,12 @@ void panel_menu_edit_tonality(int change) {
         case PANEL_MENU_TONALITY_TRACK_TYPE:
             seq_ctrl_adjust_track_type(change);
             break;
+        case PANEL_MENU_TONALITY_MAGIC_RANGE:
+            seq_ctrl_adjust_magic_range(change);
+            break;
+        case PANEL_MENU_TONALITY_MAGIC_CHANCE:
+            seq_ctrl_adjust_magic_chance(change);
+            break;
     }
     panel_menu_update_display();
 }
@@ -1107,7 +1159,7 @@ void panel_menu_edit_arp(int change) {
 void panel_menu_edit_load(int change) {
     switch(pmstate.menu_submode) {
         case PANEL_MENU_LOAD_LOAD:
-            pmstate.load_save_song = 
+            pmstate.load_save_song =
                 seq_utils_clamp(pmstate.load_save_song + change,
                 0, (SEQ_NUM_SONGS - 1));
             break;
@@ -1121,7 +1173,7 @@ void panel_menu_edit_load(int change) {
 void panel_menu_edit_save(int change) {
     switch(pmstate.menu_submode) {
         case PANEL_MENU_SAVE_SAVE:
-            pmstate.load_save_song = 
+            pmstate.load_save_song =
                 seq_utils_clamp(pmstate.load_save_song + change,
                 0, (SEQ_NUM_SONGS - 1));
             break;
@@ -1136,7 +1188,7 @@ void panel_menu_edit_midi(int change) {
             seq_ctrl_adjust_midi_program(0, change);
             break;
         case PANEL_MENU_MIDI_PROGRAM_B:
-            seq_ctrl_adjust_midi_program(1, change);        
+            seq_ctrl_adjust_midi_program(1, change);
             break;
         case PANEL_MENU_MIDI_TRACK_OUTA_CHAN:
             seq_ctrl_adjust_midi_channel(0, change);
@@ -1207,7 +1259,7 @@ void panel_menu_edit_sys(int change) {
             seq_ctrl_adjust_cvoffset(temp, change);
             break;
         case PANEL_MENU_SYS_MENU_TIMEOUT:
-            panel_menu_set_timeout(seq_utils_clamp(pmstate.menu_timeout + 
+            panel_menu_set_timeout(seq_utils_clamp(pmstate.menu_timeout +
                 (change * 1000),
                 PANEL_MENU_TIMEOUT_MIN, PANEL_MENU_TIMEOUT_MAX));
             break;
@@ -1219,7 +1271,7 @@ void panel_menu_edit_sys(int change) {
 void panel_menu_edit_clock(int change) {
     switch(pmstate.menu_submode) {
         case PANEL_MENU_CLOCK_STEP_LEN:
-            seq_ctrl_adjust_step_length(change);        
+            seq_ctrl_adjust_step_length(change);
             break;
         case PANEL_MENU_CLOCK_METRONOME_MODE:
             seq_ctrl_adjust_metronome_mode(change);
@@ -1245,7 +1297,9 @@ void panel_menu_edit_clock(int change) {
         case PANEL_MENU_CLOCK_SOURCE:
             seq_ctrl_adjust_clock_source(change);
             break;
+        case PANEL_MENU_CLOCK_SCENE_SYNC:
+            seq_ctrl_adjust_scene_sync(change);
+            break;
     }
     panel_menu_update_display();
 }
-

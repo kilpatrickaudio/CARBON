@@ -55,6 +55,9 @@ enum STATE_CHANGE_EVENT {
     SCE_SONG_MIDI_CLOCK_SOURCE,  // arg0 = source
     SCE_SONG_MIDI_REMOTE_CTRL,  // arg0 = enable
     SCE_SONG_MIDI_AUTOLIVE,  // arg0 = enable
+    SCE_SONG_SCENE_SYNC,  // arg0 = mode
+    SCE_SONG_MAGIC_RANGE,  // arg0 = range
+    SCE_SONG_MAGIC_CHANCE,  // arg0 = chance
     SCE_SONG_LIST_SCENE,  // arg0 = entry, arg1 = scene
     SCE_SONG_LIST_LENGTH,  // arg0 = entry, arg1 = length
     SCE_SONG_LIST_KBTRANS,  // arg0 = entry, arg1 = kbtrans
@@ -106,4 +109,3 @@ enum STATE_CHANGE_EVENT {
 };
 
 #endif
-

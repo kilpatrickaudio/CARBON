@@ -19,6 +19,7 @@
  *
  */
 #include "panel.h"
+#include "gui.h"
 #include "panel_menu.h"
 #include "step_edit.h"
 #include "song_edit.h"
@@ -108,7 +109,7 @@ void panel_handle_shift_double_tap(void);
 // init the panel
 void panel_init(void) {
     int i;
-    
+
     // panel input queue
     pstate.key_queue_inp = 0;
     pstate.key_queue_outp = 0;
@@ -130,11 +131,11 @@ void panel_init(void) {
     for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
         pstate.track_hold_state[i] = 0;
     }
-    
+
     // select track 1
     panel_handle_track_select(0, 1);  // press
     panel_handle_track_select(0, 0);  // release
-    
+
     // set the backlight modes
     pstate.bl_record = 0;
     pstate.bl_live = 0;
@@ -146,7 +147,7 @@ void panel_init(void) {
 
     // init the panel menu
     panel_menu_init();
-    
+
     // register for events
     state_change_register(panel_handle_state_change, SCEC_SONG);
     state_change_register(panel_handle_state_change, SCEC_CTRL);
@@ -158,7 +159,7 @@ void panel_init(void) {
 void panel_timer_task(void) {
     // handle panel input
     panel_handle_key_queue();
-    
+
     // handle beat LED
     if(pstate.beat_led_timeout) {
         pstate.beat_led_timeout --;
@@ -166,7 +167,7 @@ void panel_timer_task(void) {
             panel_set_led(PANEL_LED_CLOCK, 0);
         }
     }
-    
+
     // timeout the shift double tap counter
     if(pstate.shift_tap_timeout) {
         pstate.shift_tap_timeout --;
@@ -247,7 +248,7 @@ void panel_set_bl_led(int led, int state) {
 void panel_clear_leds(void) {
     int i;
     for(i = 0; i < PANEL_LED_NUM_LEDS; i ++) {
-        pstate.led_restore_state[i] = pstate.led_state[i];         
+        pstate.led_restore_state[i] = pstate.led_state[i];
         panel_set_led(i, PANEL_LED_STATE_OFF);
     }
 }
@@ -279,7 +280,7 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_CTRL_FIRST_TRACK:
             panel_update_arp_led();
             panel_update_dir_led();
-            break;            
+            break;
         case SCE_CTRL_SONG_MODE:
             panel_update_song_led();
             break;
@@ -301,7 +302,7 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
                     // turn off all panel LEDs
                     panel_clear_leds();
                     pstate.bl_power_state = PANEL_POWER_STATE_STANDBY;
-                    panel_update_bl_display();                    
+                    panel_update_bl_display();
                     break;
                 case POWER_CTRL_STATE_IF:
                     // turn off all panel LEDs
@@ -324,7 +325,7 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
                     break;
             }
             break;
-        default: 
+        default:
             break;
     }
 }
@@ -333,12 +334,12 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
 void panel_handle_key_queue(void) {
     int ctrl;  // the pressed key
     int val;  // the up/down state
-        
+
     // nothing to do
     if(pstate.key_queue_inp == pstate.key_queue_outp) {
         return;
     }
-    
+
     // take an event out of the queue
     ctrl = pstate.key_queue[pstate.key_queue_outp].ctrl;
     val = pstate.key_queue[pstate.key_queue_outp].val;
@@ -371,7 +372,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                     }
                     // record is not active so we can start song edit
                     else if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_IDLE) {
-                        song_edit_set_enable(1);                    
+                        song_edit_set_enable(1);
                     }
                 }
                 // scene
@@ -390,13 +391,13 @@ void panel_handle_seq_input(int ctrl, int val) {
                     song_edit_set_enable(0);  // cancel song edit
                 }
                 // arp menu (without changing state)
-                if(pstate.shift_state) { 
+                if(pstate.shift_state) {
                     panel_menu_set_mode(PANEL_MENU_ARP);
                 }
                 // arp
                 else {
                     seq_ctrl_flip_arp_enable();
-                    if(seq_ctrl_get_arp_enable(seq_ctrl_get_first_track())) {                    
+                    if(seq_ctrl_get_arp_enable(seq_ctrl_get_first_track())) {
                         // prevent menu from dismissing if we entered it with shift
                         if(panel_menu_get_mode() != PANEL_MENU_ARP) {
                             panel_menu_set_mode(PANEL_MENU_ARP);  // call up menu
@@ -405,7 +406,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                     else {
                         if(panel_menu_get_mode() == PANEL_MENU_ARP) {
                             panel_menu_set_mode(PANEL_MENU_NONE);  // dismiss menu
-                        }                    
+                        }
                     }
                 }
                 break;
@@ -447,7 +448,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_handle_track_select(0, 1);
                 }
-                break;                
+                break;
             case PANEL_SW_2:
                 // scene select 2
                 if(pstate.scene_state) {
@@ -468,7 +469,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_handle_track_select(1, 1);
                 }
-                break;                
+                break;
             case PANEL_SW_3:
                 // scene select 3
                 if(pstate.scene_state) {
@@ -489,7 +490,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_handle_track_select(2, 1);
                 }
-                break;                
+                break;
             case PANEL_SW_4:
                 // scene select 4
                 if(pstate.scene_state) {
@@ -510,7 +511,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_handle_track_select(3, 1);
                 }
-                break;                
+                break;
             case PANEL_SW_5:
                 // scene select 5
                 if(pstate.scene_state) {
@@ -531,7 +532,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_handle_track_select(4, 1);
                 }
-                break;                
+                break;
             case PANEL_SW_6:
                 // scene select 6
                 if(pstate.scene_state) {
@@ -552,7 +553,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_handle_track_select(5, 1);
                 }
-                break;                
+                break;
             case PANEL_SW_MIDI:
                 // step edit mode is active
                 if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
@@ -570,7 +571,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_menu_set_mode(PANEL_MENU_MIDI);
                 }
-                break;                
+                break;
             case PANEL_SW_CLOCK:
                 // tap
                 if(pstate.shift_state) {
@@ -580,7 +581,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_menu_set_mode(PANEL_MENU_CLOCK);
                 }
-                break;                
+                break;
             case PANEL_SW_DIR:
                 // magic
                 if(pstate.shift_state) {
@@ -590,7 +591,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     seq_ctrl_flip_motion_dir();
                 }
-                break;                
+                break;
             case PANEL_SW_TONALITY:
                 // step edit mode is active
                 if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
@@ -608,7 +609,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_menu_set_mode(PANEL_MENU_TONALITY);
                 }
-                break;                
+                break;
             case PANEL_SW_LOAD:
                 // step edit mode is active
                 if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
@@ -626,12 +627,12 @@ void panel_handle_seq_input(int ctrl, int val) {
                 else {
                     panel_menu_set_mode(PANEL_MENU_LOAD);
                 }
-                break;                
+                break;
             case PANEL_SW_RUN_STOP:
                 // reset
                 if(pstate.shift_state) {
                     panel_handle_reset();
-                }                
+                }
                 // run/stop
                 else {
                     if(seq_ctrl_get_run_state()) {
@@ -641,7 +642,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                         seq_ctrl_set_run_state(1);
                     }
                 }
-                break;                
+                break;
             case PANEL_SW_RECORD:
                 // clear
                 if(pstate.shift_state) {
@@ -657,12 +658,12 @@ void panel_handle_seq_input(int ctrl, int val) {
                     else {
                         seq_ctrl_make_clear();
                     }
-                }                
+                }
                 // record
                 else {
                     seq_ctrl_record_pressed();
                 }
-                break;                
+                break;
             case PANEL_SW_EDIT:
                 // song edit mode is active
                 if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
@@ -673,11 +674,11 @@ void panel_handle_seq_input(int ctrl, int val) {
                     // step edit enable / retrigger
                     step_edit_set_enable(1);
                 }
-                break;                
+                break;
             case PANEL_SW_SHIFT:
                 pstate.shift_state = 1;  // shift is pressed
                 panel_handle_shift_double_tap();  // handle canceling of modes
-                break;                
+                break;
             case PANEL_SW_SONG_MODE:
                 seq_ctrl_toggle_song_mode();
 #ifdef GFX_REMLCD_MODE
@@ -728,7 +729,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 }
                 // menu mode for encoder
                 else if(panel_menu_get_mode() != PANEL_MENU_NONE) {
-                    panel_menu_adjust_cursor(seq_utils_enc_val_to_change(val), 
+                    panel_menu_adjust_cursor(seq_utils_enc_val_to_change(val),
                         pstate.shift_state);
                 }
                 // step record mode
@@ -754,7 +755,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 }
                 // menu mode for encoder
                 else if(panel_menu_get_mode() != PANEL_MENU_NONE) {
-                    panel_menu_adjust_value(seq_utils_enc_val_to_change(val), 
+                    panel_menu_adjust_value(seq_utils_enc_val_to_change(val),
                         pstate.shift_state);
                 }
                 // track step length
@@ -813,50 +814,50 @@ void panel_handle_seq_input(int ctrl, int val) {
             case PANEL_SW_ARP:
                 break;
             case PANEL_SW_LIVE:
-                break;                
+                break;
             case PANEL_SW_1:
                 panel_handle_track_select(0, 0);
-                break;                
+                break;
             case PANEL_SW_2:
                 panel_handle_track_select(1, 0);
-                break;                
+                break;
             case PANEL_SW_3:
                 panel_handle_track_select(2, 0);
-                break;                
+                break;
             case PANEL_SW_4:
                 panel_handle_track_select(3, 0);
-                break;                
+                break;
             case PANEL_SW_5:
                 panel_handle_track_select(4, 0);
-                break;                
+                break;
             case PANEL_SW_6:
                 panel_handle_track_select(5, 0);
-                break;                
+                break;
             case PANEL_SW_MIDI:
-                break;                
+                break;
             case PANEL_SW_CLOCK:
-                break;                
+                break;
             case PANEL_SW_DIR:
-                break;                
+                break;
             case PANEL_SW_TONALITY:
-                break;                
+                break;
             case PANEL_SW_LOAD:
-                break;                
+                break;
             case PANEL_SW_RUN_STOP:
-                break;                
+                break;
             case PANEL_SW_RECORD:
-                break;                
+                break;
             case PANEL_SW_EDIT:
-                break;                
+                break;
             case PANEL_SW_SHIFT:
                 pstate.shift_state = 0;  // always reset this
-                break;                
+                break;
             case PANEL_SW_SONG_MODE:
                 break;
             default:
                 log_error("phsi - invalid ctrl: %d", ctrl);
                 break;
-        }    
+        }
     }
 }
 
@@ -881,7 +882,7 @@ void panel_handle_track_select(int track, int state) {
             current_select[i] = 0;
             new_select[i] = 0;
         }
-    }    
+    }
 
     // pressed
     if(state) {
@@ -937,7 +938,7 @@ void panel_handle_mute_select(int track) {
         seq_ctrl_set_mute_select(track, 0);
     }
     else {
-        seq_ctrl_set_mute_select(track, 1);    
+        seq_ctrl_set_mute_select(track, 1);
     }
 }
 
@@ -953,7 +954,7 @@ void panel_handle_reset(void) {
     }
     if(track_held) {
         return;
-    }   
+    }
     seq_ctrl_reset_pos();
 }
 
@@ -963,14 +964,14 @@ void panel_update_bl_display(void) {
     uint32_t new_color;
     // these are arranged in priority order highest to lowest
     if(pstate.bl_power_state == PANEL_POWER_STATE_ERROR) {
-        new_color = PANEL_BL_COLOR_POWER_ERROR;    
+        new_color = PANEL_BL_COLOR_POWER_ERROR;
     }
     else if(pstate.bl_power_state == PANEL_POWER_STATE_STANDBY) {
         new_color = PANEL_BL_COLOR_POWER_OFF;
     }
     else if(pstate.bl_power_state == PANEL_POWER_STATE_IF) {
         new_color = PANEL_BL_COLOR_POWER_IF_MODE;
-    }    
+    }
     else if(pstate.bl_record) {
         new_color = PANEL_BL_COLOR_RECORD;
     }
@@ -1002,15 +1003,15 @@ void panel_update_bl_display(void) {
 // update the ARP LED
 void panel_update_arp_led(void) {
     static int state = 0;
-    int newstate = song_get_arp_enable(seq_ctrl_get_scene(), 
+    int newstate = song_get_arp_enable(seq_ctrl_get_scene(),
         seq_ctrl_get_first_track());
     if(newstate != state) {
         if(newstate) {
             panel_set_led(PANEL_LED_ARP, PANEL_LED_STATE_ON);
         }
         else {
-            panel_set_led(PANEL_LED_ARP, PANEL_LED_STATE_OFF);    
-        }                
+            panel_set_led(PANEL_LED_ARP, PANEL_LED_STATE_OFF);
+        }
         state = newstate;
     }
 }
@@ -1022,7 +1023,7 @@ void panel_update_song_led(void) {
         pstate.bl_song_mode = 1;
     }
     else {
-        panel_set_led(PANEL_LED_SONG_MODE, PANEL_LED_STATE_OFF);    
+        panel_set_led(PANEL_LED_SONG_MODE, PANEL_LED_STATE_OFF);
         pstate.bl_song_mode = 0;
     }
 }
@@ -1052,15 +1053,15 @@ void panel_update_live_led(void) {
 // update the DIR LED
 void panel_update_dir_led(void) {
     static int state = 0;
-    int newstate = song_get_motion_dir(seq_ctrl_get_scene(), 
+    int newstate = song_get_motion_dir(seq_ctrl_get_scene(),
         seq_ctrl_get_first_track());
     if(newstate != state) {
         if(newstate) {
             panel_set_led(PANEL_LED_DIR, PANEL_LED_STATE_ON);
         }
         else {
-            panel_set_led(PANEL_LED_DIR, PANEL_LED_STATE_OFF);    
-        }                
+            panel_set_led(PANEL_LED_DIR, PANEL_LED_STATE_OFF);
+        }
         state = newstate;
     }
 }
@@ -1098,8 +1099,8 @@ void panel_update_run_led(int state) {
             panel_set_led(PANEL_LED_RUN_STOP, PANEL_LED_STATE_ON);
         }
         else {
-            panel_set_led(PANEL_LED_RUN_STOP, PANEL_LED_STATE_OFF);    
-        }                
+            panel_set_led(PANEL_LED_RUN_STOP, PANEL_LED_STATE_OFF);
+        }
         oldstate = state;
     }
 }
@@ -1116,7 +1117,7 @@ void panel_update_track_led(int track, int state) {
             panel_set_led(PANEL_LED_1 + track, PANEL_LED_STATE_ON);
         }
         else {
-            panel_set_led(PANEL_LED_1 + track, PANEL_LED_STATE_OFF);        
+            panel_set_led(PANEL_LED_1 + track, PANEL_LED_STATE_OFF);
         }
         oldstate[track] = state;
     }
@@ -1151,4 +1152,3 @@ void panel_handle_shift_double_tap(void) {
     }
     pstate.shift_tap_timeout = PANEL_SHIFT_TAP_TIMEOUT;
 }
-

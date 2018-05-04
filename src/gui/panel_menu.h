@@ -44,11 +44,13 @@
 #define PANEL_MENU_SWING_NUM_SUBMODES 1
 #define PANEL_MENU_SWING_SWING 0  // global
 // tonality
-#define PANEL_MENU_TONALITY_NUM_SUBMODES 4
+#define PANEL_MENU_TONALITY_NUM_SUBMODES 6
 #define PANEL_MENU_TONALITY_SCALE 0  // per scene / track
 #define PANEL_MENU_TONALITY_TRANSPOSE 1  // per scene / track
 #define PANEL_MENU_TONALITY_BIAS_TRACK 2  // per scene / track
 #define PANEL_MENU_TONALITY_TRACK_TYPE 3  // per track
+#define PANEL_MENU_TONALITY_MAGIC_RANGE 4  // per song
+#define PANEL_MENU_TONALITY_MAGIC_CHANCE 5  // per song
 // arp
 #define PANEL_MENU_ARP_NUM_SUBMODES 3
 #define PANEL_MENU_ARP_TYPE 0  // per scene / track
@@ -100,9 +102,8 @@
 #define PANEL_MENU_SYS_CVOFFSET3 17  // per song
 #define PANEL_MENU_SYS_CVOFFSET4 18  // per song
 #define PANEL_MENU_SYS_MENU_TIMEOUT 19 // global
-
 // clock
-#define PANEL_MENU_CLOCK_NUM_SUBMODES 9
+#define PANEL_MENU_CLOCK_NUM_SUBMODES 10
 #define PANEL_MENU_CLOCK_STEP_LEN 0  // per scene / track
 #define PANEL_MENU_CLOCK_METRONOME_MODE 1  // per song
 #define PANEL_MENU_CLOCK_METRONOME_SOUND_LEN 2  // per song
@@ -112,6 +113,7 @@
 #define PANEL_MENU_CLOCK_TX_USB_HOST 6  // per song
 #define PANEL_MENU_CLOCK_TX_USB_DEV 7  // per song
 #define PANEL_MENU_CLOCK_SOURCE 8  // per song
+#define PANEL_MENU_CLOCK_SCENE_SYNC 9  // per song
 
 // init the panel menu
 void panel_menu_init(void);
@@ -138,4 +140,3 @@ int panel_menu_get_timeout(void);
 void panel_menu_set_timeout(int timeout);
 
 #endif
-
