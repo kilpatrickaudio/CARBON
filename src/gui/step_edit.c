@@ -56,7 +56,7 @@ struct step_edit_state {
     int8_t playing_notes[SEQ_TRACK_POLY];  // playing notes
     uint16_t playing_note_timeouts[SEQ_TRACK_POLY];  // timeouts for playing notes
     // recording input events
-    int8_t recording_notes[SEQ_TRACK_POLY];  // keep track of input notes    
+    int8_t recording_notes[SEQ_TRACK_POLY];  // keep track of input notes
 };
 struct step_edit_state sedits;
 
@@ -102,7 +102,7 @@ void step_edit_timer_task(void) {
 // the clock ticked - do note timeouts for preview
 void step_edit_run(uint32_t tick_count) {
     int i;
-    
+
     // time out note notes
     for(i = 0; i < SEQ_TRACK_POLY; i ++) {
         if(sedits.playing_note_timeouts[i]) {
@@ -139,7 +139,7 @@ void step_edit_handle_input(struct midi_msg *msg) {
     if(!sedits.enable) {
         return;
     }
-    
+
     // handle incoming MIDI types
     switch(msg->status & 0xf0) {
         case MIDI_NOTE_ON:
@@ -148,12 +148,14 @@ void step_edit_handle_input(struct midi_msg *msg) {
             if(step_edit_get_num_recording_notes() == 0) {
                 for(i = 0; i < SEQ_TRACK_POLY; i ++) {
                     // no data on step
-                    if(song_get_step_event(sedits.scene, sedits.track, 
+                    if(song_get_step_event(sedits.scene, sedits.track,
                             sedits.step_pos, i, &event) == -1) {
                         continue;
                     }
-                    if(event.type == SONG_EVENT_NOTE) {
-                        song_clear_step_event(sedits.scene, sedits.track, 
+                    // for voice tracks we clear the whole step
+                    if(event.type == SONG_EVENT_NOTE &&
+                            song_get_track_type(sedits.track) == SONG_TRACK_TYPE_VOICE) {
+                        song_clear_step_event(sedits.scene, sedits.track,
                             sedits.step_pos, i);
                     }
                 }
@@ -164,8 +166,8 @@ void step_edit_handle_input(struct midi_msg *msg) {
             event.data1 = msg->data1;
             event.length = seq_utils_step_len_to_ticks(
                 song_get_step_length(sedits.scene, sedits.track));
-            song_add_step_event(sedits.scene, sedits.track, 
-                sedits.step_pos, &event);            
+            song_add_step_event(sedits.scene, sedits.track,
+                sedits.step_pos, &event);
             step_edit_update_display();
             step_edit_add_recording_note(msg->data0);
             break;
@@ -179,7 +181,7 @@ void step_edit_handle_input(struct midi_msg *msg) {
             event.type = SONG_EVENT_CC;
             event.data0 = msg->data0;
             event.data1 = msg->data1;
-            song_add_step_event(sedits.scene, sedits.track, 
+            song_add_step_event(sedits.scene, sedits.track,
                 sedits.step_pos, &event);
             step_edit_update_display();
             break;
@@ -197,7 +199,7 @@ void step_edit_set_enable(int enable) {
     if(enable) {
         // we're already editing - just trigger the note
         if(sedits.enable) {
-            step_edit_adjust_cursor(0, 0);  // causes the step to be played / displayed        
+            step_edit_adjust_cursor(0, 0);  // causes the step to be played / displayed
             sedits.edit_timeout = panel_menu_get_timeout();
         }
         // start editing from scratch
@@ -206,6 +208,7 @@ void step_edit_set_enable(int enable) {
             sedits.edit_timeout = panel_menu_get_timeout();
             sedits.scene = seq_ctrl_get_scene();
             sedits.track = seq_ctrl_get_first_track();
+            panel_menu_set_mode(PANEL_MENU_NONE);  // disable any menu mode
             gui_grid_clear_overlay();
             gui_grid_set_overlay_enable(1);
             gui_clear_status_text_all();
@@ -219,7 +222,7 @@ void step_edit_set_enable(int enable) {
         sedits.enable = 0;
         sedits.edit_timeout = 0;
         step_edit_stop_notes();
-        gui_grid_set_overlay_enable(0);    
+        gui_grid_set_overlay_enable(0);
         gui_clear_status_text_all();  // XXX get rid of this
         gui_set_status_override(0);  // give back status display
     }
@@ -229,12 +232,12 @@ void step_edit_set_enable(int enable) {
 void step_edit_adjust_cursor(int change, int shift) {
     int val;
     sedits.edit_timeout = panel_menu_get_timeout();
-    
+
     // select event pos
     if(shift) {
-        sedits.event_pos = seq_utils_clamp(sedits.event_pos + change, 
+        sedits.event_pos = seq_utils_clamp(sedits.event_pos + change,
             STEP_EDIT_EVENT_POS_ALL, SEQ_TRACK_POLY - 1);
-        step_edit_update_display();    
+        step_edit_update_display();
     }
     // select step
     else {
@@ -247,7 +250,7 @@ void step_edit_adjust_cursor(int change, int shift) {
         }
         // disable old step
         step_edit_stop_notes();
-        gui_grid_set_overlay_color(sedits.step_pos, GUI_OVERLAY_BLANK);    
+        gui_grid_set_overlay_color(sedits.step_pos, GUI_OVERLAY_BLANK);
         // enable new step
         sedits.step_pos = val;
         // display / play step
@@ -282,7 +285,7 @@ void step_edit_adjust_velocity(int change, int shift) {
 // adjust the step gate time
 void step_edit_adjust_gate_time(int change, int shift) {
     sedits.edit_timeout = panel_menu_get_timeout();
-    if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {    
+    if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {
         step_edit_adjust_step(change, STEP_EDIT_ADJUST_GATE_TIME, 0, shift);
     }
     else {
@@ -293,14 +296,14 @@ void step_edit_adjust_gate_time(int change, int shift) {
 // adjust the start delay
 void step_edit_adjust_start_delay(int change, int shift) {
     sedits.edit_timeout = panel_menu_get_timeout();
-    step_edit_adjust_step(change, STEP_EDIT_ADJUST_START_DELAY, 0, shift);    
+    step_edit_adjust_step(change, STEP_EDIT_ADJUST_START_DELAY, 0, shift);
 }
 
 // adjust the ratchet mode
 void step_edit_adjust_ratchet_mode(int change, int shift) {
     sedits.edit_timeout = panel_menu_get_timeout();
     song_set_ratchet_mode(sedits.scene, sedits.track, sedits.step_pos,
-        seq_utils_clamp(song_get_ratchet_mode(sedits.scene, sedits.track, 
+        seq_utils_clamp(song_get_ratchet_mode(sedits.scene, sedits.track,
         sedits.step_pos) + change,
         SEQ_RATCHET_MIN, SEQ_RATCHET_MAX));
     // display / play step
@@ -314,12 +317,12 @@ void step_edit_clear_step(void) {
     step_edit_stop_notes();
     // clear specific event
     if(sedits.event_pos != STEP_EDIT_EVENT_POS_ALL) {
-        song_clear_step_event(sedits.scene, sedits.track, 
+        song_clear_step_event(sedits.scene, sedits.track,
             sedits.step_pos, sedits.event_pos);
     }
     // clear all events on step
     else {
-        song_clear_step(sedits.scene, sedits.track, sedits.step_pos);    
+        song_clear_step(sedits.scene, sedits.track, sedits.step_pos);
     }
     // display / play step
     step_edit_update_display();
@@ -333,15 +336,15 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
     int inhibit_preview = 0;
     struct track_event event;
     int i, start, num, temp;
-    
+
     // stop playing before editing
     step_edit_stop_notes();
-    
+
     // create a note or a CC depending on what has been turned
     // if there are no events or the current edit pos is blank
     if(song_get_num_step_events(sedits.scene, sedits.track, sedits.step_pos) == 0 ||
             (sedits.event_pos != STEP_EDIT_EVENT_POS_ALL &&
-            song_get_step_event(sedits.scene, sedits.track, sedits.step_pos, 
+            song_get_step_event(sedits.scene, sedits.track, sedits.step_pos,
             sedits.event_pos, &event) == -1)) {
         // figure out single slot position
         if(single && sedits.event_pos != STEP_EDIT_EVENT_POS_ALL) {
@@ -363,7 +366,7 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                 event.data0 = STEP_EDIT_NEW_CC;
             }
             event.data1 = STEP_EDIT_NEW_CC_VAL;
-            inhibit_preview = 1;  // user must retrigger edit to hear            
+            inhibit_preview = 1;  // user must retrigger edit to hear
         }
         // otherwise insert a note
         else {
@@ -374,14 +377,14 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                 event.data0 = STEP_EDIT_NEW_NOTE + 1;
             }
             else {
-                event.data0 = STEP_EDIT_NEW_NOTE;            
+                event.data0 = STEP_EDIT_NEW_NOTE;
             }
             event.data1 = STEP_EDIT_NEW_NOTE_VELOCITY;
             // default to half the step len
             event.length = seq_utils_step_len_to_ticks(
                 song_get_step_length(seq_ctrl_get_scene(), sedits.track)) >> 1;
-        }        
-        song_set_step_event(sedits.scene, sedits.track, sedits.step_pos, 
+        }
+        song_set_step_event(sedits.scene, sedits.track, sedits.step_pos,
             start, &event);
     }
     // otherwise let's edit the existing events
@@ -396,11 +399,11 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
             start = 0;
             num = SEQ_TRACK_POLY;
         }
-    
+
         // modify events and put them back into the step
         for(i = start; i < (start + num); i ++) {
             // get the slot event
-            if(song_get_step_event(sedits.scene, sedits.track, 
+            if(song_get_step_event(sedits.scene, sedits.track,
                     sedits.step_pos, i, &event) == -1) {
                 continue;
             }
@@ -409,7 +412,7 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                 case STEP_EDIT_ADJUST_NOTE:  // note number and CC number
                     // note
                     if(event.type == SONG_EVENT_NOTE) {
-                        event.data0 += change;                       
+                        event.data0 += change;
                         // the new value would collide with another slot
                         if(step_edit_does_step_contain_event(SONG_EVENT_NOTE, event.data0) != -1) {
                             if(change > 0) {
@@ -445,7 +448,7 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                         }
                     }
                     // put back modified event
-                    song_set_step_event(sedits.scene, sedits.track, 
+                    song_set_step_event(sedits.scene, sedits.track,
                         sedits.step_pos, i, &event);
                     break;
                 case STEP_EDIT_ADJUST_VELO:  // note velocity and CC value
@@ -460,29 +463,29 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                     }
                     sedits.last_adjust_type = STEP_EDIT_ADJUST_VELO;
                     // put back modified event
-                    song_set_step_event(sedits.scene, sedits.track, 
+                    song_set_step_event(sedits.scene, sedits.track,
                         sedits.step_pos, i, &event);
                     break;
                 case STEP_EDIT_ADJUST_GATE_TIME:
                     if(event.type == SONG_EVENT_NOTE) {
-                        event.length = seq_utils_clamp(event.length + 
-                            seq_utils_warp_change(event.length, change, 10), 
+                        event.length = seq_utils_clamp(event.length +
+                            seq_utils_warp_change(event.length, change, 10),
                             STEP_EDIT_SHORTEST_NOTE, STEP_EDIT_LONGEST_NOTE);
                     }
                     sedits.last_adjust_type = STEP_EDIT_ADJUST_GATE_TIME;
                     inhibit_preview = 1;  // user must retrigger edit to hear
                     // put back modified event
-                    song_set_step_event(sedits.scene, sedits.track, 
+                    song_set_step_event(sedits.scene, sedits.track,
                         sedits.step_pos, i, &event);
                     break;
                 case STEP_EDIT_ADJUST_START_DELAY:
                     if(event.type == SONG_EVENT_NOTE) {
-                        temp = song_get_start_delay(sedits.scene, 
-                            sedits.track, sedits.step_pos);                    
-                        song_set_start_delay(sedits.scene, sedits.track, 
+                        temp = song_get_start_delay(sedits.scene,
+                            sedits.track, sedits.step_pos);
+                        song_set_start_delay(sedits.scene, sedits.track,
                             sedits.step_pos,
-                            seq_utils_clamp(temp + 
-                            seq_utils_warp_change(temp, change, 10), 
+                            seq_utils_clamp(temp +
+                            seq_utils_warp_change(temp, change, 10),
                             SEQ_START_DELAY_MIN, SEQ_START_DELAY_MAX));
                     }
                     sedits.last_adjust_type = STEP_EDIT_ADJUST_START_DELAY;
@@ -504,13 +507,13 @@ void step_edit_update_display(void) {
     char tempstr[GFX_LABEL_LEN];
     struct track_event event;
     gui_clear_status_text_all();
-    sprintf(tempstr, "Edit - Track: %2d Step: %2d", 
+    sprintf(tempstr, "Edit - Track: %2d Step: %2d",
         (sedits.track + 1), (sedits.step_pos + 1));
     gui_set_status_text(0, tempstr);
 
     // left title
     gui_set_status_text_part(1, 0, 3, "R  ");  // ratchet title
-    sprintf(tempstr, "%d  ", song_get_ratchet_mode(sedits.scene, 
+    sprintf(tempstr, "%d  ", song_get_ratchet_mode(sedits.scene,
         sedits.track, sedits.step_pos));
     gui_set_status_text_part(2, 0, 3, tempstr);  // ratchet setting
     switch(sedits.last_adjust_type) {
@@ -533,31 +536,31 @@ void step_edit_update_display(void) {
     if(sedits.event_pos >= 0) {
         for(i = 0; i < SEQ_TRACK_POLY; i ++) {
             if(i == sedits.event_pos) {
-                gui_set_status_highlight_part(2, 3 + (4 * i), 3, 
+                gui_set_status_highlight_part(2, 3 + (4 * i), 3,
                     GFX_HIGHLIGHT_INVERT);
-                gui_set_status_highlight_part(3, 3 + (4 * i), 3, 
+                gui_set_status_highlight_part(3, 3 + (4 * i), 3,
                     GFX_HIGHLIGHT_INVERT);
             }
             else {
-                gui_set_status_highlight_part(2, 3 + (4 * i), 3, 
+                gui_set_status_highlight_part(2, 3 + (4 * i), 3,
                     GFX_HIGHLIGHT_NORMAL);
-                gui_set_status_highlight_part(3, 3 + (4 * i), 3, 
+                gui_set_status_highlight_part(3, 3 + (4 * i), 3,
                     GFX_HIGHLIGHT_NORMAL);
-            }        
-        }        
+            }
+        }
     }
     else {
         gui_set_status_highlight_part(2, 3, 25, GFX_HIGHLIGHT_NORMAL);
         gui_set_status_highlight_part(3, 3, 25, GFX_HIGHLIGHT_NORMAL);
     }
-        
+
     xpos = 3;
     //
     // display data for each event
     //
     for(i = 0; i < SEQ_TRACK_POLY; i ++) {
         // get event
-        song_get_step_event(sedits.scene, sedits.track, 
+        song_get_step_event(sedits.scene, sedits.track,
             sedits.step_pos, i, &event);
 
         // display the step
@@ -580,7 +583,7 @@ void step_edit_update_display(void) {
                         break;
                     case STEP_EDIT_ADJUST_START_DELAY:
                         // display time
-                        temp = song_get_start_delay(sedits.scene, sedits.track, 
+                        temp = song_get_start_delay(sedits.scene, sedits.track,
                                 sedits.step_pos);
                         if(temp == 0) {
                             sprintf(tempstr, "OFF");
@@ -605,7 +608,7 @@ void step_edit_update_display(void) {
                 gui_set_status_text_part(3, xpos, 4, "---");
                 break;
         }
-        xpos += 4;    
+        xpos += 4;
     }
 }
 
@@ -618,15 +621,15 @@ void step_edit_play_step(void) {
     if(seq_ctrl_get_run_state()) {
         return;
     }
-    
+
     // play each note on step
     for(i = 0; i < SEQ_TRACK_POLY; i ++) {
         // get the event and play the note
-        if(song_get_step_event(sedits.scene, sedits.track, 
+        if(song_get_step_event(sedits.scene, sedits.track,
                 sedits.step_pos, i, &event) == -1) {
             continue;
         }
-        
+
         // play the step
         switch(event.type) {
             case SONG_EVENT_NOTE:
@@ -646,7 +649,7 @@ void step_edit_play_step(void) {
                 break;
             default:
                 continue;
-        }                
+        }
     }
 }
 
@@ -659,7 +662,7 @@ void step_edit_stop_notes(void) {
             step_edit_send_note_off(sedits.playing_notes[i]);
             sedits.playing_notes[i] = STEP_EDIT_NOTE_SLOT_FREE;
             sedits.playing_note_timeouts[i] = 0;  // time out note
-        }        
+        }
     }
 }
 
@@ -667,7 +670,7 @@ void step_edit_stop_notes(void) {
 void step_edit_send_note_on(int note, int velocity) {
     struct midi_msg msg;
     midi_utils_enc_note_on(&msg, 0, 0, note, velocity);
-    outproc_deliver_msg(sedits.scene, sedits.track, &msg, 
+    outproc_deliver_msg(sedits.scene, sedits.track, &msg,
         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);  // send note
 }
 
@@ -675,7 +678,7 @@ void step_edit_send_note_on(int note, int velocity) {
 void step_edit_send_note_off(int note) {
     struct midi_msg msg;
     midi_utils_enc_note_off(&msg, 0, 0, note, 0x40);
-    outproc_deliver_msg(sedits.scene, sedits.track, &msg, 
+    outproc_deliver_msg(sedits.scene, sedits.track, &msg,
         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);  // send note
 }
 
@@ -683,7 +686,7 @@ void step_edit_send_note_off(int note) {
 void step_edit_send_cc(int controller, int value) {
     struct midi_msg msg;
     midi_utils_enc_control_change(&msg, 0, 0, controller, value);
-    outproc_deliver_msg(sedits.scene, sedits.track, &msg, 
+    outproc_deliver_msg(sedits.scene, sedits.track, &msg,
         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);  // send note
 }
 
@@ -735,7 +738,7 @@ int step_edit_does_step_contain_event(int type, int data0) {
     // see if the event is already there
     for(i = 0; i < SEQ_TRACK_POLY; i ++) {
         // no data on step
-        if(song_get_step_event(sedits.scene, sedits.track, 
+        if(song_get_step_event(sedits.scene, sedits.track,
                 sedits.step_pos, i, &event) == -1) {
             continue;
         }
@@ -746,4 +749,3 @@ int step_edit_does_step_contain_event(int type, int data0) {
     }
     return -1;
 }
-

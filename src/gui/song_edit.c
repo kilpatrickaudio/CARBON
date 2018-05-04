@@ -74,6 +74,7 @@ void song_edit_set_enable(int enable) {
     if(enable) {
         sngedits.enable = 1;
         sngedits.edit_timeout = panel_menu_get_timeout();
+        panel_menu_set_mode(PANEL_MENU_NONE);  // disable any menu mode
         gui_grid_clear_overlay();
         gui_grid_set_overlay_enable(1);
         gui_clear_status_text_all();
@@ -84,7 +85,7 @@ void song_edit_set_enable(int enable) {
     else if(sngedits.enable) {
         sngedits.enable = 0;
         sngedits.edit_timeout = 0;
-        gui_grid_set_overlay_enable(0);    
+        gui_grid_set_overlay_enable(0);
         gui_clear_status_text_all();  // XXX get rid of this
         gui_set_status_override(0);  // give back status display
     }
@@ -98,7 +99,7 @@ void song_edit_adjust_cursor(int change, int shift) {
     }
     // adjust the cursor position
     else {
-        sngedits.edit_pos = seq_utils_clamp(sngedits.edit_pos + change, 
+        sngedits.edit_pos = seq_utils_clamp(sngedits.edit_pos + change,
             0, (SEQ_SONG_LIST_ENTRIES - 1));
     }
     song_edit_update_display();
@@ -113,7 +114,7 @@ void song_edit_adjust_scene(int change, int shift) {
     }
     // edit the existing scene
     else {
-        song_set_song_list_scene(sngedits.edit_pos, 
+        song_set_song_list_scene(sngedits.edit_pos,
             seq_utils_clamp(scene + change, 0, SEQ_NUM_SCENES));
     }
     song_edit_update_display();
@@ -165,7 +166,7 @@ void song_edit_update_display(void) {
     for(row = 0; row < SONG_EDIT_DISPLAY_SLOTS; row ++) {
         entry = sngedits.display_pos + row;
         if(entry == sngedits.edit_pos) {
-            sprintf(tempstr, ">%3d: ", (entry + 1));            
+            sprintf(tempstr, ">%3d: ", (entry + 1));
         }
         else {
             sprintf(tempstr, " %3d: ", (entry + 1));
@@ -174,16 +175,16 @@ void song_edit_update_display(void) {
         // get scene
         scene = song_get_song_list_scene(entry);
         if(scene == SONG_LIST_SCENE_NULL) {
-            gui_set_status_text_part(row + 1, 6, 7, "-------");  // scene            
+            gui_set_status_text_part(row + 1, 6, 7, "-------");  // scene
             gui_set_status_text_part(row + 1, 14, 5, "-----");  // bars/beats
             gui_set_status_text_part(row + 1, 20, 3, "---");  // kbtrans
         }
         else {
             sprintf(tempstr, "Scene %d", (scene + 1));
             gui_set_status_text_part(row + 1, 6, 7, tempstr);  // scene
-            sprintf(tempstr, "%5d", song_get_song_list_length(entry));      
+            sprintf(tempstr, "%5d", song_get_song_list_length(entry));
             gui_set_status_text_part(row + 1, 14, 5, tempstr);  // bars/beats
-            panel_utils_transpose_to_str(tempstr, 
+            panel_utils_transpose_to_str(tempstr,
                 song_get_song_list_kbtrans(entry));
             gui_set_status_text_part(row + 1, 20, 3, tempstr);  // kbtrans
         }
@@ -191,4 +192,3 @@ void song_edit_update_display(void) {
     // make the mode state active for a while
     sngedits.edit_timeout = panel_menu_get_timeout();
 }
-
