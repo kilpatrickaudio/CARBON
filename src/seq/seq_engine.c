@@ -42,14 +42,6 @@
 #include "../util/state_change_events.h"
 #include <limits.h>
 
-//
-// recording states for each track - this is a sub-state to handle starting
-// and stopping track or step recording once the main record mode is active
-//
-#define SEQ_ENGINE_TRACK_RECORD_IDLE 0  // track recording is idle
-#define SEQ_ENGINE_TRACK_RECORD_START 1  // track recording is triggered
-#define SEQ_ENGINE_TRACK_RECORD_RUN 2  // track record is running
-
 // internal settings
 #define SEQ_ENGINE_MAX_NOTES 16  // active notes per track
 #define SEQ_ENGINE_KEYBOARD_Q_LEN 16  // number of events in the keyboard queue
@@ -99,9 +91,8 @@ struct seq_engine_state {
     // song mode
     struct song_mode_state sngmode;  // the song mode current data
     // record state
-    int record_state[SEQ_NUM_TRACKS];  // recording state for step or RT mode
-    int record_pos[SEQ_NUM_TRACKS];  // step recording = step position
-                                     // RT recording = recording start tick per track
+    int record_pos;  // step recording = step position
+                     // RT recording = recording start tick per track
     int record_event_count;  // number of recorded events in live mode
     // live state
     uint8_t live_damper_pedal[SEQ_NUM_TRACKS];  // 0 = no hold, 1 = hold
@@ -138,8 +129,8 @@ void seq_engine_live_stop_all_notes(int track);
 void seq_engine_live_passthrough(int track, struct midi_msg *msg);
 // recording stuff
 void seq_engine_record_event(struct midi_msg *msg);
-void seq_engine_step_sequence_advance(int track);
-void seq_engine_step_sequence_shuttle(int track, int change);
+void seq_engine_step_sequence_advance(void);
+void seq_engine_step_sequence_shuttle(int change);
 void seq_engine_record_write_tracks(void);
 // change event handlers
 void seq_engine_live_mode_changed(int newval);
@@ -186,10 +177,7 @@ void seq_engine_init(void) {
     }
 
     // reset record info
-    for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
-        sestate.record_pos[j] = 0;
-        sestate.record_state[j] = SEQ_ENGINE_TRACK_RECORD_IDLE;
-    }
+    sestate.record_pos = 0;
     sestate.record_event_count = 0;
 
     // reset playback info
@@ -300,7 +288,7 @@ void seq_engine_timer_task(void) {
 // run the sequencer - called on each clock tick
 void seq_engine_run(uint32_t tick_count) {
     struct track_event event;
-    int i, track, temp, live_active;
+    int i, track, live_active;
 
     // position was reset
     if(tick_count == 0) {
@@ -375,8 +363,8 @@ void seq_engine_run(uint32_t tick_count) {
             // this is so we can catch notes played a half step early
             // only if we are armed and in the last half of the step time
             // all tracks will be armed together
-            if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM &&
-                    seq_ctrl_get_track_select(track) &&
+            if(track == sestate.first_track &&
+                    seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM &&
                     seq_engine_is_first_step(track) &&
                     (sestate.clock_div_count[track] >
                     (sestate.step_size[track] >> 1))) {
@@ -389,13 +377,12 @@ void seq_engine_run(uint32_t tick_count) {
                 // handle starting and stopping recording - start of a loop
                 // only work on tracks which are selected for recording
                 if(seq_engine_is_first_step(track) &&
-                        seq_ctrl_get_track_select(track)) {
+                        track == sestate.first_track) {
                     // we are armed for recording - let's start RT recording
                     // this would only be triggered if we start running while
                     // record is already armed
                     if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
-                        sestate.record_pos[track] = tick_count -
-                            (sestate.step_size[track] >> 1);
+                        sestate.record_pos = tick_count - (sestate.step_size[track] >> 1);
                         // all selected tracks will go into run mode
                         seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT);
                     }
@@ -418,38 +405,24 @@ void seq_engine_run(uint32_t tick_count) {
                     sestate.step_pos[track]);
 
                 // manage step position
-                temp = seq_engine_move_to_next_step(track);
+                seq_engine_move_to_next_step(track);
             }
 
             // give half step lead-out to RT recording
-            if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_RT &&
-                    seq_ctrl_get_track_select(track) &&
+            if(track == sestate.first_track &&
+                seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_RT &&
                     seq_engine_is_first_step(track) &&
                     (sestate.clock_div_count[track] ==
                     (sestate.step_size[track] >> 1))) {
-                // we stop recording on this track
-                sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_IDLE;
-                // check all the tracks to see if they are all idle
-                // if so we need to get out of RT recording mode
-                temp = 0;
-                for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
-                    // track is still active
-                    if(seq_ctrl_get_track_select(track) &&
-                            sestate.record_state[i] != SEQ_ENGINE_TRACK_RECORD_IDLE) {
-                        temp = 1;
-                    }
-                }
-                // no selected tracks are still recording
-                if(temp == 0) {
-                    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // end recording mode
-                    // handle record finalizing if we actually got some notes
-                    if(sestate.record_event_count > 0) {
-                        seq_engine_record_write_tracks();
-                        // call up "as recorded" pattern
-                        seq_ctrl_set_pattern_type(track, PATTERN_AS_RECORDED);
-                        // cancel live mode so we will hear the track right away
-                        seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
-                    }
+                // end recording mode
+                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
+                // handle record finalizing if we actually got some notes
+                if(sestate.record_event_count > 0) {
+                    seq_engine_record_write_tracks();
+                    // call up "as recorded" pattern
+                    seq_ctrl_set_pattern_type(track, PATTERN_AS_RECORDED);
+                    // cancel live mode so we will hear the track right away
+                    seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
                 }
             }
             // handle step timing
@@ -613,69 +586,36 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
 
 // the step record position was manually changed
 void seq_engine_step_rec_pos_changed(int change) {
-    int track;
-    // handle each track
-    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        // ignore unselected tracks
-        if(!seq_ctrl_get_track_select(track)) {
-            continue;
+    // see if we need to start recording mode
+    // this might be the first event that enables recording
+    if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
+        // no clock - time for step mode
+        if(!midi_clock_get_running()) {
+            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);
         }
-        // see if we need to start recording mode
-        // this might be the first event that enables recording
-        if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM) {
-            // no clock - time for step mode
-            if(!midi_clock_get_running()) {
-                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_STEP);
-                sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_RUN;  // force run
-            }
-        }
-        // make sure we can record on this track
-        if(sestate.record_state[track] == SEQ_ENGINE_TRACK_RECORD_IDLE) {
-            continue;
-        }
-        seq_engine_step_sequence_shuttle(track, change);
     }
+    seq_engine_step_sequence_shuttle(change);
 }
 
 // recording was started or stopped by the user
 void seq_engine_record_mode_changed(int newval) {
-    int track;
     switch(newval) {
         case SEQ_CTRL_RECORD_IDLE:
-            for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-                sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_IDLE;
-                // if the track is selected then we might have some notes
-                // playing which should be stopped
-                if(seq_ctrl_get_track_select(track)) {
-                    seq_engine_live_stop_all_notes(track);
-                }
-            }
+            seq_engine_live_stop_all_notes(sestate.first_track);
             gui_grid_set_overlay_enable(0);
             break;
         case SEQ_CTRL_RECORD_ARM:
             break;
         case SEQ_CTRL_RECORD_STEP:
-            for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-                // only set up selected tracks
-                if(seq_ctrl_get_track_select(track)) {
-                    sestate.record_pos[track] = sestate.motion_start[track];
-                    sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_START;
-                }
-            }
+            sestate.record_pos = sestate.motion_start[sestate.first_track];
             gui_grid_clear_overlay();
             gui_grid_set_overlay_enable(1);
             sestate.record_event_count = 0;  // reset note count
             seq_engine_highlight_step_record_pos();
             break;
         case SEQ_CTRL_RECORD_RT:
-            for(track= 0; track < SEQ_NUM_TRACKS; track ++) {
-                // only set up selected tracks
-                if(seq_ctrl_get_track_select(track)) {
-                    sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_RUN;
-                    sestate.record_pos[track] = midi_clock_get_tick_pos();
-                }
-                sestate.record_event_count = 0;  // reset note count
-            }
+            sestate.record_pos = midi_clock_get_tick_pos();
+            sestate.record_event_count = 0;  // reset note count
             break;
         default:
             break;
@@ -1387,7 +1327,7 @@ void seq_engine_live_passthrough(int track, struct midi_msg *msg) {
 //
 // record the event
 void seq_engine_record_event(struct midi_msg *msg) {
-    int i, temp, track;
+    int i;
     struct track_event trkevent;
 
     // see if we need to start recording mode
@@ -1427,73 +1367,49 @@ void seq_engine_record_event(struct midi_msg *msg) {
                 break;
         }
 
-        // put data in each track
-        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-            // make sure we can record on this track
-            if(sestate.record_state[track] == SEQ_ENGINE_TRACK_RECORD_IDLE) {
-                continue;
-            }
-            // handle different message types
-            switch(msg->status & 0xf0) {
-                case MIDI_NOTE_OFF:
-                    // time to advance
-                    if(sestate.record_event_count <= 0) {
-                        seq_engine_step_sequence_advance(track);
-                        sestate.record_event_count = 0;
-                    }
-                    break;
-                case MIDI_NOTE_ON:
-                    // record is not started on this step
-                    if(sestate.record_state[track] == SEQ_ENGINE_TRACK_RECORD_START) {
-                        sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_RUN;
-                    }
-                    // make sure we have enough space to record
-                    if(sestate.record_event_count < SEQ_TRACK_POLY) {
-                        // record the note
-                        trkevent.type = SONG_EVENT_NOTE;
-                        trkevent.data0 = msg->data0;
-                        trkevent.data1 = msg->data1;
-                        trkevent.length = sestate.step_size[track];
-                        song_add_step_event(sestate.scene_current, track,
-                            sestate.record_pos[track], &trkevent);
-                    }
-                    break;
-                case MIDI_CONTROL_CHANGE:
-                    // handle damper pedal for inserting rests - all notes must be released
-                    if(msg->data0 == MIDI_CONTROLLER_DAMPER && msg->data1 == 127 &&
-                            sestate.record_event_count == 0) {
-                        song_clear_step(sestate.scene_current, track, sestate.record_pos[track]);
-                        // move ahead to skip step
-                        seq_engine_step_sequence_advance(track);
-                    }
-                    // other kinds of CC
-                    else if(msg->data0 < MIDI_CONTROLLER_ALL_SOUNDS_OFF) {
-                        // add / edit the CC
-                        trkevent.type = SONG_EVENT_CC;
-                        trkevent.data0 = msg->data0;
-                        trkevent.data1 = msg->data1;
-                        song_add_step_event(sestate.scene_current, track,
-                            sestate.record_pos[track], &trkevent);
-                    }
-                    break;
-                default:
-                    // only NOTE events can be recorded in step sequencer mode
-                    break;
-            }
-        }
-        // check if we should end record mode (all tracks have reached their ends)
-        temp = 0;
-        for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
-            // track is still active
-            if(seq_ctrl_get_track_select(i) &&
-                    sestate.record_state[i] != SEQ_ENGINE_TRACK_RECORD_IDLE) {
-                temp = 1;
-            }
-        }
-        // no selected tracks are still recording
-        if(temp == 0) {
-            seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // end recording mode
-            seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);  // turn off live mode
+        // handle different message types
+        switch(msg->status & 0xf0) {
+            case MIDI_NOTE_OFF:
+                // time to advance
+                if(sestate.record_event_count <= 0) {
+                    seq_engine_step_sequence_advance();
+                    sestate.record_event_count = 0;
+                }
+                break;
+            case MIDI_NOTE_ON:
+                // make sure we have enough space to record
+                if(sestate.record_event_count < SEQ_TRACK_POLY) {
+                    // record the note
+                    trkevent.type = SONG_EVENT_NOTE;
+                    trkevent.data0 = msg->data0;
+                    trkevent.data1 = msg->data1;
+                    trkevent.length = sestate.step_size[sestate.first_track];
+                    song_add_step_event(sestate.scene_current,
+                        sestate.first_track, sestate.record_pos, &trkevent);
+                }
+                break;
+            case MIDI_CONTROL_CHANGE:
+                // handle damper pedal for inserting rests - all notes must be released
+                if(msg->data0 == MIDI_CONTROLLER_DAMPER && msg->data1 == 127 &&
+                        sestate.record_event_count == 0) {
+                    song_clear_step(sestate.scene_current,
+                        sestate.first_track, sestate.record_pos);
+                    // move ahead to skip step
+                    seq_engine_step_sequence_advance();
+                }
+                // other kinds of CC
+                else if(msg->data0 < MIDI_CONTROLLER_ALL_SOUNDS_OFF) {
+                    // add / edit the CC
+                    trkevent.type = SONG_EVENT_CC;
+                    trkevent.data0 = msg->data0;
+                    trkevent.data1 = msg->data1;
+                    song_add_step_event(sestate.scene_current,
+                        sestate.first_track, sestate.record_pos, &trkevent);
+                }
+                break;
+            default:
+                // only NOTE events can be recorded in step sequencer mode
+                break;
         }
     }
     // handle realtime record
@@ -1547,24 +1463,23 @@ void seq_engine_record_event(struct midi_msg *msg) {
 }
 
 // advance the step sequencer position and possibly end recording
-void seq_engine_step_sequence_advance(int track) {
-    sestate.record_pos[track] =
-        (sestate.record_pos[track] + 1) & (SEQ_NUM_STEPS - 1);
-    sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_START;
+void seq_engine_step_sequence_advance(void) {
+    sestate.record_pos = (sestate.record_pos + 1) & (SEQ_NUM_STEPS - 1);
     // end the sequence
-    if(sestate.record_pos[track] ==
-            ((sestate.motion_start[track] + sestate.motion_len[track]) &
-            (SEQ_NUM_STEPS - 1))) {
-        sestate.record_state[track] = SEQ_ENGINE_TRACK_RECORD_IDLE;
+    if(sestate.record_pos == ((sestate.motion_start[sestate.first_track] +
+            sestate.motion_len[sestate.first_track]) & (SEQ_NUM_STEPS - 1))) {
+        seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // end recording mode
+        seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);  // turn off live mode
         return;
     }
     seq_engine_highlight_step_record_pos();
 }
 
 // move the step sequence position manually
-void seq_engine_step_sequence_shuttle(int track, int change) {
+void seq_engine_step_sequence_shuttle(int change) {
     // compute new position and wrap around
-    seq_engine_compute_next_pos(track, &sestate.record_pos[track], change);
+    seq_engine_compute_next_pos(sestate.first_track,
+        &sestate.record_pos, change);
     seq_engine_highlight_step_record_pos();
 }
 
@@ -1600,9 +1515,9 @@ void seq_engine_record_write_tracks(void) {
             // scan the note list and figure out which pitches are in use
             for(rn = 0; rn < sestate.record_event_count; rn ++) {
                 // make sure this event fits within our desired step range
-                if(sestate.record_events[rn].tick_pos < sestate.record_pos[track] ||
+                if(sestate.record_events[rn].tick_pos < sestate.record_pos ||
                         sestate.record_events[rn].tick_pos >=
-                        (sestate.record_pos[track] + (sestate.motion_len[track] *
+                        (sestate.record_pos + (sestate.motion_len[track] *
                         sestate.step_size[track]))) {
                     continue;
                 }
@@ -1629,14 +1544,14 @@ void seq_engine_record_write_tracks(void) {
         // attempt to insert recorded events into tracks
         for(rn = 0; rn < sestate.record_event_count; rn ++) {
             // make sure this event fits within our desired step range
-            if(sestate.record_events[rn].tick_pos < sestate.record_pos[track] ||
+            if(sestate.record_events[rn].tick_pos < sestate.record_pos ||
                     sestate.record_events[rn].tick_pos >=
-                    (sestate.record_pos[track] + (sestate.motion_len[track] *
+                    (sestate.record_pos + (sestate.motion_len[track] *
                     sestate.step_size[track]))) {
                 continue;
             }
             // calculate actual step on track
-            step = (((sestate.record_events[rn].tick_pos - sestate.record_pos[track]) /
+            step = (((sestate.record_events[rn].tick_pos - sestate.record_pos) /
                 sestate.step_size[track]) + sestate.motion_start[track]) & (SEQ_NUM_STEPS - 1);
             // insert event
             switch(sestate.record_events[rn].msg.status) {
@@ -2105,8 +2020,7 @@ void seq_engine_send_all_notes_off(int track) {
 // highlight the step position on the first selected track
 void seq_engine_highlight_step_record_pos() {
     gui_grid_clear_overlay();
-    gui_grid_set_overlay_color(sestate.record_pos[seq_ctrl_get_first_track()],
-        GUI_OVERLAY_HIGH);
+    gui_grid_set_overlay_color(sestate.record_pos, GUI_OVERLAY_HIGH);
 }
 
 // checks if a note is within the supplied key split range
