@@ -64,7 +64,6 @@ struct seq_state {
 struct seq_state sstate;  // used by seq_engine as an extern
 
 // local functions
-void seq_ctrl_cancel_record(void);
 void seq_ctrl_refresh_modules(void);
 void seq_ctrl_set_current_song(int song);
 void seq_ctrl_set_run_lockout(int lockout);
@@ -266,8 +265,7 @@ int seq_ctrl_load_song(int song) {
         log_error("scls - song invalid: %d", song);
         return -1;
     }
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     seq_ctrl_set_run_lockout(1);  // lock out UI and MIDI
     seq_ctrl_set_run_state(0);
     // start the loading process
@@ -283,8 +281,7 @@ int seq_ctrl_save_song(int song) {
         log_error("scss - song invalid: %d", song);
         return -1;
     }
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     seq_ctrl_set_run_lockout(0);  // lock out UI and MIDI
     seq_ctrl_set_run_state(0);
     song_save(song);  // start the saving process
@@ -293,8 +290,7 @@ int seq_ctrl_save_song(int song) {
 
 // clear the current song
 void seq_ctrl_clear_song(void) {
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     seq_ctrl_set_run_lockout(0);  // lock out UI and MIDI
     seq_ctrl_set_run_state(0);
     song_clear();
@@ -311,8 +307,7 @@ void seq_ctrl_set_scene(int scene) {
         log_error("scss - scene invalid: %d", scene);
         return;
     }
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     // request the engine to change the scene at the next opportunity
     seq_engine_change_scene(scene);
 }
@@ -323,8 +318,7 @@ void seq_ctrl_copy_scene(int dest_scene) {
         log_error("sccs - scene invalid: %d", dest_scene);
         return;
     }
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     song_copy_scene(dest_scene, seq_engine_get_current_scene());
 }
 
@@ -345,8 +339,7 @@ void seq_ctrl_set_run_state(int run) {
 
 // reset the playback to the start - does not change playback state
 void seq_ctrl_reset_pos(void) {
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     // if we are in song mode, reset the song position too
     if(sstate.song_mode) {
         seq_engine_song_mode_reset();
@@ -356,8 +349,7 @@ void seq_ctrl_reset_pos(void) {
 
 // reset a single track
 void seq_ctrl_reset_track(int track) {
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     // reset only the current track
     seq_engine_reset_track(track);
 }
@@ -385,8 +377,7 @@ int seq_ctrl_get_track_select(int track) {
 // set the current track selector
 void seq_ctrl_set_track_select(int track, int select) {
     int i, temp;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     if(track < 0 || track >= SEQ_NUM_TRACKS) {
         log_error("scsts - track invalid: %d", track);
         return;
@@ -502,19 +493,27 @@ int seq_ctrl_get_record_mode(void) {
 
 // change the record mode - to be used by seq_ctrl and seq_engine
 void seq_ctrl_set_record_mode(int mode) {
-    sstate.record_mode = mode;
-    // disable editing modes
-    if(song_edit_get_enable()) {
-        song_edit_set_enable(0);
-    }
-    if(step_edit_get_enable()) {
-        step_edit_set_enable(0);
-    }
-    // disable KB trans mode
-    if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_KBTRANS) {
-        seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
+    int i;
+    // if we are arming
+    if(mode != SEQ_CTRL_RECORD_IDLE) {
+        // disable editing modes
+        if(song_edit_get_enable()) {
+            song_edit_set_enable(0);
+        }
+        if(step_edit_get_enable()) {
+            step_edit_set_enable(0);
+        }
+        // disable KB trans mode
+        if(seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_KBTRANS) {
+            seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
+        }
+        // make sure only first track is selected
+        for(i = sstate.first_track + 1; i < SEQ_NUM_TRACKS; i ++) {
+            seq_ctrl_set_track_select(i, 0);
+        }
     }
     // call this directly
+    sstate.record_mode = mode;
     seq_engine_record_mode_changed(sstate.record_mode);
     // fire event
     state_change_fire1(SCE_CTRL_RECORD_MODE, sstate.record_mode);
@@ -932,8 +931,7 @@ void seq_ctrl_set_motion_start(int track, int start) {
 // adjust the motion start of the selected scene and track(s)
 void seq_ctrl_adjust_motion_start(int change) {
     int track, val;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     val = seq_utils_wrap(song_get_motion_start(seq_engine_get_current_scene(),
         sstate.first_track) + change,
         0, SEQ_NUM_STEPS - 1);
@@ -968,8 +966,7 @@ void seq_ctrl_set_motion_length(int track, int length) {
 // adjust the motion length of the selected scene and track(s)
 void seq_ctrl_adjust_motion_length(int change) {
     int track, val;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     val = seq_utils_clamp(song_get_motion_length(seq_engine_get_current_scene(),
         sstate.first_track) + change,
         1, SEQ_NUM_STEPS);
@@ -1057,8 +1054,7 @@ void seq_ctrl_adjust_pattern_type(int change) {
 // set the motion dir of the track - supports SEQ_CTRL_TRACK_OMNI
 void seq_ctrl_set_motion_dir(int track, int dir) {
     int i, val;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     if(dir) {
         val = 1;
     }
@@ -1084,8 +1080,7 @@ void seq_ctrl_set_motion_dir(int track, int dir) {
 // adjust the motion direction of the selected scene and track(s)
 void seq_ctrl_flip_motion_dir(void) {
     int track, val;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     val = song_get_motion_dir(seq_engine_get_current_scene(),
         sstate.first_track);
     if(val) {
@@ -1110,8 +1105,7 @@ int seq_ctrl_get_mute_select(int track) {
 // set the current mute selector - supports SEQ_CTRL_TRACK_OMNI
 void seq_ctrl_set_mute_select(int track, int mute) {
     int i, val;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     if(mute) {
         val = 1;
     }
@@ -1263,8 +1257,7 @@ void seq_ctrl_set_arp_enable(int track, int enable) {
 // toggle whether arp mode is enabled on the current tracks
 void seq_ctrl_flip_arp_enable(void) {
     int track, val;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     val = song_get_arp_enable(seq_engine_get_current_scene(),
         sstate.first_track);
     if(val) {
@@ -1285,8 +1278,7 @@ void seq_ctrl_flip_arp_enable(void) {
 void seq_ctrl_make_magic(void) {
     int track, i, start, len, step, temp;
     struct track_event event;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     // process currently selected tracks
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         if(!sstate.track_select[track]) {
@@ -1324,8 +1316,7 @@ void seq_ctrl_make_magic(void) {
 // clear tracks - affects the current active tracks / region
 void seq_ctrl_make_clear(void) {
     int track, i, start, len, step;
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     // process currently selected tracks
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         if(!sstate.track_select[track]) {
@@ -1390,8 +1381,7 @@ void midi_clock_ticked_straight(uint32_t tick_count) {
 
 // the clock position was reset
 void midi_clock_pos_reset(void) {
-    // cancel recording if active
-    seq_ctrl_cancel_record();
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     // if we are in song mode, reset the song position too
     if(sstate.song_mode) {
         seq_engine_song_mode_reset();
@@ -1413,13 +1403,6 @@ void midi_clock_ext_sync_changed(int synced) {
 //
 // local functions
 //
-// cancel record if we do something that would conflict with record
-void seq_ctrl_cancel_record(void) {
-    if(sstate.record_mode != SEQ_CTRL_RECORD_IDLE) {
-        seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
-    }
-}
-
 // refresh modules when the song is loaded or cleared
 void seq_ctrl_refresh_modules(void) {
     int i, scene, track;
