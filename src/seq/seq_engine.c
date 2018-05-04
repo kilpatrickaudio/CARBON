@@ -688,7 +688,7 @@ void seq_engine_arp_stop_note(int track, struct midi_msg *msg) {
 // handle MIDI from keyboards and MIDI input ports
 void seq_engine_handle_midi_msg(struct midi_msg *msg) {
     struct midi_msg send_msg;
-    int track;
+    int track, live_mode, record_mode, run_state, step_edit_enable;
 
     // handle system command and realtime
     if((msg->status & 0xf0) == 0xf0) {
@@ -740,6 +740,11 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
         }
 
         // check each track
+        live_mode = seq_ctrl_get_live_mode();
+        record_mode = seq_ctrl_get_record_mode();
+        run_state = seq_ctrl_get_run_state();
+        step_edit_enable = step_edit_get_enable();
+
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             // is the track unselected?
             if(seq_ctrl_get_track_select(track) == 0) {
@@ -749,10 +754,10 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg) {
             // this will send even if we are muted since recording
             // can happen if a track is muted
             if(seq_ctrl_get_track_select(track) &&
-                    (seq_ctrl_get_live_mode() == SEQ_CTRL_LIVE_ON ||
-                    sestate.autolive ||
-                    seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE ||
-                    (step_edit_get_enable() && !seq_ctrl_get_run_state()))) {
+                    (live_mode == SEQ_CTRL_LIVE_ON ||
+                    (sestate.autolive && live_mode != SEQ_CTRL_LIVE_KBTRANS) ||
+                    record_mode != SEQ_CTRL_RECORD_IDLE ||
+                    (step_edit_enable && !run_state))) {
                 seq_engine_live_send_msg(track, &send_msg);
             }
             // handle pass-through messages all the time
