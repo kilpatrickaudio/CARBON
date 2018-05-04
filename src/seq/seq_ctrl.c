@@ -493,7 +493,8 @@ int seq_ctrl_get_record_mode(void) {
 
 // change the record mode - to be used by seq_ctrl and seq_engine
 void seq_ctrl_set_record_mode(int mode) {
-    int i;
+    int i, oldmode;
+    oldmode = sstate.record_mode;
     // if we are arming
     if(mode != SEQ_CTRL_RECORD_IDLE) {
         // disable editing modes
@@ -512,9 +513,9 @@ void seq_ctrl_set_record_mode(int mode) {
             seq_ctrl_set_track_select(i, 0);
         }
     }
-    // call this directly
     sstate.record_mode = mode;
-    seq_engine_record_mode_changed(sstate.record_mode);
+    // call this directly
+    seq_engine_record_mode_changed(oldmode, sstate.record_mode);
     // fire event
     state_change_fire1(SCE_CTRL_RECORD_MODE, sstate.record_mode);
 }

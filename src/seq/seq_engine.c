@@ -414,16 +414,17 @@ void seq_engine_run(uint32_t tick_count) {
                     seq_engine_is_first_step(track) &&
                     (sestate.clock_div_count[track] ==
                     (sestate.step_size[track] >> 1))) {
-                // end recording mode
-                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
                 // handle record finalizing if we actually got some notes
                 if(sestate.record_event_count > 0) {
+                    // write out data
                     seq_engine_record_write_tracks();
                     // call up "as recorded" pattern
                     seq_ctrl_set_pattern_type(track, PATTERN_AS_RECORDED);
                     // cancel live mode so we will hear the track right away
                     seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
                 }
+                // start recording again
+                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT);
             }
             // handle step timing
             sestate.clock_div_count[track] ++;
@@ -598,9 +599,12 @@ void seq_engine_step_rec_pos_changed(int change) {
 }
 
 // recording was started or stopped by the user
-void seq_engine_record_mode_changed(int newval) {
+void seq_engine_record_mode_changed(int oldval, int newval) {
     switch(newval) {
         case SEQ_CTRL_RECORD_IDLE:
+            if(oldval == SEQ_CTRL_RECORD_RT) {
+                seq_engine_record_write_tracks();  // try writing data if we canceled mid-way
+            }
             seq_engine_live_stop_all_notes(sestate.first_track);
             gui_grid_set_overlay_enable(0);
             break;
@@ -1486,7 +1490,7 @@ void seq_engine_step_sequence_shuttle(int change) {
 // write the recorded tracks to the song
 // if there is no data then the song is not overwritten
 void seq_engine_record_write_tracks(void) {
-    int i, j, rn, track, step, temp;
+    int i, j, rn, step, temp;
     int damper_held;
     int used_notes[128];  // note numbers
     struct track_event trkevent;
@@ -1496,119 +1500,104 @@ void seq_engine_record_write_tracks(void) {
         return;
     }
 
+    // keep track of damper state
+    damper_held = 0;
+
     // event times are offset by approx. 1/2 step time
-    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-        // keep track of damper state
-        damper_held = 0;
-        // skip unselected tracks
-        if(!seq_ctrl_get_track_select(track)) {
-            continue;
+    // for drum track mode we need to figure out which notes are in our
+    // recording and then clear them from the existing recording (selective
+    // overdub) mode
+    if(sestate.track_type[sestate.first_track] == SONG_TRACK_TYPE_DRUM) {
+        // clear the used notes list
+        for(i = 0; i < 128; i ++) {
+            used_notes[i] = 0;
         }
-        // for drum track mode we need to figure out which notes are in our
-        // recording and then clear them from the existing recording (selective
-        // overdub) mode
-        if(sestate.track_type[track] == SONG_TRACK_TYPE_DRUM) {
-            // clear the used notes list
-            for(i = 0; i < 128; i ++) {
-                used_notes[i] = 0;
-            }
-            // scan the note list and figure out which pitches are in use
-            for(rn = 0; rn < sestate.record_event_count; rn ++) {
-                // make sure this event fits within our desired step range
-                if(sestate.record_events[rn].tick_pos < sestate.record_pos ||
-                        sestate.record_events[rn].tick_pos >=
-                        (sestate.record_pos + (sestate.motion_len[track] *
-                        sestate.step_size[track]))) {
-                    continue;
-                }
-                // flag the note
-                if(sestate.record_events[rn].msg.status == MIDI_NOTE_ON) {
-                    used_notes[sestate.record_events[rn].msg.data0 & 0x7f] = 1;
-                }
-            }
-            // scan the existing track and remove notes as necessary
-            for(i = 0; i < sestate.motion_len[track]; i ++) {
-                step = (sestate.motion_start[track] + i) &
-                    (SEQ_NUM_STEPS - 1);
-                // check events on step that match a note that exists in our recording
-                for(j = 0; j < SEQ_TRACK_POLY; j ++) {
-                    if(song_get_step_event(sestate.scene_current, track, step, j, &trkevent) == -1) {
-                        continue;
-                    }
-                    if(trkevent.type == SONG_EVENT_NOTE && used_notes[trkevent.data0 & 0x7f] == 1) {
-                        song_clear_step_event(sestate.scene_current, track, step, j);
-                    }
-                }
-            }
-        }
-        // attempt to insert recorded events into tracks
+        // scan the note list and figure out which pitches are in use
         for(rn = 0; rn < sestate.record_event_count; rn ++) {
             // make sure this event fits within our desired step range
             if(sestate.record_events[rn].tick_pos < sestate.record_pos ||
                     sestate.record_events[rn].tick_pos >=
-                    (sestate.record_pos + (sestate.motion_len[track] *
-                    sestate.step_size[track]))) {
+                    (sestate.record_pos + (sestate.motion_len[sestate.first_track] *
+                    sestate.step_size[sestate.first_track]))) {
                 continue;
             }
-            // calculate actual step on track
-            step = (((sestate.record_events[rn].tick_pos - sestate.record_pos) /
-                sestate.step_size[track]) + sestate.motion_start[track]) & (SEQ_NUM_STEPS - 1);
-            // insert event
-            switch(sestate.record_events[rn].msg.status) {
-                case MIDI_NOTE_ON:
-                    // key split excludes this note on this track
-                    if(seq_ctrl_get_num_tracks_selected() > 1 &&
-                            seq_engine_check_key_split_range(sestate.key_split[track],
-                            trkevent.data0) == 0) {
-                        break;
-                    }
-                    trkevent.type = SONG_EVENT_NOTE;
-                    trkevent.data0 = sestate.record_events[rn].msg.data0;
-                    trkevent.data1 = sestate.record_events[rn].msg.data1;
-                    // note was held down past loop end (tick_len is 0)
-                    if(sestate.record_events[rn].tick_len == 0) {
-                        trkevent.length = (((sestate.motion_start[track] +
-                            sestate.motion_len[track]) - step) &
-                            (SEQ_NUM_STEPS - 1)) * sestate.step_size[track];
-                    }
-                    // proper note length
-                    else {
-                        trkevent.length = sestate.record_events[rn].tick_len;
-                    }
-                    song_add_step_event(sestate.scene_current, track, step, &trkevent);
+            // flag the note
+            if(sestate.record_events[rn].msg.status == MIDI_NOTE_ON) {
+                used_notes[sestate.record_events[rn].msg.data0 & 0x7f] = 1;
+            }
+        }
+        // scan the existing track and remove notes as necessary
+        for(i = 0; i < sestate.motion_len[sestate.first_track]; i ++) {
+            step = (sestate.motion_start[sestate.first_track] + i) &
+                (SEQ_NUM_STEPS - 1);
+            // check events on step that match a note that exists in our recording
+            for(j = 0; j < SEQ_TRACK_POLY; j ++) {
+                if(song_get_step_event(sestate.scene_current,
+                        sestate.first_track, step, j, &trkevent) == -1) {
+                    continue;
+                }
+                if(trkevent.type == SONG_EVENT_NOTE && used_notes[trkevent.data0 & 0x7f] == 1) {
+                    song_clear_step_event(sestate.scene_current,
+                        sestate.first_track, step, j);
+                }
+            }
+        }
+    }
+
+    // attempt to insert recorded events into track
+    for(rn = 0; rn < sestate.record_event_count; rn ++) {
+        // make sure this event fits within our desired step range
+        if(sestate.record_events[rn].tick_pos < sestate.record_pos ||
+                sestate.record_events[rn].tick_pos >=
+                (sestate.record_pos + (sestate.motion_len[sestate.first_track] *
+                sestate.step_size[sestate.first_track]))) {
+            continue;
+        }
+        // calculate actual step on track
+        step = (((sestate.record_events[rn].tick_pos - sestate.record_pos) /
+            sestate.step_size[sestate.first_track]) +
+            sestate.motion_start[sestate.first_track]) & (SEQ_NUM_STEPS - 1);
+        // insert event
+        switch(sestate.record_events[rn].msg.status) {
+            case MIDI_NOTE_ON:
+                // key split excludes this note on this track
+                if(seq_ctrl_get_num_tracks_selected() > 1 &&
+                        seq_engine_check_key_split_range(sestate.key_split[sestate.first_track],
+                        trkevent.data0) == 0) {
                     break;
-                case MIDI_CONTROL_CHANGE:
-                    temp = 0;  // update flag
-                    // check to see if we already have this CC on this step
-                    for(i = 0; i < SEQ_TRACK_POLY; i ++) {
-                        // no event in slot
-                        if(song_get_step_event(sestate.scene_current, track, step, i, &trkevent) == -1) {
-                            continue;
-                        }
-                        // CC matches - update value
-                        if(trkevent.type == SONG_EVENT_CC &&
-                                trkevent.data0 == sestate.record_events[rn].msg.data0) {
-                            trkevent.data1 = sestate.record_events[rn].msg.data1;  // update value
-                            song_set_step_event(sestate.scene_current, track, step, i, &trkevent);
-                            temp = 1;  // update flag
-                            // check to see if we got the damper
-                            if(sestate.record_events[rn].msg.data0 == MIDI_CONTROLLER_DAMPER) {
-                                if(sestate.record_events[rn].msg.data1 > 0) {
-                                    damper_held = 1;
-                                }
-                                else {
-                                    damper_held = 0;
-                                }
-                            }
-                            break;
-                        }
+                }
+                trkevent.type = SONG_EVENT_NOTE;
+                trkevent.data0 = sestate.record_events[rn].msg.data0;
+                trkevent.data1 = sestate.record_events[rn].msg.data1;
+                // note was held down past loop end (tick_len is 0)
+                if(sestate.record_events[rn].tick_len == 0) {
+                    trkevent.length = (((sestate.motion_start[sestate.first_track] +
+                        sestate.motion_len[sestate.first_track]) - step) &
+                        (SEQ_NUM_STEPS - 1)) * sestate.step_size[sestate.first_track];
+                }
+                // proper note length
+                else {
+                    trkevent.length = sestate.record_events[rn].tick_len;
+                }
+                song_add_step_event(sestate.scene_current,
+                    sestate.first_track, step, &trkevent);
+                break;
+            case MIDI_CONTROL_CHANGE:
+                temp = 0;  // update flag
+                // check to see if we already have this CC on this step
+                for(i = 0; i < SEQ_TRACK_POLY; i ++) {
+                    // no event in slot
+                    if(song_get_step_event(sestate.scene_current,
+                            sestate.first_track, step, i, &trkevent) == -1) {
+                        continue;
                     }
-                    // CC is not already on step - add it
-                    if(temp == 0) {
-                        trkevent.type = SONG_EVENT_CC;
-                        trkevent.data0 = sestate.record_events[rn].msg.data0;
-                        trkevent.data1 = sestate.record_events[rn].msg.data1;
-                        song_add_step_event(sestate.scene_current, track, step, &trkevent);
+                    // CC matches - update value
+                    if(trkevent.type == SONG_EVENT_CC &&
+                            trkevent.data0 == sestate.record_events[rn].msg.data0) {
+                        trkevent.data1 = sestate.record_events[rn].msg.data1;  // update value
+                        song_set_step_event(sestate.scene_current,
+                            sestate.first_track, step, i, &trkevent);
+                        temp = 1;  // update flag
                         // check to see if we got the damper
                         if(sestate.record_events[rn].msg.data0 == MIDI_CONTROLLER_DAMPER) {
                             if(sestate.record_events[rn].msg.data1 > 0) {
@@ -1618,22 +1607,41 @@ void seq_engine_record_write_tracks(void) {
                                 damper_held = 0;
                             }
                         }
+                        break;
                     }
-                    break;
-                default:
-                    break;
-            }
+                }
+                // CC is not already on step - add it
+                if(temp == 0) {
+                    trkevent.type = SONG_EVENT_CC;
+                    trkevent.data0 = sestate.record_events[rn].msg.data0;
+                    trkevent.data1 = sestate.record_events[rn].msg.data1;
+                    song_add_step_event(sestate.scene_current,
+                        sestate.first_track, step, &trkevent);
+                    // check to see if we got the damper
+                    if(sestate.record_events[rn].msg.data0 == MIDI_CONTROLLER_DAMPER) {
+                        if(sestate.record_events[rn].msg.data1 > 0) {
+                            damper_held = 1;
+                        }
+                        else {
+                            damper_held = 0;
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
         }
-        // if the damper is still down at the end of the track
-        // turn it off on the last step
-        if(damper_held) {
-            trkevent.type = SONG_EVENT_CC;
-            trkevent.data0 = MIDI_CONTROLLER_DAMPER;
-            trkevent.data1 = 0;
-            step = (sestate.motion_start[track] +
-                sestate.motion_len[track] - 1) & (SEQ_NUM_STEPS - 1);
-            song_add_step_event(sestate.scene_current, track, step, &trkevent);
-        }
+    }
+    // if the damper is still down at the end of the track
+    // turn it off on the last step
+    if(damper_held) {
+        trkevent.type = SONG_EVENT_CC;
+        trkevent.data0 = MIDI_CONTROLLER_DAMPER;
+        trkevent.data1 = 0;
+        step = (sestate.motion_start[sestate.first_track] +
+            sestate.motion_len[sestate.first_track] - 1) & (SEQ_NUM_STEPS - 1);
+        song_add_step_event(sestate.scene_current,
+            sestate.first_track, step, &trkevent);
     }
 }
 

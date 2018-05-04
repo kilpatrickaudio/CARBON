@@ -75,8 +75,8 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len);
 void seq_engine_step_rec_pos_changed(int change);
 
 // recording was started or stopped by the user
-void seq_engine_record_mode_changed(int newval);
-    
+void seq_engine_record_mode_changed(int oldval, int newval);
+
 // get the song mode state (for display)
 struct song_mode_state *seq_engine_get_song_mode_state(void);
 
