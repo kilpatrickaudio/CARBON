@@ -228,8 +228,8 @@
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
 
-#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode
@@ -251,7 +251,7 @@
 // WARNING: DO NOT ENABLE THIS IN PRODUCTION CODE
 // The remote LCD mode will send large amounts of data over the USB dev port.
 //
-#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
+//#define GFX_REMLCD_MODE  // uncomment this to enable remote LCD mode
 #define GFX_REMLCD_MIDI_PORT (MIDI_PORT_USB_DEV_OUT2)  // spare port for remlcd mode
 #define GFX_REMLCD_BYTES_PER_MS 48  // number of bytes that will be sent per ms
 

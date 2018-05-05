@@ -90,13 +90,13 @@ void arp_init(void) {
         astate[track].playing_note_count = 0;
         astate[track].play_note_timeout = 0;
         astate[track].gate_time = 1;
-        
+
         // reset stuff
         arp_set_seq_enable(0);
         arp_set_arp_enable(track, 0);  // off - causes stuff to be reset
         arp_set_type(track, ARP_TYPE_UP1);
         arp_set_speed(track, SEQ_UTILS_STEP_16TH);
-        arp_set_gate_time(track, 
+        arp_set_gate_time(track,
             seq_utils_step_len_to_ticks(SEQ_UTILS_STEP_32ND));
     }
 }
@@ -134,7 +134,7 @@ void arp_run(int tick_count) {
                 arp_timeout_notes(track);
             }
         }
-        
+
         // sequencer is running
         if(astate[track].seq_enable) {
             astate[track].seq_clock_count ++;
@@ -173,7 +173,7 @@ void arp_set_arp_enable(int track, int enable) {
         log_error("asae - track invalid: %d", track);
         return;
     }
-    
+
     // start
     if(enable) {
         arp_clear_input(track);
@@ -184,7 +184,7 @@ void arp_set_arp_enable(int track, int enable) {
     else {
         arp_clear_input(track);
         arp_stop_all_notes(track);
-        astate[track].arp_enable = 0;    
+        astate[track].arp_enable = 0;
     }
 }
 
@@ -195,7 +195,7 @@ void arp_handle_input(int track, struct midi_msg *msg) {
         log_error("ahi - track invalid: %d", track);
         return;
     }
-    // handle each kind of message we care about    
+    // handle each kind of message we care about
     switch(msg->status & 0xf0) {
         case MIDI_NOTE_OFF:
             // remove the note from the list
@@ -210,9 +210,9 @@ void arp_handle_input(int track, struct midi_msg *msg) {
         case MIDI_NOTE_ON:
             // add the note to the list
             for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
-                if(astate[track].held_notes[i] == ARP_NOTE_SLOT_FREE) {    
+                if(astate[track].held_notes[i] == ARP_NOTE_SLOT_FREE) {
                     astate[track].held_notes[i] = msg->data0;
-                    // we use the first note pressed for the velocity            
+                    // we use the first note pressed for the velocity
                     if(astate[track].held_note_count == 0) {
                         astate[track].held_velo = msg->data1;
                     }
@@ -220,7 +220,7 @@ void arp_handle_input(int track, struct midi_msg *msg) {
                     break;
                 }
             }
-            // if this is our first note then we need to reset the 
+            // if this is our first note then we need to reset the
             // freerunning clock counter so we start playing right away
             if(astate[track].held_note_count == 1) {
                 astate[track].freerun_clock_count = 0;
@@ -290,66 +290,6 @@ void arp_set_gate_time(int track, int time) {
 }
 
 //
-// helper functions
-//
-// convert an arp type to a text string
-void arp_type_to_name(char *text, int type) {
-    switch(type) {
-        case ARP_TYPE_UP1:
-            sprintf(text, "Up 1");
-            break;    
-        case ARP_TYPE_UP2:
-            sprintf(text, "Up 2");
-            break;    
-        case ARP_TYPE_UP3:
-            sprintf(text, "Up 3");
-            break;    
-        case ARP_TYPE_UP4:
-            sprintf(text, "Up 4");
-            break;    
-        case ARP_TYPE_DOWN1:
-            sprintf(text, "Down 1");
-            break;    
-        case ARP_TYPE_DOWN2:
-            sprintf(text, "Down 2");
-            break;    
-        case ARP_TYPE_DOWN3:
-            sprintf(text, "Down 3");
-            break;    
-        case ARP_TYPE_DOWN4:
-            sprintf(text, "Down 4");
-            break;    
-        case ARP_TYPE_UPDOWN1:
-            sprintf(text, "Up/Down 1");
-            break;    
-        case ARP_TYPE_UPDOWN2:
-            sprintf(text, "Up/Down 2");
-            break;    
-        case ARP_TYPE_UPDOWN3:
-            sprintf(text, "Up/Down 3");
-            break;    
-        case ARP_TYPE_UPDOWN4:
-            sprintf(text, "Up/Down 4");
-            break;
-        case ARP_TYPE_RANDOM1:
-            sprintf(text, "Random 1");
-            break;    
-        case ARP_TYPE_RANDOM2:
-            sprintf(text, "Random 2");
-            break;    
-        case ARP_TYPE_RANDOM3:
-            sprintf(text, "Random 3");
-            break;    
-        case ARP_TYPE_RANDOM4:
-            sprintf(text, "Random 4");
-            break;    
-        default:
-            sprintf(text, " ");
-            break;
-    }
-}
-
-//
 // local functions
 //
 // reset the program
@@ -372,10 +312,10 @@ void arp_reset_program(int track) {
 void arp_execute_step(int track) {
     int loop_count = 0;
     int arg, temp, note;
-    
+
     while(loop_count < ARP_MAX_LOOP_COUNT) {
         arg = aprog[track].prog[astate[track].pc][ARP_PROG_ARG];
-    
+
         // process the instruction
         switch(aprog[track].prog[astate[track].pc][ARP_PROG_INST]) {
             case AP_NOP:
@@ -413,7 +353,7 @@ void arp_execute_step(int track) {
                     }
                     astate[track].pc = temp;
                     break;
-                }  
+                }
                 // note was found
                 else {
                     astate[track].x = note;
@@ -452,7 +392,7 @@ void arp_execute_step(int track) {
                 }
                 // note was found
                 else {
-                    astate[track].x = note;    
+                    astate[track].x = note;
                 }
                 break;
             case AP_FIND_RANDOM_NOTE:
@@ -470,9 +410,15 @@ void arp_execute_step(int track) {
                 }
                 // note was found
                 else {
-                    astate[track].x = note;    
-                }                
+                    astate[track].x = note;
+                }
                 break;
+            case AP_PLAY_NOTE:
+                arp_start_note(track, astate[track].x + astate[track].note_offset);
+                break;
+            case AP_WAIT:
+                astate[track].pc ++;
+                return;  // we need to return here to pause execution
             case AP_PLAY_NOTE_AND_WAIT:
                 arp_stop_all_notes(track);
                 arp_start_note(track, astate[track].x + astate[track].note_offset);
@@ -534,13 +480,13 @@ void arp_execute_step(int track) {
             case AP_SUBF:
                 if(arg >= 0 && arg < ARP_PROG_NUM_REGS) {
                     astate[track].x -= astate[track].regs[arg];
-                }            
+                }
                 break;
             case AP_MULF:
                 if(arg >= 0 && arg < ARP_PROG_NUM_REGS) {
                     astate[track].x *= astate[track].regs[arg];
-                }            
-                break;                
+                }
+                break;
             case AP_JZ:
                 if(astate[track].x == 0) {
                     temp = arp_find_label(track, arg);
@@ -562,7 +508,7 @@ void arp_execute_step(int track) {
             arp_reset_program(track);
             return;
         }
-        loop_count ++;    
+        loop_count ++;
     }
 }
 
@@ -573,7 +519,7 @@ int arp_find_lowest_note(int track) {
         return -1;
     }
     for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
-        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE && 
+        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE &&
                 astate[track].snapshot_notes[i] < min) {
             min = astate[track].snapshot_notes[i];
         }
@@ -591,7 +537,7 @@ int arp_find_highest_note(int track) {
         return -1;
     }
     for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
-        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE && 
+        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE &&
                 astate[track].snapshot_notes[i] > max) {
             max = astate[track].snapshot_notes[i];
         }
@@ -622,7 +568,7 @@ int arp_find_higher_note(int track, int note) {
         return -1;
     }
     for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
-        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE && 
+        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE &&
                 astate[track].snapshot_notes[i] < next &&
                 astate[track].snapshot_notes[i] > note) {
             next = astate[track].snapshot_notes[i];
@@ -713,4 +659,3 @@ void arp_take_snapshot(int track) {
         astate[track].snapshot_notes[i] = astate[track].held_notes[i];
     }
 }
-

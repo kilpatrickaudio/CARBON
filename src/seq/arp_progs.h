@@ -39,26 +39,37 @@ struct arp_prog {
 };
 
 // internal registers
-#define ARP_REG_NOTE_OFFSET 0x70  // note offset
+#define ARP_REG_NOTE_OFFSET 0x70  // note offset added to generated notes
 
 // arp types
-#define ARP_NUM_TYPES 16
-#define ARP_TYPE_UP1 0
-#define ARP_TYPE_UP2 1
-#define ARP_TYPE_UP3 2
-#define ARP_TYPE_UP4 3
-#define ARP_TYPE_DOWN1 4
-#define ARP_TYPE_DOWN2 5
-#define ARP_TYPE_DOWN3 6
-#define ARP_TYPE_DOWN4 7
-#define ARP_TYPE_UPDOWN1 8
-#define ARP_TYPE_UPDOWN2 9
-#define ARP_TYPE_UPDOWN3 10
-#define ARP_TYPE_UPDOWN4 11
-#define ARP_TYPE_RANDOM1 12
-#define ARP_TYPE_RANDOM2 13
-#define ARP_TYPE_RANDOM3 14
-#define ARP_TYPE_RANDOM4 15
+enum {
+    ARP_TYPE_UP1,
+    ARP_TYPE_UP2,
+    ARP_TYPE_UP3,
+    ARP_TYPE_UP4,
+    ARP_TYPE_DOWN1,
+    ARP_TYPE_DOWN2,
+    ARP_TYPE_DOWN3,
+    ARP_TYPE_DOWN4,
+    ARP_TYPE_UPDOWN1,
+    ARP_TYPE_UPDOWN2,
+    ARP_TYPE_UPDOWN3,
+    ARP_TYPE_UPDOWN4,
+    ARP_TYPE_UPDOWN1_NR,
+    ARP_TYPE_UPDOWN2_NR,
+    ARP_TYPE_UPDOWN3_NR,
+    ARP_TYPE_UPDOWN4_NR,
+    ARP_TYPE_RANDOM1,
+    ARP_TYPE_RANDOM2,
+    ARP_TYPE_RANDOM3,
+    ARP_TYPE_RANDOM4,
+    ARP_TYPE_REPEAT1_0,
+    ARP_TYPE_REPEAT1_1,
+    ARP_TYPE_REPEAT2_1,
+    ARP_TYPE_REPEAT3_1,
+    ARP_TYPE_REPEAT4_1,
+    ARP_NUM_TYPES
+};    
 
 // program instructions
 enum {
@@ -69,6 +80,8 @@ enum {
     AP_FIND_LOWER_NOTE,         // find the next lower note or jump to arg = label
     AP_FIND_HIGHER_NOTE,        // find the next higher note or jump to arg = label
     AP_FIND_RANDOM_NOTE,        // find a random note or jump to arg = label
+    AP_PLAY_NOTE,               // play the current note - arg = none
+    AP_WAIT,                    // wait for step - arg = none
     AP_PLAY_NOTE_AND_WAIT,      // play the current note and wait for step - arg = none
     AP_LABEL,                   // mark a label for jumping - arg = label number
     AP_JUMP,                    // jump to a label - arg = label to jump to
