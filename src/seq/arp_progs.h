@@ -68,8 +68,16 @@ enum {
     ARP_TYPE_REPEAT2_1,
     ARP_TYPE_REPEAT3_1,
     ARP_TYPE_REPEAT4_1,
+    ARP_TYPE_UP_LOW1,
+    ARP_TYPE_UP_LOW2,
+    ARP_TYPE_UP_LOW3,
+    ARP_TYPE_UP_LOW4,
+    ARP_TYPE_DOWN_HIGH1,
+    ARP_TYPE_DOWN_HIGH2,
+    ARP_TYPE_DOWN_HIGH3,
+    ARP_TYPE_DOWN_HIGH4,
     ARP_NUM_TYPES
-};    
+};
 
 // program instructions
 enum {

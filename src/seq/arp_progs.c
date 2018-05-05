@@ -36,6 +36,8 @@ void arp_progs_generate_updown(int octaves);
 void arp_progs_generate_updown_norepeat(int octaves);
 void arp_progs_generate_random(int octaves);
 void arp_progs_generate_repeat(int notes, int rests);
+void arp_progs_generate_up_low(int octaves);
+void arp_progs_generate_down_high(int octaves);
 
 // init the arp programs
 void arp_progs_init(void) {
@@ -129,6 +131,30 @@ void arp_progs_load(int track, int prog) {
         case ARP_TYPE_REPEAT4_1:
             arp_progs_generate_repeat(4, 1);
             break;
+        case ARP_TYPE_UP_LOW1:
+            arp_progs_generate_up_low(1);
+            break;
+        case ARP_TYPE_UP_LOW2:
+            arp_progs_generate_up_low(2);
+            break;
+        case ARP_TYPE_UP_LOW3:
+            arp_progs_generate_up_low(3);
+            break;
+        case ARP_TYPE_UP_LOW4:
+            arp_progs_generate_up_low(4);
+            break;
+        case ARP_TYPE_DOWN_HIGH1:
+            arp_progs_generate_down_high(1);
+            break;
+        case ARP_TYPE_DOWN_HIGH2:
+            arp_progs_generate_down_high(2);
+            break;
+        case ARP_TYPE_DOWN_HIGH3:
+            arp_progs_generate_down_high(3);
+            break;
+        case ARP_TYPE_DOWN_HIGH4:
+            arp_progs_generate_down_high(4);
+            break;
         default:
             break;
     }
@@ -214,6 +240,30 @@ void arp_type_to_name(char *text, int type) {
             break;
         case ARP_TYPE_REPEAT4_1:
             sprintf(text, "Repeat 4:1");
+            break;
+        case ARP_TYPE_UP_LOW1:
+            sprintf(text, "Up (Low) 1");
+            break;
+        case ARP_TYPE_UP_LOW2:
+            sprintf(text, "Up (Low) 2");
+            break;
+        case ARP_TYPE_UP_LOW3:
+            sprintf(text, "Up (Low) 3");
+            break;
+        case ARP_TYPE_UP_LOW4:
+            sprintf(text, "Up (Low) 4");
+            break;
+        case ARP_TYPE_DOWN_HIGH1:
+            sprintf(text, "Down (High) 1");
+            break;
+        case ARP_TYPE_DOWN_HIGH2:
+            sprintf(text, "Down (High) 2");
+            break;
+        case ARP_TYPE_DOWN_HIGH3:
+            sprintf(text, "Down (High) 3");
+            break;
+        case ARP_TYPE_DOWN_HIGH4:
+            sprintf(text, "Down (High) 4");
             break;
         default:
             sprintf(text, " ");
@@ -569,4 +619,107 @@ void arp_progs_generate_repeat(int notes, int rests) {
     arp_progs_ai(AP_STOREF, RESTS_COUNT);
     arp_progs_ai(AP_WAIT, 0);  // wait for next step
     arp_progs_ai(AP_JUMP, REST);  // try another rest
+}
+
+// generate an up low arp program
+void arp_progs_generate_up_low(int octaves) {
+    // labels
+    enum {
+        INIT,
+        START,
+        UP_LOOP,
+        TRANS
+    };
+    // regs
+    enum {
+        OCT_COUNT,
+        LAST_NOTE,
+    };
+
+    // setup
+    arp_progs_ai(AP_LABEL, INIT);
+    arp_progs_ai(AP_SNAPSHOT, 0);
+    arp_progs_ai(AP_LOADL, 0);  // init transpose
+    arp_progs_ai(AP_STOREF, ARP_REG_NOTE_OFFSET);
+    arp_progs_ai(AP_LOADL, octaves);  // init octave counter
+    arp_progs_ai(AP_STOREF, OCT_COUNT);
+    // play notes in octave
+    arp_progs_ai(AP_LABEL, START);
+    arp_progs_ai(AP_FIND_LOWEST_NOTE, INIT);  // find lowest note
+    arp_progs_ai(AP_STOREF, LAST_NOTE);  // store it so we can restore
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);  // play lowest note
+    arp_progs_ai(AP_SNAPSHOT, 0);  // make sure we get all initial notes
+    // up loop
+    arp_progs_ai(AP_LABEL, UP_LOOP);
+    arp_progs_ai(AP_LOADF, LAST_NOTE);  // restore the last note we found
+    arp_progs_ai(AP_FIND_HIGHER_NOTE, TRANS);  // play a higher note
+    arp_progs_ai(AP_STOREF, LAST_NOTE);  // store it so we can restore
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);  // play note
+    arp_progs_ai(AP_FIND_HIGHER_NOTE, TRANS);  // ensure we don't play low note at top
+    arp_progs_ai(AP_FIND_LOWEST_NOTE, INIT);  // find lowest note again
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);  // play note
+    arp_progs_ai(AP_LOADF, LAST_NOTE);  // restore the last note we found
+    arp_progs_ai(AP_JUMP, UP_LOOP);
+    // do transposing
+    arp_progs_ai(AP_LABEL, TRANS);
+    arp_progs_ai(AP_LOADF, OCT_COUNT);  // handle octave counter
+    arp_progs_ai(AP_SUBL, 1);
+    arp_progs_ai(AP_STOREF, OCT_COUNT);
+    arp_progs_ai(AP_JZ, INIT);  // restart if done all octaves
+    arp_progs_ai(AP_LOADF, ARP_REG_NOTE_OFFSET);  // handle transpose
+    arp_progs_ai(AP_ADDL, 12);
+    arp_progs_ai(AP_STOREF, ARP_REG_NOTE_OFFSET);
+    arp_progs_ai(AP_JUMP, START);  // do next octave
+}
+
+// generate an down high arp program
+void arp_progs_generate_down_high(int octaves) {
+    // labels
+    enum {
+        INIT,
+        START,
+        DOWN_LOOP,
+        TRANS
+    };
+    // regs
+    enum {
+        OCT_COUNT,
+        LAST_NOTE
+    };
+
+    // setup
+    arp_progs_ai(AP_LABEL, INIT);
+    arp_progs_ai(AP_SNAPSHOT, 0);
+    arp_progs_ai(AP_LOADL, octaves);  // init octave counter
+    arp_progs_ai(AP_STOREF, OCT_COUNT);
+    arp_progs_ai(AP_SUBL, 1);  // subtract 1 octave so we don't start higher for 1 oct
+    arp_progs_ai(AP_MULL, 12);
+    arp_progs_ai(AP_STOREF, ARP_REG_NOTE_OFFSET);  // set note offset to higher octaves
+    // play notes in octave
+    arp_progs_ai(AP_LABEL, START);
+    arp_progs_ai(AP_FIND_HIGHEST_NOTE, INIT);
+    arp_progs_ai(AP_STOREF, LAST_NOTE);  // store it so we can restore
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);
+    arp_progs_ai(AP_SNAPSHOT, 0);  // make sure we get all initial notes
+    // down loop
+    arp_progs_ai(AP_LABEL, DOWN_LOOP);
+    arp_progs_ai(AP_LOADF, LAST_NOTE);  // restore the last note we found
+    arp_progs_ai(AP_FIND_LOWER_NOTE, TRANS);  // play lower note
+    arp_progs_ai(AP_STOREF, LAST_NOTE);  // store it so we can restore
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);  // play note
+    arp_progs_ai(AP_FIND_LOWER_NOTE, TRANS);  // ensure we don't play highest note at bottom
+    arp_progs_ai(AP_FIND_HIGHEST_NOTE, INIT);  // find highest note avain
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);  // play note
+    arp_progs_ai(AP_LOADF, LAST_NOTE);  // restore the last note we found
+    arp_progs_ai(AP_JUMP, DOWN_LOOP);
+    // do transposing
+    arp_progs_ai(AP_LABEL, TRANS);
+    arp_progs_ai(AP_LOADF, OCT_COUNT);  // handle octave counter
+    arp_progs_ai(AP_SUBL, 1);
+    arp_progs_ai(AP_STOREF, OCT_COUNT);
+    arp_progs_ai(AP_JZ, INIT);  // restart if done all octaves
+    arp_progs_ai(AP_LOADF, ARP_REG_NOTE_OFFSET);  // handle transpose
+    arp_progs_ai(AP_ADDL, -12);
+    arp_progs_ai(AP_STOREF, ARP_REG_NOTE_OFFSET);
+    arp_progs_ai(AP_JUMP, START);  // do next octave
 }
