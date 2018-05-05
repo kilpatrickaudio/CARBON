@@ -46,9 +46,11 @@ struct arp_state {
     int gate_time;  // arp gate time
     int step_size;  // arp step size in ticks
     int8_t held_notes[ARP_MAX_HELD_NOTES];  // held notes
+    int8_t held_order[ARP_MAX_HELD_NOTES];  // held note order
     int8_t held_velo;  // held note velocity
     uint8_t held_note_count;  // number of held notes
     int8_t snapshot_notes[ARP_MAX_HELD_NOTES];  // snapshot of held notes
+    int8_t snapshot_order[ARP_MAX_HELD_NOTES];  // snapshot of held note order
     int8_t playing_notes[ARP_MAX_PLAYING_NOTES];  // playing note
     uint8_t playing_note_count;  // number of playing notes
     int play_note_timeout;  // tick timeout for playing note
@@ -69,6 +71,10 @@ int arp_find_lowest_note(int track);
 int arp_find_highest_note(int track);
 int arp_find_lower_note(int track, int note);
 int arp_find_higher_note(int track, int note);
+int arp_find_oldest_note(int track);
+int arp_find_newest_note(int track);
+int arp_find_older_note(int track, int note);
+int arp_find_newer_note(int track, int note);
 int arp_find_random_note(int track, int note);
 void arp_start_note(int track, int note);
 void arp_stop_all_notes(int track);
@@ -190,7 +196,7 @@ void arp_set_arp_enable(int track, int enable) {
 
 // handle a input from the keyboard - we only get notes if we're enabled
 void arp_handle_input(int track, struct midi_msg *msg) {
-    int i;
+    int i, max_order;
     if(track < 0 || track >= SEQ_NUM_TRACKS) {
         log_error("ahi - track invalid: %d", track);
         return;
@@ -208,6 +214,15 @@ void arp_handle_input(int track, struct midi_msg *msg) {
             }
             break;
         case MIDI_NOTE_ON:
+            max_order = 0;
+            // search for max order
+            for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
+                if(astate[track].held_notes[i] != ARP_NOTE_SLOT_FREE) {
+                    if(astate[track].held_order[i] > max_order) {
+                        max_order = astate[track].held_order[i];
+                    }
+                }
+            }
             // add the note to the list
             for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
                 if(astate[track].held_notes[i] == ARP_NOTE_SLOT_FREE) {
@@ -216,6 +231,7 @@ void arp_handle_input(int track, struct midi_msg *msg) {
                     if(astate[track].held_note_count == 0) {
                         astate[track].held_velo = msg->data1;
                     }
+                    astate[track].held_order[i] = max_order + 1;
                     astate[track].held_note_count ++;
                     break;
                 }
@@ -242,6 +258,7 @@ void arp_clear_input(int track) {
     // clear the held note list
     for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
         astate[track].held_notes[i] = ARP_NOTE_SLOT_FREE;
+        astate[track].held_order[i] = 0;
     }
     astate[track].held_note_count = 0;
     // turn off all playing notes
@@ -305,6 +322,7 @@ void arp_reset_program(int track) {
     // clear the note snapshot
     for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
         astate[track].snapshot_notes[i] = ARP_NOTE_SLOT_FREE;
+        astate[track].snapshot_order[i] = 0;
     }
 }
 
@@ -379,6 +397,77 @@ void arp_execute_step(int track) {
                 break;
             case AP_FIND_HIGHER_NOTE:
                 note = arp_find_higher_note(track, astate[track].x);
+                // no note found - jump to label from argument
+                if(note == -1) {
+                    temp = arp_find_label(track, arg);
+                    // label not found - reset program
+                    if(temp == -1) {
+                        arp_reset_program(track);
+                        return;
+                    }
+                    astate[track].pc = temp;
+                    break;
+                }
+                // note was found
+                else {
+                    astate[track].x = note;
+                }
+                break;
+            case AP_FIND_OLDEST_NOTE:
+                note = arp_find_oldest_note(track);
+                // no note found - jump to label from argument
+                if(note == -1) {
+                    temp = arp_find_label(track, arg);
+                    // label not found - reset program
+                    if(temp == -1) {
+                        arp_reset_program(track);
+                        return;
+                    }
+                    astate[track].pc = temp;
+                }
+                // note was found
+                else {
+                    astate[track].x = note;
+                }
+                break;
+            case AP_FIND_NEWEST_NOTE:
+                note = arp_find_newest_note(track);
+                // no note found - jump to label from argument
+                if(note == -1) {
+                    temp = arp_find_label(track, arg);
+                    // label not found - reset program
+                    if(temp == -1) {
+                        arp_reset_program(track);
+                        return;
+                    }
+                    astate[track].pc = temp;
+                    break;
+                }
+                // note was found
+                else {
+                    astate[track].x = note;
+                }
+                break;
+            case AP_FIND_OLDER_NOTE:
+                note = arp_find_older_note(track, astate[track].x);
+                // no note found - jump to label from argument
+                if(note == -1) {
+                    temp = arp_find_label(track, arg);
+                    // label not found - reset program
+                    if(temp == -1) {
+                        arp_reset_program(track);
+                        return;
+                    }
+                    astate[track].pc = temp;
+                    break;
+                }
+                // note was found
+                else {
+                    astate[track].x = note;
+                }
+                break;
+            case AP_FIND_NEWER_NOTE:
+                note = arp_find_newer_note(track, astate[track].x);
                 // no note found - jump to label from argument
                 if(note == -1) {
                     temp = arp_find_label(track, arg);
@@ -512,7 +601,7 @@ void arp_execute_step(int track) {
     }
 }
 
-// find the lowest held note - returns note num or -1 if not found
+// find the lowest snapshot note - returns note num or -1 if not found
 int arp_find_lowest_note(int track) {
     int i, min = 255;
     if(astate[track].held_note_count == 0) {
@@ -530,7 +619,7 @@ int arp_find_lowest_note(int track) {
     return min;
 }
 
-// find the highest held note - returns note num or -1 if not found
+// find the highest snapshot note - returns note num or -1 if not found
 int arp_find_highest_note(int track) {
     int i, max = -1;
     if(astate[track].held_note_count == 0) {
@@ -545,7 +634,7 @@ int arp_find_highest_note(int track) {
     return max;
 }
 
-// find a held note lower than note - returns note num or -1 if not found
+// find a snapshot note lower than note - returns note num or -1 if not found
 int arp_find_lower_note(int track, int note) {
     int i, next = -1;
     if(astate[track].held_note_count == 0) {
@@ -561,7 +650,7 @@ int arp_find_lower_note(int track, int note) {
     return next;
 }
 
-// find a held note higher than note - returns note num or -1 if not found
+// find a snapshot note higher than note - returns note num or -1 if not found
 int arp_find_higher_note(int track, int note) {
     int i, next = 255;
     if(astate[track].held_note_count == 0) {
@@ -580,7 +669,117 @@ int arp_find_higher_note(int track, int note) {
     return next;
 }
 
-// find a random held note - returns note num or -1 if not found
+// find the oldest snapshot note - returns note num or -1 if not found
+int arp_find_oldest_note(int track) {
+    int i, min = 255, note;
+    if(astate[track].held_note_count == 0) {
+        return -1;
+    }
+    for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
+        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE &&
+                astate[track].snapshot_order[i] < min) {
+            min = astate[track].snapshot_order[i];
+            note = astate[track].snapshot_notes[i];
+        }
+    }
+    if(min == 255) {
+        return -1;
+    }
+    return note;
+}
+
+// find the newest snapshot note - returns note num or -1 if not found
+int arp_find_newest_note(int track) {
+    int i, max = -1, note;
+    if(astate[track].held_note_count == 0) {
+        return -1;
+    }
+    for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
+        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE &&
+                astate[track].snapshot_order[i] > max) {
+            max = astate[track].snapshot_order[i];
+            note = astate[track].snapshot_notes[i];
+        }
+    }
+    if(max == -1) {
+        return -1;
+    }
+    return note;
+}
+
+// find a snapshot note older than note - returns note num or -1 if not found
+int arp_find_older_note(int track, int note) {
+    int i, next, order, old_note;
+    if(astate[track].held_note_count == 0) {
+        return -1;
+    }
+    // find the order of the existing note
+    order = 0;
+    for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
+        if(astate[track].snapshot_notes[i] == note) {
+            order = astate[track].snapshot_order[i];
+        }
+    }
+    if(order == 0) {
+        return -1;
+    }
+    // find an older note
+    next = 0;
+    old_note = -1;
+    for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
+        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE &&
+                astate[track].snapshot_order[i] > next &&
+                astate[track].snapshot_order[i] < order) {
+            next = astate[track].snapshot_order[i];
+            old_note = astate[track].snapshot_notes[i];
+        }
+    }
+    if(next == -1) {
+        return -1;
+    }
+    if(old_note == -1) {
+        return -1;
+    }
+    return old_note;
+}
+
+// find a snapshot note newer than note - returns note num or -1 if not found
+int arp_find_newer_note(int track, int note) {
+    int i, next, order, new_note;
+    if(astate[track].held_note_count == 0) {
+        return -1;
+    }
+    // find the order of the existing note
+    order = 0;
+    for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
+        if(astate[track].snapshot_notes[i] == note) {
+            order = astate[track].snapshot_order[i];
+        }
+    }
+    if(order == 0) {
+        return -1;
+    }
+    // find a newer note
+    next = 255;
+    new_note = -1;
+    for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
+        if(astate[track].snapshot_notes[i] != ARP_NOTE_SLOT_FREE &&
+                astate[track].snapshot_order[i] < next &&
+                astate[track].snapshot_order[i] > order) {
+            next = astate[track].snapshot_order[i];
+            new_note = astate[track].snapshot_notes[i];
+        }
+    }
+    if(next == 255) {
+        return -1;
+    }
+    if(new_note == -1) {
+        return -1;
+    }
+    return new_note;
+}
+
+// find a random snapshot note - returns note num or -1 if not found
 int arp_find_random_note(int track, int note) {
     int i, rand_num_notes;
     int8_t rand_notes[ARP_MAX_HELD_NOTES];
@@ -657,5 +856,6 @@ void arp_take_snapshot(int track) {
     int i;
     for(i = 0; i < ARP_MAX_HELD_NOTES; i ++) {
         astate[track].snapshot_notes[i] = astate[track].held_notes[i];
+        astate[track].snapshot_order[i] = astate[track].held_order[i];
     }
 }

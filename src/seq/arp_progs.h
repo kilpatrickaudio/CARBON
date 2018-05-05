@@ -55,14 +55,18 @@ enum {
     ARP_TYPE_UPDOWN2,
     ARP_TYPE_UPDOWN3,
     ARP_TYPE_UPDOWN4,
-    ARP_TYPE_UPDOWN1_NR,
-    ARP_TYPE_UPDOWN2_NR,
-    ARP_TYPE_UPDOWN3_NR,
-    ARP_TYPE_UPDOWN4_NR,
     ARP_TYPE_RANDOM1,
     ARP_TYPE_RANDOM2,
     ARP_TYPE_RANDOM3,
     ARP_TYPE_RANDOM4,
+    ARP_TYPE_NOTE_ORDER1,
+    ARP_TYPE_NOTE_ORDER2,
+    ARP_TYPE_NOTE_ORDER3,
+    ARP_TYPE_NOTE_ORDER4,
+    ARP_TYPE_UPDOWN1_NR,
+    ARP_TYPE_UPDOWN2_NR,
+    ARP_TYPE_UPDOWN3_NR,
+    ARP_TYPE_UPDOWN4_NR,
     ARP_TYPE_REPEAT1_0,
     ARP_TYPE_REPEAT1_1,
     ARP_TYPE_REPEAT2_1,
@@ -87,6 +91,10 @@ enum {
     AP_FIND_HIGHEST_NOTE,       // find the highest note or jump to arg = label
     AP_FIND_LOWER_NOTE,         // find the next lower note or jump to arg = label
     AP_FIND_HIGHER_NOTE,        // find the next higher note or jump to arg = label
+    AP_FIND_OLDEST_NOTE,        // find the oldest note or jump to arg = label
+    AP_FIND_NEWEST_NOTE,        // find the newest note or jump to arg = label
+    AP_FIND_OLDER_NOTE,         // find the next older note or jump to arg = label
+    AP_FIND_NEWER_NOTE,         // find the next newer note or jump to arg = label
     AP_FIND_RANDOM_NOTE,        // find a random note or jump to arg = label
     AP_PLAY_NOTE,               // play the current note - arg = none
     AP_WAIT,                    // wait for step - arg = none

@@ -33,8 +33,9 @@ void arp_progs_ai(int inst, int arg);
 void arp_progs_generate_up(int octaves);
 void arp_progs_generate_down(int octaves);
 void arp_progs_generate_updown(int octaves);
-void arp_progs_generate_updown_norepeat(int octaves);
 void arp_progs_generate_random(int octaves);
+void arp_progs_generate_note_order(int octaves);
+void arp_progs_generate_updown_norepeat(int octaves);
 void arp_progs_generate_repeat(int notes, int rests);
 void arp_progs_generate_up_low(int octaves);
 void arp_progs_generate_down_high(int octaves);
@@ -92,18 +93,6 @@ void arp_progs_load(int track, int prog) {
         case ARP_TYPE_UPDOWN4:
             arp_progs_generate_updown(4);
             break;
-        case ARP_TYPE_UPDOWN1_NR:
-            arp_progs_generate_updown_norepeat(1);
-            break;
-        case ARP_TYPE_UPDOWN2_NR:
-            arp_progs_generate_updown_norepeat(2);
-            break;
-        case ARP_TYPE_UPDOWN3_NR:
-            arp_progs_generate_updown_norepeat(3);
-            break;
-        case ARP_TYPE_UPDOWN4_NR:
-            arp_progs_generate_updown_norepeat(4);
-            break;
         case ARP_TYPE_RANDOM1:
             arp_progs_generate_random(1);
             break;
@@ -115,6 +104,30 @@ void arp_progs_load(int track, int prog) {
             break;
         case ARP_TYPE_RANDOM4:
             arp_progs_generate_random(4);
+            break;
+        case ARP_TYPE_NOTE_ORDER1:
+            arp_progs_generate_note_order(1);
+            break;
+        case ARP_TYPE_NOTE_ORDER2:
+            arp_progs_generate_note_order(2);
+            break;
+        case ARP_TYPE_NOTE_ORDER3:
+            arp_progs_generate_note_order(3);
+            break;
+        case ARP_TYPE_NOTE_ORDER4:
+            arp_progs_generate_note_order(4);
+            break;
+        case ARP_TYPE_UPDOWN1_NR:
+            arp_progs_generate_updown_norepeat(1);
+            break;
+        case ARP_TYPE_UPDOWN2_NR:
+            arp_progs_generate_updown_norepeat(2);
+            break;
+        case ARP_TYPE_UPDOWN3_NR:
+            arp_progs_generate_updown_norepeat(3);
+            break;
+        case ARP_TYPE_UPDOWN4_NR:
+            arp_progs_generate_updown_norepeat(4);
             break;
         case ARP_TYPE_REPEAT1_0:
             arp_progs_generate_repeat(1, 0);
@@ -202,18 +215,6 @@ void arp_type_to_name(char *text, int type) {
         case ARP_TYPE_UPDOWN4:
             sprintf(text, "Up/Down 4");
             break;
-        case ARP_TYPE_UPDOWN1_NR:
-            sprintf(text, "Up/Down 1 NR");
-            break;
-        case ARP_TYPE_UPDOWN2_NR:
-            sprintf(text, "Up/Down 2 NR");
-            break;
-        case ARP_TYPE_UPDOWN3_NR:
-            sprintf(text, "Up/Down 3 NR");
-            break;
-        case ARP_TYPE_UPDOWN4_NR:
-            sprintf(text, "Up/Down 4 NR");
-            break;
         case ARP_TYPE_RANDOM1:
             sprintf(text, "Random 1");
             break;
@@ -225,6 +226,30 @@ void arp_type_to_name(char *text, int type) {
             break;
         case ARP_TYPE_RANDOM4:
             sprintf(text, "Random 4");
+            break;
+        case ARP_TYPE_NOTE_ORDER1:
+            sprintf(text, "Order 1");
+            break;
+        case ARP_TYPE_NOTE_ORDER2:
+            sprintf(text, "Order 2");
+            break;
+        case ARP_TYPE_NOTE_ORDER3:
+            sprintf(text, "Order 3");
+            break;
+        case ARP_TYPE_NOTE_ORDER4:
+            sprintf(text, "Order 4");
+            break;
+        case ARP_TYPE_UPDOWN1_NR:
+            sprintf(text, "Up/Down 1 NR");
+            break;
+        case ARP_TYPE_UPDOWN2_NR:
+            sprintf(text, "Up/Down 2 NR");
+            break;
+        case ARP_TYPE_UPDOWN3_NR:
+            sprintf(text, "Up/Down 3 NR");
+            break;
+        case ARP_TYPE_UPDOWN4_NR:
+            sprintf(text, "Up/Down 4 NR");
             break;
         case ARP_TYPE_REPEAT1_0:
             sprintf(text, "Repeat 1:0");
@@ -451,6 +476,79 @@ void arp_progs_generate_updown(int octaves) {
     arp_progs_ai(AP_JUMP, START_DOWN);  // do next octave
 }
 
+// generate a random arp pattern
+void arp_progs_generate_random(int octaves) {
+    // labels
+    enum {
+        INIT
+    };
+    // regs
+    enum {
+        TRANS
+    };
+
+    // setup
+    arp_progs_ai(AP_LABEL, INIT);
+    arp_progs_ai(AP_SNAPSHOT, 0);
+    // do transposing
+    if(octaves > 1) {
+        arp_progs_ai(AP_RAND, octaves);
+        arp_progs_ai(AP_MULL, 12);
+        arp_progs_ai(AP_STOREF, TRANS);
+    }
+    else {
+        arp_progs_ai(AP_LOADL, 0);
+        arp_progs_ai(AP_STOREF, TRANS);
+    }
+    // get note
+    arp_progs_ai(AP_FIND_RANDOM_NOTE, INIT);
+    arp_progs_ai(AP_ADDF, TRANS);
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);
+    arp_progs_ai(AP_JUMP, INIT);
+}
+
+// generate a note order arp pattern
+void arp_progs_generate_note_order(int octaves) {
+    // labels
+    enum {
+        INIT,
+        START,
+        UP_LOOP,
+        TRANS
+    };
+    // regs
+    enum {
+        OCT_COUNT
+    };
+
+    // setup
+    arp_progs_ai(AP_LABEL, INIT);
+    arp_progs_ai(AP_SNAPSHOT, 0);
+    arp_progs_ai(AP_LOADL, 0);  // init transpose
+    arp_progs_ai(AP_STOREF, ARP_REG_NOTE_OFFSET);
+    arp_progs_ai(AP_LOADL, octaves);  // init octave counter
+    arp_progs_ai(AP_STOREF, OCT_COUNT);
+    // play notes in octave
+    arp_progs_ai(AP_LABEL, START);
+    arp_progs_ai(AP_FIND_OLDEST_NOTE, INIT);
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);
+    arp_progs_ai(AP_SNAPSHOT, 0);  // make sure we get all initial notes
+    arp_progs_ai(AP_LABEL, UP_LOOP);
+    arp_progs_ai(AP_FIND_NEWER_NOTE, TRANS);
+    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);
+    arp_progs_ai(AP_JUMP, UP_LOOP);
+    // do transposing
+    arp_progs_ai(AP_LABEL, TRANS);
+    arp_progs_ai(AP_LOADF, OCT_COUNT);  // handle octave counter
+    arp_progs_ai(AP_SUBL, 1);
+    arp_progs_ai(AP_STOREF, OCT_COUNT);
+    arp_progs_ai(AP_JZ, INIT);  // restart if done all octaves
+    arp_progs_ai(AP_LOADF, ARP_REG_NOTE_OFFSET);  // handle transpose
+    arp_progs_ai(AP_ADDL, 12);
+    arp_progs_ai(AP_STOREF, ARP_REG_NOTE_OFFSET);
+    arp_progs_ai(AP_JUMP, START);  // do next octave
+}
+
 // generate an up/down norepeat arp program
 void arp_progs_generate_updown_norepeat(int octaves) {
     // labels
@@ -539,37 +637,6 @@ void arp_progs_generate_updown_norepeat(int octaves) {
     arp_progs_ai(AP_LOADL, 1);  // set looping flag
     arp_progs_ai(AP_STOREF, LOOPING);
     arp_progs_ai(AP_JUMP, INIT_UP);  // restart
-}
-
-// generate a random arp pattern
-void arp_progs_generate_random(int octaves) {
-    // labels
-    enum {
-        INIT
-    };
-    // regs
-    enum {
-        TRANS
-    };
-
-    // setup
-    arp_progs_ai(AP_LABEL, INIT);
-    arp_progs_ai(AP_SNAPSHOT, 0);
-    // do transposing
-    if(octaves > 1) {
-        arp_progs_ai(AP_RAND, octaves);
-        arp_progs_ai(AP_MULL, 12);
-        arp_progs_ai(AP_STOREF, TRANS);
-    }
-    else {
-        arp_progs_ai(AP_LOADL, 0);
-        arp_progs_ai(AP_STOREF, TRANS);
-    }
-    // get note
-    arp_progs_ai(AP_FIND_RANDOM_NOTE, INIT);
-    arp_progs_ai(AP_ADDF, TRANS);
-    arp_progs_ai(AP_PLAY_NOTE_AND_WAIT, 0);
-    arp_progs_ai(AP_JUMP, INIT);
 }
 
 // generate a repeats arp
