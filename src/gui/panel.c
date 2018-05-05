@@ -21,6 +21,7 @@
 #include "panel.h"
 #include "gui.h"
 #include "panel_menu.h"
+#include "pattern_edit.h"
 #include "step_edit.h"
 #include "song_edit.h"
 #include "../iface/iface_panel.h"
@@ -42,6 +43,7 @@
 #define PANEL_EDIT_MODE_NONE 0
 #define PANEL_EDIT_MODE_STEP 1
 #define PANEL_EDIT_MODE_SONG 2
+#define PANEL_EDIT_MODE_PATTERN 3
 
 // panel power state for LEDs
 #define PANEL_POWER_STATE_STANDBY 0
@@ -104,6 +106,7 @@ void panel_update_record_led(void);
 void panel_update_run_led(int state);
 void panel_update_track_led(int track, int state);
 int panel_get_edit_mode(void);
+void panel_cancel_edit_mode(void);
 void panel_handle_shift_double_tap(void);
 
 // init the panel
@@ -360,18 +363,15 @@ void panel_handle_seq_input(int ctrl, int val) {
     if(val) {
         switch(ctrl) {
             case PANEL_SW_SCENE:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_set_enable(0);  // cancel step edit
-                }
                 // song menu
                 if(pstate.shift_state) {
-                    // turn off song edit mode
-                    if(song_edit_get_enable()) {
+                    // turn off song edit mode if we are on
+                    if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
                         song_edit_set_enable(0);
                     }
                     // record is not active so we can start song edit
                     else if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_IDLE) {
+                        panel_cancel_edit_mode();
                         song_edit_set_enable(1);
                     }
                 }
@@ -382,14 +382,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 }
                 break;
             case PANEL_SW_ARP:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_set_enable(0);  // cancel step edit
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_set_enable(0);  // cancel song edit
-                }
+                panel_cancel_edit_mode();
                 // arp menu (without changing state)
                 if(pstate.shift_state) {
                     panel_menu_set_mode(PANEL_MENU_ARP);
@@ -555,14 +548,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 }
                 break;
             case PANEL_SW_MIDI:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_set_enable(0);  // cancel step edit
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_set_enable(0);  // cancel song edit
-                }
+                panel_cancel_edit_mode();
                 // sys
                 if(pstate.shift_state) {
                     panel_menu_set_mode(PANEL_MENU_SYS);
@@ -593,14 +579,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 }
                 break;
             case PANEL_SW_TONALITY:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_set_enable(0);  // cancel step edit
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_set_enable(0);  // cancel song edit
-                }
+                panel_cancel_edit_mode();
                 // swing
                 if(pstate.shift_state) {
                     panel_menu_set_mode(PANEL_MENU_SWING);
@@ -611,14 +590,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                 }
                 break;
             case PANEL_SW_LOAD:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_set_enable(0);  // cancel step edit
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_set_enable(0);  // cancel song edit
-                }
+                panel_cancel_edit_mode();
                 // save
                 if(pstate.shift_state) {
                     panel_menu_set_mode(PANEL_MENU_SAVE);
@@ -646,17 +618,16 @@ void panel_handle_seq_input(int ctrl, int val) {
             case PANEL_SW_RECORD:
                 // clear
                 if(pstate.shift_state) {
-                    // step edit mode is active
-                    if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                        step_edit_clear_step();
-                    }
-                    // song edit mode is active
-                    else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                        song_edit_remove_step();
-                    }
-                    // normal track clearing
-                    else {
-                        seq_ctrl_make_clear();
+                    switch(panel_get_edit_mode()) {
+                        case PANEL_EDIT_MODE_STEP:
+                            step_edit_clear_step();
+                            break;
+                        case PANEL_EDIT_MODE_SONG:
+                            song_edit_remove_step();
+                            break;
+                        default:
+                            seq_ctrl_make_clear();
+                            break;
                     }
                 }
                 // record
@@ -665,14 +636,30 @@ void panel_handle_seq_input(int ctrl, int val) {
                 }
                 break;
             case PANEL_SW_EDIT:
-                // song edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_set_enable(0);  // cancel song edit
-                }
-                // record is not active so we can start step edit
-                else if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_IDLE) {
-                    // step edit enable / retrigger
-                    step_edit_set_enable(1);
+                // record is not active so we can start an editing mode
+                if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_IDLE) {
+                    // pattern edit
+                    if(pstate.shift_state) {
+                        if(panel_get_edit_mode() == PANEL_EDIT_MODE_PATTERN) {
+                            pattern_edit_set_enable(0);
+                        }
+                        else {
+                            panel_cancel_edit_mode();
+                            pattern_edit_set_enable(1);
+                        }
+                    }
+                    // step edit
+                    else {
+                        // step edit retrigger
+                        if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
+                            step_edit_set_enable(1);
+                        }
+                        // start step edit from scratch
+                        else {
+                            panel_cancel_edit_mode();
+                            step_edit_set_enable(1);
+                        }
+                    }
                 }
                 break;
             case PANEL_SW_SHIFT:
@@ -687,116 +674,135 @@ void panel_handle_seq_input(int ctrl, int val) {
 #endif
                 break;
             case PANEL_ENC_SPEED:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_adjust_start_delay(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // tempo fine
-                else if(pstate.shift_state) {
-                    seq_ctrl_adjust_tempo(seq_utils_enc_val_to_change(val), 1);
-                }
-                // tempo coarse
-                else {
-                    seq_ctrl_adjust_tempo(seq_utils_enc_val_to_change(val), 0);
+                switch(panel_get_edit_mode()) {
+                    case PANEL_EDIT_MODE_STEP:
+                        step_edit_adjust_start_delay(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_SONG:
+                    case PANEL_EDIT_MODE_PATTERN:
+                    default:
+                        // tempo fine
+                        if(pstate.shift_state) {
+                            seq_ctrl_adjust_tempo(seq_utils_enc_val_to_change(val), 1);
+                        }
+                        // tempo coarse
+                        else {
+                            seq_ctrl_adjust_tempo(seq_utils_enc_val_to_change(val), 0);
+                        }
+                        break;
                 }
                 break;
             case PANEL_ENC_GATE_TIME:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_adjust_gate_time(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    // unused
-                }
-                // normal mode
-                else {
-                    seq_ctrl_adjust_gate_time(seq_utils_enc_val_to_change(val));
+                switch(panel_get_edit_mode()) {
+                    case PANEL_EDIT_MODE_STEP:
+                        step_edit_adjust_gate_time(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_SONG:
+                    case PANEL_EDIT_MODE_PATTERN:
+                        // no action
+                        break;
+                    default:
+                        seq_ctrl_adjust_gate_time(seq_utils_enc_val_to_change(val));
+                        break;
                 }
                 break;
             case PANEL_ENC_MOTION_START:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_adjust_cursor(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_adjust_cursor(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // menu mode for encoder
-                else if(panel_menu_get_mode() != PANEL_MENU_NONE) {
-                    panel_menu_adjust_cursor(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // step record mode
-                else if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM ||
-                        seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_STEP) {
-                    seq_engine_step_rec_pos_changed(seq_utils_enc_val_to_change(val));
-                }
-                // normal mode
-                else {
-                    seq_ctrl_adjust_motion_start(seq_utils_enc_val_to_change(val));
+                switch(panel_get_edit_mode()) {
+                    case PANEL_EDIT_MODE_STEP:
+                        step_edit_adjust_cursor(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_SONG:
+                        song_edit_adjust_cursor(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_PATTERN:
+                        pattern_edit_adjust_cursor(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    default:
+                        if(panel_menu_get_mode() != PANEL_MENU_NONE) {
+                            panel_menu_adjust_cursor(
+                                seq_utils_enc_val_to_change(val),
+                                pstate.shift_state);
+                        }
+                        // step record mode
+                        else if(seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_ARM ||
+                                seq_ctrl_get_record_mode() == SEQ_CTRL_RECORD_STEP) {
+                            seq_engine_step_rec_pos_changed(seq_utils_enc_val_to_change(val));
+                        }
+                        // normal mode
+                        else {
+                            seq_ctrl_adjust_motion_start(seq_utils_enc_val_to_change(val));
+                        }
+                        break;
                 }
                 break;
             case PANEL_ENC_MOTION_LENGTH:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_adjust_velocity(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_adjust_length(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // menu mode for encoder
-                else if(panel_menu_get_mode() != PANEL_MENU_NONE) {
-                    panel_menu_adjust_value(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // track step length
-                else if(pstate.shift_state) {
-                    seq_ctrl_adjust_step_length(seq_utils_enc_val_to_change(val));
-                }
-                // motion length
-                else {
-                    seq_ctrl_adjust_motion_length(seq_utils_enc_val_to_change(val));
+                switch(panel_get_edit_mode()) {
+                    case PANEL_EDIT_MODE_STEP:
+                        step_edit_adjust_velocity(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_SONG:
+                        song_edit_adjust_length(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_PATTERN:
+                        pattern_edit_adjust_step(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    default:
+                        // menu mode for encoder
+                        if(panel_menu_get_mode() != PANEL_MENU_NONE) {
+                            panel_menu_adjust_value(seq_utils_enc_val_to_change(val),
+                                pstate.shift_state);
+                        }
+                        // track step length
+                        else if(pstate.shift_state) {
+                            seq_ctrl_adjust_step_length(seq_utils_enc_val_to_change(val));
+                        }
+                        // motion length
+                        else {
+                            seq_ctrl_adjust_motion_length(seq_utils_enc_val_to_change(val));
+                        }
+                        break;
                 }
                 break;
             case PANEL_ENC_PATTERN_TYPE:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_adjust_ratchet_mode(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_adjust_scene(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // pattern type
-                else {
-                    seq_ctrl_adjust_pattern_type(seq_utils_enc_val_to_change(val));
+                switch(panel_get_edit_mode()) {
+                    case PANEL_EDIT_MODE_STEP:
+                        step_edit_adjust_ratchet_mode(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_SONG:
+                        song_edit_adjust_scene(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_PATTERN:
+                    default:
+                        seq_ctrl_adjust_pattern_type(seq_utils_enc_val_to_change(val));
+                        break;
                 }
                 break;
             case PANEL_ENC_TRANSPOSE:
-                // step edit mode is active
-                if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
-                    step_edit_adjust_note(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // song edit mode is active
-                else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
-                    song_edit_adjust_kbtrans(seq_utils_enc_val_to_change(val),
-                        pstate.shift_state);
-                }
-                // normal mode
-                else {
-                    seq_ctrl_adjust_transpose(seq_utils_enc_val_to_change(val));
+                switch(panel_get_edit_mode()) {
+                    case PANEL_EDIT_MODE_STEP:
+                        step_edit_adjust_note(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_SONG:
+                        song_edit_adjust_kbtrans(seq_utils_enc_val_to_change(val),
+                            pstate.shift_state);
+                        break;
+                    case PANEL_EDIT_MODE_PATTERN:
+                        // no action
+                        break;
+                    default:
+                        seq_ctrl_adjust_transpose(seq_utils_enc_val_to_change(val));
+                        break;
                 }
                 break;
             default:
@@ -1131,7 +1137,26 @@ int panel_get_edit_mode(void) {
     else if(step_edit_get_enable()) {
         return PANEL_EDIT_MODE_STEP;
     }
+    else if(pattern_edit_get_enable()) {
+        return PANEL_EDIT_MODE_PATTERN;
+    }
     return PANEL_EDIT_MODE_NONE;
+}
+
+// cancel edit mode
+void panel_cancel_edit_mode(void) {
+    // step edit mode is active
+    if(panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
+        step_edit_set_enable(0);  // cancel step edit
+    }
+    // song edit mode is active
+    else if(panel_get_edit_mode() == PANEL_EDIT_MODE_SONG) {
+        song_edit_set_enable(0);  // cancel song edit
+    }
+    // pattern edit is active
+    else if(panel_get_edit_mode() == PANEL_EDIT_MODE_PATTERN) {
+        pattern_edit_set_enable(0);  // cancel pattern edit
+    }
 }
 
 // handle shift double-tap to exit menu

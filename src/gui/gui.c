@@ -307,9 +307,9 @@ int gui_draw_preview_grids(void);
 int gui_draw_labels(void);
 void gui_set_label(int index, char *text);
 void gui_set_label_highlight(int index, int startch, int lench, int mode);
-void gui_set_label_prefs(int index, int x, int y, int w, int h, 
+void gui_set_label_prefs(int index, int x, int y, int w, int h,
     int font, uint32_t fg_color, uint32_t bg_color);
-void gui_set_label_color(int index, uint32_t fg_color, 
+void gui_set_label_color(int index, uint32_t fg_color,
     uint32_t bg_color);
 void gui_calculate_motion_steps(int track);
 void gui_update_song(int song);
@@ -380,7 +380,7 @@ int gui_init(void) {
         gstate.grid_overlay[i] = 0;
     }
     gstate.grid_overlay_enable = 0;
-    
+
     // reset the preview grid states
     for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
         gstate.track_select_state[i] = 0x00;
@@ -403,7 +403,7 @@ int gui_init(void) {
             gstate.motion_step[i][j] = 0;
         }
     }
-    
+
     gstate.first_track = 0;
     gstate.current_scene = 0;
 
@@ -428,8 +428,8 @@ void gui_startup(void) {
         config_store_set_val(CONFIG_STORE_GUI_DISP_TYPE, gstate.screen_type);
     }
 
-    // init stuff for screen type A    
-    if(gstate.screen_type == GUI_DISP_TYPE_A) {    
+    // init stuff for screen type A
+    if(gstate.screen_type == GUI_DISP_TYPE_A) {
         // cache some drawing stuff
         gstate.GUI_GRID_X = GUI_DISP_A_GRID_X;
         gstate.GUI_GRID_Y = GUI_DISP_A_GRID_Y;
@@ -448,65 +448,65 @@ void gui_startup(void) {
         gstate.GUI_PREVIEW_SELECT_Y = GUI_DISP_A_PREVIEW_SELECT_Y;
         gstate.GUI_PREVIEW_SELECT_H = GUI_DISP_A_PREVIEW_SELECT_H;
         gstate.GUI_PREVIEW_ARP_Y = GUI_DISP_A_PREVIEW_ARP_Y;
-    
+
         //
         // set the prefs for each label
         //
-        gui_set_label_prefs(GUI_LABEL_SONG, 
-            GUI_DISP_A_LABEL_SONG_X, GUI_DISP_A_LABEL_SONG_Y, 
+        gui_set_label_prefs(GUI_LABEL_SONG,
+            GUI_DISP_A_LABEL_SONG_X, GUI_DISP_A_LABEL_SONG_Y,
             60, 12, GUI_DISP_A_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_TEMPO, 
+        gui_set_label_prefs(GUI_LABEL_TEMPO,
             GUI_DISP_A_LABEL_TEMPO_X, GUI_DISP_A_LABEL_TEMPO_Y,
-            80, 12, GUI_DISP_A_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);        
+            80, 12, GUI_DISP_A_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_SCENE, 
+        gui_set_label_prefs(GUI_LABEL_SCENE,
             GUI_DISP_A_LABEL_SCENE_X, GUI_DISP_A_LABEL_SCENE_Y,
             60, 12, GUI_DISP_A_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_RUN, 
-            GUI_DISP_A_LABEL_RUN_X, GUI_DISP_A_LABEL_RUN_Y, 
+        gui_set_label_prefs(GUI_LABEL_RUN,
+            GUI_DISP_A_LABEL_RUN_X, GUI_DISP_A_LABEL_RUN_Y,
             20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_GREEN_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_RUN, "RUN");
-        
-        gui_set_label_prefs(GUI_LABEL_REC, 
+
+        gui_set_label_prefs(GUI_LABEL_REC,
             GUI_DISP_A_LABEL_REC_X, GUI_DISP_A_LABEL_REC_Y,
             20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_RED_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_REC, "REC");
 
-        gui_set_label_prefs(GUI_LABEL_CLKSRC, 
+        gui_set_label_prefs(GUI_LABEL_CLKSRC,
             GUI_DISP_A_LABEL_CLKSRC_X, GUI_DISP_A_LABEL_CLKSRC_Y,
             20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_GREY, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_CLKSRC, "INT");
 
-        gui_set_label_prefs(GUI_LABEL_KEYTRANS, 
+        gui_set_label_prefs(GUI_LABEL_KEYTRANS,
             GUI_DISP_A_LABEL_KEYTRANS_X, GUI_DISP_A_LABEL_KEYTRANS_Y,
             60, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_MAGENTA_DIM, GUI_TEXT_BG_COLOR);
         gui_update_keyboard_transpose(0);
-            
-        gui_set_label_prefs(GUI_LABEL_LIVE, 
+
+        gui_set_label_prefs(GUI_LABEL_LIVE,
             GUI_DISP_A_LABEL_LIVE_X, GUI_DISP_A_LABEL_LIVE_Y,
             30, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_CYAN_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_LIVE, "LIVE");
 
-        gui_set_label_prefs(GUI_LABEL_SONG_MODE, 
+        gui_set_label_prefs(GUI_LABEL_SONG_MODE,
             GUI_DISP_A_LABEL_SONG_MODE_X, GUI_DISP_A_LABEL_SONG_MODE_Y,
             20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
 
-        gui_set_label_prefs(GUI_LABEL_STATUS_L1, 
-            GUI_DISP_A_LABEL_STATUS_L1_X, GUI_DISP_A_LABEL_STATUS_L1_Y, 
+        gui_set_label_prefs(GUI_LABEL_STATUS_L1,
+            GUI_DISP_A_LABEL_STATUS_L1_X, GUI_DISP_A_LABEL_STATUS_L1_Y,
             224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
-            
-        gui_set_label_prefs(GUI_LABEL_STATUS_L2, 
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L2,
             GUI_DISP_A_LABEL_STATUS_L2_X, GUI_DISP_A_LABEL_STATUS_L2_Y,
             224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_STATUS_L3, 
+        gui_set_label_prefs(GUI_LABEL_STATUS_L3,
             GUI_DISP_A_LABEL_STATUS_L3_X, GUI_DISP_A_LABEL_STATUS_L3_Y,
             224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_STATUS_L4, 
+        gui_set_label_prefs(GUI_LABEL_STATUS_L4,
             GUI_DISP_A_LABEL_STATUS_L4_X, GUI_DISP_A_LABEL_STATUS_L4_Y,
             224, 10, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
     }
@@ -534,67 +534,67 @@ void gui_startup(void) {
         //
         // set the prefs for each label
         //
-        gui_set_label_prefs(GUI_LABEL_SONG, 
-            GUI_DISP_B_LABEL_SONG_X, GUI_DISP_B_LABEL_SONG_Y, 
+        gui_set_label_prefs(GUI_LABEL_SONG,
+            GUI_DISP_B_LABEL_SONG_X, GUI_DISP_B_LABEL_SONG_Y,
             60, 12, GUI_DISP_B_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_TEMPO, 
+        gui_set_label_prefs(GUI_LABEL_TEMPO,
             GUI_DISP_B_LABEL_TEMPO_X, GUI_DISP_B_LABEL_TEMPO_Y,
-            80, 12, GUI_DISP_B_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);        
+            80, 12, GUI_DISP_B_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_SCENE, 
+        gui_set_label_prefs(GUI_LABEL_SCENE,
             GUI_DISP_B_LABEL_SCENE_X, GUI_DISP_B_LABEL_SCENE_Y,
             60, 12, GUI_DISP_B_FONT_HEADING, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_RUN, 
-            GUI_DISP_B_LABEL_RUN_X, GUI_DISP_B_LABEL_RUN_Y, 
+        gui_set_label_prefs(GUI_LABEL_RUN,
+            GUI_DISP_B_LABEL_RUN_X, GUI_DISP_B_LABEL_RUN_Y,
             20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_GREEN_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_RUN, "RUN");
-        
-        gui_set_label_prefs(GUI_LABEL_REC, 
+
+        gui_set_label_prefs(GUI_LABEL_REC,
             GUI_DISP_B_LABEL_REC_X, GUI_DISP_B_LABEL_REC_Y,
             20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_RED_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_REC, "REC");
 
-        gui_set_label_prefs(GUI_LABEL_CLKSRC, 
+        gui_set_label_prefs(GUI_LABEL_CLKSRC,
             GUI_DISP_B_LABEL_CLKSRC_X, GUI_DISP_B_LABEL_CLKSRC_Y,
             20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_GREY, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_CLKSRC, "INT");
 
-        gui_set_label_prefs(GUI_LABEL_KEYTRANS, 
+        gui_set_label_prefs(GUI_LABEL_KEYTRANS,
             GUI_DISP_B_LABEL_KEYTRANS_X, GUI_DISP_B_LABEL_KEYTRANS_Y,
             60, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_MAGENTA_DIM, GUI_TEXT_BG_COLOR);
         gui_update_keyboard_transpose(0);
-            
-        gui_set_label_prefs(GUI_LABEL_LIVE, 
+
+        gui_set_label_prefs(GUI_LABEL_LIVE,
             GUI_DISP_B_LABEL_LIVE_X, GUI_DISP_B_LABEL_LIVE_Y,
             30, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_CYAN_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_LIVE, "LIVE");
 
-        gui_set_label_prefs(GUI_LABEL_SONG_MODE, 
+        gui_set_label_prefs(GUI_LABEL_SONG_MODE,
             GUI_DISP_B_LABEL_SONG_MODE_X, GUI_DISP_B_LABEL_SONG_MODE_Y,
             20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
 
-        gui_set_label_prefs(GUI_LABEL_STATUS_L1, 
-            GUI_DISP_B_LABEL_STATUS_L1_X, GUI_DISP_B_LABEL_STATUS_L1_Y, 
+        gui_set_label_prefs(GUI_LABEL_STATUS_L1,
+            GUI_DISP_B_LABEL_STATUS_L1_X, GUI_DISP_B_LABEL_STATUS_L1_Y,
             224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
-            
-        gui_set_label_prefs(GUI_LABEL_STATUS_L2, 
+
+        gui_set_label_prefs(GUI_LABEL_STATUS_L2,
             GUI_DISP_B_LABEL_STATUS_L2_X, GUI_DISP_B_LABEL_STATUS_L2_Y,
             224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_STATUS_L3, 
+        gui_set_label_prefs(GUI_LABEL_STATUS_L3,
             GUI_DISP_B_LABEL_STATUS_L3_X, GUI_DISP_B_LABEL_STATUS_L3_Y,
             224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
 
-        gui_set_label_prefs(GUI_LABEL_STATUS_L4, 
+        gui_set_label_prefs(GUI_LABEL_STATUS_L4,
             GUI_DISP_B_LABEL_STATUS_L4_X, GUI_DISP_B_LABEL_STATUS_L4_Y,
-            224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);    
+            224, 10, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
     }
 
 	// draw display for the first time
-	gfx_clear_screen(GUI_BG_COLOR);	
+	gfx_clear_screen(GUI_BG_COLOR);
 	gui_draw_grid_bg();
 	// mark components dirty
     for(i = 0; i < GUI_MAX_LABELS; i ++) {
@@ -606,12 +606,12 @@ void gui_startup(void) {
     gui_set_status_override(0);
     gstate.force_refresh = 0;
     gstate.force_reinit = 0;
-	
+
     // register for events
     state_change_register(gui_handle_state_change, SCEC_SONG);
     state_change_register(gui_handle_state_change, SCEC_CTRL);
     state_change_register(gui_handle_state_change, SCEC_ENG);
-    
+
     // unblock the drawing
     gstate.started = 1;
 }
@@ -651,7 +651,7 @@ void gui_refresh_task(void) {
             for(step = 0; step < SEQ_NUM_STEPS; step ++) {
                 gstate.preview_state[track][step] = 0;
             }
-        } 
+        }
 	}
     dirty += gui_draw_labels();
 	// attempt to redraw the squares
@@ -764,7 +764,7 @@ void gui_clear_status_text(int line) {
     }
     gstate.status_lines[line][i] = 0x00;
     gui_set_label(GUI_LABEL_STATUS_L1 + line, gstate.status_lines[line]);
-    gui_set_label_highlight(GUI_LABEL_STATUS_L1 + line, 
+    gui_set_label_highlight(GUI_LABEL_STATUS_L1 + line,
         0, GUI_STATUS_LINE_LEN, GFX_HIGHLIGHT_NORMAL);
 }
 
@@ -777,8 +777,8 @@ void gui_set_status_text(int line, char *text) {
     len = strlen(text);
     if(len > GUI_STATUS_LINE_LEN) {
         len = GUI_STATUS_LINE_LEN;
-    }    
-    memcpy(gstate.status_lines[line], text, len);    
+    }
+    memcpy(gstate.status_lines[line], text, len);
     // pad out line
     for(i = strlen(text); i < GUI_STATUS_LINE_LEN; i ++) {
         gstate.status_lines[line][i] = ' ';
@@ -812,7 +812,7 @@ void gui_set_status_text_part(int line, int startch, int lench, char *text) {
 }
 
 // set the highlight of a status line
-void gui_set_status_highlight_part(int line, int startch, 
+void gui_set_status_highlight_part(int line, int startch,
         int lench, int mode) {
     if(line < 0 || line >= 4) {
         log_error("gsshp - line invalid: %d", line);
@@ -847,10 +847,10 @@ void gui_set_menu_prev_next(int prev, int next) {
         gui_set_status_text_part(0, 14, 13, "            >");
     }
     else if(prev && !next) {
-        gui_set_status_text_part(0, 14, 13, "          <  ");    
+        gui_set_status_text_part(0, 14, 13, "          <  ");
     }
     else if(prev && next) {
-        gui_set_status_text_part(0, 14, 13, "          < >");    
+        gui_set_status_text_part(0, 14, 13, "          < >");
     }
     else {
         gui_set_status_text_part(0, 14, 13, "             ");
@@ -901,7 +901,7 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             gui_update_scene(seq_ctrl_get_scene());
             gui_update_song_mode();
             gui_update_clock_source(song_get_midi_clock_source());
-            break;        
+            break;
         case SCE_SONG_SAVED:
             gui_update_song(data[0]);
             break;
@@ -910,7 +910,7 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_CTRL_FIRST_TRACK:
             gui_update_first_track(data[0]);
-            break;          
+            break;
         case SCE_CTRL_EXT_TEMPO:
             gui_update_tempo(midi_clock_get_tempo());
             gui_update_clock_source(song_get_midi_clock_source());  // sync color
@@ -965,10 +965,10 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             gui_update_gate_time_override(data[0], data[1], data[2]);
             break;
         case SCE_SONG_PATTERN_TYPE:
-            gui_update_pattern_type(data[0], data[1], data[2]);            
+            gui_update_pattern_type(data[0], data[1], data[2]);
             break;
         case SCE_SONG_TRACK_TYPE:
-            gui_update_track_type(data[0], data[1], data[2]);            
+            gui_update_track_type(data[0], data[1], data[2]);
             break;
         case SCE_ENG_CURRENT_SCENE:
             gui_update_scene(data[0]);
@@ -977,16 +977,16 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             gui_update_active_step(data[0], data[1]);
             break;
         case SCE_ENG_KBTRANS:
-            gui_update_keyboard_transpose(data[0]);            
+            gui_update_keyboard_transpose(data[0]);
             break;
-        default: 
+        default:
             break;
     }
 }
 
 // draw the grid background
 void gui_draw_grid_bg(void) {
-    gfx_fill_rect(gstate.GUI_GRID_X, gstate.GUI_GRID_Y, 
+    gfx_fill_rect(gstate.GUI_GRID_X, gstate.GUI_GRID_Y,
         gstate.GUI_GRID_W, gstate.GUI_GRID_H, GUI_GRID_BG_COLOR);
 }
 
@@ -1006,11 +1006,11 @@ int gui_draw_main_grid(void) {
         }
         if(gstate.grid_state[step] != color) {
             x = step & 0x07;
-            y = (step >> 3) & 0x07;        
+            y = (step >> 3) & 0x07;
             gstate.grid_state[step] = color;
-            gfx_fill_rect(gstate.GUI_GRID_SQUARE_X + 
-                ((gstate.GUI_GRID_SQUARE_W + gstate.GUI_GRID_SQUARE_SPACE) * x), 
-                gstate.GUI_GRID_SQUARE_Y + 
+            gfx_fill_rect(gstate.GUI_GRID_SQUARE_X +
+                ((gstate.GUI_GRID_SQUARE_W + gstate.GUI_GRID_SQUARE_SPACE) * x),
+                gstate.GUI_GRID_SQUARE_Y +
                 ((gstate.GUI_GRID_SQUARE_H + gstate.GUI_GRID_SQUARE_SPACE) * y),
                 gstate.GUI_GRID_SQUARE_W, gstate.GUI_GRID_SQUARE_H,
                 color);
@@ -1037,7 +1037,7 @@ int gui_draw_preview_grids(void) {
                     color = GUI_GRID_TRACK_COLOR_ACTIVE[track];
                 }
                 // pattern enabled on step
-                else if(pattern_get_step_enable(gstate.current_scene, track, 
+                else if(pattern_get_step_enable(gstate.current_scene, track,
                         gstate.pattern_type[track], step)) {
                     color = GUI_GRID_TRACK_COLOR_MUTED[track][gstate.motion_step[track][step]];
                 }
@@ -1053,7 +1053,7 @@ int gui_draw_preview_grids(void) {
                     color = GUI_GRID_TRACK_COLOR_ACTIVE[track];
                 }
                 // pattern enabled on step
-                else if(pattern_get_step_enable(gstate.current_scene, track, 
+                else if(pattern_get_step_enable(gstate.current_scene, track,
                         gstate.pattern_type[track], step)) {
                     color = GUI_GRID_TRACK_COLOR_NORMAL[track][gstate.motion_step[track][step]];
                 }
@@ -1065,9 +1065,9 @@ int gui_draw_preview_grids(void) {
             // only redraw if the square has changed
             if(gstate.preview_state[track][step] != color) {
                 x = step & 0x07;
-                y = (step >> 3) & 0x07;        
+                y = (step >> 3) & 0x07;
                 gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_SQUARE_W * x) +
-                  (gstate.GUI_PREVIEW_GRID_SPACING * track), 
+                  (gstate.GUI_PREVIEW_GRID_SPACING * track),
                   gstate.GUI_PREVIEW_Y + (gstate.GUI_PREVIEW_SQUARE_H * y),
                   gstate.GUI_PREVIEW_SQUARE_W, gstate.GUI_PREVIEW_SQUARE_H,
                   color);
@@ -1084,25 +1084,25 @@ int gui_draw_preview_grids(void) {
         }
         // only redraw if the select bar has changed
         if(color != gstate.track_select_state[track]) {
-            gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_GRID_SPACING * track), 
+            gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_GRID_SPACING * track),
               gstate.GUI_PREVIEW_SELECT_Y,
               (gstate.GUI_PREVIEW_SQUARE_W * 8), gstate.GUI_PREVIEW_SELECT_H,
-              color);            
+              color);
             gstate.track_select_state[track] = color;
         }
-        // arp enable color        
+        // arp enable color
         if(gstate.arp_enable[track]) {
             color = GUI_FONT_COLOR_YELLOW;
         }
         else {
-            color = GUI_FONT_COLOR_YELLOW_DIM;            
-        }        
+            color = GUI_FONT_COLOR_YELLOW_DIM;
+        }
         // only redraw if the arp bar has changed
         if(color != gstate.arp_enable_state[track]) {
-            gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_GRID_SPACING * track), 
+            gfx_fill_rect(gstate.GUI_PREVIEW_X + (gstate.GUI_PREVIEW_GRID_SPACING * track),
               gstate.GUI_PREVIEW_ARP_Y,
               (gstate.GUI_PREVIEW_SQUARE_W * 8), gstate.GUI_PREVIEW_SELECT_H,
-              color);            
+              color);
             gstate.arp_enable_state[track] = color;
         }
     }
@@ -1134,7 +1134,7 @@ void gui_set_label(int index, char *text) {
     // string is unchanged - don't redraw
     if(!strcmp(text, gstate.glabels[index].text)) {
         return;
-    }    
+    }
     // don't crash with zero length strings
     if(*text == 0x00) {
         strcpy(gstate.glabels[index].text, " ");
@@ -1167,12 +1167,12 @@ void gui_set_label_highlight(int index, int startch, int lench, int mode) {
 }
 
 // set the prefs for a label
-void gui_set_label_prefs(int index, int x, int y, int w, int h, 
+void gui_set_label_prefs(int index, int x, int y, int w, int h,
         int font, uint32_t fg_color, uint32_t bg_color) {
     if(index < 0 || index >= GUI_MAX_LABELS) {
         log_error("gslp - index invalid: %d", index);
         return;
-    }        
+    }
     gstate.glabels[index].x = x;
     gstate.glabels[index].y = y;
     gstate.glabels[index].w = w;
@@ -1188,7 +1188,7 @@ void gui_set_label_color(int index, uint32_t fg_color, uint32_t bg_color) {
     if(index < 0 || index >= GUI_MAX_LABELS) {
         log_error("gslc - index invalid: %d", index);
         return;
-    }        
+    }
     gstate.glabels[index].fg_color = fg_color;
     gstate.glabels[index].bg_color = bg_color;
     gstate.glabels[index].dirty = 1;
@@ -1203,8 +1203,8 @@ void gui_calculate_motion_steps(int track) {
     }
     // figure out which steps are enabled for motion
     for(i = 0; i < SEQ_NUM_STEPS; i ++) {
-        gstate.motion_step[track][i] = seq_utils_is_step_active(i, 
-                gstate.motion_start[track], 
+        gstate.motion_step[track][i] = seq_utils_is_step_active(i,
+                gstate.motion_start[track],
                 gstate.motion_length[track], SEQ_NUM_STEPS);
     }
 }
@@ -1224,15 +1224,15 @@ void gui_update_scene(int scene) {
     }
     sprintf(tempstr, "SCENE %d", (scene + 1));
     gui_set_label(GUI_LABEL_SCENE, tempstr);
-    
+
     gstate.current_scene = scene;
-    
+
     // refresh all display info
     // we need this stuff for all tracks
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         gui_update_step_length(scene, track,
             song_get_step_length(scene, track));
-        gui_update_motion_start(scene, track, 
+        gui_update_motion_start(scene, track,
             song_get_motion_start(scene, track));
         gui_update_motion_length(scene, track,
             song_get_motion_length(scene, track));
@@ -1251,14 +1251,14 @@ void gui_update_track_select(int track, int select) {
     if(track < 0 || track >= SEQ_NUM_TRACKS) {
         log_error("guts - track invalid: %d", track);
         return;
-    }    
+    }
     if(select) {
         gstate.track_select[track] = 1;
     }
     else {
-        gstate.track_select[track] = 0;    
+        gstate.track_select[track] = 0;
     }
-    
+
     // check to see if the first track changed
     if(seq_ctrl_get_first_track() != gstate.first_track) {
         gui_update_first_track(seq_ctrl_get_first_track());
@@ -1272,13 +1272,13 @@ void gui_update_first_track(int first) {
         return;
     }
     gstate.first_track = first;
-    
+
     // track number
     if(!gstate.status_override) {
         sprintf(tempstr, "Track: %d", (gstate.first_track + 1));
         gui_set_status_text_part(0, 0, 8, tempstr);
     }
-    gui_update_track_transpose(gstate.current_scene, first, 
+    gui_update_track_transpose(gstate.current_scene, first,
         song_get_transpose(gstate.current_scene, first));
     gui_update_tonality(gstate.current_scene, first,
         song_get_tonality(gstate.current_scene, first));
@@ -1292,10 +1292,10 @@ void gui_update_first_track(int first) {
         song_get_motion_dir(gstate.current_scene, first));
     gui_update_step_length(gstate.current_scene, first,
         song_get_step_length(gstate.current_scene, first));
-    gui_update_gate_time_override(gstate.current_scene, first, 
+    gui_update_gate_time_override(gstate.current_scene, first,
         song_get_gate_time(gstate.current_scene, first));
     gui_update_track_type(gstate.current_scene, first,
-        song_get_track_type(first));      
+        song_get_track_type(first));
     gui_update_track_mute(gstate.current_scene, first,
         song_get_mute(gstate.current_scene, first));
 }
@@ -1309,12 +1309,12 @@ void gui_update_tempo(float tempo) {
 // update the run indicator state
 void gui_update_run_enable(int enable) {
     if(enable) {
-        gui_set_label_color(GUI_LABEL_RUN, 
+        gui_set_label_color(GUI_LABEL_RUN,
             GUI_FONT_COLOR_GREEN, GUI_TEXT_BG_COLOR);
     }
     else {
-        gui_set_label_color(GUI_LABEL_RUN, 
-            GUI_FONT_COLOR_GREEN_DIM, GUI_TEXT_BG_COLOR);    
+        gui_set_label_color(GUI_LABEL_RUN,
+            GUI_FONT_COLOR_GREEN_DIM, GUI_TEXT_BG_COLOR);
     }
 }
 
@@ -1332,11 +1332,11 @@ void gui_update_rec_mode(int mode) {
         case SEQ_CTRL_RECORD_RT:
             gui_set_label_color(GUI_LABEL_REC,
                 GUI_FONT_COLOR_RED, GUI_TEXT_BG_COLOR);
-            break;    
+            break;
         case SEQ_CTRL_RECORD_IDLE:
         default:
             gui_set_label_color(GUI_LABEL_REC,
-                GUI_FONT_COLOR_RED_DIM, GUI_TEXT_BG_COLOR);    
+                GUI_FONT_COLOR_RED_DIM, GUI_TEXT_BG_COLOR);
             break;
     }
 }
@@ -1347,7 +1347,7 @@ void gui_update_clock_source(int source) {
         case SONG_MIDI_CLOCK_SOURCE_INT:
             gui_set_label(GUI_LABEL_CLKSRC, "INT");
             gui_set_label_color(GUI_LABEL_CLKSRC,
-                GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);    
+                GUI_FONT_COLOR_NORMAL, GUI_TEXT_BG_COLOR);
             break;
         default:
             gui_set_label(GUI_LABEL_CLKSRC, "EXT");
@@ -1409,7 +1409,7 @@ void gui_update_keyboard_transpose(int transpose) {
     }
     else {
         sprintf(tempstr, "KB:%+-2d", transpose);
-        gui_set_label(GUI_LABEL_KEYTRANS, tempstr);    
+        gui_set_label(GUI_LABEL_KEYTRANS, tempstr);
     }
 }
 
@@ -1432,7 +1432,7 @@ void gui_update_track_mute(int scene, int track, int mute) {
         gstate.track_mute[track] = 1;
     }
     else {
-        gstate.track_mute[track] = 0;    
+        gstate.track_mute[track] = 0;
     }
     // update info display
     if(!gstate.status_override && track == gstate.first_track) {
@@ -1494,7 +1494,7 @@ void gui_update_track_transpose(int scene, int track, int transpose) {
         gui_set_status_text_part(0, 19, 6, "Tran: ");
         panel_utils_transpose_to_str(tempstr, transpose);
         gui_set_status_text_part(0, 25, 3, tempstr);
-    }    
+    }
 }
 
 // update the track arp enable state
@@ -1541,10 +1541,10 @@ void gui_update_tonality(int scene, int track, int tonality) {
     // update info display
     if(!gstate.status_override) {
         gui_set_status_text_part(3, 0, 6, "Tona: ");
-        scale_type_to_name(tempstr, 
+        scale_type_to_name(tempstr,
             song_get_tonality(seq_ctrl_get_scene(), gstate.first_track));
         gui_set_status_text_part(3, 7, 10, tempstr);
-    }    
+    }
 }
 
 // update the start position of a track
@@ -1571,7 +1571,7 @@ void gui_update_motion_start(int scene, int track, int pos) {
     if(!gstate.status_override && track == gstate.first_track) {
         sprintf(tempstr, "Start: %d", (gstate.motion_start[track] + 1));
         gui_set_status_text_part(1, 0, 9, tempstr);
-    }    
+    }
     // cause the motion steps to be recalculated
     gui_calculate_motion_steps(track);
 }
@@ -1600,7 +1600,7 @@ void gui_update_motion_length(int scene, int track, int length) {
     if(!gstate.status_override && track == gstate.first_track) {
         sprintf(tempstr, "Len: %d", gstate.motion_length[track]);
         gui_set_status_text_part(1, 10, 7, tempstr);
-    }    
+    }
     // cause the motion steps to be recalculated
     gui_calculate_motion_steps(track);
 }
@@ -1622,16 +1622,16 @@ void gui_update_motion_dir(int scene, int track, int rev) {
     // we only care about the first track
     if(track != gstate.first_track) {
         return;
-    }    
+    }
     // update info display
     if(!gstate.status_override && track == gstate.first_track) {
         if(rev) {
             gui_set_status_text_part(1, 19, 3, "REV");
         }
         else {
-            gui_set_status_text_part(1, 19, 3, "FWD");        
+            gui_set_status_text_part(1, 19, 3, "FWD");
         }
-    }        
+    }
 }
 
 // update the step length for a track
@@ -1657,7 +1657,7 @@ void gui_update_step_length(int scene, int track, int len) {
         gui_set_status_text_part(2, 0, 6, "Step: ");
         panel_utils_step_len_to_str(tempstr, len);
         gui_set_status_text_part(2, 7, 6, tempstr);
-    }    
+    }
 }
 
 // update the gate time override - 0-255 = 0-200%
@@ -1677,12 +1677,12 @@ void gui_update_gate_time_override(int scene, int track, int time) {
     // we only care about the first track
     if(track != gstate.first_track) {
         return;
-    }    
+    }
     // update info display
     if(!gstate.status_override && track == gstate.first_track) {
         sprintf(tempstr, "Gate: %d%%", (time * 200 / 256));
         gui_set_status_text_part(2, 13, 10, tempstr);
-    }    
+    }
 }
 
 // update the pattern type for a track
@@ -1727,7 +1727,7 @@ void gui_update_track_type(int scene, int track, int type) {
             gui_set_status_text_part(3, 19, 10, "DRUM");
         }
         else {
-            gui_set_status_text_part(3, 19, 10, "VOICE");        
+            gui_set_status_text_part(3, 19, 10, "VOICE");
         }
     }
 }
@@ -1762,12 +1762,11 @@ void gui_update_song_mode(void) {
     // display the status bar - song mode enabled
     else {
         sprintf(tempstr, "SONG - Slot: %d: %d/%d  ",
-            (sngmode->current_entry + 1), 
-            seq_utils_clamp(sngmode->beat_count, 
+            (sngmode->current_entry + 1),
+            seq_utils_clamp(sngmode->beat_count,
                 SEQ_SONG_LIST_MIN_LENGTH,
-                SEQ_SONG_LIST_MAX_LENGTH),          
+                SEQ_SONG_LIST_MAX_LENGTH),
             sngmode->total_beats);
     }
     gui_set_label(GUI_LABEL_SONG_MODE, tempstr);
 }
-

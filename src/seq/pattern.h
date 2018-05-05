@@ -28,7 +28,7 @@
 void pattern_init(void);
 
 // handle state change
-void pattern_handle_state_change(int event_type, 
+void pattern_handle_state_change(int event_type,
     int *data, int data_len);
 
 // load the patterns from the config store
@@ -36,5 +36,8 @@ void pattern_load_patterns(void);
 
 // check whether the current step is enabled on a pattern
 int pattern_get_step_enable(int scene, int track, int pattern, int step);
+
+// adjust the step enable for a pattern - PATTERN_AS_RECORDED is read-only
+void pattern_set_step_enable(int pattern, int step, int enable);
 
 #endif

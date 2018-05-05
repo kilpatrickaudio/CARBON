@@ -35,6 +35,7 @@
 #include "../power_ctrl.h"
 #include "../gui/gui.h"
 #include "../gui/panel.h"
+#include "../gui/pattern_edit.h"
 #include "../gui/step_edit.h"
 #include "../gui/song_edit.h"
 #include "../iface/iface_panel.h"
@@ -79,6 +80,7 @@ void seq_ctrl_init(void) {
     song_init();
     seq_engine_init();  // song must be loaded before this
     clock_out_init();
+    pattern_edit_init();
     step_edit_init();
     song_edit_init();
     sysex_init();
@@ -100,6 +102,7 @@ void seq_ctrl_rt_task(void) {
         midi_clock_timer_task();  // all music timing starts here
         seq_engine_timer_task();  // must run after clock for correct timing
         clock_out_timer_task();  // runs separately from sequencer due to straight time
+        pattern_edit_timer_task();  // handle timeout of pattern edit mode
         step_edit_timer_task();  // handle timeout of step edit mode
         song_edit_timer_task();  // handle timeout of song edit mode
         sysex_timer_task();  // handle processing of SYSEX messages
@@ -150,6 +153,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             midi_clock_request_reset_pos();  // reset the clock position
             // turn off modes
             seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
+            pattern_edit_set_enable(0);
             step_edit_set_enable(0);
             song_edit_set_enable(0);
             // set selections
@@ -168,6 +172,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             midi_clock_request_reset_pos();  // reset the clock position
             // turn off modes
             seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
+            pattern_edit_set_enable(0);
             step_edit_set_enable(0);
             song_edit_set_enable(0);
             // set selections
@@ -494,10 +499,16 @@ int seq_ctrl_get_record_mode(void) {
 // change the record mode - to be used by seq_ctrl and seq_engine
 void seq_ctrl_set_record_mode(int mode) {
     int i, oldmode;
+    if(mode == sstate.record_mode) {
+        return;
+    }
     oldmode = sstate.record_mode;
     // if we are arming
     if(mode != SEQ_CTRL_RECORD_IDLE) {
         // disable editing modes
+        if(pattern_edit_get_enable()) {
+            pattern_edit_set_enable(0);
+        }
         if(song_edit_get_enable()) {
             song_edit_set_enable(0);
         }

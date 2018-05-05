@@ -91,7 +91,7 @@ void pattern_init(void) {
 }
 
 // handle state change
-void pattern_handle_state_change(int event_type, 
+void pattern_handle_state_change(int event_type,
         int *data, int data_len) {
     switch(event_type) {
         case SCE_CONFIG_LOADED:
@@ -102,7 +102,7 @@ void pattern_handle_state_change(int event_type,
             log_debug("phsc - config cleared");
             pattern_load_rom_defaults();
             break;
-    }  
+    }
 }
 
 // load the patterns from the config store
@@ -111,7 +111,7 @@ void pattern_load_patterns(void) {
     int32_t temp;
     int32_t valid_token;
     // check the valid token first
-    valid_token = config_store_get_val(CONFIG_STORE_PATTERN_BANK + 
+    valid_token = config_store_get_val(CONFIG_STORE_PATTERN_BANK +
         PATTERN_VALID_TOKEN_OFFSET);
     log_debug("pattern token: 0x%08x", valid_token);
 
@@ -139,12 +139,13 @@ void pattern_load_patterns(void) {
             patterns.pat[pattern][6] = (temp >> 8) & 0xff;
             patterns.pat[pattern][7] = temp & 0xff;
             addr ++;
-        }        
+        }
     }
 }
 
 // check whether the current step is enabled on a pattern
 int pattern_get_step_enable(int scene, int track, int pattern, int step) {
+    int row, col;
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
         return 0;
     }
@@ -164,9 +165,23 @@ int pattern_get_step_enable(int scene, int track, int pattern, int step) {
         return 0;
     }
     else {
-        int row = (step >> 3) & 0x07;
-        int col = step & 0x07;
+        row = (step >> 3) & 0x07;
+        col = step & 0x07;
         return (patterns.pat[pattern][row] >> col) & 0x01;
+    }
+}
+
+// adjust the step enable for a pattern - PATTERN_AS_RECORDED is read-only
+void pattern_set_step_enable(int pattern, int step, int enable) {
+    int row, col;
+    if(pattern == PATTERN_AS_RECORDED) {
+        return;
+    }
+    row = (step >> 3) & 0x07;
+    col = step & 0x07;
+    patterns.pat[pattern][row] &= ~(0x01 << col);
+    if(enable) {
+        patterns.pat[pattern][row] |= 0x01 << col;
     }
 }
 
@@ -177,7 +192,7 @@ int pattern_get_step_enable(int scene, int track, int pattern, int step) {
 void pattern_load_rom_defaults(void) {
     int addr, pattern, row;
     int32_t temp;
-    
+
     addr = CONFIG_STORE_PATTERN_BANK;
     // write ROM patterns to config store
     for(pattern = 0; pattern < SEQ_NUM_PATTERNS; pattern ++) {
@@ -204,4 +219,3 @@ void pattern_load_rom_defaults(void) {
         }
     }
 }
-
