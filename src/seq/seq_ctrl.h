@@ -38,6 +38,7 @@
 
 // track selection for track param setters
 #define SEQ_CTRL_TRACK_OMNI -1  // all selected tracks will be set
+                                // used for MIDI remote control
 
 // init the sequencer controller
 void seq_ctrl_init(void);

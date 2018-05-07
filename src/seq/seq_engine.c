@@ -972,6 +972,7 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
     // put the note data into the slot and ensure it has a valid length
     midi_utils_copy_msg(&sestate.track_active_notes[track][free_slot].note.msg, on_msg);
     // figure out the total length scaled by gate override (for non-ratchet mode)
+    // gate time of 0x80 is 100%
     total_len = (length * sestate.gate_time[track]) >> 7;
     if(total_len < 1) {
         sestate.track_active_notes[track][free_slot].note.tick_len = 1;
@@ -1392,7 +1393,12 @@ void seq_engine_record_event(struct midi_msg *msg) {
                     trkevent.type = SONG_EVENT_NOTE;
                     trkevent.data0 = msg->data0;
                     trkevent.data1 = msg->data1;
-                    trkevent.length = sestate.step_size[sestate.first_track];
+                    // scale step length by the gate time
+                    trkevent.length = (sestate.step_size[sestate.first_track] *
+                        sestate.gate_time[sestate.first_track]) >> 7;
+                    if(trkevent.length < 1) {
+                        trkevent.length = 1;
+                    }
                     song_add_step_event(sestate.scene_current,
                         sestate.first_track, sestate.record_pos, &trkevent);
                 }

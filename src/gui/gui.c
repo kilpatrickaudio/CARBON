@@ -1680,7 +1680,7 @@ void gui_update_gate_time_override(int scene, int track, int time) {
     }
     // update info display
     if(!gstate.status_override && track == gstate.first_track) {
-        sprintf(tempstr, "Gate: %d%%", (time * 200 / 256));
+        sprintf(tempstr, "Gate: %d%%", ((time + 1) * 200 / 256));
         gui_set_status_text_part(2, 13, 10, tempstr);
     }
 }

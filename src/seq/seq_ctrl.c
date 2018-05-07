@@ -1014,11 +1014,8 @@ void seq_ctrl_set_gate_time(int track, int time) {
 // adjust the gate time of the selected scene and track(s)
 void seq_ctrl_adjust_gate_time(int change) {
     int track, val;
-    // XXX is this being calculated properly?
     val = seq_utils_clamp(song_get_gate_time(seq_engine_get_current_scene(),
-        sstate.first_track) +
-        (change * SEQ_GATE_TIME_STEP_SIZE),
-        SEQ_GATE_TIME_MIN, SEQ_GATE_TIME_MAX);
+        sstate.first_track) + change, SEQ_GATE_TIME_MIN, SEQ_GATE_TIME_MAX);
     // update selected track values
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         if(sstate.track_select[track]) {

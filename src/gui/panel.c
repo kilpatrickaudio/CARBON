@@ -707,7 +707,15 @@ void panel_handle_seq_input(int ctrl, int val) {
                         // no action
                         break;
                     default:
-                        seq_ctrl_adjust_gate_time(seq_utils_enc_val_to_change(val));
+                        // fine gate time
+                        if(pstate.shift_state) {
+                            seq_ctrl_adjust_gate_time(seq_utils_enc_val_to_change(val));
+                        }
+                        // coarse gate time
+                        else {
+                            seq_ctrl_adjust_gate_time(seq_utils_enc_val_to_change(val) *
+                                SEQ_GATE_TIME_STEP_SIZE);
+                        }
                         break;
                 }
                 break;
