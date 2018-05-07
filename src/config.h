@@ -76,7 +76,7 @@
 #define EXT_FLASH_CONFIG_SIZE 0x1000
 
 // config store
-#define CONFIG_STORE_WRITEBACK_INTERVAL 0xfff
+#define CONFIG_STORE_WRITEBACK_INTERVAL 0xffff
 #define CONFIG_STORE_ITEM_SIZE 4  // number of bytes per item
 #define CONFIG_STORE_NUM_ITEMS 128  // max must be a power of 2
 #define CONFIG_STORE_LAST_SONG 0
@@ -228,8 +228,8 @@
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
 
-//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode

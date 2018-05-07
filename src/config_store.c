@@ -65,7 +65,7 @@ void config_store_init(void) {
 
 // run the config storage task
 void config_store_timer_task(void) {
-    static int timer_div = 0;    
+    static int timer_div = 0;
     switch(cfgss.io_state) {
         case CONFIG_STORE_IO_STATE_NOT_LOADED:
             // start load
@@ -130,7 +130,7 @@ void config_store_timer_task(void) {
             switch(ext_flash_get_state()) {
                 case EXT_FLASH_STATE_SAVE_ERROR:
                 case EXT_FLASH_STATE_SAVE_DONE:
-                    log_debug("cstt - config store wiped");
+//                    log_debug("cstt - config store wiped");
                     cfgss.io_state = CONFIG_STORE_IO_STATE_LOADED;
                     cfgss.dirty = 0;  // clean
                     break;
@@ -172,7 +172,7 @@ int config_store_wipe_flash(void) {
         cfgss.io_buf[i] = 0xff;  // blank
     }
     // erase the flash and write nothing
-    if(ext_flash_save(EXT_FLASH_CONFIG_OFFSET, (CONFIG_STORE_NUM_ITEMS * 
+    if(ext_flash_save(EXT_FLASH_CONFIG_OFFSET, (CONFIG_STORE_NUM_ITEMS *
             CONFIG_STORE_ITEM_SIZE), cfgss.io_buf) == -1) {
         log_error("cswf - error starting save");
         return -1;
@@ -202,8 +202,8 @@ int config_store_load_start(void) {
 int config_store_load_done(void) {
     int i, token_pos, inpos;
     // search backwards for the last token in the config sector
-    for(i = (EXT_FLASH_CONFIG_SIZE - 
-            (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE)); 
+    for(i = (EXT_FLASH_CONFIG_SIZE -
+            (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE));
             i >= 0;
             i -= (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE)) {
         token_pos = i + (CONFIG_STORE_TOKEN * CONFIG_STORE_ITEM_SIZE);
@@ -214,7 +214,7 @@ int config_store_load_done(void) {
         // magic token found
         if(val == CONFIG_STORE_MAGIC_TOKEN) {
             cfgss.config_offset = i;
-            log_debug("csld - token found at: %d", cfgss.config_offset);
+//            log_debug("csld - token found at: %d", cfgss.config_offset);
             // copy the I/O buf to RAM
             inpos = i;
             for(i = 0; i < CONFIG_STORE_NUM_ITEMS; i ++) {
@@ -227,7 +227,7 @@ int config_store_load_done(void) {
             return 0;
         }
     }
-    log_debug("csld - token not found");
+//    log_debug("csld - token not found");
     return -1;
 }
 
@@ -248,20 +248,20 @@ int config_store_writeback_start(void) {
     cfgss.config_offset += (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE);
     if(cfgss.config_offset >= EXT_FLASH_CONFIG_SIZE) {
         cfgss.config_offset = 0;  // reset to start (recycle entire sector)
-        log_debug("csws - erase pos: %d", cfgss.config_offset);
-        if(ext_flash_save(EXT_FLASH_CONFIG_OFFSET, (CONFIG_STORE_NUM_ITEMS * 
+//        log_debug("csws - erase pos: %d", cfgss.config_offset);
+        if(ext_flash_save(EXT_FLASH_CONFIG_OFFSET, (CONFIG_STORE_NUM_ITEMS *
                 CONFIG_STORE_ITEM_SIZE), cfgss.io_buf) == -1) {
             return -1;
         }
     }
     // just add to the existing thing
     else {
-        log_debug("csws - noerase pos: %d", cfgss.config_offset);
-        if(ext_flash_save_noerase(EXT_FLASH_CONFIG_OFFSET + cfgss.config_offset, 
-                (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE), 
+//        log_debug("csws - noerase pos: %d", cfgss.config_offset);
+        if(ext_flash_save_noerase(EXT_FLASH_CONFIG_OFFSET + cfgss.config_offset,
+                (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE),
                 cfgss.io_buf) == -1) {
             return -1;
-        }        
+        }
     }
     return 0;
 }
@@ -273,4 +273,3 @@ void config_store_clear(void) {
         cfgss.config_ram[i] = 0xffffffff;
     }
 }
-

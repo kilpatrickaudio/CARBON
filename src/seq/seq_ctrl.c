@@ -146,7 +146,7 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
     int i;
     switch(event_type) {
         case SCE_SONG_LOADED:
-            log_debug("schsc - song loaded: %d", (data[0] + 1));
+//            log_debug("schsc - song loaded: %d", (data[0] + 1));
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             seq_ctrl_set_current_song(data[0]);
             seq_ctrl_refresh_modules();  // make sure all song data is updatd in the system
@@ -190,17 +190,17 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             seq_ctrl_set_song_mode(0);
             break;
         case SCE_SONG_LOAD_ERROR:
-            log_debug("schsc - song load error: %d", (data[0] + 1));
+//            log_debug("schsc - song load error: %d", (data[0] + 1));
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             seq_ctrl_set_current_song(data[0]);
             break;
         case SCE_SONG_SAVED:
-            log_debug("schsc - song saved: %d", (data[0] + 1));
+//            log_debug("schsc - song saved: %d", (data[0] + 1));
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             seq_ctrl_set_current_song(data[0]);
             break;
         case SCE_SONG_SAVE_ERROR:
-            log_debug("schsc - song save error: %d", (data[0] + 1));
+//            log_debug("schsc - song save error: %d", (data[0] + 1));
             seq_ctrl_set_run_lockout(0);  // enable the UI and MIDI
             break;
         case SCE_SONG_TEMPO:
@@ -227,11 +227,11 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
             cvproc_set_cvoffset(data[0], data[1]);
             break;
         case SCE_CONFIG_LOADED:
-            log_debug("scrt - config loaded");
+//            log_debug("scrt - config loaded");
             gui_startup();  // start the GUI now that we know which LCD type we have
             break;
         case SCE_CONFIG_CLEARED:
-            log_debug("scrt - config cleared");
+//            log_debug("scrt - config cleared");
             gui_startup();  // start the GUI now that we know which LCD type we have
             // default config stuff
             seq_ctrl_clear_song();
@@ -240,13 +240,13 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_POWER_STATE:
             switch(data[0]) {
                 case POWER_CTRL_STATE_TURNING_OFF:
-                    log_debug("scstop");
+//                    log_debug("scstop");
                     seq_ctrl_set_run_state(0);  // stop sequencer
                     seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
                     break;
                 case POWER_CTRL_STATE_ON:
                     // startup
-                    log_debug("scstart");
+//                    log_debug("scstart");
                     seq_ctrl_load_song(config_store_get_val(CONFIG_STORE_LAST_SONG));
                     break;
                 default:
@@ -1420,7 +1420,7 @@ void seq_ctrl_refresh_modules(void) {
     int i, scene, track;
     int song_ver = song_get_song_version();
 
-    log_debug("song ver: %x", song_ver);
+//    log_debug("song ver: %x", song_ver);
     //
     // do song version upgrades based on song version and system version
     //

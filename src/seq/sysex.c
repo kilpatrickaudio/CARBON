@@ -82,7 +82,7 @@
  *   - 0x0g - address bits 7-4
  *   - 0x0h - address bits 3-0
  *   - 0xii - read length (1-64 bytes)
- *   - 0xf7 - sysex end 
+ *   - 0xf7 - sysex end
  *
  * - readback ext flash data    - 0x71  <- from device
  *   - 0xf0 - sysex start
@@ -156,7 +156,7 @@
  *   - 0xf7	- sysex end
  *
  * - restart device             - 0x7e  -> to device
- *   - 0xf0	- sysex start       
+ *   - 0xf0	- sysex start
  *   - 0x00	- MMA ID
  *   - 0x01	- MMA ID
  *   - 0x72	- MMA ID
@@ -253,10 +253,10 @@ void sysex_timer_task(void) {
                     break;
                 case EXT_FLASH_STATE_LOAD_ERROR:
                     syxs.state = SYSEX_STATE_IDLE;
-                    sysex_send_error_response(SYSEX_CMD_READBACK_EXT_FLASH, 
+                    sysex_send_error_response(SYSEX_CMD_READBACK_EXT_FLASH,
                         SYSEX_ERROR_EXT_FLASH_ERROR);
                     break;
-                case EXT_FLASH_STATE_LOAD_DONE:                    
+                case EXT_FLASH_STATE_LOAD_DONE:
                     syxs.state = SYSEX_STATE_IDLE;
                     sysex_send_read_ext_mem_result();
                     break;
@@ -280,7 +280,7 @@ void sysex_handle_msg(struct midi_msg *msg) {
         syxs.rx_buf[syxs.rx_len++] = msg->status;
         if(msg->status == MIDI_SYSEX_END) {
             sysex_process();
-            syxs.rx_len = 0;            
+            syxs.rx_len = 0;
             return;
         }
     }
@@ -289,7 +289,7 @@ void sysex_handle_msg(struct midi_msg *msg) {
         syxs.rx_buf[syxs.rx_len++] = msg->data0;
         if(msg->data0 == MIDI_SYSEX_END) {
             sysex_process();
-            syxs.rx_len = 0;            
+            syxs.rx_len = 0;
             return;
         }
     }
@@ -298,7 +298,7 @@ void sysex_handle_msg(struct midi_msg *msg) {
         syxs.rx_buf[syxs.rx_len++] = msg->data1;
         if(msg->data1 == MIDI_SYSEX_END) {
             sysex_process();
-            syxs.rx_len = 0;            
+            syxs.rx_len = 0;
             return;
         }
     }
@@ -328,7 +328,7 @@ void sysex_process(void) {
         // global Kilpatrick commands
         case SYSEX_CMD_DEV_TYPE:
             if(syxs.rx_len != 6) {
-                sysex_send_error_response(syxs.rx_buf[4], 
+                sysex_send_error_response(syxs.rx_buf[4],
                     SYSEX_ERROR_MALFORMED_MSG);
                 return;
             }
@@ -336,7 +336,7 @@ void sysex_process(void) {
             break;
         case SYSEX_CMD_RESTART:
             if(syxs.rx_len != 11) {
-                sysex_send_error_response(syxs.rx_buf[4], 
+                sysex_send_error_response(syxs.rx_buf[4],
                     SYSEX_ERROR_MALFORMED_MSG);
                 return;
             }
@@ -350,7 +350,7 @@ void sysex_process(void) {
             break;
         case MIDI_DEV_TYPE:  // CARBON message
             if(syxs.rx_len < 7) {
-                sysex_send_error_response(syxs.rx_buf[4], 
+                sysex_send_error_response(syxs.rx_buf[4],
                     SYSEX_ERROR_MALFORMED_MSG);
                 return;
             }
@@ -407,20 +407,20 @@ void sysex_process(void) {
                     syxs.addr |= syxs.rx_buf[11] & 0x0f;
                     syxs.io_len = syxs.rx_buf[12];
                     if(syxs.io_len > SYSEX_MAX_READ_LEN) {
-                        sysex_send_error_response(syxs.rx_buf[5], 
+                        sysex_send_error_response(syxs.rx_buf[5],
                             SYSEX_ERROR_BAD_LENGTH);
                         return;
                     }
                     if(syxs.addr + syxs.io_len > ext_flash_get_mem_size()) {
-                        sysex_send_error_response(syxs.rx_buf[5], 
-                            SYSEX_ERROR_BAD_ADDRESS);                        
+                        sysex_send_error_response(syxs.rx_buf[5],
+                            SYSEX_ERROR_BAD_ADDRESS);
                         return;
                     }
                     // start the read process
-                    log_debug("sp - read ext flash - addr: 0x%06x - len: %d",
-                        syxs.addr, syxs.io_len);
+//                    log_debug("sp - read ext flash - addr: 0x%06x - len: %d",
+//                        syxs.addr, syxs.io_len);
                     if(ext_flash_load(syxs.addr, syxs.io_len, (uint8_t *)&syxs.io_buf) == -1) {
-                        sysex_send_error_response(syxs.rx_buf[5], 
+                        sysex_send_error_response(syxs.rx_buf[5],
                             SYSEX_ERROR_EXT_FLASH_ERROR);
                         return;
                     }
@@ -443,16 +443,16 @@ void sysex_process(void) {
                         len = syxs.rx_buf[12];
                         if(offset + len > EXT_FLASH_SECTOR_SIZE) {
                             sysex_send_error_response(syxs.rx_buf[5],
-                                SYSEX_ERROR_BAD_LENGTH);   
-                            return;                         
+                                SYSEX_ERROR_BAD_LENGTH);
+                            return;
                         }
                         // convert nibbles to bytes / copy to io_buf
-                        sysex_nibbles_to_bytes(syxs.rx_buf + 13, 
+                        sysex_nibbles_to_bytes(syxs.rx_buf + 13,
                             syxs.io_buf + offset, len);
                         sysex_send_error_response(syxs.rx_buf[5],
                             SYSEX_ERROR_OK);
                     }
-                    break;                
+                    break;
                 case SYSEX_CMD_WRITE_EXT_FLASH_COMMIT:
                     if(syxs.rx_len < 17) {
                         sysex_send_error_response(syxs.rx_buf[5],
@@ -472,9 +472,9 @@ void sysex_process(void) {
                         len |= (syxs.rx_buf[14] & 0x0f) << 4;
                         len |= syxs.rx_buf[15] & 0x0f;
                         // start the write process
-                        log_debug("save addr: 0x%06x len: %d", addr, len);
+//                        log_debug("save addr: 0x%06x len: %d", addr, len);
                         if(ext_flash_save(addr, len, (uint8_t *)&syxs.io_buf) == -1) {
-                            sysex_send_error_response(syxs.rx_buf[5], 
+                            sysex_send_error_response(syxs.rx_buf[5],
                                 SYSEX_ERROR_EXT_FLASH_ERROR);
                             return;
                         }
@@ -509,7 +509,7 @@ void sysex_send_read_ext_mem_result(void) {
         tx_buf[tx_count++] = (syxs.io_buf[i] & 0xf0) >> 4;
         tx_buf[tx_count++] = syxs.io_buf[i] & 0x0f;
     }
-    tx_buf[tx_count++] = MIDI_SYSEX_END;    
+    tx_buf[tx_count++] = MIDI_SYSEX_END;
     midi_stream_send_sysex_msg(MIDI_PORT_SYSEX_OUT, tx_buf, tx_count);
 }
 
@@ -524,7 +524,7 @@ void sysex_send_devtype_response(void) {
     tx_buf[tx_count++] = MIDI_DEV_TYPE;
     tx_buf[tx_count++] = SYSEX_CMD_DEV_RESPONSE;
     tx_buf[tx_count++] = MIDI_DEV_TYPE;
-    tx_buf[tx_count++] = MIDI_SYSEX_END;    
+    tx_buf[tx_count++] = MIDI_SYSEX_END;
     midi_stream_send_sysex_msg(MIDI_PORT_SYSEX_OUT, tx_buf, tx_count);
 }
 
@@ -540,7 +540,7 @@ void sysex_send_error_response(int cmd, int errorcode) {
     tx_buf[tx_count++] = SYSEX_CMD_ERROR_CODE;
     tx_buf[tx_count++] = cmd & 0x7f;
     tx_buf[tx_count++] = errorcode & 0x7f;
-    tx_buf[tx_count++] = MIDI_SYSEX_END;        
+    tx_buf[tx_count++] = MIDI_SYSEX_END;
     midi_stream_send_sysex_msg(MIDI_PORT_SYSEX_OUT, tx_buf, tx_count);
 }
 
@@ -557,4 +557,3 @@ void sysex_nibbles_to_bytes(uint8_t *inbuf, uint8_t *outbuf, int in_len) {
             (inbuf[i+1] & 0x0f);
     }
 }
-

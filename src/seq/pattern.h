@@ -34,6 +34,9 @@ void pattern_handle_state_change(int event_type,
 // load the patterns from the config store
 void pattern_load_patterns(void);
 
+// restore a pattern from ROM
+void pattern_restore_pattern(int pattern);
+
 // check whether the current step is enabled on a pattern
 int pattern_get_step_enable(int scene, int track, int pattern, int step);
 

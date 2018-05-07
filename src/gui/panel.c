@@ -625,6 +625,9 @@ void panel_handle_seq_input(int ctrl, int val) {
                         case PANEL_EDIT_MODE_SONG:
                             song_edit_remove_step();
                             break;
+                        case PANEL_EDIT_MODE_PATTERN:
+                            pattern_edit_restore_pattern();
+                            break;
                         default:
                             seq_ctrl_make_clear();
                             break;

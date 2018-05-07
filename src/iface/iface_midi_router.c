@@ -157,7 +157,7 @@ void iface_midi_router_timer_task(void) {
         msg.port = MIDI_PORT_USB_DEV_OUT3;
         midi_stream_send_msg(&msg);
     }
-    // USB DEV IN 1 - pass to CV out    
+    // USB DEV IN 1 - pass to CV out
     while(midi_stream_data_available(MIDI_PORT_USB_DEV_IN1)) {
         midi_stream_receive_msg(MIDI_PORT_USB_DEV_IN1, &msg);
         // channel mode messages
@@ -223,18 +223,16 @@ void iface_midi_router_timer_task(void) {
 }
 
 // handle state change
-void iface_midi_router_handle_state_change(int event_type, 
+void iface_midi_router_handle_state_change(int event_type,
         int *data, int data_len) {
     switch(event_type) {
         case SCE_CONFIG_LOADED:
-            log_debug("imrhsc - config loaded");
             iface_midi_router_load_config();
             break;
         case SCE_CONFIG_CLEARED:
-            log_debug("imrhsc - config cleared");
             iface_midi_router_clear_config();
             break;
-    }  
+    }
 }
 
 //
@@ -258,7 +256,7 @@ void iface_midi_router_load_config(void) {
 
 // set the MIDI program and write back config
 void iface_midi_router_set_program(int prog) {
-    if(prog < IFACE_MIDI_ROUTER_CV_PROGRAM_MIN || 
+    if(prog < IFACE_MIDI_ROUTER_CV_PROGRAM_MIN ||
             prog > IFACE_MIDI_ROUTER_CV_PROGRAM_MAX) {
         log_error("imrsp - prog invalid: %d", prog);
         return;
@@ -413,7 +411,7 @@ void iface_midi_router_set_clock_div(int div) {
         return;
     }
     config_store_set_val(CONFIG_STORE_IFACE_ANALOG_CLOCK_DIV, div);
-    ifacemrs.analog_clock_div = seq_utils_clock_pqq_to_divisor(div) / 
+    ifacemrs.analog_clock_div = seq_utils_clock_pqq_to_divisor(div) /
         MIDI_CLOCK_UPSAMPLE;
 }
 
@@ -442,7 +440,7 @@ void iface_midi_router_handle_cv_setting(struct midi_msg *msg) {
 // run the MIDI clock task to handle timeouts of pulses, etc.
 void iface_midi_router_clock_task(void) {
     // time out clock / reset output pulses - analog output only
-    if(ifacemrs.analog_clock_delay_trigger && 
+    if(ifacemrs.analog_clock_delay_trigger &&
             ifacemrs.analog_reset_timeout == 0) {
         ifacemrs.analog_clock_delay_trigger = 0;
         if(ifacemrs.analog_clock_enable) {
@@ -453,7 +451,7 @@ void iface_midi_router_clock_task(void) {
     if(ifacemrs.analog_clock_timeout) {
         ifacemrs.analog_clock_timeout --;
         if(ifacemrs.analog_clock_timeout == 0) {
-            analog_out_set_clock(0);            
+            analog_out_set_clock(0);
         }
     }
     if(ifacemrs.analog_reset_timeout) {
@@ -472,9 +470,9 @@ void iface_midi_router_handle_clock_msg(struct midi_msg *msg) {
     }
 
     switch(msg->status) {
-        case MIDI_TIMING_TICK:        
+        case MIDI_TIMING_TICK:
             // time to issue a clock pulse - we are running
-            if(ifacemrs.analog_clock_div_count == 0 && 
+            if(ifacemrs.analog_clock_div_count == 0 &&
                     ifacemrs.analog_clock_enable == 1) {
                 // reset is already activated - need to defer it
                 if(ifacemrs.analog_reset_timeout) {
@@ -499,11 +497,10 @@ void iface_midi_router_handle_clock_msg(struct midi_msg *msg) {
             analog_out_set_reset(1);
             break;
         case MIDI_CLOCK_CONTINUE:
-            ifacemrs.analog_clock_enable = 1;        
+            ifacemrs.analog_clock_enable = 1;
             break;
         case MIDI_CLOCK_STOP:
             ifacemrs.analog_clock_enable = 0;
-            break;    
+            break;
     }
 }
-

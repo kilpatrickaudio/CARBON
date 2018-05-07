@@ -76,6 +76,7 @@ struct pattern_store patterns;
 
 // local functions
 void pattern_load_rom_defaults(void);
+void pattern_store_pattern(int pattern);
 
 // init the pattern lookup
 void pattern_init(void) {
@@ -95,11 +96,9 @@ void pattern_handle_state_change(int event_type,
         int *data, int data_len) {
     switch(event_type) {
         case SCE_CONFIG_LOADED:
-            log_debug("phsc - config loaded");
             pattern_load_patterns();
             break;
         case SCE_CONFIG_CLEARED:
-            log_debug("phsc - config cleared");
             pattern_load_rom_defaults();
             break;
     }
@@ -113,16 +112,16 @@ void pattern_load_patterns(void) {
     // check the valid token first
     valid_token = config_store_get_val(CONFIG_STORE_PATTERN_BANK +
         PATTERN_VALID_TOKEN_OFFSET);
-    log_debug("pattern token: 0x%08x", valid_token);
+//    log_debug("pattern token: 0x%08x", valid_token);
 
     // token not found - let's use the ROM patterns and store them back
     if(valid_token != PATTERN_VALID_TOKEN) {
-        log_debug("plp - token not found - using ROM patterns");
+//        log_debug("plp - token not found - using ROM patterns");
         pattern_load_rom_defaults();
     }
     // token is valid - let's load the patterns from the config store
     else {
-        log_debug("plp - token found - loading from config");
+//        log_debug("plp - token found - loading from config");
         addr = CONFIG_STORE_PATTERN_BANK;
         for(pattern = 0; pattern < SEQ_NUM_PATTERNS; pattern ++) {
             // get 4 bytes - MSB first order
@@ -141,6 +140,20 @@ void pattern_load_patterns(void) {
             addr ++;
         }
     }
+}
+
+// restore a pattern from ROM
+void pattern_restore_pattern(int pattern) {
+    int row;
+    if(pattern < 0 || pattern >= SEQ_NUM_PATTERNS) {
+        return;
+    }
+    // populate the RAM pattern struct with the ROM data also
+    for(row = 0; row < PATTERN_NUM_ROWS; row ++) {
+        patterns.pat[pattern][row] = pattern_rom[pattern][row];
+    }
+    // store pattern
+    pattern_store_pattern(pattern);
 }
 
 // check whether the current step is enabled on a pattern
@@ -183,6 +196,8 @@ void pattern_set_step_enable(int pattern, int step, int enable) {
     if(enable) {
         patterns.pat[pattern][row] |= 0x01 << col;
     }
+    // store back to flash
+    pattern_store_pattern(pattern);
 }
 
 //
@@ -190,32 +205,34 @@ void pattern_set_step_enable(int pattern, int step, int enable) {
 //
 // local ROM defaults and store them in config store
 void pattern_load_rom_defaults(void) {
-    int addr, pattern, row;
-    int32_t temp;
+    int pattern;
+    // load all ROM pattern defaults
+    for(pattern = 0; pattern < SEQ_NUM_PATTERNS; pattern ++) {
+        pattern_restore_pattern(pattern);
+    }
+    // place token at end so we know flash patterns are valid
+    config_store_set_val(CONFIG_STORE_PATTERN_BANK + (SEQ_NUM_PATTERNS << 1) + 1,
+        PATTERN_VALID_TOKEN);
+}
 
-    addr = CONFIG_STORE_PATTERN_BANK;
-    // write ROM patterns to config store
-    for(pattern = 0; pattern < SEQ_NUM_PATTERNS; pattern ++) {
-        // set 4 bytes - MSB first order
-        temp = (pattern_rom[pattern][0] << 24) |
-            (pattern_rom[pattern][1] << 16) |
-            (pattern_rom[pattern][2] << 8) |
-            pattern_rom[pattern][3];
-        config_store_set_val(addr, temp);
-        addr ++;
-        // set 4 bytes - MSB first order
-        temp = (pattern_rom[pattern][4] << 24) |
-            (pattern_rom[pattern][5] << 16) |
-            (pattern_rom[pattern][6] << 8) |
-            pattern_rom[pattern][7];
-        config_store_set_val(addr, temp);
-        addr ++;
+// store a RAM pattern to config store
+void pattern_store_pattern(int pattern) {
+    int32_t temp, addr;
+    if(pattern < 0 || pattern >= SEQ_NUM_PATTERNS) {
+        return;
     }
-    config_store_set_val(addr, PATTERN_VALID_TOKEN);
-    // populate the pattern struct with the ROM data also
-    for(pattern = 0; pattern < SEQ_NUM_PATTERNS; pattern ++) {
-        for(row = 0; row < PATTERN_NUM_ROWS; row ++) {
-            patterns.pat[pattern][row] = pattern_rom[pattern][row];
-        }
-    }
+    addr = CONFIG_STORE_PATTERN_BANK + (pattern << 1);
+    // set 4 bytes - MSB first order
+    temp = (patterns.pat[pattern][0] << 24) |
+        (patterns.pat[pattern][1] << 16) |
+        (patterns.pat[pattern][2] << 8) |
+        patterns.pat[pattern][3];
+    config_store_set_val(addr, temp);
+    addr ++;
+    // set 4 bytes - MSB first order
+    temp = (patterns.pat[pattern][4] << 24) |
+        (patterns.pat[pattern][5] << 16) |
+        (patterns.pat[pattern][6] << 8) |
+        patterns.pat[pattern][7];
+    config_store_set_val(addr, temp);
 }

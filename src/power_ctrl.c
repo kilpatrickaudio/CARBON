@@ -52,7 +52,7 @@ void power_ctrl_init(void) {
     pwrs.desired_power_state = POWER_CTRL_STATE_STANDBY;
     pwrs.power_state = -1;  // cause a state change
     power_ctrl_change_state(POWER_CTRL_STATE_STANDBY);
-    
+
 #ifdef POWER_CTRL_POWER_ON_AUTO
     power_ctrl_change_state(POWER_CTRL_STATE_TURNING_ON);
 #endif
@@ -81,7 +81,7 @@ void power_ctrl_timer_task(void) {
                 else if(pwrs.power_state == POWER_CTRL_STATE_IF) {
                     next_state = POWER_CTRL_STATE_TURNING_STANDBY;
                 }
-            }        
+            }
         }
     }
     // power switch is not pressed
@@ -92,14 +92,14 @@ void power_ctrl_timer_task(void) {
             next_state = -1;
         }
     }
-    
+
     // if we're not already errored out - detect input voltage and average it
     if((pwrs.timer_div & 0x3f) == 0 && pwrs.power_state != POWER_CTRL_STATE_ERROR) {
         if(ioctl_get_dc_vsense() < POWER_CTRL_DC_MIN_CUTOFF) {
-            log_debug("pctt - power error: %d", ioctl_get_dc_vsense());
+//            log_debug("pctt - power error: %d", ioctl_get_dc_vsense());
             power_ctrl_change_state(POWER_CTRL_STATE_ERROR);
         }
-    }    
+    }
 
     // do state changes more slowly
     if((pwrs.timer_div & 0x3f) == 0) {
@@ -109,7 +109,7 @@ void power_ctrl_timer_task(void) {
             // change state
             switch(pwrs.desired_power_state) {
                 case POWER_CTRL_STATE_STANDBY:
-                    log_debug("pctt - standby");
+//                    log_debug("pctt - standby");
                     // set order critical stuff
                     ioctl_set_analog_pwr_ctrl(0);
                     gui_set_lcd_power(0);
@@ -118,7 +118,7 @@ void power_ctrl_timer_task(void) {
                     state_change_fire1(SCE_POWER_STATE, POWER_CTRL_STATE_STANDBY);
                     break;
                 case POWER_CTRL_STATE_IF:
-                    log_debug("pctt - interface");
+//                    log_debug("pctt - interface");
                     // set order critical stuff
                     ioctl_set_analog_pwr_ctrl(1);
                     gui_set_lcd_power(0);
@@ -127,13 +127,13 @@ void power_ctrl_timer_task(void) {
                     state_change_fire1(SCE_POWER_STATE, POWER_CTRL_STATE_IF);
                     break;
                 case POWER_CTRL_STATE_TURNING_OFF:
-                    log_debug("pctt - turning off (to IF)");
+//                    log_debug("pctt - turning off (to IF)");
                     // fire event for other modules
                     state_change_fire1(SCE_POWER_STATE, POWER_CTRL_STATE_TURNING_OFF);
                     power_ctrl_change_state(POWER_CTRL_STATE_IF);
                     break;
                 case POWER_CTRL_STATE_TURNING_ON:
-                    log_debug("pctt - turning on");
+//                    log_debug("pctt - turning on");
                     // set order critical stuff
                     ioctl_set_analog_pwr_ctrl(1);
                     power_ctrl_change_state(POWER_CTRL_STATE_ON);
@@ -142,10 +142,10 @@ void power_ctrl_timer_task(void) {
                     break;
                 case POWER_CTRL_STATE_TURNING_STANDBY:
                     // reboot back to power applied state
-                    HAL_NVIC_SystemReset();                
+                    HAL_NVIC_SystemReset();
                     break;
                 case POWER_CTRL_STATE_ON:
-                    log_debug("pctt - on");
+//                    log_debug("pctt - on");
                     // set order critical stuff
                     gui_set_lcd_power(1);  // causes power and init to be performed on main thread
                     usbh_midi_set_vbus(1);  // turn on USB host port
@@ -161,7 +161,7 @@ void power_ctrl_timer_task(void) {
             }
         }
     }
-    pwrs.timer_div ++;    
+    pwrs.timer_div ++;
 }
 
 // get the current power state
@@ -176,4 +176,3 @@ int power_ctrl_get_power_state(void) {
 void power_ctrl_change_state(int state) {
     pwrs.desired_power_state = state;
 }
-
