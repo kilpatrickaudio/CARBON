@@ -113,7 +113,7 @@ void seq_engine_handle_midi_msg(struct midi_msg *msg);
 void seq_engine_song_mode_process(void);
 void seq_engine_song_mode_enable_changed(int enable);
 int seq_engine_song_mode_find_next_scene(int current_entry);
-void seq_engine_song_mode_load_entry(int entry);
+int seq_engine_song_mode_load_entry(int entry);
 // track event handlers
 void seq_engine_track_play_step(int track, int step);
 void seq_engine_track_start_note(int track, int step, int length, struct midi_msg *on_msg);
@@ -149,7 +149,7 @@ void seq_engine_recalc_params(void);
 int seq_engine_is_first_step(int track);
 int seq_engine_move_to_next_step(int track);
 int seq_engine_compute_next_pos(int track, int *pos, int change);
-void seq_engine_change_scene_synced(void);
+int seq_engine_change_scene_synced(void);
 void seq_engine_cancel_pending_scene_change(void);
 void seq_engine_reset_all_tracks_pos(void);
 void seq_engine_send_program(int track, int mapnum);
@@ -308,16 +308,20 @@ void seq_engine_run(uint32_t tick_count) {
             // recording and playback processing of song mode
             if(sestate.sngmode.enable) {
                 seq_engine_song_mode_process();
-                seq_engine_change_scene_synced();
+                if(seq_engine_change_scene_synced()) {
+                    // scene sync stopped us so we need to get out of here
+                    // so we don't run the notes on the current step
+                    return;
+                }
             }
             // scene sync beat mode
             if(song_get_scene_sync() == SONG_SCENE_SYNC_BEAT) {
                 seq_engine_change_scene_synced();
             }
         }
-
         // scene sync mode loop 1 - not necessarily beat synced
-        if(song_get_scene_sync() == SONG_SCENE_SYNC_TRACK1 &&
+        if(!sestate.sngmode.enable &&
+                song_get_scene_sync() == SONG_SCENE_SYNC_TRACK1 &&
                 sestate.clock_div_count[0] == 0 &&
                 sestate.step_pos[0] == sestate.motion_start[0]) {
             seq_engine_change_scene_synced();
@@ -636,7 +640,7 @@ void seq_engine_song_mode_reset(void) {
     int entry = seq_engine_song_mode_find_next_scene(-1);
     // no entry found - just turn off song mode
     if(entry == -1) {
-        seq_ctrl_set_song_mode(0);  // this will cause us to get called again
+        seq_ctrl_set_song_mode(0);
         return;
     }
     // load the entry and reset stuff
@@ -799,12 +803,16 @@ void seq_engine_song_mode_process(void) {
         entry = seq_engine_song_mode_find_next_scene(sestate.sngmode.current_entry);
         // no entry found - just turn off song mode
         if(entry == -1) {
-            seq_ctrl_set_song_mode(0);
-            return;
+            seq_ctrl_set_song_mode(0);  // stop song mode
+            sestate.scene_next = -1;
         }
         // load the entry and reset stuff
-        seq_engine_song_mode_load_entry(entry);
-        sestate.scene_next = sestate.sngmode.current_scene;
+        if(seq_engine_song_mode_load_entry(entry) == -1) {
+            sestate.scene_next = -1;
+        }
+        else {
+            sestate.scene_next = sestate.sngmode.current_scene;
+        }
         sestate.sngmode.beat_count ++;
         // fire event
         state_change_fire0(SCE_ENG_SONG_MODE_STATUS);
@@ -824,11 +832,13 @@ void seq_engine_song_mode_enable_changed(int enable) {
     if(enable == 0) {
         sestate.sngmode.enable = 0;
         seq_engine_set_kbtrans(0);  // reset transpose
+        state_change_fire0(SCE_ENG_SONG_MODE_STATUS);
         return;
     }
     entry = sestate.sngmode.current_entry;
     // don't change the current entry except if it has become null
-    if(song_get_song_list_scene(sestate.sngmode.current_entry) ==
+    if(entry == -1 ||
+            song_get_song_list_scene(sestate.sngmode.current_entry) ==
             SONG_LIST_SCENE_NULL) {
         entry = seq_engine_song_mode_find_next_scene(entry);
     }
@@ -842,7 +852,10 @@ void seq_engine_song_mode_enable_changed(int enable) {
         return;
     }
     // load the entry and reset stuff
-    seq_engine_song_mode_load_entry(entry);
+    if(seq_engine_song_mode_load_entry(entry) == -1) {
+        // entry couldn't be loaded
+        return;
+    }
     sestate.sngmode.enable = 1;
     // issue a reset to the playback
     seq_ctrl_reset_pos();
@@ -863,12 +876,29 @@ int seq_engine_song_mode_find_next_scene(int current_entry) {
 }
 
 // load a song mode entry and notify listeners
-void seq_engine_song_mode_load_entry(int entry) {
+// returns -1 we couldn't load the entry or we hit a STOP event
+int seq_engine_song_mode_load_entry(int entry) {
+    int new_scene;
     // invalid entry
     if(entry < 0 || entry >= SEQ_SONG_LIST_ENTRIES) {
         // invalid entry - just turn off song mode
-        seq_ctrl_set_song_mode(0);  // this will cause us to get called again
-        return;
+        seq_ctrl_set_song_mode(0);
+        return -1;
+    }
+    new_scene = song_get_song_list_scene(entry);
+    switch(new_scene) {
+        case SONG_LIST_SCENE_NULL:
+            return -1;
+        case SONG_LIST_SCENE_RESET:  // restart from the first entry
+            entry = seq_engine_song_mode_find_next_scene(-1);
+            // no entry found - just turn off song mode
+            if(entry == SONG_LIST_SCENE_NULL) {
+                return -1;
+            }
+            break;
+        case SONG_LIST_SCENE_REPEAT:  // repeat the current scene
+            seq_ctrl_set_song_mode(0);
+            return 0;
     }
     // set state
     sestate.sngmode.current_entry = entry;
@@ -880,6 +910,7 @@ void seq_engine_song_mode_load_entry(int entry) {
     seq_engine_set_kbtrans(song_get_song_list_kbtrans(sestate.sngmode.current_entry));
     // change scenes
     seq_engine_change_scene(sestate.sngmode.current_scene);
+    return 0;
 }
 
 //
@@ -1963,12 +1994,20 @@ int seq_engine_compute_next_pos(int track, int *pos, int change) {
 }
 
 // chance scenes since we are now synchronized
-void seq_engine_change_scene_synced(void) {
+// returns 1 if the song was stopped by this function
+int seq_engine_change_scene_synced(void) {
     int track;
     // no change
     if(sestate.scene_current == sestate.scene_next) {
-        return;
+        return 0;
     }
+    if(sestate.scene_next == -1) {
+        sestate.scene_next = sestate.scene_current;
+        seq_ctrl_set_run_state(0);  // stop sequencer
+        seq_ctrl_reset_pos();
+        return 1;  // notify caller that we actually just stopped
+    }
+
     sestate.scene_current = sestate.scene_next;
     seq_engine_recalc_params();
     seq_engine_reset_all_tracks_pos();
@@ -1991,6 +2030,7 @@ void seq_engine_change_scene_synced(void) {
         arp_set_gate_time(track,
             song_get_arp_gate_time(sestate.scene_current, track));
     }
+    return 0;
 }
 
 // cancel a pending scene change

@@ -811,7 +811,7 @@ void song_set_song_list_scene(int entry, int scene) {
         log_error("sssls - entry invalid: %d", entry);
         return;
     }
-    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+    if(scene < 0 || scene > SONG_LIST_SCENE_REPEAT) {
         log_error("sssls - scene invalid: %d", scene);
         return;
     }

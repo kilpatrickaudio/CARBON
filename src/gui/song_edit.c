@@ -115,7 +115,7 @@ void song_edit_adjust_scene(int change, int shift) {
     // edit the existing scene
     else {
         song_set_song_list_scene(sngedits.edit_pos,
-            seq_utils_clamp(scene + change, 0, SEQ_NUM_SCENES));
+            seq_utils_clamp(scene + change, 0, SONG_LIST_SCENE_REPEAT));
     }
     song_edit_update_display();
 }
@@ -174,19 +174,31 @@ void song_edit_update_display(void) {
         gui_set_status_text_part(row + 1, 0, 6, tempstr);
         // get scene
         scene = song_get_song_list_scene(entry);
-        if(scene == SONG_LIST_SCENE_NULL) {
-            gui_set_status_text_part(row + 1, 6, 7, "-------");  // scene
-            gui_set_status_text_part(row + 1, 14, 5, "-----");  // bars/beats
-            gui_set_status_text_part(row + 1, 20, 3, "---");  // kbtrans
-        }
-        else {
-            sprintf(tempstr, "Scene %d", (scene + 1));
-            gui_set_status_text_part(row + 1, 6, 7, tempstr);  // scene
-            sprintf(tempstr, "%5d", song_get_song_list_length(entry));
-            gui_set_status_text_part(row + 1, 14, 5, tempstr);  // bars/beats
-            panel_utils_transpose_to_str(tempstr,
-                song_get_song_list_kbtrans(entry));
-            gui_set_status_text_part(row + 1, 20, 3, tempstr);  // kbtrans
+        switch(scene) {
+            case SONG_LIST_SCENE_RESET:
+                gui_set_status_text_part(row + 1, 6, 7, "Reset  ");  // scene
+                gui_set_status_text_part(row + 1, 14, 5, "-----");  // bars/beats
+                gui_set_status_text_part(row + 1, 20, 3, "---");  // kbtrans
+                break;
+            case SONG_LIST_SCENE_REPEAT:
+                gui_set_status_text_part(row + 1, 6, 7, "Repeat ");  // scene
+                gui_set_status_text_part(row + 1, 14, 5, "-----");  // bars/beats
+                gui_set_status_text_part(row + 1, 20, 3, "---");  // kbtrans
+                break;
+            case SONG_LIST_SCENE_NULL:
+                gui_set_status_text_part(row + 1, 6, 7, "-------");  // scene
+                gui_set_status_text_part(row + 1, 14, 5, "-----");  // bars/beats
+                gui_set_status_text_part(row + 1, 20, 3, "---");  // kbtrans
+                break;
+            default:
+                sprintf(tempstr, "Scene %d", (scene + 1));
+                gui_set_status_text_part(row + 1, 6, 7, tempstr);  // scene
+                sprintf(tempstr, "%5d", song_get_song_list_length(entry));
+                gui_set_status_text_part(row + 1, 14, 5, tempstr);  // bars/beats
+                panel_utils_transpose_to_str(tempstr,
+                    song_get_song_list_kbtrans(entry));
+                gui_set_status_text_part(row + 1, 20, 3, tempstr);  // kbtrans
+                break;
         }
     }
     // make the mode state active for a while

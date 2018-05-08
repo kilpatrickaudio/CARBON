@@ -81,6 +81,8 @@
 #define SONG_TRACK_BIAS_NULL -1
 // song list scenes
 #define SONG_LIST_SCENE_NULL -1
+#define SONG_LIST_SCENE_RESET (SEQ_NUM_SCENES)
+#define SONG_LIST_SCENE_REPEAT (SONG_LIST_SCENE_RESET + 1)
 // song magic number token
 #define SONG_MAGIC_NUM 0x534f4e47  // "SONG" in big endian
 
