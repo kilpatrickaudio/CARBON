@@ -40,12 +40,12 @@ typedef enum {
 
 // interface typedef
 typedef struct {
-    uint8_t InPipe; 
+    uint8_t InPipe;
     uint8_t OutPipe;
     uint8_t OutEp;
     uint8_t InEp;
     uint16_t OutEpSize;
-    uint16_t InEpSize;  
+    uint16_t InEpSize;
 } USBH_MIDI_DataItfTypedef;
 
 // structure for MIDI process
@@ -53,9 +53,9 @@ typedef struct _USBH_MIDI_HandleTypeDef {
     USBH_MIDI_DataXferStateTypedef RxDataState;
     USBH_MIDI_DataItfTypedef DataItf;
     uint8_t *pTxData;
-    uint8_t *pRxData; 
+    uint8_t *pRxData;
     uint32_t TxDataLength;
-    uint32_t RxDataLength;  
+    uint32_t RxDataLength;
 } USBH_MIDI_HandleTypedef;
 
 extern USBH_ClassTypeDef USBH_MIDI_ClassDriver;
@@ -68,7 +68,7 @@ extern USBH_ClassTypeDef USBH_MIDI_ClassDriver;
 void usbh_midi_init(void);
 
 // run the USB host polling tasks
-void usbh_midi_task(void);
+void usbh_midi_timer_task(void);
 
 // set the USB VBUS state
 void usbh_midi_set_vbus(int state);

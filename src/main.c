@@ -54,7 +54,7 @@ static void SystemClock_Config(void);
 int startup_wait;
 
 // main!
-int main(void) { 
+int main(void) {
     btime start_time;
     startup_wait = 1;
 
@@ -97,10 +97,10 @@ int main(void) {
 
     // unblock RT thread
     startup_wait = 0;  // cause main timer task to begin
-    
+
     // power up timeout - 10ms
     start_time = time_utils_get_btime();
-    while((int)(time_utils_get_btime() - start_time) < 10000);    
+    while((int)(time_utils_get_btime() - start_time) < 10000);
     seq_ctrl_ui_task();
 
     // whee!
@@ -120,10 +120,10 @@ void main_timer_task(void) {
 #endif
 
     // do this always - even before startup - 1000us
-    if((task_div & 0x01) == 0) { 
+    if((task_div & 0x01) == 0) {
         delay_timer_task();
     }
- 
+
     // XXX this could be more elegant
     // not ready to go yet
     if(startup_wait) {
@@ -134,15 +134,16 @@ void main_timer_task(void) {
     // handle task timing
     DWT->CYCCNT = 0;  // reset cycle counter
 #endif
-    
+
     // tasks - every 1000us
-    if((task_div & 0x01) == 0) { 
+    if((task_div & 0x01) == 0) {
         time_utils_set_btime(current_time);
         panel_if_timer_task();  // do this first for nice LED dimming
         seq_ctrl_rt_task();  // sequencer realtime stuff
         din_midi_timer_task();  // hardware MIDI I/O
         ext_flash_timer_task();  // loading/saving to external flash
         usbd_midi_timer_task();  // USB device
+        usbh_midi_timer_task();  // USB host
         config_store_timer_task();  // system config loading / saving
         cvproc_timer_task();  // hardware CV/gate/clock outputs
         power_ctrl_timer_task();  // power control monitoring / switching
@@ -151,7 +152,7 @@ void main_timer_task(void) {
     // hardware I/O - every 250us
     ioctl_timer_task();
     analog_out_timer_task();
-    
+
     // nom entropy to make it more random (since we only have one seed)
     if((task_div & 0xff) == 0) {
         rand();
@@ -160,7 +161,6 @@ void main_timer_task(void) {
     // keep track of running time
     current_time += 500;  // XXX this could be done better
     task_div ++;
-
 
 #ifdef DEBUG_OVER_MIDI
     if((task_div & 0xfff) == 0) {
@@ -180,7 +180,7 @@ void main_timer_task(void) {
     if((task_div & 0x7ff) == 0) {
         task_timing_min = (task_timing_min * 6) / 1000;  // convert to us (168MHz clock)
         task_timing_max = (task_timing_max * 6) / 1000;  // convert to us (168MHz clock)
-        log_debug("RT timing - min: %d us - max: %d us", 
+        log_debug("RT timing - min: %d us - max: %d us",
             task_timing_min , task_timing_max);
         task_timing_min = 0x7fffffff;
         task_timing_max = 0;
@@ -203,8 +203,8 @@ static void SystemClock_Config(void) {
     // Enable Power Control clock
     __HAL_RCC_PWR_CLK_ENABLE();
 
-    // The voltage scaling allows optimizing the power consumption when the 
-    // device is clocked below the maximum system frequency, to update the 
+    // The voltage scaling allows optimizing the power consumption when the
+    // device is clocked below the maximum system frequency, to update the
     // voltage scaling value regarding system frequency refer to product datashee.
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
@@ -231,7 +231,7 @@ static void SystemClock_Config(void) {
     HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/2000);  // 500 us
     HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-    // STM32F405x/407x/415x/417x Revision Z devices: prefetch is supported 
+    // STM32F405x/407x/415x/417x Revision Z devices: prefetch is supported
     if (HAL_GetREVID() == 0x1001) {
         /* Enable the Flash prefetch */
         __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
@@ -246,9 +246,8 @@ static void SystemClock_Config(void) {
   * @param  line: assert_param error line source number
   * @retval None
   */
-void assert_failed(uint8_t* file, uint32_t line) { 
+void assert_failed(uint8_t* file, uint32_t line) {
   while(1) {
   }
 }
 #endif
-

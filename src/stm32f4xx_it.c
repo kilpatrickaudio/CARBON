@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    stm32f4xx_it.c 
+  * @file    stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.2.1
   * @date    13-March-2015
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -54,7 +54,6 @@ extern SPI_HandleTypeDef spi_flash_spi_handle;  // SPI3 flash interface
 // USB stuff
 extern PCD_HandleTypeDef usbdev_handle;  // USB device handle
 extern HCD_HandleTypeDef hhcd;  // USB host handle
-extern TIM_HandleTypeDef usbh_task_timer;  // USB host task timer
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
@@ -197,7 +196,7 @@ void UART4_IRQHandler(void) {
 
 //
 // DIN MIDI 2
-// 
+//
 // DIN MIDI USART2 DMA TX
 void DMA1_Stream6_IRQHandler(void) {
     HAL_DMA_IRQHandler(din_midi2_handle.hdmatx);
@@ -240,10 +239,3 @@ void OTG_HS_IRQHandler(void) {
     HAL_HCD_IRQHandler(&hhcd);
 }
 #endif
-
-// USB host task timer - approx. 840us period
-void TIM3_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&usbh_task_timer);
-    usbh_midi_task();  // USB host housekeeping stuff 
-}
-

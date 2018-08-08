@@ -53,7 +53,6 @@
 #define INT_PRIO_DIN_MIDI_DMA_UART2 6
 #define INT_PRIO_USBD_CORE 7
 #define INT_PRIO_USBH_CORE 8  // must be the same prio as the USBH timer
-#define INT_PRIO_USBH_TIMER 8  // must be the same prio as the USBH core
 
 // SPI channels (for HAL callback dispatching)
 #define SPI_NUM_CHANNELS 3
