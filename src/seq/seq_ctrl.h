@@ -30,6 +30,7 @@
 #define SEQ_CTRL_RECORD_ARM 1
 #define SEQ_CTRL_RECORD_STEP 2
 #define SEQ_CTRL_RECORD_RT 3
+#define SEQ_CTRL_RECORD_RT_RECYCLE 4
 
 // live modes
 #define SEQ_CTRL_LIVE_OFF 0

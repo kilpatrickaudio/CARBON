@@ -428,7 +428,7 @@ void seq_engine_run(uint32_t tick_count) {
                     seq_ctrl_set_live_mode(SEQ_CTRL_LIVE_OFF);
                 }
                 // start recording again
-                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT);
+                seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_RT_RECYCLE);
             }
             // handle step timing
             sestate.clock_div_count[track] ++;

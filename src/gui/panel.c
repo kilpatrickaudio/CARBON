@@ -921,6 +921,9 @@ void panel_handle_track_select(int track, int state) {
         pstate.track_hold_state[track] = 0;
     }
 
+    // make sure we are not recording
+    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);
+
     // update state - select select before unselect
     // XXX using bit fields could make sending this data to the selector smoother
     for(i = 0; i < SEQ_NUM_TRACKS; i ++) {

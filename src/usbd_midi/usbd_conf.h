@@ -48,8 +48,8 @@
 #define USBD_PID                      0xf3f6
 #define USBD_LANGID_STRING            0x0409  // english
 #define USBD_MANUFACTURER_STRING      "Kilpatrick Audio"
-#define USBD_PRODUCT_HS_STRING        "CARBON Sequencer"
-#define USBD_PRODUCT_FS_STRING        "CARBON Sequencer"
+#define USBD_PRODUCT_HS_STRING        "CARBON"
+#define USBD_PRODUCT_FS_STRING        "CARBON"
 #define USBD_CONFIGURATION_HS_STRING  "MIDI Config"
 #define USBD_INTERFACE_HS_STRING      "MIDI Interface"
 #define USBD_CONFIGURATION_FS_STRING  "MIDI Config"
@@ -59,7 +59,7 @@
 // descriptor stuff (must be in this file due to core requirement)
 #define USBD_MAX_NUM_INTERFACES       2
 #define USBD_MAX_NUM_CONFIGURATION    1
-// language config 
+// language config
 #define USBD_malloc               malloc
 #define USBD_free                 free
 #define USBD_memset               memset

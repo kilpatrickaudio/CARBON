@@ -382,7 +382,6 @@ int seq_ctrl_get_track_select(int track) {
 // set the current track selector
 void seq_ctrl_set_track_select(int track, int select) {
     int i, temp;
-    seq_ctrl_set_record_mode(SEQ_CTRL_RECORD_IDLE);  // stop recording
     if(track < 0 || track >= SEQ_NUM_TRACKS) {
         log_error("scsts - track invalid: %d", track);
         return;
@@ -498,13 +497,18 @@ int seq_ctrl_get_record_mode(void) {
 
 // change the record mode - to be used by seq_ctrl and seq_engine
 void seq_ctrl_set_record_mode(int mode) {
-    int i, oldmode;
+    int i, oldmode, newmode;
     if(mode == sstate.record_mode) {
         return;
     }
     oldmode = sstate.record_mode;
+    newmode = mode;
+    // recycle mode
+    if(newmode == SEQ_CTRL_RECORD_RT_RECYCLE) {
+        newmode = SEQ_CTRL_RECORD_RT;
+    }
     // if we are arming
-    if(mode != SEQ_CTRL_RECORD_IDLE) {
+    if(newmode != SEQ_CTRL_RECORD_IDLE) {
         // disable editing modes
         if(pattern_edit_get_enable()) {
             pattern_edit_set_enable(0);
@@ -524,7 +528,7 @@ void seq_ctrl_set_record_mode(int mode) {
             seq_ctrl_set_track_select(i, 0);
         }
     }
-    sstate.record_mode = mode;
+    sstate.record_mode = newmode;
     // call this directly
     seq_engine_record_mode_changed(oldmode, sstate.record_mode);
     // fire event
