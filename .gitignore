@@ -1,0 +1,6 @@
+Makefile
+build
+main
+main.bin
+main.map
+*.swp
