@@ -441,6 +441,16 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
+        case SCE_SONG_CVGATEDELAY:
+            if(pmstate.menu_mode == PANEL_MENU_SYS &&
+                    (pmstate.menu_submode == PANEL_MENU_SYS_CVGATEDELAY1 ||
+                    pmstate.menu_submode == PANEL_MENU_SYS_CVGATEDELAY2 ||
+                    pmstate.menu_submode == PANEL_MENU_SYS_CVGATEDELAY3 ||
+                    pmstate.menu_submode == PANEL_MENU_SYS_CVGATEDELAY4)) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
+            }
+            break;
         case SCE_SONG_STEP_LEN:
             if(pmstate.menu_mode == PANEL_MENU_CLOCK &&
                     pmstate.menu_submode == PANEL_MENU_CLOCK_STEP_LEN) {
@@ -976,6 +986,17 @@ void panel_menu_display_sys(void) {
             sprintf(tempstr, "%d", song_get_cvoffset(temp));
             gui_set_menu_value(tempstr);
             break;
+        case PANEL_MENU_SYS_CVGATEDELAY1:
+        case PANEL_MENU_SYS_CVGATEDELAY2:
+        case PANEL_MENU_SYS_CVGATEDELAY3:
+        case PANEL_MENU_SYS_CVGATEDELAY4:
+            temp = pmstate.menu_submode - PANEL_MENU_SYS_CVGATEDELAY1;
+            gui_set_menu_subtitle("CV Gate Delay");
+            sprintf(tempstr, "Gate Delay %d", (temp + 1));
+            gui_set_menu_param(tempstr);
+            sprintf(tempstr, "%d", song_get_cvgatedelay(temp));
+            gui_set_menu_value(tempstr);
+            break;
         case PANEL_MENU_SYS_MENU_TIMEOUT:
             gui_set_menu_subtitle("Menu Timeout");
             gui_set_menu_param("Timeout");
@@ -1257,6 +1278,13 @@ void panel_menu_edit_sys(int change) {
         case PANEL_MENU_SYS_CVOFFSET4:
             temp = pmstate.menu_submode - PANEL_MENU_SYS_CVOFFSET1;
             seq_ctrl_adjust_cvoffset(temp, change);
+            break;
+        case PANEL_MENU_SYS_CVGATEDELAY1:
+        case PANEL_MENU_SYS_CVGATEDELAY2:
+        case PANEL_MENU_SYS_CVGATEDELAY3:
+        case PANEL_MENU_SYS_CVGATEDELAY4:
+            temp = pmstate.menu_submode - PANEL_MENU_SYS_CVGATEDELAY1;
+            seq_ctrl_adjust_cvgatedelay(temp, change);
             break;
         case PANEL_MENU_SYS_MENU_TIMEOUT:
             panel_menu_set_timeout(seq_utils_clamp(pmstate.menu_timeout +

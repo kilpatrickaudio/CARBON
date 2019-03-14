@@ -201,6 +201,12 @@ int song_get_cvoffset(int out);
 // set the CV offset for an output
 void song_set_cvoffset(int out, int offset);
 
+// get the CV gate delay for an output
+int song_get_cvgatedelay(int out);
+
+// set the CV gate delay for an output
+void song_set_cvgatedelay(int out, int delay);
+
 // get a MIDI port clock out enable setting - returns -1 on error
 // port must be a MIDI output port
 int song_get_midi_port_clock_out(int port);

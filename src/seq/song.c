@@ -83,7 +83,7 @@ struct song_list_entry {
 // a complete song
 struct song_data {
     // firwmare version that wrote this song - this should be first
-    uint32_t song_version;  // version major: upper 16 bits, version mintor: lower 16 bits
+    uint32_t song_version;  // version major: upper 16 bits, version minor: lower 16 bits
     // global
     float tempo;  // song tempo in BPM
     int8_t swing;  // track swing - 50-80 = 50-80%
@@ -127,19 +127,21 @@ struct song_data {
     uint8_t scene_sync;  // scene sync type - 0 = beat, 1 = track 1 end
     uint8_t magic_range;  // magic seed range in semitones
     uint8_t magic_chance;  // magic change amount in percent
+    // CARBON version 1.15
+    uint8_t cvgatedelay[SONG_CVGATE_NUM_OUTPUTS]; // CV gate delay offset
 
     // dummy padding - to make it an even number of 4096 byte sectors in the flash
     // - be VERY careful that this is correct or other RAM could be overwritten
 #ifdef SONG_NOTES_PER_SCENE
     uint8_t dummy0[1024];
-    uint8_t dummy1[473];
+    uint8_t dummy1[469];
 #else
     uint8_t dummy0[1024];
     uint8_t dummy1[1024];
     uint8_t dummy2[1024];
     uint8_t dummy3[1024];
     uint8_t dummy4[700];
-    uint8_t dummy5[13];
+    uint8_t dummy5[9];
 #endif
     // token to identify correct loading of file
     uint32_t magic_num;
@@ -234,6 +236,7 @@ void song_clear(void) {
     for(i = 0; i < SONG_CVGATE_NUM_OUTPUTS; i ++) {
         song_set_cvcal(i, 0);  // no cal
         song_set_cvoffset(i, 0);  // no offset
+        song_set_cvgatedelay(i, 0); // no gate delay
     }
     for(port = 0; port < MIDI_PORT_NUM_TRACK_OUTPUTS; port ++) {
         song_set_midi_port_clock_out(port, SEQ_UTILS_CLOCK_OFF);
@@ -610,6 +613,30 @@ void song_set_cvoffset(int out, int offset) {
     song.cvoffset[out] = offset;
     // fire event
     state_change_fire2(SCE_SONG_CVOFFSET, out, offset);
+}
+
+// get the CV gate delay for an output
+int song_get_cvgatedelay(int out) {
+    if(out < 0 || out >= SONG_CVGATE_NUM_OUTPUTS) {
+        log_error("sgcgd - out invalid: %d", out);
+        return -1;
+    }
+    return song.cvgatedelay[out];
+}
+
+// set the CV gate delay for an output
+void song_set_cvgatedelay(int out, int delay) {
+    if(out < 0 || out >= SONG_CVGATE_NUM_OUTPUTS) {
+        log_error("sgcgd - out invalid: %d", out);
+        return;
+    }
+    if(delay < CVPROC_CVGATEDELAY_MIN || delay > CVPROC_CVGATEDELAY_MAX) {
+        log_error("sgcgd - delay invalid: %d", delay);
+        return;
+    }
+    song.cvgatedelay[out] = delay;
+    // fire event
+    state_change_fire2(SCE_SONG_CVGATEDELAY, out, delay);
 }
 
 // get a MIDI port clock out enable setting - returns -1 on error

@@ -51,6 +51,7 @@ enum STATE_CHANGE_EVENT {
     SCE_SONG_CV_OUTPUT_SCALING,  // arg0 = CV output, arg1 = mode
     SCE_SONG_CVCAL,  // arg0 = channel, arg1 = cal
     SCE_SONG_CVOFFSET,  // arg0 = channel, arg1 = offset
+    SCE_SONG_CVGATEDELAY, // arg0 = channel, arg1 = delay
     SCE_SONG_MIDI_PORT_CLOCK_OUT,  // arg0 = port, arg1 = ppq
     SCE_SONG_MIDI_CLOCK_SOURCE,  // arg0 = source
     SCE_SONG_MIDI_REMOTE_CTRL,  // arg0 = enable

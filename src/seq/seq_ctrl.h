@@ -142,6 +142,9 @@ void seq_ctrl_adjust_cvcal(int channel, int change);
 // adjust the CV offset on a channel
 void seq_ctrl_adjust_cvoffset(int channel, int change);
 
+// adjust the CV gate delay on a channel
+void seq_ctrl_adjust_cvgatedelay(int channel, int change);
+
 // set the tempo
 void seq_ctrl_set_tempo(float tempo);
 

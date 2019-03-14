@@ -81,7 +81,7 @@
 #define PANEL_MENU_MIDI_REMOTE_CTRL 8  // per song
 #define PANEL_MENU_MIDI_AUTOLIVE 9  // per song
 // sys
-#define PANEL_MENU_SYS_NUM_SUBMODES 20
+#define PANEL_MENU_SYS_NUM_SUBMODES 24
 #define PANEL_MENU_SYS_VERSION 0  // global
 #define PANEL_MENU_SYS_CVGATE_PAIRS 1  // per song
 #define PANEL_MENU_SYS_CV_BEND_RANGE 2  // per song
@@ -101,7 +101,11 @@
 #define PANEL_MENU_SYS_CVOFFSET2 16  // per song
 #define PANEL_MENU_SYS_CVOFFSET3 17  // per song
 #define PANEL_MENU_SYS_CVOFFSET4 18  // per song
-#define PANEL_MENU_SYS_MENU_TIMEOUT 19 // global
+#define PANEL_MENU_SYS_CVGATEDELAY1 19  // per song
+#define PANEL_MENU_SYS_CVGATEDELAY2 20  // per song
+#define PANEL_MENU_SYS_CVGATEDELAY3 21  // per song
+#define PANEL_MENU_SYS_CVGATEDELAY4 22  // per song
+#define PANEL_MENU_SYS_MENU_TIMEOUT 23 // global
 // clock
 #define PANEL_MENU_CLOCK_NUM_SUBMODES 10
 #define PANEL_MENU_CLOCK_STEP_LEN 0  // per scene / track

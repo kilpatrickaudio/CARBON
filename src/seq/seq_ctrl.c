@@ -226,6 +226,9 @@ void seq_ctrl_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_CVOFFSET:
             cvproc_set_cvoffset(data[0], data[1]);
             break;
+        case SCE_SONG_CVGATEDELAY:
+            cvproc_set_cvgatedelay(data[0], data[1]);
+            break;
         case SCE_CONFIG_LOADED:
 //            log_debug("scrt - config loaded");
             gui_startup();  // start the GUI now that we know which LCD type we have
@@ -557,6 +560,16 @@ void seq_ctrl_adjust_cvoffset(int channel, int change) {
     }
     song_set_cvoffset(channel, seq_utils_clamp(song_get_cvoffset(channel) + change,
         CVPROC_CVOFFSET_MIN, CVPROC_CVOFFSET_MAX));
+}
+
+// adjust the CV gate delay on a channel
+void seq_ctrl_adjust_cvgatedelay(int channel, int change) {
+    if(channel < 0 || channel >= CVPROC_NUM_OUTPUTS) {
+        log_error("scacgd - channel invalid: %d", channel);
+        return;
+    }
+    song_set_cvgatedelay(channel, seq_utils_clamp(song_get_cvgatedelay(channel) + change,
+        CVPROC_CVGATEDELAY_MIN, CVPROC_CVGATEDELAY_MAX));
 }
 
 // set the tempo
@@ -1455,6 +1468,13 @@ void seq_ctrl_refresh_modules(void) {
         song_set_magic_range(12);
         song_set_magic_chance(100);
     }
+    // song version <= 1.14
+    if (song_ver <= 0x0001000e) {
+        song_set_cvgatedelay(0, 0);
+        song_set_cvgatedelay(1, 0);
+        song_set_cvgatedelay(2, 0);
+        song_set_cvgatedelay(3, 0);
+    }
 
     // make sure we save back the current version
     if(song_ver != CARBON_VERSION_MAJMIN) {
@@ -1478,6 +1498,9 @@ void seq_ctrl_refresh_modules(void) {
     for(i = 0; i < CVPROC_NUM_OUTPUTS; i ++) {
         cvproc_set_cvcal(i, song_get_cvcal(i));
         cvproc_set_cvoffset(i, song_get_cvoffset(i));
+    }
+    for(i = 0; i < CVPROC_NUM_OUTPUTS; i ++) {
+        cvproc_set_cvgatedelay(i, song_get_cvgatedelay(i));
     }
 }
 

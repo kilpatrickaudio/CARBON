@@ -70,6 +70,9 @@ void cvproc_set_cvcal(int out, int scale);
 // set the offset for an output
 void cvproc_set_cvoffset(int out, int offset);
 
+// set the gate delay for an output
+void cvproc_set_cvgatedelay(int out, int delay);
+
 #endif
 
 

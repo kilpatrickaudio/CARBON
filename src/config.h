@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 14
+#define CARBON_VERSION_MINOR 15
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -148,6 +148,8 @@
 #define CVPROC_BEND_RANGE_MAX 12  // max setting for CV bend range
 #define CVPROC_CVOFFSET_MIN -450  // min setting for CV offset
 #define CVPROC_CVOFFSET_MAX 450  // max setting for CV offset
+#define CVPROC_CVGATEDELAY_MIN 0 // min setting for CV gate delay
+#define CVPROC_CVGATEDELAY_MAX 64 // max setting for CV gate delay (ticks).
 
 // MIDI clock
 #define MIDI_CLOCK_TASK_INTERVAL_US (SEQ_TASK_INTERVAL_US)

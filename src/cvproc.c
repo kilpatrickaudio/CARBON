@@ -52,6 +52,7 @@ struct cvproc_state {
     int cvoffset[CVPROC_NUM_OUTPUTS];  // offset for output
     int output_scaling[CVPROC_NUM_OUTPUTS];  // output scaling
     int bend_range;  // pitch bend range
+    int gate_delay[CVPROC_NUM_OUTPUTS]; // gate delay in ticks
     // common state
     uint8_t damper[CVPROC_NUM_OUTPUTS];  // damper state for each pair
     uint8_t out_offset[CVPROC_NUM_PAIRS];  // the start offset mono / poly group
@@ -66,6 +67,8 @@ struct cvproc_state {
     int16_t out_bend[CVPROC_NUM_OUTPUTS];  // the current bend value (DAC offset)
     // output tuning
     uint16_t cvproc_scale[CVPROC_NUM_OUTPUTS][CVPROC_SCALE_NUM_NOTES];
+    // delayed gate on triggers 
+    int8_t delayed_gate[CVPROC_NUM_OUTPUTS];
 };
 struct cvproc_state cvstate;
 
@@ -79,6 +82,7 @@ void cvproc_reset_state(void);
 void cvproc_reset_pair(int pair);
 void cvproc_set_note(int out, int note, int gate);
 void cvproc_set_velo(int out, int velo, int gate);
+void cvproc_set_gate(int out, int gate);
 void cvproc_set_bend(int out, int bend);
 void cvproc_build_scale(int out);
 
@@ -90,6 +94,8 @@ void cvproc_init(void) {
     for(i = 0; i < CVPROC_NUM_PAIRS; i ++) {
         cvstate.out_note[i] = CVPROC_DEFAULT_NOTE;
         cvstate.out_bend[i] = 0;
+        cvstate.gate_delay[i] = 0;
+        cvstate.delayed_gate[i] = 0;
         cvproc_set_pair_mode(i, CVPROC_MODE_NOTE);
     }
 
@@ -107,7 +113,17 @@ void cvproc_init(void) {
 // run the timer task
 void cvproc_timer_task(void) {
     struct midi_msg msg;
-    int pair;
+    int pair, i;
+
+    // handle any delayed gate on triggers
+    for (i = 0; i < CVPROC_NUM_OUTPUTS; i ++) {
+        if (cvstate.delayed_gate[i] > 0) {
+            if (--cvstate.delayed_gate[i] == 0) {
+                analog_out_set_gate(i, CVPROC_GATE_ON);
+            }
+        }
+    }
+
     // CV/gate
     if(midi_stream_data_available(MIDI_PORT_CV_OUT)) {
         while(midi_stream_data_available(MIDI_PORT_CV_OUT)) {
@@ -295,7 +311,20 @@ void cvproc_set_cvoffset(int out, int offset) {
         return;
     }
     cvstate.cvoffset[out] = offset;
-    cvproc_build_scale(out);    
+    cvproc_build_scale(out);
+}
+
+// set the offset for an output
+void cvproc_set_cvgatedelay(int out, int delay) {
+    if(out < 0 || out >= CVPROC_NUM_OUTPUTS) {
+        log_error("cscgd - out invalid: %d", out);
+        return;
+    }
+    if(delay < CVPROC_CVGATEDELAY_MIN || delay > CVPROC_CVGATEDELAY_MAX) {
+        log_error("cscgd - offset invalid: %d", delay);
+        return;
+    }
+    cvstate.gate_delay[out] = delay;
 }
 
 //
@@ -549,10 +578,10 @@ void cvproc_cc_handler(int pair, struct midi_msg *msg) {
     analog_out_set_cv(out, (msg->data1 << 5));
     // control gate based on CC level threshold
     if(msg->data1 & 0x40) {
-        analog_out_set_gate(out, 1);
+        cvproc_set_gate(out, CVPROC_GATE_ON);
     }
     else {
-        analog_out_set_gate(out, 0);    
+        cvproc_set_gate(out, CVPROC_GATE_OFF);
     }
 }
 
@@ -664,7 +693,7 @@ void cvproc_set_note(int out, int note, int gate) {
         return;
     }
     analog_out_set_cv(out, cvstate.cvproc_scale[out][note] + cvstate.out_bend[out]);
-    analog_out_set_gate(out, gate);
+    cvproc_set_gate(out, gate);
     cvstate.out_note[out] = note;
 }
 
@@ -682,7 +711,18 @@ void cvproc_set_velo(int out, int velo, int gate) {
     if(gate == CVPROC_GATE_ON) {
         analog_out_set_cv(out, velo << 5);  // convert to 12 bit
     }
-    analog_out_set_gate(out, gate);
+    cvproc_set_gate(out, gate);
+}
+
+// set gate on/off on an output (or potentially delay it a bit)
+void cvproc_set_gate(int out, int gate) {
+    if (gate == CVPROC_GATE_OFF || cvstate.gate_delay[out] == 0) {
+        cvstate.delayed_gate[out] = 0; // CVPROC_GATE_OFF kills any delayed GATE_ON
+        analog_out_set_gate(out, gate);
+    }
+    else {
+        cvstate.delayed_gate[out] = cvstate.gate_delay[out];
+    }
 }
 
 // set a bend on an output
