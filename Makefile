@@ -8,12 +8,13 @@
 #
 # build target specs
 CC = /home/andrew/bin/gcc-arm/bin/arm-none-eabi-gcc
+CPP = g++
 LD = /home/andrew/bin/gcc-arm/bin/arm-none-eabi-gcc
 AS = /home/andrew/bin/gcc-arm/bin/arm-none-eabi-as
-CFLAGS = -O2 -g -Wall -mlittle-endian -mthumb -mthumb-interwork -mcpu=cortex-m4 -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4 -DUSBD_USE_FS -DUSBH_USE_HS -DUSE_USB_HS_IN_FS
+CFLAGS = -O2 -g -Wall -mlittle-endian -mthumb -mthumb-interwork -mcpu=cortex-m4 -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4 -DUSBD_USE_FS -DUSBH_USE_HS -DUSE_USB_HS_IN_FS -DVTOR_BL
 INCLUDES = -Isrc -Isrc/usbd_midi -Isrc/usbh_midi -IDrivers/CMSIS/Device/ST/STM32F4xx/Include -IDrivers/CMSIS/Include -IDrivers/STM32F4xx_HAL_Driver/Inc -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc -IMiddlewares/ST/STM32_USB_Host_Library/Core/Inc
 OUT_DIR = build
-LDFLAGS = --specs=nosys.specs -mthumb -mthumb-interwork -mcpu=cortex-m4 -Wl,-Map=main.map,--gc-sections -Tsrc/STM32F407VE_FLASH.ld
+LDFLAGS = --specs=nosys.specs -mthumb -mthumb-interwork -mcpu=cortex-m4 -Wl,-Map=main.map,--gc-sections -Tsrc/STM32F407VE_FLASH-release.ld
 
 # first target to run when typing 'make'
 default: main
@@ -4013,7 +4014,9 @@ $(OUT_DIR)/panel_menu.c.o: src/gui/panel_menu.c src/gui/panel_menu.h \
 $(OUT_DIR)/pattern_edit.c.o: src/gui/pattern_edit.c \
  src/gui/pattern_edit.h src/gui/gui.h src/gui/../config.h \
  src/gui/panel_menu.h src/gui/../gfx.h src/gui/../config.h \
- src/gui/../seq/seq_ctrl.h src/gui/../seq/../config.h \
+ src/gui/../seq/pattern.h src/gui/../seq/seq_ctrl.h \
+ src/gui/../seq/../config.h src/gui/../seq/song.h \
+ src/gui/../seq/../midi/midi_protocol.h src/gui/../seq/../cvproc.h \
  src/gui/../util/log.h src/gui/../util/panel_utils.h \
  src/gui/../util/state_change.h src/gui/../util/state_change_events.h
 	@echo 'compiling pattern_edit.c...'
@@ -5416,7 +5419,7 @@ $(OUT_DIR)/usbd_midi.c.o: src/usbd_midi/usbd_midi.c \
 
 # run target
 run:
-	./basso -i 0
+	./carbon -i 0
 
 # clean target
 clean:

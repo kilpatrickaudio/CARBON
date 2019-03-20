@@ -32,8 +32,8 @@ _Min_Stack_Size = 0x400; /* stack size */
 /* memory layout */
 MEMORY
 {
-VECTOR (rx)     : ORIGIN = 0x8000000, LENGTH = 16K
-FLASH (rx)      : ORIGIN = 0x8004000, LENGTH = 512K-16K
+VECTOR (rx)     : ORIGIN = 0x8020000, LENGTH = 16K
+FLASH (rx)      : ORIGIN = 0x8024000, LENGTH = 384K-16K
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
 CCMRAM (rw)      : ORIGIN = 0x10000000, LENGTH = 64K
 }
@@ -47,7 +47,7 @@ SECTIONS
     KEEP(*(.isr_vector)) /* startup code */
     . = ALIGN(4);
   } >VECTOR
-  
+
   /* program code and data */
   .text :
   {
@@ -106,7 +106,7 @@ SECTIONS
   _sidata = LOADADDR(.data);
 
   /* init RAM data */
-  .data : 
+  .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* global symbol at start */
@@ -118,7 +118,7 @@ SECTIONS
 /* put init data in RAM */
 /*  } >RAM AT> FLASH  */
 /* put init data in CCMRAM */
-  } >CCMRAM AT> FLASH 
+  } >CCMRAM AT> FLASH
 
   _siccmram = LOADADDR(.ccmram);
 
@@ -129,12 +129,12 @@ SECTIONS
     _sccmram = .;  /* global symbol at start */
     *(.ccmram)
     *(.ccmram*)
-    
+
     . = ALIGN(4);
     _eccmram = .;  /* global symbol at end */
   } >CCMRAM AT> FLASH
 
-  
+
   /* uninit data section */
   . = ALIGN(4);
   .bss :

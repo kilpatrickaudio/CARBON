@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 18
+#define CARBON_VERSION_MINOR 20
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -232,7 +232,7 @@
 //
 // development mode
 //
-//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread
