@@ -136,8 +136,8 @@ void panel_init(void) {
     }
 
     // select track 1
-    panel_handle_track_select(0, 1);  // press
-    panel_handle_track_select(0, 0);  // release
+//    panel_handle_track_select(0, 1);  // press
+//    panel_handle_track_select(0, 0);  // release
 
     // set the backlight modes
     pstate.bl_record = 0;
