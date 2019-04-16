@@ -670,11 +670,19 @@ void panel_handle_seq_input(int ctrl, int val) {
                 panel_handle_shift_double_tap();  // handle canceling of modes
                 break;
             case PANEL_SW_SONG_MODE:
-                seq_ctrl_toggle_song_mode();
+                if (panel_get_edit_mode() == PANEL_EDIT_MODE_STEP) {
+                    if (pstate.shift_state == 1) {
+                        step_edit_mark_step_for_copying();
+                    } else {
+                        step_edit_copy_marked_step();
+                    }
+                } else {
+                    seq_ctrl_toggle_song_mode();
 #ifdef GFX_REMLCD_MODE
                 // allow screen to be redrawn for client
-                gui_force_refresh();
+                    gui_force_refresh();
 #endif
+                }
                 break;
             case PANEL_ENC_SPEED:
                 switch(panel_get_edit_mode()) {

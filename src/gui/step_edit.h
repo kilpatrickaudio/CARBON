@@ -68,5 +68,11 @@ void step_edit_adjust_ratchet_mode(int change, int shift);
 // clear the current step
 void step_edit_clear_step(void);
 
+// store the current track and step_pos 
+void step_edit_mark_step_for_copying(void);
+
+// copy the event from copy_from_scene, copy_from_track, copy_from_pos
+void step_edit_copy_marked_step(void);
+
 #endif
 

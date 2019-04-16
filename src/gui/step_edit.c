@@ -57,6 +57,9 @@ struct step_edit_state {
     uint16_t playing_note_timeouts[SEQ_TRACK_POLY];  // timeouts for playing notes
     // recording input events
     int8_t recording_notes[SEQ_TRACK_POLY];  // keep track of input notes
+    int copy_from_scene; // for the case that SONG_NOTES_PER_SCENE is true
+    int copy_from_track; // store the current track to copy from it at a later time 
+    int copy_from_pos; // store the current pos to copy from it at a later time 
 };
 struct step_edit_state sedits;
 
@@ -74,6 +77,7 @@ void step_edit_remove_recording_note(int note);
 int step_edit_get_num_recording_notes(void);
 int step_edit_does_step_contain_event(int type, int data0);
 
+
 // init the step edit mode
 void step_edit_init(void) {
     sedits.enable = 0;
@@ -83,6 +87,11 @@ void step_edit_init(void) {
     sedits.step_pos = 0;
     sedits.event_pos = STEP_EDIT_EVENT_POS_ALL;
     sedits.last_adjust_type = STEP_EDIT_ADJUST_NOTE;
+    // dont't paste steps before one step was marked,
+    // therefore all values are set to -1 and not 0
+    sedits.copy_from_scene = -1;
+    sedits.copy_from_pos = -1;
+    sedits.copy_from_track = -1;
     // register events
     state_change_register(step_edit_handle_state_change, SCEC_CTRL);
     state_change_register(step_edit_handle_state_change, SCEC_ENG);
@@ -748,4 +757,51 @@ int step_edit_does_step_contain_event(int type, int data0) {
         }
     }
     return -1;
+}
+
+// store the current track and step_pos to copy the events of
+// this step at a later time by calling step_edit_copy_marked_step
+void step_edit_mark_step_for_copying(void) {
+    sedits.copy_from_scene = sedits.scene;
+    sedits.copy_from_track = sedits.track;
+    sedits.copy_from_pos = sedits.step_pos;
+}
+
+// copy the event from sedits.copy_from_track / sedits.copy_from_pos
+void step_edit_copy_marked_step(void) {
+    struct track_event event;
+    
+    if (sedits.copy_from_track < 0)
+        return;
+
+    step_edit_stop_notes();
+    
+    int slot;
+    for (slot = 0; slot < SEQ_TRACK_POLY; slot++) {
+        song_get_step_event(sedits.copy_from_scene, sedits.copy_from_track,
+                            sedits.copy_from_pos, slot, &event);
+        song_set_step_event(sedits.scene, sedits.track,
+                            sedits.step_pos, slot, &event);
+
+        // copy the start delay track_step_param
+        int start_delay = song_get_start_delay(sedits.copy_from_scene,
+                                               sedits.copy_from_track,
+                                               sedits.copy_from_pos);
+        song_set_start_delay(sedits.scene,
+                             sedits.track,
+                             sedits.step_pos,
+                             start_delay);
+
+        // copy the ratchet track_step_param
+        int ratchet = song_get_ratchet_mode(sedits.copy_from_scene,
+                                            sedits.copy_from_track,
+                                            sedits.copy_from_pos);
+        song_set_ratchet_mode(sedits.scene,
+                              sedits.track,
+                              sedits.step_pos,
+                              ratchet);
+    }
+
+    step_edit_update_display();
+    step_edit_play_step();
 }
