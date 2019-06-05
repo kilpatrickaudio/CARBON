@@ -97,22 +97,23 @@ void seq_ctrl_init(void) {
 
 // run the sequencer control realtime task - run on RT interrupt at 1000us interval
 void seq_ctrl_rt_task(void) {
-    // only run this if we are on
-    if(power_ctrl_get_power_state() == POWER_CTRL_STATE_ON) {
-        midi_clock_timer_task();  // all music timing starts here
-        seq_engine_timer_task();  // must run after clock for correct timing
-        clock_out_timer_task();  // runs separately from sequencer due to straight time
-        pattern_edit_timer_task();  // handle timeout of pattern edit mode
-        step_edit_timer_task();  // handle timeout of step edit mode
-        song_edit_timer_task();  // handle timeout of song edit mode
-        sysex_timer_task();  // handle processing of SYSEX messages
-        song_timer_task();  // handle loading and saving
+    switch(power_ctrl_get_power_state()) {
+        case POWER_CTRL_STATE_ON:
+            midi_clock_timer_task();  // all music timing starts here
+            seq_engine_timer_task();  // must run after clock for correct timing
+            clock_out_timer_task();  // runs separately from sequencer due to straight time
+            pattern_edit_timer_task();  // handle timeout of pattern edit mode
+            step_edit_timer_task();  // handle timeout of step edit mode
+            song_edit_timer_task();  // handle timeout of song edit mode
+            sysex_timer_task();  // handle processing of SYSEX messages
+            song_timer_task();  // handle loading and saving
+            panel_timer_task();  // handle input from user which might be realtime
+            break;
+        case POWER_CTRL_STATE_IF:
+            iface_midi_router_timer_task();
+            panel_timer_task();  // handle input from user which might be realtime
+            break;
     }
-    // run this if we are off
-    else {
-        iface_midi_router_timer_task();
-    }
-    panel_timer_task();  // handle input from user which might be realtime
 }
 
 // run the sequencer control UI task - run on main loop

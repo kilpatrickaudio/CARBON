@@ -25,6 +25,8 @@
 
 #include <inttypes.h>
 
+#define PANEL_IF_NUM_LEDS 32
+
 // init the panel interface
 void panel_if_init(void);
 
@@ -43,4 +45,3 @@ void panel_if_set_rgb(int side, uint32_t color);
 void panel_if_blink_led(int led, uint8_t off, uint8_t on);
 
 #endif
-

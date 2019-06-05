@@ -21,9 +21,11 @@
  *
  */
 #include "power_ctrl.h"
+#include "panel_if.h"
 #include "ioctl.h"
 #include "config.h"
 #include "gui/gui.h"
+#include "gui/panel.h"
 #include "seq/seq_ctrl.h"
 #include "usbh_midi/usbh_midi.h"
 #include "util/log.h"
@@ -60,6 +62,7 @@ void power_ctrl_init(void) {
 
 // run the power control timer task
 void power_ctrl_timer_task(void) {
+    int i;
     static int next_state = -1;  // handle release of button before changing
 
     // power switch is pressed
@@ -159,6 +162,18 @@ void power_ctrl_timer_task(void) {
                     state_change_fire1(SCE_POWER_STATE, POWER_CTRL_STATE_ERROR);
                     break;
             }
+        }
+        // XXX force LEDs off when in standby state
+        if(pwrs.power_state == POWER_CTRL_STATE_STANDBY) {
+            for(i = 0; i < PANEL_LED_BL_LR; i ++) {
+                panel_if_set_led(i, 0);
+            }
+            panel_if_set_led(PANEL_LED_BL_LR, 0xff);  // RGB LEDs are inverted
+            panel_if_set_led(PANEL_LED_BL_LG, 0xff);  // RGB LEDs are inverted
+            panel_if_set_led(PANEL_LED_BL_LB, 0xff);  // RGB LEDs are inverted
+            panel_if_set_led(PANEL_LED_BL_RR, 0xff);  // RGB LEDs are inverted
+            panel_if_set_led(PANEL_LED_BL_RG, 0xff);  // RGB LEDs are inverted
+            panel_if_set_led(PANEL_LED_BL_RB, 0xff);  // RGB LEDs are inverted
         }
     }
     pwrs.timer_div ++;

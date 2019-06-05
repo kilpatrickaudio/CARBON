@@ -41,7 +41,6 @@ SPI_HandleTypeDef panel_spi_handle;  // SPI2 panel interface
 uint8_t panel_spi_rx_buf[PANEL_IF_BUFSIZE];
 
 // LED framebuffer
-#define PANEL_IF_NUM_LEDS 32
 #define PANEL_IF_LED_PHASES 8
 #define PANEL_IF_LED_SHIFT_BITS 5  // number of bits to shit from 8 to n bits
 #define PANEL_IF_LED_PHASE_MASK (PANEL_IF_LED_PHASES - 1)
@@ -60,7 +59,7 @@ void panel_if_write_pwm(int bank, int bit, uint8_t level);
 // init the panel interface
 void panel_if_init(void) {
     int i, j;
-    
+
     // clear the LED framebuffer
     for(j = 0; j < PANEL_IF_LED_PHASES; j ++) {
         for(i = 0; i < PANEL_IF_BUFSIZE; i ++) {
@@ -70,11 +69,11 @@ void panel_if_init(void) {
 #ifdef PANEL_IF_BL_COMMON_ANODE
         panel_if_decode_led(PANEL_LED_BL_RR, 0xff);
         panel_if_decode_led(PANEL_LED_BL_RG, 0xff);
-        panel_if_decode_led(PANEL_LED_BL_RB, 0xff);    
+        panel_if_decode_led(PANEL_LED_BL_RB, 0xff);
         panel_if_decode_led(PANEL_LED_BL_LR, 0xff);
         panel_if_decode_led(PANEL_LED_BL_LG, 0xff);
         panel_if_decode_led(PANEL_LED_BL_LB, 0xff);
-#endif    
+#endif
     // clear blink setting
     for(i = 0; i < PANEL_IF_NUM_LEDS; i ++) {
         panel_if_blink[i][0] = 0;
@@ -84,20 +83,20 @@ void panel_if_init(void) {
     for(i = 0; i < PANEL_IF_BUFSIZE; i ++) {
         panel_spi_rx_buf[i] = 0xff;  // open switches
     }
-    
-    // set up the switch debouncing code  
-    switch_filter_init(10, 2, 2);        
+
+    // set up the switch debouncing code
+    switch_filter_init(10, 2, 2);
     switch_filter_set_encoder(0);
     switch_filter_set_encoder(2);
     switch_filter_set_encoder(4);
     switch_filter_set_encoder(10);
     switch_filter_set_encoder(12);
     switch_filter_set_encoder(14);
-        
+
     // register the SPI callbacks
     spi_callbacks_register_handle(SPI_CHANNEL_PANEL, &panel_spi_handle,
         panel_if_spi_init_cb);
-    spi_callbacks_register_txrx_cb(SPI_CHANNEL_PANEL, 
+    spi_callbacks_register_txrx_cb(SPI_CHANNEL_PANEL,
         panel_if_spi_txrx_cplt_cb);
 
     // setup SPI
@@ -135,7 +134,7 @@ void panel_if_timer_task(void) {
         // start the next transfer
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, 1);  // CS goes high to latch data
         if(HAL_SPI_TransmitReceive_IT(&panel_spi_handle,
-                (uint8_t *)panel_if_led_fb[led_phase], 
+                (uint8_t *)panel_if_led_fb[led_phase],
                 (uint8_t *)panel_spi_rx_buf, PANEL_IF_BUFSIZE) != HAL_OK) {
             // XXX handle error
         }
@@ -217,9 +216,9 @@ void panel_if_timer_task(void) {
                     seq_ctrl_panel_input(PANEL_SW_SHIFT, val);
                     break;
                 case 0x06:  // keys
-                    seq_ctrl_panel_input(PANEL_SW_SONG_MODE, val);            
+                    seq_ctrl_panel_input(PANEL_SW_SONG_MODE, val);
                     break;
-                case 0x0a:  // speed                
+                case 0x0a:  // speed
                     seq_ctrl_panel_input(PANEL_ENC_SPEED, val);
                     break;
                 case 0x0c:  // gate time
@@ -239,9 +238,9 @@ void panel_if_timer_task(void) {
                     break;
             }
         }
-        
-        // handle LED blinking  
-        if((count & 0x03) == 0) {        
+
+        // handle LED blinking
+        if((count & 0x03) == 0) {
             for(i = 0; i < PANEL_IF_NUM_LEDS; i ++) {
                 // only handle LEDs that are supposed to be blinking
                 if(panel_if_blink[i][0]) {
@@ -268,7 +267,7 @@ void panel_if_timer_task(void) {
             }
         }
         count ++;
-    } 
+    }
 }
 
 // set an LED brightness level - level: 0-255 = 0-100%
@@ -290,7 +289,7 @@ void panel_if_set_rgb(int side, uint32_t color) {
     if(side) {
         panel_if_decode_led(PANEL_LED_BL_RR, 0xff - ((color >> 16) & 0xff));
         panel_if_decode_led(PANEL_LED_BL_RG, 0xff - ((color >> 8) & 0xff));
-        panel_if_decode_led(PANEL_LED_BL_RB, 0xff - (color & 0xff));    
+        panel_if_decode_led(PANEL_LED_BL_RB, 0xff - (color & 0xff));
     }
     else {
         panel_if_decode_led(PANEL_LED_BL_LR, ~((color >> 16) & 0xff));
@@ -301,7 +300,7 @@ void panel_if_set_rgb(int side, uint32_t color) {
     if(side) {
         panel_if_decode_led(PANEL_LED_BL_RR, (color >> 16) & 0xff);
         panel_if_decode_led(PANEL_LED_BL_RG, (color >> 8) & 0xff);
-        panel_if_decode_led(PANEL_LED_BL_RB, color & 0xff);    
+        panel_if_decode_led(PANEL_LED_BL_RB, color & 0xff);
     }
     else {
         panel_if_decode_led(PANEL_LED_BL_LR, (color >> 16) & 0xff);
@@ -329,10 +328,10 @@ void panel_if_blink_led(int led, uint8_t off, uint8_t on) {
 // handle SPI init callback
 void panel_if_spi_init_cb(void) {
     GPIO_InitTypeDef GPIO_InitStruct;
-    
+
     //
     // configure clocks and ports
-    // 
+    //
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_SPI2_CLK_ENABLE();
@@ -350,19 +349,19 @@ void panel_if_spi_init_cb(void) {
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
     GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-    
+
     // SCLK
     GPIO_InitStruct.Pin = GPIO_PIN_10;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-   
+
     // MISO
     GPIO_InitStruct.Pin = GPIO_PIN_2;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-    
+
     // MOSI
     GPIO_InitStruct.Pin = GPIO_PIN_3;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-    
+
     // enable interrupt for SPI
     HAL_NVIC_SetPriority(SPI2_IRQn, INT_PRIO_SPI_PANEL, 0);
     HAL_NVIC_EnableIRQ(SPI2_IRQn);
@@ -454,8 +453,7 @@ void panel_if_write_pwm(int bank, int bit, uint8_t level) {
             panel_if_led_fb[phase][bank] |= (1 << bit);
         }
         else {
-            panel_if_led_fb[phase][bank] &= ~(1 << bit);        
+            panel_if_led_fb[phase][bank] &= ~(1 << bit);
         }
     }
 }
-
