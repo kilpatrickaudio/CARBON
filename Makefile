@@ -5182,8 +5182,8 @@ $(OUT_DIR)/usbh_conf.c.o: src/usbh_midi/usbh_conf.c \
 # source file: ./src/power_ctrl.c
 $(OUT_DIR)/power_ctrl.c.o: src/power_ctrl.c src/power_ctrl.h \
  src/panel_if.h src/ioctl.h src/config.h src/gui/gui.h \
- src/gui/../config.h src/seq/seq_ctrl.h src/seq/../config.h \
- src/usbh_midi/usbh_midi.h \
+ src/gui/../config.h src/gui/panel.h src/seq/seq_ctrl.h \
+ src/seq/../config.h src/usbh_midi/usbh_midi.h \
  Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h \
  src/usbh_midi/usbh_conf.h \
  Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \

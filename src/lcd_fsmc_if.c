@@ -70,7 +70,7 @@ void lcd_fsmc_if_init_if(void) {
     lcd_sram.Extended = FSMC_NORSRAM_EXTENDED_DEVICE;  // bank 1E
 
 /*
-    // test    
+    // test
     lcd_timing.AddressSetupTime = 10;  // 0-16 clocks
     lcd_timing.AddressHoldTime = 10;  // no effect in mode A
     lcd_timing.DataSetupTime = 16;  // 1-256 clocks
@@ -102,7 +102,7 @@ void lcd_fsmc_if_init_if(void) {
     lcd_sram.Init.ExtendedMode = FSMC_EXTENDED_MODE_DISABLE;
     lcd_sram.Init.AsynchronousWait = FSMC_EXTENDED_MODE_DISABLE;
     lcd_sram.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
-    
+
     // init SRAM controller
     if(HAL_SRAM_Init(&lcd_sram, &lcd_timing, &lcd_timing) != HAL_OK) {
         // XXX handle error
@@ -128,7 +128,7 @@ void lcd_fsmc_if_write8(uint8_t *buf, int len, int rs) {
     else {
         LCD_FSMC_RS_L;
     }
-        
+
     HAL_SRAM_Write_8b(&lcd_sram, (uint32_t *)SRAM_BANK_ADDR, buf, len);
     while(HAL_SRAM_GetState(&lcd_sram) != HAL_SRAM_STATE_READY);
 }
@@ -172,12 +172,12 @@ void lcd_fsmc_if_write16(uint16_t *buf, int len, int rs) {
     if(writelen > LCD_BUF_LEN) {
         writelen = LCD_BUF_LEN;
     }
-    
+
     HAL_SRAM_Write_16b(&lcd_sram, (uint32_t *)SRAM_BANK_ADDR, lcds.lcd_buf, writelen);
-    while(HAL_SRAM_GetState(&lcd_sram) != HAL_SRAM_STATE_READY);  
+    while(HAL_SRAM_GetState(&lcd_sram) != HAL_SRAM_STATE_READY);
 #else
     HAL_SRAM_Write_16b(&lcd_sram, (uint32_t *)SRAM_BANK_ADDR, buf, len);
-    while(HAL_SRAM_GetState(&lcd_sram) != HAL_SRAM_STATE_READY);  
+    while(HAL_SRAM_GetState(&lcd_sram) != HAL_SRAM_STATE_READY);
 #endif
 }
 
@@ -191,31 +191,31 @@ void HAL_SRAM_MspInit(SRAM_HandleTypeDef *hsram) {
     // enable FSMC clock
     __HAL_RCC_FSMC_CLK_ENABLE();
 
-    // enable GPIO clocks 
+    // enable GPIO clocks
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_GPIOE_CLK_ENABLE();
 
     // common GPIO settings - switch to FSMC
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+    GPIO_InitStruct.Speed = GPIO_SPEED_MEDIUM;
     GPIO_InitStruct.Alternate = GPIO_AF12_FSMC;
 
     // GPIOD - FSMC stuff
     GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | \
-        GPIO_PIN_5 | GPIO_PIN_7 | GPIO_PIN_14 | GPIO_PIN_15;   
+        GPIO_PIN_5 | GPIO_PIN_7 | GPIO_PIN_14 | GPIO_PIN_15;
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     // GPIOE - FSMC stuff
     GPIO_InitStruct.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10;
-    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);    
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
     // RS pin - enable output
     GPIO_InitStruct.Pin = GPIO_PIN_3;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct); 
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 }
 
 // callback from SRAM deinit
@@ -225,7 +225,7 @@ void HAL_SRAM_MspDeInit(SRAM_HandleTypeDef *hsram) {
     // enable FSMC clock
     __HAL_RCC_FSMC_CLK_ENABLE();
 
-    // enable GPIO clock    
+    // enable GPIO clock
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_GPIOE_CLK_ENABLE();
 
@@ -236,18 +236,17 @@ void HAL_SRAM_MspDeInit(SRAM_HandleTypeDef *hsram) {
 
     // GPIOD - FSMC pins
     GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | \
-        GPIO_PIN_5 | GPIO_PIN_7 | GPIO_PIN_14 | GPIO_PIN_15;   
+        GPIO_PIN_5 | GPIO_PIN_7 | GPIO_PIN_14 | GPIO_PIN_15;
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     // GPIOE - FSMC pins
     GPIO_InitStruct.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10;
-    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);    
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
     // RS pin - disable output and pull down
     GPIO_InitStruct.Pin = GPIO_PIN_3;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_PULLDOWN;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct); 
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 }
-
