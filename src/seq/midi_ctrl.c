@@ -60,7 +60,7 @@
  * -                        - NOTE 92
  * - mute/unmute track 6    - NOTE 94
  * -                        - NOTE 86
- * -                        - NOTE 111
+ * - tap tempo              - NOTE 111
  * - reset-run/stop         - NOTE 112
  *
  * MIDI CC Control:
@@ -122,6 +122,7 @@
 #define MIDI_CTRL_NOTE_MUTE_TRACK_4 77
 #define MIDI_CTRL_NOTE_MUTE_TRACK_5 93
 #define MIDI_CTRL_NOTE_MUTE_TRACK_6 94
+#define MIDI_CTRL_NOTE_TAP_TEMPO 111
 #define MIDI_CTRL_NOTE_RESETRUN_STOP 112
 // CC defines
 #define MIDI_CTRL_CC_STEP_LENGTH 16
@@ -249,6 +250,9 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
                 break;
             case MIDI_CTRL_NOTE_MUTE_TRACK_6:
                 seq_ctrl_set_mute_select(5, !seq_ctrl_get_mute_select(5));
+                break;
+            case MIDI_CTRL_NOTE_TAP_TEMPO:
+                seq_ctrl_tap_tempo();
                 break;
             case MIDI_CTRL_NOTE_RESETRUN_STOP:
                 if (seq_ctrl_get_run_state()) {
