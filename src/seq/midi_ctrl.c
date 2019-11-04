@@ -50,16 +50,16 @@
  *
  * MIDI Note Control for Roland PK-5 Sound Effects Factory Set: (works on any channel: 10-16)
  * - mute/unmute track 1    - NOTE 103
- * -                        - NOTE 104
+ * - select track 1         - NOTE 104
  * - mute/unmute track 2    - NOTE 106
- * -                        - NOTE 107
+ * - select track 2         - NOTE 107
  * - mute/unmute track 3    - NOTE 76
  * - mute/unmute track 4    - NOTE 77
- * -                        - NOTE 82
+ * - arp on/off track 2     - NOTE 82
  * - mute/unmute track 5    - NOTE 93
- * -                        - NOTE 92
+ * - arp on/off track 3     - NOTE 92
  * - mute/unmute track 6    - NOTE 94
- * -                        - NOTE 86
+ * - arp on/off track 4     - NOTE 86
  * - tap tempo              - NOTE 111
  * - reset-run/stop         - NOTE 112
  *
@@ -117,11 +117,16 @@
 #define MIDI_CTRL_NOTE_KBTRANS_OFFSET 60
 // note defines - Roland PK-5 Sound Effects Factory Set
 #define MIDI_CTRL_NOTE_MUTE_TRACK_1 103
+#define MIDI_CTRL_NOTE_SELECT_TRACK_1 104
 #define MIDI_CTRL_NOTE_MUTE_TRACK_2 106
+#define MIDI_CTRL_NOTE_SELECT_TRACK_2 107
 #define MIDI_CTRL_NOTE_MUTE_TRACK_3 76
 #define MIDI_CTRL_NOTE_MUTE_TRACK_4 77
+#define MIDI_CTRL_NOTE_ARP_TRACK_2 82
 #define MIDI_CTRL_NOTE_MUTE_TRACK_5 93
+#define MIDI_CTRL_NOTE_ARP_TRACK_3 92
 #define MIDI_CTRL_NOTE_MUTE_TRACK_6 94
+#define MIDI_CTRL_NOTE_ARP_TRACK_4 86
 #define MIDI_CTRL_NOTE_TAP_TEMPO 111
 #define MIDI_CTRL_NOTE_RESETRUN_STOP 112
 // CC defines
@@ -250,6 +255,21 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
                 break;
             case MIDI_CTRL_NOTE_MUTE_TRACK_6:
                 seq_ctrl_set_mute_select(5, !seq_ctrl_get_mute_select(5));
+                break;
+            case MIDI_CTRL_NOTE_SELECT_TRACK_1:
+                
+                break;
+            case MIDI_CTRL_NOTE_SELECT_TRACK_2:
+                
+                break;
+            case MIDI_CTRL_NOTE_ARP_TRACK_2:
+                
+                break;
+            case MIDI_CTRL_NOTE_ARP_TRACK_3:
+                
+                break;
+            case MIDI_CTRL_NOTE_ARP_TRACK_4:
+                
                 break;
             case MIDI_CTRL_NOTE_TAP_TEMPO:
                 seq_ctrl_tap_tempo();
