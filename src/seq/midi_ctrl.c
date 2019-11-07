@@ -257,19 +257,25 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
                 seq_ctrl_set_mute_select(5, !seq_ctrl_get_mute_select(5));
                 break;
             case MIDI_CTRL_NOTE_SELECT_TRACK_1:
-                
+                for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+                    seq_ctrl_set_track_select(i, 0);
+                }
+                seq_ctrl_set_track_select(0, 1);
                 break;
             case MIDI_CTRL_NOTE_SELECT_TRACK_2:
-                
+                for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+                    seq_ctrl_set_track_select(i, 0);
+                }
+                seq_ctrl_set_track_select(1, 1);
                 break;
             case MIDI_CTRL_NOTE_ARP_TRACK_2:
-                
+                seq_ctrl_set_arp_enable(1, !seq_ctrl_get_arp_enable(1));
                 break;
             case MIDI_CTRL_NOTE_ARP_TRACK_3:
-                
+                seq_ctrl_set_arp_enable(2, !seq_ctrl_get_arp_enable(2));
                 break;
             case MIDI_CTRL_NOTE_ARP_TRACK_4:
-                
+                seq_ctrl_set_arp_enable(3, !seq_ctrl_get_arp_enable(3));
                 break;
             case MIDI_CTRL_NOTE_TAP_TEMPO:
                 seq_ctrl_tap_tempo();
