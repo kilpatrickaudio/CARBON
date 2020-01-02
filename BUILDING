@@ -68,23 +68,27 @@ Makefile generator:
 Compiler:
 - gcc version 4.9.3 20150303 (release) [ARM/embedded-4_9-branch 
   revision 221220] (GNU Tools for ARM Embedded Processors) 
+- a newer version is probably okay and we are currently developing
+  on version 7.2.1
+- we normally put this in our user bin dir like /home/andrew/bin/
 
 Drivers:
-- updated to STM32Cube V1.11.0 on 2016-03-11
+- updated to STM32Cube V1.11.0 on 2016-03-11 (included with source)
 
 Middlewares: (USB stuff)
-- running V1.8.0 - no changes in V1.11.0 so didn't update
+- running V1.8.0 - no changes in V1.11.0 so didn't update (included with source)
 - there are modifications made to some ST-supplied files due to bugs or
   workarounds that we required so please do a diff before updating to make
   sure that you don't clobber important changes
 
 Generating Makefile when adding new sources:
-- use the makegen tool by Kilpatrick Audio (look on the Kilpatrick 
-  Audio github)
+- use the makegen tool by Kilpatrick Audio - https://github.com/hires/makegen
+- we normally put this in our user bin dir like /home/andrew/bin/
 
 Flashing over JTAG:
-- use OpenOCD with the script provided - we use a JLink programmer but 
-  other models might by useable too
+- use OpenOCD with the script provided - we use a JLink programmer
+- if you want to save money the ST-Link V2 programmer also works with
+  OpenOCD and should do most of the same things as the JLink
 
 Flashing over DFU:
 - you need dfu-util for Linux or your operating system
