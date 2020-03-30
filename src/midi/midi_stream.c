@@ -277,9 +277,7 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
                 case MIDI_PROGRAM_CHANGE:
                     midi_utils_enc_program_change(&msg, port, rx_chan[port], send_byte);
                     midi_stream_send_msg(&msg);
-                    rx_chan[port] = 255;  // clear running status channel
-                    rx_status[port] = 0;  // clear running status
-                    midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
+                    // stay in this state for running status
                     break;
                 case MIDI_CHANNEL_PRESSURE:
                     midi_utils_enc_channel_pressure(&msg, port, rx_chan[port], send_byte);
