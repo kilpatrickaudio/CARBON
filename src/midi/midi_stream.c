@@ -328,7 +328,7 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
                     break;
                 case MIDI_SONG_POSITION:
                     midi_utils_enc_song_position(&msg, port, 
-                        rx_data1[port] << 7 | rx_data1[port]);
+                        rx_data1[port] << 7 | rx_data0[port]);
                     rx_chan[port] = 255;  // clear running status channel
                     rx_status[port] = 0;  // clear running status
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
