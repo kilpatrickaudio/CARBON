@@ -48,6 +48,21 @@
  *  - record                - NOTE 46 (A#2)
  *  - KB transpose          - NOTE 48-72 = transpose -12 to +12
  *
+ * MIDI Note Control for Roland PK-5 Sound Effects Factory Set: (works on any channel: 10-16)
+ * - mute/unmute track 1    - NOTE 103
+ * - select track 1         - NOTE 104
+ * - mute/unmute track 2    - NOTE 106
+ * - select track 2         - NOTE 107
+ * - mute/unmute track 3    - NOTE 76
+ * - mute/unmute track 4    - NOTE 77
+ * - arp on/off track 2     - NOTE 82
+ * - mute/unmute track 5    - NOTE 93
+ * - arp on/off track 3     - NOTE 92
+ * - mute/unmute track 6    - NOTE 94
+ * - arp on/off track 4     - NOTE 86
+ * - tap tempo              - NOTE 111
+ * - reset-run/stop         - NOTE 112
+ *
  * MIDI CC Control:
  *  - step length           - CC 16     - val: 0-127 = 32nd to whole
  *  - track transpose       - CC 17     - val: 0-127 = -24 to +24 (0 at val 64)
@@ -100,6 +115,20 @@
 #define MIDI_CTRL_NOTE_KBTRANS_MIN 48
 #define MIDI_CTRL_NOTE_KBTRANS_MAX 72
 #define MIDI_CTRL_NOTE_KBTRANS_OFFSET 60
+// note defines - Roland PK-5 Sound Effects Factory Set
+#define MIDI_CTRL_NOTE_MUTE_TRACK_1 103
+#define MIDI_CTRL_NOTE_SELECT_TRACK_1 104
+#define MIDI_CTRL_NOTE_MUTE_TRACK_2 106
+#define MIDI_CTRL_NOTE_SELECT_TRACK_2 107
+#define MIDI_CTRL_NOTE_MUTE_TRACK_3 76
+#define MIDI_CTRL_NOTE_MUTE_TRACK_4 77
+#define MIDI_CTRL_NOTE_ARP_TRACK_2 82
+#define MIDI_CTRL_NOTE_MUTE_TRACK_5 93
+#define MIDI_CTRL_NOTE_ARP_TRACK_3 92
+#define MIDI_CTRL_NOTE_MUTE_TRACK_6 94
+#define MIDI_CTRL_NOTE_ARP_TRACK_4 86
+#define MIDI_CTRL_NOTE_TAP_TEMPO 111
+#define MIDI_CTRL_NOTE_RESETRUN_STOP 112
 // CC defines
 #define MIDI_CTRL_CC_STEP_LENGTH 16
 #define MIDI_CTRL_CC_TRACK_TRANSPOSE 17
@@ -208,6 +237,56 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
                 break;
             case MIDI_CTRL_NOTE_RECORD:
                 seq_ctrl_record_pressed();
+                break;
+            case MIDI_CTRL_NOTE_MUTE_TRACK_1:
+                seq_ctrl_set_mute_select(0, !seq_ctrl_get_mute_select(0));
+                break;
+            case MIDI_CTRL_NOTE_MUTE_TRACK_2:
+                seq_ctrl_set_mute_select(1, !seq_ctrl_get_mute_select(1));
+                break;
+            case MIDI_CTRL_NOTE_MUTE_TRACK_3:
+                seq_ctrl_set_mute_select(2, !seq_ctrl_get_mute_select(2));
+                break;
+            case MIDI_CTRL_NOTE_MUTE_TRACK_4:
+                seq_ctrl_set_mute_select(3, !seq_ctrl_get_mute_select(3));
+                break;
+            case MIDI_CTRL_NOTE_MUTE_TRACK_5:
+                seq_ctrl_set_mute_select(4, !seq_ctrl_get_mute_select(4));
+                break;
+            case MIDI_CTRL_NOTE_MUTE_TRACK_6:
+                seq_ctrl_set_mute_select(5, !seq_ctrl_get_mute_select(5));
+                break;
+            case MIDI_CTRL_NOTE_SELECT_TRACK_1:
+                for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+                    seq_ctrl_set_track_select(i, 0);
+                }
+                seq_ctrl_set_track_select(0, 1);
+                break;
+            case MIDI_CTRL_NOTE_SELECT_TRACK_2:
+                for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+                    seq_ctrl_set_track_select(i, 0);
+                }
+                seq_ctrl_set_track_select(1, 1);
+                break;
+            case MIDI_CTRL_NOTE_ARP_TRACK_2:
+                seq_ctrl_set_arp_enable(1, !seq_ctrl_get_arp_enable(1));
+                break;
+            case MIDI_CTRL_NOTE_ARP_TRACK_3:
+                seq_ctrl_set_arp_enable(2, !seq_ctrl_get_arp_enable(2));
+                break;
+            case MIDI_CTRL_NOTE_ARP_TRACK_4:
+                seq_ctrl_set_arp_enable(3, !seq_ctrl_get_arp_enable(3));
+                break;
+            case MIDI_CTRL_NOTE_TAP_TEMPO:
+                seq_ctrl_tap_tempo();
+                break;
+            case MIDI_CTRL_NOTE_RESETRUN_STOP:
+                if (seq_ctrl_get_run_state()) {
+                    seq_ctrl_set_run_state(0);
+                } else {
+                    seq_ctrl_reset_pos();
+                    seq_ctrl_set_run_state(1);
+                }
                 break;
             default:
                 if(msg->data0 >= MIDI_CTRL_NOTE_KBTRANS_MIN &&
