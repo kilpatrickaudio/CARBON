@@ -302,6 +302,7 @@ void song_clear(void) {
                 event.data0 = song_reset_scale[step % 8];  // seed with notes
                 event.data1 = 0x60;  // velocity
                 event.length = 20;  // length in ticks
+		event.probability = STEP_EDIT_NEW_NOTE_PROBABILITY;
                 song_add_step_event(scene, track, step, &event);
                 // clear step modes
                 song_set_ratchet_mode(scene, track, step, SEQ_RATCHET_MIN);
@@ -1653,11 +1654,13 @@ int song_add_step_event(int scene, int track, int step,
     song.trkevents[scene][track][step][slot].data0 = event->data0;
     song.trkevents[scene][track][step][slot].data1 = event->data1;
     song.trkevents[scene][track][step][slot].length = event->length;
+    song.trkevents[scene][track][step][slot].probability = event->probability;
 #else
     song.trkevents[track][step][slot].type = event->type;
     song.trkevents[track][step][slot].data0 = event->data0;
     song.trkevents[track][step][slot].data1 = event->data1;
     song.trkevents[track][step][slot].length = event->length;
+    song.trkevents[track][step][slot].probability = event->probability;
 #endif
     // fire event
     state_change_fire3(SCE_SONG_ADD_STEP_EVENT, scene, track, step);
@@ -1688,11 +1691,13 @@ int song_set_step_event(int scene, int track, int step,
     song.trkevents[scene][track][step][slot].data0 = event->data0;
     song.trkevents[scene][track][step][slot].data1 = event->data1;
     song.trkevents[scene][track][step][slot].length = event->length;
+    song.trkevents[scene][track][step][slot].probability = event->probability;
 #else
     song.trkevents[track][step][slot].type = event->type;
     song.trkevents[track][step][slot].data0 = event->data0;
     song.trkevents[track][step][slot].data1 = event->data1;
     song.trkevents[track][step][slot].length = event->length;
+    song.trkevents[track][step][slot].probability = event->probability;
 #endif
     // fire event
     state_change_fire3(SCE_SONG_SET_STEP_EVENT, scene, track, step);
@@ -1725,11 +1730,13 @@ int song_get_step_event(int scene, int track, int step, int slot,
     event->data0 = song.trkevents[scene][track][step][slot].data0;
     event->data1 = song.trkevents[scene][track][step][slot].data1;
     event->length = song.trkevents[scene][track][step][slot].length;
+    event->probability = song.trkevents[scene][track][step][slot].probability;
 #else
     event->type = song.trkevents[track][step][slot].type;
     event->data0 = song.trkevents[track][step][slot].data0;
     event->data1 = song.trkevents[track][step][slot].data1;
     event->length = song.trkevents[track][step][slot].length;
+    event->probability = song.trkevents[track][step][slot].probability;
 #endif
     // blank slot
     if(event->type == SONG_EVENT_NULL) {

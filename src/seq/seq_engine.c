@@ -41,6 +41,7 @@
 #include "../util/state_change.h"
 #include "../util/state_change_events.h"
 #include <limits.h>
+#include <stdlib.h>
 
 // internal settings
 #define SEQ_ENGINE_MAX_NOTES 16  // active notes per track
@@ -950,7 +951,21 @@ void seq_engine_track_play_step(int track, int step) {
                         }
                         midi_utils_enc_note_on(&msg, 0, 0, temp, event.data1);
                     }
-                    seq_engine_track_start_note(track, step, event.length, &msg);
+		    switch(event.probability) {
+		    case 0:
+		      // don't play note if probability is zero
+		      break;
+		    case 1 ... 99:
+		      // roll the dice if probability is set between 1 and 99
+		      if(rand() % 100 < event.probability) {
+			seq_engine_track_start_note(track, step, event.length, &msg);
+		      }
+		      break;
+		    default:
+		      // always play when probability is 100 and provide some backwards
+		      // compatibility for saved songs where event.prob was not set
+		      seq_engine_track_start_note(track, step, event.length, &msg);
+		    }
                     break;
                 case SONG_EVENT_CC:
                     // send event directly
@@ -1424,6 +1439,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                     trkevent.type = SONG_EVENT_NOTE;
                     trkevent.data0 = msg->data0;
                     trkevent.data1 = msg->data1;
+		    trkevent.probability = STEP_EDIT_NEW_NOTE_PROBABILITY;
                     // scale step length by the gate time
                     trkevent.length = (sestate.step_size[sestate.first_track] *
                         sestate.gate_time[sestate.first_track]) >> 7;
@@ -1611,6 +1627,7 @@ void seq_engine_record_write_tracks(void) {
                 trkevent.type = SONG_EVENT_NOTE;
                 trkevent.data0 = sestate.record_events[rn].msg.data0;
                 trkevent.data1 = sestate.record_events[rn].msg.data1;
+		trkevent.probability = STEP_EDIT_NEW_NOTE_PROBABILITY;
                 // note was held down past loop end (tick_len is 0)
                 if(sestate.record_events[rn].tick_len == 0) {
                     trkevent.length = (((sestate.motion_start[sestate.first_track] +
