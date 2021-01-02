@@ -1439,6 +1439,7 @@ void seq_engine_record_event(struct midi_msg *msg) {
                     trkevent.type = SONG_EVENT_NOTE;
                     trkevent.data0 = msg->data0;
                     trkevent.data1 = msg->data1;
+		    trkevent.probability = STEP_EDIT_NEW_NOTE_PROBABILITY;
                     // scale step length by the gate time
                     trkevent.length = (sestate.step_size[sestate.first_track] *
                         sestate.gate_time[sestate.first_track]) >> 7;
@@ -1626,6 +1627,7 @@ void seq_engine_record_write_tracks(void) {
                 trkevent.type = SONG_EVENT_NOTE;
                 trkevent.data0 = sestate.record_events[rn].msg.data0;
                 trkevent.data1 = sestate.record_events[rn].msg.data1;
+		trkevent.probability = STEP_EDIT_NEW_NOTE_PROBABILITY;
                 // note was held down past loop end (tick_len is 0)
                 if(sestate.record_events[rn].tick_len == 0) {
                     trkevent.length = (((sestate.motion_start[sestate.first_track] +
