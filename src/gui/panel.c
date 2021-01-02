@@ -787,7 +787,7 @@ void panel_handle_seq_input(int ctrl, int val) {
                     case PANEL_EDIT_MODE_STEP:
 		        // probability mode
 		        if(pstate.shift_state) {
-			    step_edit_adjust_prob(seq_utils_enc_val_to_change(val),
+			    step_edit_adjust_probability(seq_utils_enc_val_to_change(val),
 			        pstate.shift_state);
                         }
 			// ratchet mode

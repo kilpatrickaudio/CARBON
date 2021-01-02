@@ -66,7 +66,7 @@ void step_edit_adjust_start_delay(int change, int shift);
 void step_edit_adjust_ratchet_mode(int change, int shift);
 
 // adjust the event probability
-void step_edit_adjust_prob(int change, int shift);
+void step_edit_adjust_probability(int change, int shift);
 
 // clear the current step
 void step_edit_clear_step(void);

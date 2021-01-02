@@ -1688,13 +1688,13 @@ int song_set_step_event(int scene, int track, int step,
     song.trkevents[scene][track][step][slot].data0 = event->data0;
     song.trkevents[scene][track][step][slot].data1 = event->data1;
     song.trkevents[scene][track][step][slot].length = event->length;
-    song.trkevents[scene][track][step][slot].prob = event->prob;
+    song.trkevents[scene][track][step][slot].probability = event->probability;
 #else
     song.trkevents[track][step][slot].type = event->type;
     song.trkevents[track][step][slot].data0 = event->data0;
     song.trkevents[track][step][slot].data1 = event->data1;
     song.trkevents[track][step][slot].length = event->length;
-    song.trkevents[track][step][slot].prob = event->prob;
+    song.trkevents[track][step][slot].probability = event->probability;
 #endif
     // fire event
     state_change_fire3(SCE_SONG_SET_STEP_EVENT, scene, track, step);
@@ -1727,13 +1727,13 @@ int song_get_step_event(int scene, int track, int step, int slot,
     event->data0 = song.trkevents[scene][track][step][slot].data0;
     event->data1 = song.trkevents[scene][track][step][slot].data1;
     event->length = song.trkevents[scene][track][step][slot].length;
-    event->prob = song.trkevents[scene][track][step][slot].prob;
+    event->probability = song.trkevents[scene][track][step][slot].probability;
 #else
     event->type = song.trkevents[track][step][slot].type;
     event->data0 = song.trkevents[track][step][slot].data0;
     event->data1 = song.trkevents[track][step][slot].data1;
     event->length = song.trkevents[track][step][slot].length;
-    event->prob = song.trkevents[track][step][slot].prob;
+    event->probability = song.trkevents[track][step][slot].probability;
 #endif
     // blank slot
     if(event->type == SONG_EVENT_NULL) {

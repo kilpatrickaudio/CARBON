@@ -918,7 +918,7 @@ int seq_engine_song_mode_load_entry(int entry) {
 // track event handling
 //
 void seq_engine_track_play_step(int track, int step) {
-  int i, bias, temp;
+    int i, bias, temp;
     struct track_event event;
     struct midi_msg msg;
 
@@ -951,19 +951,19 @@ void seq_engine_track_play_step(int track, int step) {
                         }
                         midi_utils_enc_note_on(&msg, 0, 0, temp, event.data1);
                     }
-		    switch(event.prob) {
+		    switch(event.probability) {
 		    case 0:
 		      // don't play note if probability is zero
 		      break;
 		    case 1 ... 99:
 		      // roll the dice if probability is set between 1 and 99
-		      if(rand() % 100 < event.prob) {
+		      if(rand() % 100 < event.probability) {
 			seq_engine_track_start_note(track, step, event.length, &msg);
 		      }
 		      break;
 		    default:
-		      // play when probability is 100, and backwards compatibility
-		      // for saved songs where event.prob was not set
+		      // always play when probability is 100 and provide some backwards
+		      // compatibility for saved songs where event.prob was not set
 		      seq_engine_track_start_note(track, step, event.length, &msg);
 		    }
                     break;

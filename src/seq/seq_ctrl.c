@@ -1320,6 +1320,7 @@ void seq_ctrl_make_magic(void) {
                 event.data1 = 0x60;  // default
                 event.length = seq_utils_step_len_to_ticks(
                     song_get_step_length(seq_engine_get_current_scene(), track)) >> 1;
+		event.probability = STEP_EDIT_NEW_NOTE_PROBABILITY;
                 song_set_step_event(seq_engine_get_current_scene(), track,
                     step, 0, &event);
             }

@@ -91,7 +91,7 @@ struct track_event {
     uint8_t type;
     uint8_t data0;  // note number or CC
     uint8_t data1;  // velocity or value
-    uint8_t prob;  // padding to make an even number of bytes
+    uint8_t probability;  // probability event should fire
     uint16_t length;  // note length (ticks)
 };
 
