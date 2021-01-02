@@ -39,6 +39,7 @@
 #define STEP_EDIT_ADJUST_VELO 1
 #define STEP_EDIT_ADJUST_GATE_TIME 2
 #define STEP_EDIT_ADJUST_START_DELAY 3
+#define STEP_EDIT_ADJUST_PROB 4
 
 // constants
 #define STEP_EDIT_EVENT_POS_ALL -1
@@ -164,6 +165,7 @@ void step_edit_handle_input(struct midi_msg *msg) {
             event.type = SONG_EVENT_NOTE;
             event.data0 = msg->data0;
             event.data1 = msg->data1;
+	    event.prob = STEP_EDIT_NEW_NOTE_PROB;
             event.length = seq_utils_step_len_to_ticks(
                 song_get_step_length(sedits.scene, sedits.track));
             song_add_step_event(sedits.scene, sedits.track,
@@ -311,6 +313,17 @@ void step_edit_adjust_ratchet_mode(int change, int shift) {
     step_edit_play_step();
 }
 
+// adjust the event probability
+void step_edit_adjust_prob(int change, int shift) {
+    sedits.edit_timeout = panel_menu_get_timeout();
+    if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {
+        step_edit_adjust_step(change << 2, STEP_EDIT_ADJUST_PROB, 0, shift);
+    }
+    else {
+        step_edit_adjust_step(change << 2, STEP_EDIT_ADJUST_PROB, 1, shift);
+    }
+}
+
 // clear the current step
 void step_edit_clear_step(void) {
     sedits.edit_timeout = panel_menu_get_timeout();
@@ -380,6 +393,7 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                 event.data0 = STEP_EDIT_NEW_NOTE;
             }
             event.data1 = STEP_EDIT_NEW_NOTE_VELOCITY;
+	    event.prob = STEP_EDIT_NEW_NOTE_PROB;
             // default to half the step len
             event.length = seq_utils_step_len_to_ticks(
                 song_get_step_length(seq_ctrl_get_scene(), sedits.track)) >> 1;
@@ -491,6 +505,14 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                     sedits.last_adjust_type = STEP_EDIT_ADJUST_START_DELAY;
                     inhibit_preview = 1;  // user must retrigger edit to hear
                     break;
+	        case STEP_EDIT_ADJUST_PROB:
+		  event.prob = seq_utils_clamp(event.prob + change,
+		      STEP_EDIT_MIN_PROB, STEP_EDIT_MAX_PROB);
+		  inhibit_preview = 1;
+		  sedits.last_adjust_type = STEP_EDIT_ADJUST_PROB;
+		  song_set_step_event(sedits.scene, sedits.track,
+		      sedits.step_pos, i, &event);
+		  break;
             }
         }
     }
@@ -527,6 +549,9 @@ void step_edit_update_display(void) {
         case STEP_EDIT_ADJUST_START_DELAY:
             gui_set_status_text_part(3, 0, 2, "D");
             break;
+        case STEP_EDIT_ADJUST_PROB:
+	    gui_set_status_text_part(3, 0, 2, "P");
+	    break;
     }
 
     //
@@ -593,6 +618,11 @@ void step_edit_update_display(void) {
                         }
                         gui_set_status_text_part(3, xpos, 4, tempstr);
                         break;
+		    case STEP_EDIT_ADJUST_PROB:
+		        // display probability
+		        sprintf(tempstr, "%-3d", event.prob);
+			gui_set_status_text_part(3, xpos, 4, tempstr);
+			break;
                 }
                 break;
             case SONG_EVENT_CC:

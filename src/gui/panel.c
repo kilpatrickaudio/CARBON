@@ -785,8 +785,16 @@ void panel_handle_seq_input(int ctrl, int val) {
             case PANEL_ENC_PATTERN_TYPE:
                 switch(panel_get_edit_mode()) {
                     case PANEL_EDIT_MODE_STEP:
-                        step_edit_adjust_ratchet_mode(seq_utils_enc_val_to_change(val),
-                            pstate.shift_state);
+		        // probability mode
+		        if(pstate.shift_state) {
+			    step_edit_adjust_prob(seq_utils_enc_val_to_change(val),
+			        pstate.shift_state);
+                        }
+			// ratchet mode
+			else {
+                            step_edit_adjust_ratchet_mode(seq_utils_enc_val_to_change(val),
+                                pstate.shift_state);
+			}
                         break;
                     case PANEL_EDIT_MODE_SONG:
                         song_edit_adjust_scene(seq_utils_enc_val_to_change(val),
