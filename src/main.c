@@ -142,8 +142,8 @@ void main_timer_task(void) {
         seq_ctrl_rt_task();  // sequencer realtime stuff
         din_midi_timer_task();  // hardware MIDI I/O
         ext_flash_timer_task();  // loading/saving to external flash
-        usbd_midi_timer_task();  // USB device
-        usbh_midi_timer_task();  // USB host
+        usbd_midi_timer_task();  // USB device - put IN data in the endpoint buffer
+//        usbh_midi_timer_task();  // USB host
         config_store_timer_task();  // system config loading / saving
         cvproc_timer_task();  // hardware CV/gate/clock outputs
         power_ctrl_timer_task();  // power control monitoring / switching

@@ -248,7 +248,7 @@ int config_store_writeback_start(void) {
     cfgss.config_offset += (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE);
     if(cfgss.config_offset >= EXT_FLASH_CONFIG_SIZE) {
         cfgss.config_offset = 0;  // reset to start (recycle entire sector)
-//        log_debug("csws - erase pos: %d", cfgss.config_offset);
+        log_debug("csws - erase pos: %d", cfgss.config_offset);
         if(ext_flash_save(EXT_FLASH_CONFIG_OFFSET, (CONFIG_STORE_NUM_ITEMS *
                 CONFIG_STORE_ITEM_SIZE), cfgss.io_buf) == -1) {
             return -1;
@@ -256,7 +256,7 @@ int config_store_writeback_start(void) {
     }
     // just add to the existing thing
     else {
-//        log_debug("csws - noerase pos: %d", cfgss.config_offset);
+        log_debug("csws - noerase pos: %d", cfgss.config_offset);
         if(ext_flash_save_noerase(EXT_FLASH_CONFIG_OFFSET + cfgss.config_offset,
                 (CONFIG_STORE_NUM_ITEMS * CONFIG_STORE_ITEM_SIZE),
                 cfgss.io_buf) == -1) {

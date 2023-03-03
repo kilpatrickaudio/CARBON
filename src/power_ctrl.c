@@ -131,6 +131,7 @@ void power_ctrl_timer_task(void) {
                     break;
                 case POWER_CTRL_STATE_TURNING_OFF:
 //                    log_debug("pctt - turning off (to IF)");
+                    // force config store writeback
                     // fire event for other modules
                     state_change_fire1(SCE_POWER_STATE, POWER_CTRL_STATE_TURNING_OFF);
                     power_ctrl_change_state(POWER_CTRL_STATE_IF);

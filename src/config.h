@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 23
+#define CARBON_VERSION_MINOR 24
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -43,6 +43,7 @@
 // interrupt priorities
 #define INT_PRIO_SPI_PANEL 0  // highest prio - avoids SPI lockup
 #define INT_PRIO_SYSTICK 1  // needs to be higher than everything else
+
 #define INT_PRIO_SPI_FLASH_DMA_TX 2
 #define INT_PRIO_SPI_FLASH_DMA_RX 2
 #define INT_PRIO_SPI_ANALOG_OUT 2
@@ -75,7 +76,8 @@
 #define EXT_FLASH_CONFIG_SIZE 0x1000
 
 // config store
-#define CONFIG_STORE_WRITEBACK_INTERVAL 0xffff
+//#define CONFIG_STORE_WRITEBACK_INTERVAL 0xffff
+#define CONFIG_STORE_WRITEBACK_INTERVAL 0xfff
 #define CONFIG_STORE_ITEM_SIZE 4  // number of bytes per item
 #define CONFIG_STORE_NUM_ITEMS 128  // max must be a power of 2
 #define CONFIG_STORE_LAST_SONG 0
@@ -232,7 +234,7 @@
 //
 // development mode
 //
-//#define DEBUG_DEVEL  // uncomment to enable normal development debugging
+#define DEBUG_DEVEL  // uncomment to enable normal development debugging
 #ifdef DEBUG_DEVEL
 // instrumentation
 //#define DEBUG_RT_TIMING  // uncomment to enable debug timing of the RT thread

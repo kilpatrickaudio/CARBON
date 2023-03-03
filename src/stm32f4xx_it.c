@@ -227,7 +227,6 @@ void OTG_HS_IRQHandler(void) {
 // USB host handler - FS
 #ifdef USBH_USE_FS
 void OTG_FS_IRQHandler(void) {
-    // host interrupt handler
     HAL_HCD_IRQHandler(&hhcd);
 }
 #endif
@@ -235,7 +234,6 @@ void OTG_FS_IRQHandler(void) {
 // USB host handler - HS
 #ifdef USBH_USE_HS
 void OTG_HS_IRQHandler(void) {
-    // host interrupt handler
     HAL_HCD_IRQHandler(&hhcd);
 }
 #endif
