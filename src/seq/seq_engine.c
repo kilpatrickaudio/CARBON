@@ -229,6 +229,7 @@ void seq_engine_timer_task(void) {
         // DIN 1 IN - performance and clock input
         while(midi_stream_data_available(MIDI_PORT_DIN1_IN)) {
             midi_stream_receive_msg(MIDI_PORT_DIN1_IN, &msg);
+//            log_debug("di - l: %d - %02x %02x %02x", msg.len, msg.status, msg.data0, msg.data1);
             // performance
             seq_engine_handle_midi_msg(&msg);
         }

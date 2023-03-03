@@ -132,9 +132,7 @@ int midi_stream_send_sysex_msg(int port, uint8_t *buf, int len) {
 // returns 0 on success and -1 if the stream is full, -2 if the port is invalid
 int midi_stream_send_byte(int port, uint8_t send_byte) {
     struct midi_msg msg;
-    int stat, chan;
-    static uint8_t rx_chan[MIDI_MAX_PORTS];  // current message channel
-    static uint8_t rx_status[MIDI_MAX_PORTS];  // current status byte
+    static uint8_t rx_status[MIDI_MAX_PORTS] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };  // current status byte
     static uint8_t rx_data0[MIDI_MAX_PORTS];  // data0 byte
     static uint8_t rx_data1[MIDI_MAX_PORTS];  // data1 byte
    
@@ -146,27 +144,29 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
     // XXX fix to work with running status properly
     // status byte received
     if(send_byte & 0x80) {
-        stat = (send_byte & 0xf0);
-        chan = (send_byte & 0x0f);
-        
         // system messages
-        if(stat == 0xf0) {
+        if((send_byte & 0xf0) == 0xf0) {
             switch(send_byte) {
                 //
                 // system common messages (non-SYSEX)
                 //
                 case MIDI_MTC_QFRAME:
                     // not supported on receive
+                    rx_status[port] = 0;  // clear running status
                     break;
                 case MIDI_SONG_POSITION:
                 case MIDI_SONG_SELECT:
-                    rx_chan[port] = 255;  // clear running status channel
                     rx_status[port] = send_byte;
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_DATA0;
                     break;
                 case MIDI_TUNE_REQUEST:
+                    rx_status[port] = send_byte;
                     midi_utils_enc_tune_request(&msg, port);
-                    break;            
+                    break;      
+                case 0xf4:  // undefined system common
+                case 0xf5:  // undefined system common
+                    rx_status[port] = 0;  // clear running status
+                    break;
                 //
                 // system realtime messages - does not reset running status
                 //
@@ -191,17 +191,18 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
                     midi_stream_send_msg(&msg);
                     break;
                 case MIDI_SYSTEM_RESET:
-                    rx_chan[port] = 255;  // clear running status channel
-                    rx_status[port] = 0;  // clear running status
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
                     midi_utils_enc_system_reset(&msg, port);
                     midi_stream_send_msg(&msg);
                     break;
+                case 0xf9:  // undefined system common
+                case 0xfd:  // undefined system common
+                    // leave RX state unaffected
+                    break;
                 //
                 // SYSEX messages
                 //
-                case MIDI_SYSEX_START:                    
-                    rx_chan[port] = 255;  // clear running status channel
+                case MIDI_SYSEX_START:
                     rx_status[port] = send_byte;
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_SYSEX_DATA0;
                     break;                    
@@ -224,7 +225,6 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
                     break;
                 default:
                     // undefined system realtime or common message
-                    rx_chan[port] = 255;  // clear running status channel
                     rx_status[port] = 0;  // clear running status
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
                     break;
@@ -232,16 +232,13 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
         }
         // channel messages
         else {
-            // do we have a sysex message current receiving?
+            // cancel pending SYSEX message
             if(midi_stream_send_byte_state[port] == MIDI_STREAM_BYTE_SYSEX_DATA0 ||
                     midi_stream_send_byte_state[port] == MIDI_STREAM_BYTE_SYSEX_DATA1) {
-                msg.port = port;
-                msg.len = 1;
-                msg.status = MIDI_SYSEX_END;
-                midi_stream_send_msg(&msg);
+                midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
             }
             // deal with channel messages
-            switch(stat) {
+            switch(send_byte & 0xf0) {
                 case MIDI_NOTE_OFF:
                 case MIDI_NOTE_ON:
                 case MIDI_POLY_KEY_PRESSURE:
@@ -249,11 +246,12 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
                 case MIDI_PROGRAM_CHANGE:
                 case MIDI_CHANNEL_PRESSURE:
                 case MIDI_PITCH_BEND:
-                    rx_chan[port] = chan;
-                    rx_status[port] = stat;
+                    rx_status[port] = send_byte;
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_DATA0;
                     break;
-                default:
+                default:  // should not hit this stae
+                    rx_status[port] = 0;  // clear running status
+                    midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
                     break;
             }
         }
@@ -266,21 +264,20 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
         case MIDI_STREAM_BYTE_DATA0:  // waiting on first data byte
             rx_data0[port] = send_byte;
             // figure out what action to do next based on status
-            switch(rx_status[port]) {
+            switch(rx_status[port] & 0xf0) {
                 case MIDI_SONG_SELECT:
                     midi_utils_enc_song_select(&msg, port, send_byte);
                     midi_stream_send_msg(&msg);
-                    rx_chan[port] = 255;  // clear running status channel
                     rx_status[port] = 0;  // clear running status
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
                     break;
                 case MIDI_PROGRAM_CHANGE:
-                    midi_utils_enc_program_change(&msg, port, rx_chan[port], send_byte);
+                    midi_utils_enc_program_change(&msg, port, rx_status[port] & 0x0f, send_byte);
                     midi_stream_send_msg(&msg);
                     // stay in this state for running status
                     break;
                 case MIDI_CHANNEL_PRESSURE:
-                    midi_utils_enc_channel_pressure(&msg, port, rx_chan[port], send_byte);
+                    midi_utils_enc_channel_pressure(&msg, port, rx_status[port] & 0x0f, send_byte);
                     midi_stream_send_msg(&msg);
                     // stay in this state for running status
                     break;
@@ -293,46 +290,50 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
         case MIDI_STREAM_BYTE_DATA1:  // waiting on second data byte
             rx_data1[port] = send_byte;
             // figure out what action to do next based on status
-            switch(rx_status[port]) {
+            switch(rx_status[port] & 0xf0) {
                 case MIDI_NOTE_OFF:
-                    midi_utils_enc_note_off(&msg, port, rx_chan[port], 
+                    midi_utils_enc_note_off(&msg, port, rx_status[port] & 0x0f, 
                         rx_data0[port], rx_data1[port]);
                     midi_stream_send_msg(&msg);                    
+                    // stay in this state for running status
                     break;
                 case MIDI_NOTE_ON:
                     // note off encoded as note on with velocity 0
                     if(rx_data1[port] == 0x00) {
-                        midi_utils_enc_note_off(&msg, port, rx_chan[port], 
+                        midi_utils_enc_note_off(&msg, port, rx_status[port] & 0x0f, 
                             rx_data0[port], 0x40);
                     }
                     else {
-                        midi_utils_enc_note_on(&msg, port, rx_chan[port], 
+                        midi_utils_enc_note_on(&msg, port, rx_status[port] & 0x0f, 
                             rx_data0[port], rx_data1[port]);
                     }
                     midi_stream_send_msg(&msg);                    
+                    // stay in this state for running status
                     break;
                 case MIDI_POLY_KEY_PRESSURE:
-                    midi_utils_enc_key_pressure(&msg, port, rx_chan[port], 
+                    midi_utils_enc_key_pressure(&msg, port, rx_status[port] & 0x0f,
                         rx_data0[port], rx_data1[port]);
                     midi_stream_send_msg(&msg); 
+                    // stay in this state for running status
                     break;
                 case MIDI_CONTROL_CHANGE:
-                    midi_utils_enc_control_change(&msg, port, rx_chan[port], 
+                    midi_utils_enc_control_change(&msg, port, rx_status[port] & 0x0f,
                         rx_data0[port], rx_data1[port]);
                     midi_stream_send_msg(&msg); 
+                    // stay in this state for running status
                     break;
                 case MIDI_PITCH_BEND:
-                    midi_utils_enc_pitch_bend(&msg, port, rx_chan[port], 
+                    midi_utils_enc_pitch_bend(&msg, port, rx_status[port] & 0x0f,
                         ((rx_data1[port] << 7) | rx_data0[port]) - 8192);
                     midi_stream_send_msg(&msg); 
+                    // stay in this state for running status
                     break;
                 case MIDI_SONG_POSITION:
                     midi_utils_enc_song_position(&msg, port, 
                         rx_data1[port] << 7 | rx_data0[port]);
-                    rx_chan[port] = 255;  // clear running status channel
                     rx_status[port] = 0;  // clear running status
                     midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
-                    return 0;  // avoid changing running status state back
+                    return 0;  // avoid changing byte state back to DATA0
             }
             midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_DATA0;  // running status
             break;
@@ -342,8 +343,7 @@ int midi_stream_send_byte(int port, uint8_t send_byte) {
             break;
         case MIDI_STREAM_BYTE_SYSEX_DATA1:  // waiting on second sysex byte
             rx_data1[port] = send_byte;
-            midi_utils_enc_3byte(&msg, port, rx_status[port], 
-                rx_data0[port], rx_data1[port]);
+            midi_utils_enc_3byte(&msg, port, rx_status[port], rx_data0[port], rx_data1[port]);
             midi_stream_send_msg(&msg); 
             midi_stream_send_byte_state[port] = MIDI_STREAM_BYTE_IDLE;
             break;

@@ -228,8 +228,8 @@
 //#define DEBUG_USBH_PINS  // uncomment to use USB host port pins for debug
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
-#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode

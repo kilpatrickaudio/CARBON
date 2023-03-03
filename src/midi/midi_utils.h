@@ -28,7 +28,7 @@
 // MIDI message
 struct midi_msg {
     int port;  // the port number - 0 if not used
-	uint8_t len;  // the message length in bytes
+    uint8_t len;  // the message length in bytes
     uint8_t status;  // status byte
     uint8_t data0;  // data0 byte
     uint8_t data1;  // data1 byte

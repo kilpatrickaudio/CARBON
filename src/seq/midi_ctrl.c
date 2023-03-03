@@ -230,7 +230,7 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
         switch(msg->data0) {
             case MIDI_CTRL_CC_STEP_LENGTH:
                 seq_ctrl_set_step_length(track, 
-                    seq_utils_clamp((msg->data1 >> 3), 
+                    seq_utils_clamp(msg->data1 / 7, 
                     0, SEQ_UTILS_STEP_LENS - 1));
                 break;
             case MIDI_CTRL_CC_TRACK_TRANSPOSE:
