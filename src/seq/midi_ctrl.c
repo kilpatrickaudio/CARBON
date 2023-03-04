@@ -270,7 +270,7 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
                 break;
             case MIDI_CTRL_CC_ARP_SPEED:
                 seq_ctrl_set_arp_speed(track, 
-                    seq_utils_clamp((msg->data1 >> 3), 
+                    seq_utils_clamp(msg->data1 / 7, 
                     0, SEQ_UTILS_STEP_LENS - 1));
                 break;
             case MIDI_CTRL_CC_ARP_GATE_TIME:
