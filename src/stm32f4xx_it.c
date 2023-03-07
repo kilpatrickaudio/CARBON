@@ -44,6 +44,7 @@
 #include "util/log.h"
 #include "usbh_midi/usbh_midi.h"
 
+extern TIM_HandleTypeDef rt_task_timer;  // RT task timer
 //extern USART_HandleTypeDef din_midi1_h;  // DIN RX and TX1 - UART4
 extern ADC_HandleTypeDef ioctl_adc_handle;  // ADC3 IOCTL interface
 extern SPI_HandleTypeDef panel_spi_handle;  // SPI2 panel interface
@@ -140,9 +141,15 @@ void PendSV_Handler(void) {
   * @retval None
   */
 void SysTick_Handler(void) {
-    main_timer_task();
+//    main_timer_task();
     HAL_IncTick();
     HAL_SYSTICK_IRQHandler();
+}
+
+// main task timer - 500us period
+void TIM3_IRQHandler(void) {
+    rt_timer_task();
+    HAL_TIM_IRQHandler(&rt_task_timer);
 }
 
 /******************************************************************************/
@@ -236,4 +243,5 @@ void OTG_FS_IRQHandler(void) {
 void OTG_HS_IRQHandler(void) {
     HAL_HCD_IRQHandler(&hhcd);
 }
+
 #endif

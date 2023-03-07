@@ -25,8 +25,11 @@
 
 #include "stm32f4xx_hal.h"
 
-// handle tasks for all parts of the system
-void main_timer_task(void);
+// handle tasks for RT parts of the system
+void rt_timer_task(void);
+
+// init/start the RT timer
+void rt_timer_start(void);
 
 #endif
 

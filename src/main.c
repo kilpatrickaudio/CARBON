@@ -49,6 +49,8 @@
 #warning main RT task timing enabled
 #endif
 
+TIM_HandleTypeDef rt_task_timer;  // RT task timer
+
 // local functions
 static void SystemClock_Config(void);
 int startup_wait;
@@ -98,6 +100,9 @@ int main(void) {
     // unblock RT thread
     startup_wait = 0;  // cause main timer task to begin
 
+    // start RT timer
+    rt_timer_start();
+
     // power up timeout - 10ms
     start_time = time_utils_get_btime();
     while((int)(time_utils_get_btime() - start_time) < 10000);
@@ -109,8 +114,8 @@ int main(void) {
     }
 }
 
-// handle tasks for all parts of the system - runs every 500us
-void main_timer_task(void) {
+// handle tasks for RT parts of the system - runs every 500us
+void rt_timer_task(void) {
     static int32_t current_time = 0;
     static int task_div = 0;
 #ifdef DEBUG_RT_TIMING
@@ -143,7 +148,7 @@ void main_timer_task(void) {
         din_midi_timer_task();  // hardware MIDI I/O
         ext_flash_timer_task();  // loading/saving to external flash
         usbd_midi_timer_task();  // USB device - put IN data in the endpoint buffer
-//        usbh_midi_timer_task();  // USB host
+        usbh_midi_timer_task();  // USB host
         config_store_timer_task();  // system config loading / saving
         cvproc_timer_task();  // hardware CV/gate/clock outputs
         power_ctrl_timer_task();  // power control monitoring / switching
@@ -188,6 +193,20 @@ void main_timer_task(void) {
 #endif
 }
 
+// init/start the RT timer
+void rt_timer_start(void) {
+    __HAL_RCC_TIM3_CLK_ENABLE();
+    rt_task_timer.Instance = TIM3;
+    rt_task_timer.Init.Period = (SystemCoreClock / 4) / 2000;  // 500us period
+    rt_task_timer.Init.Prescaler = 1;
+    rt_task_timer.Init.ClockDivision = 0;
+    rt_task_timer.Init.CounterMode = TIM_COUNTERMODE_UP;
+    HAL_TIM_Base_Init(&rt_task_timer);
+    HAL_NVIC_SetPriority(TIM3_IRQn, INT_PRIO_SEQ_RT, 0);
+    HAL_NVIC_EnableIRQ(TIM3_IRQn);
+    HAL_TIM_Base_Start_IT(&rt_task_timer);
+}
+
 //
 // STM32 stuff
 //
@@ -228,7 +247,8 @@ static void SystemClock_Config(void) {
     HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 
     // set systick interval
-    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/2000);  // 500 us
+//    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/2000);  // 500 us
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);  // 1000 us
     HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
     // STM32F405x/407x/415x/417x Revision Z devices: prefetch is supported

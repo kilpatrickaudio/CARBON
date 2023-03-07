@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 24
+#define CARBON_VERSION_MINOR 25
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -39,14 +39,13 @@
 //   - midi_stream.c        - midi_stream_queue
 //   - gui.c                - gstate
 //
-
 // interrupt priorities
-#define INT_PRIO_SPI_PANEL 0  // highest prio - avoids SPI lockup
-#define INT_PRIO_SYSTICK 1  // needs to be higher than everything else
-
+#define INT_PRIO_SYSTICK 0  // needs to be higher than everything else
+#define INT_PRIO_SEQ_RT 1
 #define INT_PRIO_SPI_FLASH_DMA_TX 2
 #define INT_PRIO_SPI_FLASH_DMA_RX 2
 #define INT_PRIO_SPI_ANALOG_OUT 2
+#define INT_PRIO_SPI_PANEL 5
 #define INT_PRIO_DIN_MIDI_DMA_TX1 6
 #define INT_PRIO_DIN_MIDI_DMA_RX1 6
 #define INT_PRIO_DIN_MIDI_DMA_UART1 6
