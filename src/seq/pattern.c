@@ -30,7 +30,7 @@
 
 // defines
 #define PATTERN_NUM_ROWS 8
-#define PATTERN_VALID_TOKEN 0x50415454
+#define PATTERN_VALID_TOKEN 0x50415454  // "PATT' in big endian
 #define PATTERN_VALID_TOKEN_OFFSET 64
 
 // ROM patterns used when config data is blank
@@ -112,16 +112,16 @@ void pattern_load_patterns(void) {
     // check the valid token first
     valid_token = config_store_get_val(CONFIG_STORE_PATTERN_BANK +
         PATTERN_VALID_TOKEN_OFFSET);
-//    log_debug("pattern token: 0x%08x", valid_token);
+    log_debug("pattern token: 0x%08x", valid_token);
 
     // token not found - let's use the ROM patterns and store them back
     if(valid_token != PATTERN_VALID_TOKEN) {
-//        log_debug("plp - token not found - using ROM patterns");
+        log_debug("plp - token not found - using ROM patterns");
         pattern_load_rom_defaults();
     }
     // token is valid - let's load the patterns from the config store
     else {
-//        log_debug("plp - token found - loading from config");
+        log_debug("plp - token found - loading from config");
         addr = CONFIG_STORE_PATTERN_BANK;
         for(pattern = 0; pattern < SEQ_NUM_PATTERNS; pattern ++) {
             // get 4 bytes - MSB first order
@@ -211,7 +211,9 @@ void pattern_load_rom_defaults(void) {
         pattern_restore_pattern(pattern);
     }
     // place token at end so we know flash patterns are valid
-    config_store_set_val(CONFIG_STORE_PATTERN_BANK + (SEQ_NUM_PATTERNS << 1) + 1,
+//    config_store_set_val(CONFIG_STORE_PATTERN_BANK + (SEQ_NUM_PATTERNS << 1) + 1,
+//        PATTERN_VALID_TOKEN);
+    config_store_set_val(CONFIG_STORE_PATTERN_BANK + PATTERN_VALID_TOKEN_OFFSET,
         PATTERN_VALID_TOKEN);
 }
 

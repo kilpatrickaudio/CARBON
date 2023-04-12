@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 25
+#define CARBON_VERSION_MINOR 26
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 
 // memory mapping
@@ -86,6 +86,8 @@
 #define CONFIG_STORE_MENU_TIMEOUT 4
 #define CONFIG_STORE_GUI_DISP_TYPE 5
 #define CONFIG_STORE_PATTERN_BANK 62  // start of the pattern bank
+// offset: 62-125 = patterns 0-63 (2 words = 8 bytes per pattern)
+// offset: 126 = pattern valid token
 // patterns consume 65 words (260 bytes) of space
 #define CONFIG_STORE_TOKEN (CONFIG_STORE_NUM_ITEMS - 1)  // must be last item
 
@@ -227,8 +229,8 @@
 //#define DEBUG_USBH_PINS  // uncomment to use USB host port pins for debug
 #define DEBUG_TP123  // uncomment to use testpoints 1-3 for debug
 // debug MIDI
-//#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
-#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
+#define DEBUG_MIDI_PORT MIDI_PORT_DIN2_OUT  // where debug text is sent
+//#define DEBUG_MIDI_PORT MIDI_PORT_USB_DEV_OUT1  // where debug text is sent
 
 //
 // development mode
