@@ -1,5 +1,5 @@
 /*
- * CARBON Step Editor
+ * CARBON Song Editor
  *
  * Written by: Andrew Kilpatrick
  * Copyright 2016: Kilpatrick Audio
