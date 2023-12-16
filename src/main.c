@@ -271,3 +271,12 @@ void assert_failed(uint8_t* file, uint32_t line) {
   }
 }
 #endif
+
+// XXX provide functions to get rid of libnosys warnings
+void _close(void) { }
+void _lseek(void) { }
+void _read(void) { }
+void _fstat_r(void) { }
+void _getpid_r(void) { }
+void _isatty_r(void) { }
+void _kill_r(void) { }

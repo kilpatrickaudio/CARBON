@@ -97,7 +97,6 @@ void debug_send_active_sensing(void) {
 #endif
 }
 
-
 #ifdef DEBUG_OVER_MIDI 
 // get printf output and send it over MIDI
 int _write(int fd, char *ptr, int len) {
@@ -127,6 +126,11 @@ int _write(int fd, char *ptr, int len) {
         ptr ++;
     }
     return incount;
+}
+#else
+// get printf output and send it over MIDI
+int _write(int fd, char *ptr, int len) {
+    return len;
 }
 #endif
 
