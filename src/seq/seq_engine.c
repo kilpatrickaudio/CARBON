@@ -465,7 +465,8 @@ void seq_engine_set_run_state(int run) {
         // send program change for all tracks
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
             for(mapnum = 0; mapnum < SEQ_NUM_TRACK_OUTPUTS; mapnum ++) {
-                seq_engine_send_program(track, mapnum);
+// ver. 1.27 - disable to see if this helps some synths
+//                seq_engine_send_program(track, mapnum);
             }
         }
         arp_set_seq_enable(0);
