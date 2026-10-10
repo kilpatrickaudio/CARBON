@@ -97,8 +97,10 @@ struct track_event {
 
 // song event types - map to real status messages where possible
 #define SONG_EVENT_NULL 0
+#define SONG_EVENT_INTERNAL_CC 1  // transient control routed through Bias Track
 #define SONG_EVENT_NOTE MIDI_NOTE_ON
 #define SONG_EVENT_CC MIDI_CONTROL_CHANGE
+#define SONG_EVENT_PROGCHG MIDI_PROGRAM_CHANGE
 
 // init the song
 void song_init(void);
@@ -308,6 +310,12 @@ void song_set_track_type(int track, int mode);
 //
 // track params (per scene)
 //
+// get a scene MIDI program for a track output
+int song_get_scene_midi_program(int scene, int track, int mapnum);
+
+// set a scene MIDI program for a track output
+void song_set_scene_midi_program(int scene, int track, int mapnum, int program);
+
 // get the step length - returns -1 on error
 int song_get_step_length(int scene, int track);
 
@@ -343,6 +351,18 @@ int song_get_motion_length(int scene, int track);
 
 // set the motion length on a track
 void song_set_motion_length(int scene, int track, int length);
+
+// get the Euclidean density for a track - returns -1 on error
+int song_get_euclidean_density(int scene, int track);
+
+// set the Euclidean density for a track
+void song_set_euclidean_density(int scene, int track, int density);
+
+// get the Euclidean rotation for a track - returns -1 on error
+int song_get_euclidean_rotation(int scene, int track);
+
+// set the Euclidean rotation for a track
+void song_set_euclidean_rotation(int scene, int track, int rotation);
 
 // get the gate time on a track in ticks - returns -1 on error
 int song_get_gate_time(int scene, int track);

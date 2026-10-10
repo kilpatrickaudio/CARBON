@@ -86,6 +86,10 @@ enum STATE_CHANGE_EVENT {
     SCE_SONG_SET_STEP_EVENT,  // arg0 = scene, arg1 = track, arg2 = step
     SCE_SONG_START_DELAY,  // arg0 = scene, arg1 = track, arg2 = step
     SCE_SONG_RATCHET_MODE,  // arg0 = scene, arg1 = track, arg1 = step
+    // Appended to preserve the numeric values of existing events.
+    SCE_SONG_SCENE_MIDI_PROGRAM,  // arg0 = scene, arg1 = track, arg2 = mapnum
+    SCE_SONG_EUCLIDEAN_DENSITY,  // arg0 = scene, arg1 = track, arg2 = density
+    SCE_SONG_EUCLIDEAN_ROTATION,  // arg0 = scene, arg1 = track, arg2 = rotation
     // control events
     SCE_CTRL_RUN_STATE = SCEC_CTRL,  // arg0 = state
     SCE_CTRL_TRACK_SELECT,  // arg0 = track, arg1 = select

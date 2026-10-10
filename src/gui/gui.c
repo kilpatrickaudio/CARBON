@@ -312,6 +312,7 @@ void gui_set_label_prefs(int index, int x, int y, int w, int h,
 void gui_set_label_color(int index, uint32_t fg_color,
     uint32_t bg_color);
 void gui_calculate_motion_steps(int track);
+int gui_get_step_display_enable(int track, int step);
 void gui_update_song(int song);
 void gui_update_scene(int scene);
 void gui_update_track_select(int track, int select);
@@ -967,6 +968,11 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_PATTERN_TYPE:
             gui_update_pattern_type(data[0], data[1], data[2]);
             break;
+        case SCE_SONG_EUCLIDEAN_DENSITY:
+        case SCE_SONG_EUCLIDEAN_ROTATION:
+            // Euclidean settings affect pattern previews immediately.
+            gui_force_refresh();
+            break;
         case SCE_SONG_TRACK_TYPE:
             gui_update_track_type(data[0], data[1], data[2]);
             break;
@@ -1037,8 +1043,7 @@ int gui_draw_preview_grids(void) {
                     color = GUI_GRID_TRACK_COLOR_ACTIVE[track];
                 }
                 // pattern enabled on step
-                else if(pattern_get_step_enable(gstate.current_scene, track,
-                        gstate.pattern_type[track], step)) {
+                else if(gui_get_step_display_enable(track, step)) {
                     color = GUI_GRID_TRACK_COLOR_MUTED[track][gstate.motion_step[track][step]];
                 }
                 // off
@@ -1053,8 +1058,7 @@ int gui_draw_preview_grids(void) {
                     color = GUI_GRID_TRACK_COLOR_ACTIVE[track];
                 }
                 // pattern enabled on step
-                else if(pattern_get_step_enable(gstate.current_scene, track,
-                        gstate.pattern_type[track], step)) {
+                else if(gui_get_step_display_enable(track, step)) {
                     color = GUI_GRID_TRACK_COLOR_NORMAL[track][gstate.motion_step[track][step]];
                 }
                 // off
@@ -1192,6 +1196,20 @@ void gui_set_label_color(int index, uint32_t fg_color, uint32_t bg_color) {
     gstate.glabels[index].fg_color = fg_color;
     gstate.glabels[index].bg_color = bg_color;
     gstate.glabels[index].dirty = 1;
+}
+
+// Determine whether a step should be shown as containing material. Within the
+// motion window this follows the effective pattern (including Euclidean
+// masking). Outside the window, retain the normal indication of stored events
+// so Euclidean mode does not make existing notes and CCs appear empty.
+int gui_get_step_display_enable(int track, int step) {
+    if(!gstate.motion_step[track][step] &&
+            song_get_euclidean_density(gstate.current_scene, track) <
+            SEQ_EUCLIDEAN_DENSITY_MAX) {
+        return song_get_num_step_events(gstate.current_scene, track, step) > 0;
+    }
+    return pattern_get_step_enable(gstate.current_scene, track,
+        gstate.pattern_type[track], step);
 }
 
 // calculate the motion squares for a track

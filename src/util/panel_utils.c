@@ -335,6 +335,27 @@ void panel_utils_step_len_to_str(char *tempstr, int speed) {
         case SEQ_UTILS_STEP_WHOLE:
             sprintf(tempstr, "1/1");
             break;
+        case SEQ_UTILS_STEP_BAR_DIV_3:
+            sprintf(tempstr, "1/3");
+            break;
+        case SEQ_UTILS_STEP_BAR_DIV_5:
+            sprintf(tempstr, "1/5");
+            break;
+        case SEQ_UTILS_STEP_BAR_DIV_7:
+            sprintf(tempstr, "1/7");
+            break;
+        case SEQ_UTILS_STEP_BAR_DIV_9:
+            sprintf(tempstr, "1/9");
+            break;
+        case SEQ_UTILS_STEP_BAR_DIV_11:
+            sprintf(tempstr, "1/11");
+            break;
+        case SEQ_UTILS_STEP_BAR_DIV_13:
+            sprintf(tempstr, "1/13");
+            break;
+        default:
+            sprintf(tempstr, "---");
+            break;
     }
 }
 

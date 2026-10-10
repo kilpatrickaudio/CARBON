@@ -286,7 +286,7 @@ void arp_set_speed(int track, int speed) {
         log_error("ass - track invalid: %d", track);
         return;
     }
-    if(speed < 0 || speed >= SEQ_UTILS_STEP_LENS) {
+    if(speed < 0 || speed >= SEQ_UTILS_ARP_SPEEDS) {
         log_error("ass - speed invalid: %d", speed);
         return;
     }
