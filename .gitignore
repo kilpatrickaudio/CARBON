@@ -1,1 +1,20 @@
-Makefile
+# Generated release-build products
+/Makefile
+/main
+/main.bin
+/main.map
+/build/
+
+# Local build logs
+/build-*.log
+
+# Local project planning and assistant sessions (not public documentation)
+/carbon-firmware-briefing.org
+/carbon-pr-briefing.org
+/copilot-*.org
+/carbon-pr-body.md
+
+# Editor backups, autosaves, and lock files
+*~
+\#*\#
+.\#*

@@ -21,6 +21,7 @@
 #include "pattern.h"
 #include "song.h"
 #include "seq_ctrl.h"
+#include "seq_engine.h"
 #include "../config.h"
 #include "../config_store.h"
 #include "../util/log.h"
@@ -158,7 +159,7 @@ void pattern_restore_pattern(int pattern) {
 
 // check whether the current step is enabled on a pattern
 int pattern_get_step_enable(int scene, int track, int pattern, int step) {
-    int row, col;
+    int row, col, density, length, start, rotation;
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
         return 0;
     }
@@ -171,6 +172,40 @@ int pattern_get_step_enable(int scene, int track, int pattern, int step) {
     if(step < 0 || step >= SEQ_NUM_STEPS) {
         return 0;
     }
+
+    // Runtime CCi overrides apply only to the active scene. Other scene previews
+    // continue to use their stored values.
+    if(scene == seq_engine_get_current_scene()) {
+        density = seq_engine_get_effective_euclidean_density(track);
+        length = seq_engine_get_effective_motion_length(track);
+        start = seq_engine_get_effective_motion_start(track);
+        rotation = seq_engine_get_effective_euclidean_rotation(track);
+    }
+    else {
+        density = song_get_euclidean_density(scene, track);
+        length = song_get_motion_length(scene, track);
+        start = song_get_motion_start(scene, track);
+        rotation = song_get_euclidean_rotation(scene, track);
+    }
+
+    // A density below 100% replaces the selected pattern with a Euclidean
+    // mask over this track's effective motion window. Density 100% preserves
+    // the stock pattern path exactly for backward compatibility.
+    if(density < 100) {
+        int rel = (step - start + SEQ_NUM_STEPS) % SEQ_NUM_STEPS;
+        int hits = ((density * length) + 50) / 100;
+
+        // The pattern exists only inside the motion window. Positive rotation
+        // moves hits later while Start relocates the window without changing
+        // the pattern's phase relative to its beginning.
+        if(rel >= length || hits == 0) {
+            return 0;
+        }
+        rotation %= length;
+        rel = (rel + length - rotation) % length;
+        return ((rel * hits) % length) < hits;
+    }
+
     if(pattern == PATTERN_AS_RECORDED) {
         if(song_get_num_step_events(scene, track, step)) {
             return 1;

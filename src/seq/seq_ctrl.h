@@ -206,6 +206,9 @@ void seq_ctrl_adjust_midi_program(int mapnum, int change);
 // set the program of a track
 void seq_ctrl_set_midi_program(int track, int mapnum, int program);
 
+// adjust a scene program on selected tracks
+void seq_ctrl_adjust_scene_midi_program(int scene, int mapnum, int change);
+
 // adjust the port mapping of an output on selected tracks
 void seq_ctrl_adjust_midi_port(int mapnum, int change);
 
@@ -262,6 +265,19 @@ void seq_ctrl_set_pattern_type(int track, int pattern);
 
 // adjust the pattern type of the selected tracks
 void seq_ctrl_adjust_pattern_type(int change);
+
+// set Euclidean density on a track - supports SEQ_CTRL_TRACK_OMNI
+void seq_ctrl_set_euclidean_density(int track, int density);
+
+// adjust Euclidean density on selected tracks
+void seq_ctrl_adjust_euclidean_density(int change);
+
+// set Euclidean rotation from a MIDI-style 0-127 value
+// supports SEQ_CTRL_TRACK_OMNI and scales to each track's motion length
+void seq_ctrl_set_euclidean_rotation_scaled(int track, int value);
+
+// adjust Euclidean rotation on selected tracks
+void seq_ctrl_adjust_euclidean_rotation(int change);
 
 // set the motion dir of the track - supports SEQ_CTRL_TRACK_OMNI
 void seq_ctrl_set_motion_dir(int track, int dir);

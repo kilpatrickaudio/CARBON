@@ -377,6 +377,14 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
+        case SCE_SONG_SCENE_MIDI_PROGRAM:
+            if(pmstate.menu_mode == PANEL_MENU_MIDI &&
+                    pmstate.menu_submode >= PANEL_MENU_MIDI_PROGRAM_A_SCENE1 &&
+                    pmstate.menu_submode <= PANEL_MENU_MIDI_PROGRAM_B_SCENE6) {
+                panel_menu_update_display();
+                pmstate.menu_timeout_count = pmstate.menu_timeout;
+            }
+            break;
         case SCE_SONG_MIDI_PORT_MAP:
             if(pmstate.menu_mode == PANEL_MENU_MIDI &&
                     (pmstate.menu_submode == PANEL_MENU_MIDI_TRACK_OUTA_PORT ||
@@ -883,6 +891,50 @@ void panel_menu_display_midi(void) {
             panel_utils_onoff_str(tempstr, song_get_midi_autolive());
             gui_set_menu_value(tempstr);
             break;
+        default:
+            if(pmstate.menu_submode >= PANEL_MENU_MIDI_PROGRAM_A_SCENE1 &&
+                    pmstate.menu_submode <= PANEL_MENU_MIDI_PROGRAM_A_SCENE6) {
+                int scene = pmstate.menu_submode - PANEL_MENU_MIDI_PROGRAM_A_SCENE1;
+                sprintf(tempstr, "Scene %d Track %d",
+                    (scene + 1), (track + 1));
+                gui_set_menu_subtitle(tempstr);
+                gui_set_menu_param("Program A");
+                if(song_get_midi_port_map(track, 0) == MIDI_PORT_CV_OUT) {
+                    panel_utils_get_blank_str(tempstr);
+                }
+                else {
+                    temp = song_get_scene_midi_program(scene, track, 0);
+                    if(temp < 0) {
+                        panel_utils_get_blank_str(tempstr);
+                    }
+                    else {
+                        sprintf(tempstr, "%d", temp + 1);
+                    }
+                }
+                gui_set_menu_value(tempstr);
+            }
+            else if(pmstate.menu_submode >= PANEL_MENU_MIDI_PROGRAM_B_SCENE1 &&
+                    pmstate.menu_submode <= PANEL_MENU_MIDI_PROGRAM_B_SCENE6) {
+                int scene = pmstate.menu_submode - PANEL_MENU_MIDI_PROGRAM_B_SCENE1;
+                sprintf(tempstr, "Scene %d Track %d",
+                    (scene + 1), (track + 1));
+                gui_set_menu_subtitle(tempstr);
+                gui_set_menu_param("Program B");
+                if(song_get_midi_port_map(track, 1) == MIDI_PORT_CV_OUT) {
+                    panel_utils_get_blank_str(tempstr);
+                }
+                else {
+                    temp = song_get_scene_midi_program(scene, track, 1);
+                    if(temp < 0) {
+                        panel_utils_get_blank_str(tempstr);
+                    }
+                    else {
+                        sprintf(tempstr, "%d", temp + 1);
+                    }
+                }
+                gui_set_menu_value(tempstr);
+            }
+            break;
     }
 }
 
@@ -893,12 +945,15 @@ void panel_menu_display_sys(void) {
     gui_set_menu_title("SYSTEM");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_SYS_VERSION:
-            gui_set_menu_subtitle("Firmware Release");
-            gui_set_menu_param("Ver:");
-            sprintf(tempstr, "%d.%02d LCD: %c",
+            gui_set_menu_subtitle("Unofficial Firmware");
+            // Keep the full version within the 13-character menu value field.
+            snprintf(tempstr, sizeof(tempstr), "Ver: LCD %c",
+                (gui_get_screen_type() + 65));
+            gui_set_menu_param(tempstr);
+            snprintf(tempstr, sizeof(tempstr), "%d.%02d-%s",
                 CARBON_VERSION_MAJOR,
                 CARBON_VERSION_MINOR,
-                (gui_get_screen_type() + 65));
+                CARBON_VERSION_VARIANT);
             gui_set_menu_value(tempstr);
             break;
         case PANEL_MENU_SYS_CVGATE_PAIRS:
@@ -1213,6 +1268,20 @@ void panel_menu_edit_midi(int change) {
             break;
         case PANEL_MENU_MIDI_AUTOLIVE:
             seq_ctrl_adjust_midi_autolive(change);
+            break;
+        default:
+            if(pmstate.menu_submode >= PANEL_MENU_MIDI_PROGRAM_A_SCENE1 &&
+                    pmstate.menu_submode <= PANEL_MENU_MIDI_PROGRAM_A_SCENE6) {
+                seq_ctrl_adjust_scene_midi_program(
+                    pmstate.menu_submode - PANEL_MENU_MIDI_PROGRAM_A_SCENE1,
+                    0, change);
+            }
+            else if(pmstate.menu_submode >= PANEL_MENU_MIDI_PROGRAM_B_SCENE1 &&
+                    pmstate.menu_submode <= PANEL_MENU_MIDI_PROGRAM_B_SCENE6) {
+                seq_ctrl_adjust_scene_midi_program(
+                    pmstate.menu_submode - PANEL_MENU_MIDI_PROGRAM_B_SCENE1,
+                    1, change);
+            }
             break;
     }
     panel_menu_update_display();

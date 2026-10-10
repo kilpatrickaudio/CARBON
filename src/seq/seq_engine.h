@@ -65,6 +65,13 @@ void seq_engine_reset_track(int track);
 // get the current scene
 int seq_engine_get_current_scene(void);
 
+// effective runtime parameters (including transient internal CC automation)
+int seq_engine_get_effective_motion_start(int track);
+int seq_engine_get_effective_motion_length(int track);
+int seq_engine_get_effective_pattern_type(int track);
+int seq_engine_get_effective_euclidean_density(int track);
+int seq_engine_get_effective_euclidean_rotation(int track);
+
 // change the scene
 void seq_engine_change_scene(int scene);
 

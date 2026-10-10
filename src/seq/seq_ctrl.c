@@ -746,6 +746,31 @@ void seq_ctrl_set_midi_program(int track, int mapnum, int program) {
         SONG_MIDI_PROG_NULL, 0x7f));
 }
 
+// adjust a scene program on selected tracks
+void seq_ctrl_adjust_scene_midi_program(int scene, int mapnum, int change) {
+    int track, program;
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+        log_error("scasmp - scene invalid: %d", scene);
+        return;
+    }
+    if(mapnum < 0 || mapnum >= SEQ_NUM_TRACK_OUTPUTS) {
+        log_error("scasmp - mapnum invalid: %d", mapnum);
+        return;
+    }
+    // Match the blank menu display: CV/gate has no MIDI program setting.
+    if(song_get_midi_port_map(sstate.first_track, mapnum) == MIDI_PORT_CV_OUT) {
+        return;
+    }
+    program = seq_utils_clamp(song_get_scene_midi_program(scene,
+        sstate.first_track, mapnum) + change, SONG_MIDI_PROG_NULL, 0x7f);
+    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        if(seq_ctrl_get_track_select(track) &&
+                song_get_midi_port_map(track, mapnum) != MIDI_PORT_CV_OUT) {
+            song_set_scene_midi_program(scene, track, mapnum, program);
+        }
+    }
+}
+
 // adjust the port mapping of an output on a track
 void seq_ctrl_adjust_midi_port(int mapnum, int change) {
     int val, track;
@@ -1065,6 +1090,89 @@ void seq_ctrl_adjust_pattern_type(int change) {
     }
 }
 
+// set Euclidean density on a track - supports SEQ_CTRL_TRACK_OMNI
+void seq_ctrl_set_euclidean_density(int track, int density) {
+    int i;
+    int val = seq_utils_clamp(density, SEQ_EUCLIDEAN_DENSITY_MIN,
+        SEQ_EUCLIDEAN_DENSITY_MAX);
+    if(track == SEQ_CTRL_TRACK_OMNI) {
+        for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+            if(sstate.track_select[i]) {
+                song_set_euclidean_density(seq_engine_get_current_scene(), i, val);
+            }
+        }
+    }
+    else {
+        if(track < 0 || track >= SEQ_NUM_TRACKS) {
+            log_error("scsed - track invalid: %d", track);
+            return;
+        }
+        song_set_euclidean_density(seq_engine_get_current_scene(), track, val);
+    }
+}
+
+// adjust Euclidean density on the selected scene and track(s)
+void seq_ctrl_adjust_euclidean_density(int change) {
+    int track, length, scale, val;
+    // Keep the 64-step resolution at 1% per encoder increment, but make
+    // shorter patterns quicker to sweep through the full density range.
+    length = song_get_motion_length(seq_engine_get_current_scene(),
+        sstate.first_track);
+    scale = (SEQ_NUM_STEPS + (length >> 1)) / length;
+    if(scale < 1) {
+        scale = 1;
+    }
+    val = seq_utils_clamp(song_get_euclidean_density(
+        seq_engine_get_current_scene(), sstate.first_track) + (change * scale),
+        SEQ_EUCLIDEAN_DENSITY_MIN, SEQ_EUCLIDEAN_DENSITY_MAX);
+    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        if(sstate.track_select[track]) {
+            song_set_euclidean_density(seq_engine_get_current_scene(), track, val);
+        }
+    }
+}
+
+// set Euclidean rotation from a MIDI-style 0-127 value
+// supports SEQ_CTRL_TRACK_OMNI and scales to each track's motion length
+void seq_ctrl_set_euclidean_rotation_scaled(int track, int value) {
+    int i, length, val;
+    if(track == SEQ_CTRL_TRACK_OMNI) {
+        for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+            if(sstate.track_select[i]) {
+                length = song_get_motion_length(seq_engine_get_current_scene(), i);
+                val = seq_utils_clamp((value * length) >> 7,
+                    SEQ_EUCLIDEAN_ROTATION_MIN, length - 1);
+                song_set_euclidean_rotation(seq_engine_get_current_scene(), i, val);
+            }
+        }
+    }
+    else {
+        if(track < 0 || track >= SEQ_NUM_TRACKS) {
+            log_error("scser - track invalid: %d", track);
+            return;
+        }
+        length = song_get_motion_length(seq_engine_get_current_scene(), track);
+        val = seq_utils_clamp((value * length) >> 7,
+            SEQ_EUCLIDEAN_ROTATION_MIN, length - 1);
+        song_set_euclidean_rotation(seq_engine_get_current_scene(), track, val);
+    }
+}
+
+// adjust Euclidean rotation on the selected scene and track(s)
+void seq_ctrl_adjust_euclidean_rotation(int change) {
+    int track, length, val;
+    length = song_get_motion_length(seq_engine_get_current_scene(),
+        sstate.first_track);
+    val = seq_utils_wrap((song_get_euclidean_rotation(
+        seq_engine_get_current_scene(), sstate.first_track) % length) + change,
+        SEQ_EUCLIDEAN_ROTATION_MIN, length - 1);
+    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        if(sstate.track_select[track]) {
+            song_set_euclidean_rotation(seq_engine_get_current_scene(), track, val);
+        }
+    }
+}
+
 // set the motion dir of the track - supports SEQ_CTRL_TRACK_OMNI
 void seq_ctrl_set_motion_dir(int track, int dir) {
     int i, val;
@@ -1177,7 +1285,7 @@ void seq_ctrl_adjust_arp_type(int change) {
 // set the arp speed on a track - supports SEQ_CTRL_TRACK_OMNI
 void seq_ctrl_set_arp_speed(int track, int speed) {
     int i, val;
-    val = seq_utils_clamp(speed, 0, (SEQ_UTILS_STEP_LENS - 1));
+    val = seq_utils_clamp(speed, 0, (SEQ_UTILS_ARP_SPEEDS - 1));
     // modify all tracks
     if(track == SEQ_CTRL_TRACK_OMNI) {
         for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
@@ -1198,7 +1306,7 @@ void seq_ctrl_set_arp_speed(int track, int speed) {
 void seq_ctrl_adjust_arp_speed(int change) {
     int track, val;
     val = seq_utils_clamp(song_get_arp_speed(seq_engine_get_current_scene(),
-        sstate.first_track) + change, 0, (SEQ_UTILS_STEP_LENS - 1));
+        sstate.first_track) + change, 0, (SEQ_UTILS_ARP_SPEEDS - 1));
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         if(sstate.track_select[track]) {
             song_set_arp_speed(seq_engine_get_current_scene(), track, val);

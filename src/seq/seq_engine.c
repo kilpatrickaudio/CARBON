@@ -49,6 +49,9 @@
 // setting
 #define SEQ_ENGINE_RECORD_EVENTS_MAX (SEQ_NUM_STEPS * SEQ_TRACK_POLY)  // number of events for recording
 
+// A bar-relative step length divides one 4/4 bar into equal parts.
+#define SEQ_ENGINE_BAR_TICKS (MIDI_CLOCK_PPQ * 4)
+
 // active note state
 struct seq_engine_active_note {
     struct midi_event note;  // active note
@@ -84,8 +87,11 @@ struct seq_engine_state {
     int track_mute[SEQ_NUM_TRACKS];  // track mute
     // playback state
     int clock_div_count[SEQ_NUM_TRACKS];  // clock divider count
+    int bar_divisions[SEQ_NUM_TRACKS];  // equal divisions per 4/4 bar, or 0
+    int bar_div_remainder[SEQ_NUM_TRACKS];  // fractional-tick error for bar divisions
     int step_pos[SEQ_NUM_TRACKS];  // current step position
     int bias_track_output[SEQ_NUM_TRACKS];  // bias track output
+    int16_t internal_cc[SEQ_NUM_TRACKS][14];  // CC 16-29; -1 = inactive
     int kbtrans;  // keyboard transpose state for tracks (no effect during song mode)
     int autolive;  // the autolive state
     // song mode
@@ -120,6 +126,10 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
 void seq_engine_track_manage_notes(int track);
 void seq_engine_track_stop_all_notes(int track);
 void seq_engine_track_set_bias_output(int track, int bias_note);
+static int seq_engine_get_internal_cc(int track, int controller, int fallback);
+void seq_engine_apply_internal_cc(int source_track, int controller, int value);
+void seq_engine_refresh_internal_cc_target(int track, int controller);
+void seq_engine_clear_internal_cc(void);
 // live input handling
 void seq_engine_live_send_msg(int track, struct midi_msg *msg);
 int seq_engine_live_enqueue_note(int track, struct midi_msg *on_msg);
@@ -152,6 +162,7 @@ int seq_engine_compute_next_pos(int track, int *pos, int change);
 int seq_engine_change_scene_synced(void);
 void seq_engine_cancel_pending_scene_change(void);
 void seq_engine_reset_all_tracks_pos(void);
+void seq_engine_schedule_bar_div_step(int track);
 void seq_engine_send_program(int track, int mapnum);
 void seq_engine_send_all_notes_off(int track);
 void seq_engine_highlight_step_record_pos();
@@ -183,7 +194,10 @@ void seq_engine_init(void) {
     // reset playback info
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
         sestate.bias_track_output[j] = 0;
+        sestate.bar_divisions[j] = 0;
+        sestate.bar_div_remainder[j] = 0;
     }
+    seq_engine_clear_internal_cc();
 
     // reset live info
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
@@ -289,11 +303,20 @@ void seq_engine_timer_task(void) {
 // run the sequencer - called on each clock tick
 void seq_engine_run(uint32_t tick_count) {
     struct track_event event;
-    int i, track, live_active;
+    int i, track, live_active, bias_note_found;
 
     // position was reset
     if(tick_count == 0) {
+        seq_engine_clear_internal_cc();
         seq_engine_recalc_params();
+        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+            arp_set_arp_enable(track,
+                song_get_arp_enable(sestate.scene_current, track));
+            arp_set_type(track, song_get_arp_type(sestate.scene_current, track));
+            arp_set_speed(track, song_get_arp_speed(sestate.scene_current, track));
+            arp_set_gate_time(track,
+                song_get_arp_gate_time(sestate.scene_current, track));
+        }
         seq_engine_reset_all_tracks_pos();
     }
 
@@ -334,15 +357,21 @@ void seq_engine_run(uint32_t tick_count) {
             if(sestate.clock_div_count[track] == 0) {
                 // get events that are on this step
                 if(pattern_get_step_enable(sestate.scene_current, track,
-                        song_get_pattern_type(sestate.scene_current, track),
+                        seq_engine_get_effective_pattern_type(track),
                         sestate.step_pos[track])) {
-                    // use first note on a step as the bias track value
+                    // The first Note updates pitch bias; all CCi events update
+                    // transient parameters on tracks using this Bias Track.
+                    bias_note_found = 0;
                     for(i = 0; i < SEQ_TRACK_POLY; i ++) {
                         if(song_get_step_event(sestate.scene_current, track,
                                 sestate.step_pos[track], i, &event) != -1) {
-                            if(event.type == SONG_EVENT_NOTE) {
+                            if(event.type == SONG_EVENT_NOTE && !bias_note_found) {
                                 seq_engine_track_set_bias_output(track, event.data0);
-                                break;
+                                bias_note_found = 1;
+                            }
+                            else if(event.type == SONG_EVENT_INTERNAL_CC) {
+                                seq_engine_apply_internal_cc(track,
+                                    event.data0, event.data1);
                             }
                         }
                     }
@@ -399,7 +428,7 @@ void seq_engine_run(uint32_t tick_count) {
                         (live_active && seq_ctrl_get_record_mode() != SEQ_CTRL_RECORD_IDLE) ||
                         sestate.track_type[track] == SONG_TRACK_TYPE_DRUM) &&
                         pattern_get_step_enable(sestate.scene_current, track,
-                            song_get_pattern_type(sestate.scene_current, track),
+                            seq_engine_get_effective_pattern_type(track),
                             sestate.step_pos[track])) {
                     // play the events on this step
                     seq_engine_track_play_step(track, sestate.step_pos[track]);
@@ -435,6 +464,7 @@ void seq_engine_run(uint32_t tick_count) {
             sestate.clock_div_count[track] ++;
             if(sestate.clock_div_count[track] >= sestate.step_size[track]) {
                 sestate.clock_div_count[track] = 0;
+                seq_engine_schedule_bar_div_step(track);
             }
         }
     }
@@ -508,6 +538,8 @@ void seq_engine_reset_track(int track) {
     }
     seq_engine_cancel_pending_scene_change();
     sestate.clock_div_count[track] = 0;
+    sestate.bar_div_remainder[track] = 0;
+    seq_engine_schedule_bar_div_step(track);
     sestate.step_pos[track] = sestate.motion_start[track];
     // fire event
     state_change_fire2(SCE_ENG_ACTIVE_STEP, track, sestate.step_pos[track]);
@@ -516,6 +548,43 @@ void seq_engine_reset_track(int track) {
 // get the current scene
 int seq_engine_get_current_scene(void) {
     return sestate.scene_current;
+}
+
+// get a transient override, falling back to the stored song value
+static int seq_engine_get_internal_cc(int track, int controller, int fallback) {
+    int index = controller - MIDI_CTRL_CC_STEP_LENGTH;
+    if(track < 0 || track >= SEQ_NUM_TRACKS || index < 0 || index >= 14) {
+        return fallback;
+    }
+    if(sestate.internal_cc[track][index] >= 0) {
+        return sestate.internal_cc[track][index];
+    }
+    return fallback;
+}
+
+int seq_engine_get_effective_motion_start(int track) {
+    return seq_engine_get_internal_cc(track, MIDI_CTRL_CC_MOTION_START,
+        song_get_motion_start(sestate.scene_current, track));
+}
+
+int seq_engine_get_effective_motion_length(int track) {
+    return seq_engine_get_internal_cc(track, MIDI_CTRL_CC_MOTION_LENGTH,
+        song_get_motion_length(sestate.scene_current, track));
+}
+
+int seq_engine_get_effective_pattern_type(int track) {
+    return seq_engine_get_internal_cc(track, MIDI_CTRL_CC_PATTERN_TYPE,
+        song_get_pattern_type(sestate.scene_current, track));
+}
+
+int seq_engine_get_effective_euclidean_density(int track) {
+    return seq_engine_get_internal_cc(track, MIDI_CTRL_CC_EUCLIDEAN_DENSITY,
+        song_get_euclidean_density(sestate.scene_current, track));
+}
+
+int seq_engine_get_effective_euclidean_rotation(int track) {
+    return seq_engine_get_internal_cc(track, MIDI_CTRL_CC_EUCLIDEAN_ROTATION,
+        song_get_euclidean_rotation(sestate.scene_current, track));
 }
 
 // change the scene
@@ -940,13 +1009,22 @@ void seq_engine_track_play_step(int track, int step) {
                     // drum track - bias / no kbtrans
                     if(sestate.track_type[track] == SONG_TRACK_TYPE_DRUM) {
                         midi_utils_enc_note_on(&msg, 0, 0,
-                            seq_utils_clamp(event.data0 + bias, 0, 127),
-                            event.data1);
+                            seq_utils_clamp(event.data0 + bias +
+                            seq_engine_get_internal_cc(track,
+                                MIDI_CTRL_CC_TRACK_TRANSPOSE,
+                                song_get_transpose(sestate.scene_current, track)) -
+                            song_get_transpose(sestate.scene_current, track),
+                            0, 127), event.data1);
                     }
                     // voice track - bias + kbtrans + songmode.kbtrans
                     else {
-                        // scale by keyboard transpose
-                        temp = event.data0 + sestate.kbtrans + bias;
+                        // Internal CC 17 is transient, so compensate for the
+                        // stored transpose that outproc will add later.
+                        temp = event.data0 + sestate.kbtrans + bias +
+                            seq_engine_get_internal_cc(track,
+                                MIDI_CTRL_CC_TRACK_TRANSPOSE,
+                                song_get_transpose(sestate.scene_current, track)) -
+                            song_get_transpose(sestate.scene_current, track);
                         if(!seq_utils_check_note_range(temp)) {
                             return;
                         }
@@ -959,6 +1037,15 @@ void seq_engine_track_play_step(int track, int step) {
                     midi_utils_enc_control_change(&msg, 0, 0, event.data0, event.data1);
                     outproc_deliver_msg(sestate.scene_current, track, &msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
+                    break;
+                case SONG_EVENT_PROGCHG:
+                    // send event directly without note output processing
+                    midi_utils_enc_program_change(&msg, 0, 0, event.data0);
+                    outproc_deliver_msg(sestate.scene_current, track, &msg,
+                        OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);
+                    break;
+                case SONG_EVENT_INTERNAL_CC:
+                    // Applied in the bias-resolution pass before track playback.
                     break;
                 case SONG_EVENT_NULL:
                 default:
@@ -1174,6 +1261,98 @@ void seq_engine_track_set_bias_output(int track, int bias_note) {
         val -= 12;
     }
     sestate.bias_track_output[track] = (bias_note - SEQ_TRANSPOSE_CENTRE);
+}
+
+// apply a transient internal CC to every track which names source_track as Bias Track
+void seq_engine_apply_internal_cc(int source_track, int controller, int value) {
+    int target, motion_length, scaled;
+    if(!midi_ctrl_internal_cc_supported(controller)) {
+        return;
+    }
+    for(target = 0; target < SEQ_NUM_TRACKS; target ++) {
+        if(target == source_track || sestate.bias_track_map[target] != source_track) {
+            continue;
+        }
+        motion_length = seq_engine_get_effective_motion_length(target);
+        scaled = midi_ctrl_internal_cc_to_value(controller, value, motion_length);
+        if(scaled < 0 || sestate.internal_cc[target]
+                [controller - MIDI_CTRL_CC_STEP_LENGTH] == scaled) {
+            continue;
+        }
+        sestate.internal_cc[target]
+            [controller - MIDI_CTRL_CC_STEP_LENGTH] = scaled;
+        seq_engine_refresh_internal_cc_target(target, controller);
+    }
+}
+
+// update cached/runtime modules after a transient override changes
+void seq_engine_refresh_internal_cc_target(int track, int controller) {
+    int divisions;
+    int value = sestate.internal_cc[track]
+        [controller - MIDI_CTRL_CC_STEP_LENGTH];
+    switch(controller) {
+        case MIDI_CTRL_CC_STEP_LENGTH:
+            divisions = seq_utils_step_len_to_bar_divisions(value);
+            sestate.bar_divisions[track] = divisions;
+            sestate.clock_div_count[track] = 0;
+            sestate.bar_div_remainder[track] = 0;
+            if(divisions) {
+                seq_engine_schedule_bar_div_step(track);
+            }
+            else {
+                sestate.step_size[track] = seq_utils_step_len_to_ticks(value);
+            }
+            break;
+        case MIDI_CTRL_CC_TRACK_MUTE:
+            sestate.track_mute[track] = value;
+            if(sestate.track_mute[track]) {
+                seq_engine_track_stop_all_notes(track);
+            }
+            break;
+        case MIDI_CTRL_CC_MOTION_START:
+            sestate.motion_start[track] = value;
+            break;
+        case MIDI_CTRL_CC_MOTION_LENGTH:
+            sestate.motion_len[track] = value;
+            break;
+        case MIDI_CTRL_CC_MOTION_DIR:
+            sestate.dir_reverse[track] = value;
+            break;
+        case MIDI_CTRL_CC_GATE_TIME:
+            sestate.gate_time[track] = value;
+            break;
+        case MIDI_CTRL_CC_ARP_ENABLE:
+            sestate.arp_enable[track] = value;
+            arp_set_arp_enable(track, sestate.arp_enable[track]);
+            if(!sestate.arp_enable[track]) {
+                arp_clear_input(track);
+                seq_engine_track_stop_all_notes(track);
+            }
+            outproc_stop_all_notes(track);
+            break;
+        case MIDI_CTRL_CC_ARP_TYPE:
+            arp_set_type(track, value);
+            break;
+        case MIDI_CTRL_CC_ARP_SPEED:
+            arp_set_speed(track, value);
+            break;
+        case MIDI_CTRL_CC_ARP_GATE_TIME:
+            arp_set_gate_time(track, value);
+            break;
+        default:
+            // Transpose, pattern and Euclidean values are read dynamically.
+            break;
+    }
+}
+
+// discard all transient automation; stored song values remain untouched
+void seq_engine_clear_internal_cc(void) {
+    int track, index;
+    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        for(index = 0; index < 14; index ++) {
+            sestate.internal_cc[track][index] = -1;
+        }
+    }
 }
 
 //
@@ -1871,6 +2050,7 @@ void seq_engine_arp_enable_changed(int scene, int track, int enable) {
 // a song was loaded - time to reset stuff
 void seq_engine_song_loaded(int song) {
     int track, mapnum;
+    seq_engine_clear_internal_cc();
     sestate.scene_current = (SEQ_NUM_SCENES - 1);
     sestate.scene_next = 0;
     seq_engine_set_kbtrans(0);  // reset kbtrans
@@ -1895,22 +2075,40 @@ void seq_engine_recalc_params(void) {
             song_get_key_split(track);
         sestate.bias_track_map[track] =
             song_get_bias_track(sestate.scene_current, track);
-        sestate.arp_enable[track] =
-            song_get_arp_enable(sestate.scene_current, track);
-        sestate.step_size[track] =
-            seq_utils_step_len_to_ticks(song_get_step_length(sestate.scene_current, track));
-        sestate.motion_start[track] =
-            song_get_motion_start(sestate.scene_current, track);
-        sestate.motion_len[track] =
-            song_get_motion_length(sestate.scene_current, track);
-        sestate.dir_reverse[track] =
-            song_get_motion_dir(sestate.scene_current, track);
-        sestate.gate_time[track] =
-            song_get_gate_time(sestate.scene_current, track);
+        sestate.arp_enable[track] = seq_engine_get_internal_cc(track,
+            MIDI_CTRL_CC_ARP_ENABLE,
+            song_get_arp_enable(sestate.scene_current, track));
+        {
+            int step_length = seq_engine_get_internal_cc(track,
+                MIDI_CTRL_CC_STEP_LENGTH,
+                song_get_step_length(sestate.scene_current, track));
+            int divisions = seq_utils_step_len_to_bar_divisions(step_length);
+            if(divisions == 0) {
+                sestate.bar_divisions[track] = 0;
+                sestate.bar_div_remainder[track] = 0;
+                sestate.step_size[track] = seq_utils_step_len_to_ticks(step_length);
+            }
+            else if(divisions != sestate.bar_divisions[track]) {
+                // Start a newly selected bar division from a deterministic phase.
+                sestate.bar_divisions[track] = divisions;
+                sestate.clock_div_count[track] = 0;
+                sestate.bar_div_remainder[track] = 0;
+                seq_engine_schedule_bar_div_step(track);
+            }
+        }
+        sestate.motion_start[track] = seq_engine_get_effective_motion_start(track);
+        sestate.motion_len[track] = seq_engine_get_effective_motion_length(track);
+        sestate.dir_reverse[track] = seq_engine_get_internal_cc(track,
+            MIDI_CTRL_CC_MOTION_DIR,
+            song_get_motion_dir(sestate.scene_current, track));
+        sestate.gate_time[track] = seq_engine_get_internal_cc(track,
+            MIDI_CTRL_CC_GATE_TIME,
+            song_get_gate_time(sestate.scene_current, track));
         sestate.track_type[track] =
             song_get_track_type(track);
-        sestate.track_mute[track] =
-            song_get_mute(sestate.scene_current, track);
+        sestate.track_mute[track] = seq_engine_get_internal_cc(track,
+            MIDI_CTRL_CC_TRACK_MUTE,
+            song_get_mute(sestate.scene_current, track));
         // if we're stopped we need to check if the playback position is
         // outside of the new motion range and correct it if so
         if(!seq_ctrl_get_run_state()) {
@@ -1998,7 +2196,8 @@ int seq_engine_compute_next_pos(int track, int *pos, int change) {
 // chance scenes since we are now synchronized
 // returns 1 if the song was stopped by this function
 int seq_engine_change_scene_synced(void) {
-    int track;
+    int track, mapnum, prog;
+    struct midi_msg send_msg;
     // no change
     if(sestate.scene_current == sestate.scene_next) {
         return 0;
@@ -2011,6 +2210,23 @@ int seq_engine_change_scene_synced(void) {
     }
 
     sestate.scene_current = sestate.scene_next;
+    seq_engine_clear_internal_cc();
+
+    // Send scene-specific programs before any notes for the new scene.
+    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        for(mapnum = 0; mapnum < SEQ_NUM_TRACK_OUTPUTS; mapnum ++) {
+            prog = song_get_scene_midi_program(sestate.scene_current,
+                track, mapnum);
+            if(prog != SONG_MIDI_PROG_NULL &&
+                    song_get_midi_port_map(track, mapnum) != SONG_PORT_DISABLE &&
+                    song_get_midi_port_map(track, mapnum) != MIDI_PORT_CV_OUT) {
+                midi_utils_enc_program_change(&send_msg, 0, 0, prog);
+                outproc_deliver_msg(sestate.scene_current, track, &send_msg,
+                    mapnum, OUTPROC_OUTPUT_RAW);
+            }
+        }
+    }
+
     seq_engine_recalc_params();
     seq_engine_reset_all_tracks_pos();
 
@@ -2045,6 +2261,8 @@ void seq_engine_reset_all_tracks_pos(void) {
     int track;
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         sestate.clock_div_count[track] = 0;
+        sestate.bar_div_remainder[track] = 0;
+        seq_engine_schedule_bar_div_step(track);
         if(sestate.dir_reverse[track]) {
             sestate.step_pos[track] = (sestate.motion_start[track] +
                 sestate.motion_len[track] - 1) & (SEQ_NUM_STEPS - 1);
@@ -2054,6 +2272,25 @@ void seq_engine_reset_all_tracks_pos(void) {
         }
         // fire event
         state_change_fire2(SCE_ENG_ACTIVE_STEP, track, sestate.step_pos[track]);
+    }
+}
+
+// schedule the next interval for a bar-relative step length
+void seq_engine_schedule_bar_div_step(int track) {
+    int divisions, remainder;
+    if(track < 0 || track >= SEQ_NUM_TRACKS) {
+        return;
+    }
+    divisions = sestate.bar_divisions[track];
+    if(divisions == 0) {
+        return;
+    }
+    sestate.step_size[track] = SEQ_ENGINE_BAR_TICKS / divisions;
+    remainder = SEQ_ENGINE_BAR_TICKS % divisions;
+    sestate.bar_div_remainder[track] += remainder;
+    if(sestate.bar_div_remainder[track] >= divisions) {
+        sestate.bar_div_remainder[track] -= divisions;
+        sestate.step_size[track] ++;
     }
 }
 
