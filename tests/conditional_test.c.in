@@ -10,8 +10,8 @@ int main(void) {
     struct track_event gate = {.type = SONG_EVENT_PROBABILITY, .data0 = 100};
     uint32_t saved;
     int i, hits = 0;
-    conditional_reset(&state, 0);
-    conditional_reset(&other, 1);
+    conditional_init(&state, 0);
+    conditional_init(&other, 1);
     assert(state.random != other.random && !state.history);
     assert(conditional_slot(&state, &visit, &note));
     saved = state.random;
@@ -35,8 +35,8 @@ int main(void) {
     assert(!conditional_slot(&state, &visit, &gate));
     conditional_commit(&state, &visit);
     assert(!state.history);
-    conditional_reset(&state, 0);
-    conditional_reset(&other, 0);
+    conditional_init(&state, 0);
+    conditional_init(&other, 0);
     for(i = 0; i < 10000; i ++) {
         int result = conditional_probability(&state, 50);
         assert(result == conditional_probability(&other, 50));
@@ -60,7 +60,7 @@ int main(void) {
             assert(conditional_euclidean(rotation, i, rotation));
         }
     }
-    conditional_reset(&state, 0);
+    conditional_init(&state, 0);
     for(i = 0; i < 840; i ++) conditional_advance(&state);
     assert(state.cycle == 0);
     // Non-Pre is complementary and never contributes, even when it fails.
@@ -96,6 +96,15 @@ int main(void) {
     assert(visit.blocked);
     conditional_commit(&state, &visit);
     assert(state.history);
+    conditional_seed(&state, 0, 123);
+    conditional_seed(&other, 0, 456);
+    assert(state.random != other.random);
+    saved = state.random;
+    state.history = 1; state.cycle = 42;
+    conditional_reset(&state, 0);
+    assert(state.random == saved && !state.history && !state.cycle);
+    conditional_seed(&state, 0, UINT32_C(0x9e3779b9));
+    assert(state.random != 0); // zero-state protection
     puts("conditional tests passed");
     return 0;
 }

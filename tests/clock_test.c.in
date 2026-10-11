@@ -44,7 +44,7 @@ int main(void) {
     put(0, 0, SONG_EVENT_PROBABILITY, 50, 0);
     midi_clock_set_swing(80);
     midi_clock_midi_rx_start(); pump(1000);
-    conditional_reset(&expected, 0);
+    conditional_init(&expected, 0);
     assert(reads[0] > 0 && reads[0] % SEQ_TRACK_POLY == 0);
     {
         int i;

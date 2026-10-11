@@ -75,3 +75,12 @@ parameters/cycle state immediately, but do not reevaluate its gates.
 All sanitized suites fail on undefined-behavior reports. On Apple clang,
 `__weak` is explicitly rebound to the C weak-function attribute for the
 clock callbacks; its built-in Objective-C meaning is not suitable here.
+
+## Revised probability initialization
+
+Probability streams are initialized once at engine startup from the STM32
+hardware random source, with a bounded timing fallback. Musical resets
+clear history and loop position, but preserve probability state. Song loads
+also preserve probability state. Fixed initialization in host fixtures makes
+tests reproducible; it is not the device's startup seed policy. Practical
+hardware testing confirmed different random events after reboot.

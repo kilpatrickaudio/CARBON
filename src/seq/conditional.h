@@ -19,9 +19,24 @@ struct conditional_visit {
     uint8_t any_true;
 };
 
-static inline void conditional_reset(struct conditional_state *state, int track) {
-    state->random = UINT32_C(0x6d2b79f5) ^
+static inline void conditional_seed(struct conditional_state *state, int track,
+        uint32_t seed) {
+    state->random = seed ^
         (UINT32_C(0x9e3779b9) * (uint32_t)(track + 1));
+    // xorshift32 cannot advance from zero.
+    if(!state->random) state->random = UINT32_C(0x6d2b79f5);
+    state->history = 0;
+    state->cycle = 0;
+}
+
+/* Fixed initialization is useful for reproducible host fixtures only. */
+static inline void conditional_init(struct conditional_state *state, int track) {
+    conditional_seed(state, track, UINT32_C(0x6d2b79f5));
+}
+
+/* Musical resets must not restart probability variation. */
+static inline void conditional_reset(struct conditional_state *state, int track) {
+    (void)track;
     state->history = 0;
     state->cycle = 0;
 }

@@ -301,12 +301,12 @@ that were already sounding. Gate events themselves send no MIDI/CV output.
 2. Use Shift + Transpose to cycle to =Prb=, =Euc=, =Pre= or =!Pr=.
 3. Use Transpose for the first value and Velocity for the second value.
 
-| Label | First value                   | Second value        | Default        |
-|-------+-------------------------------+---------------------+----------------|
-| Prb  | Probability 0--100%            | Unused              | 50%            |
-| Euc  | A:B pair, 1:2 through 7:8      | Rotation 0--(B-1)   | 1:2, rotation 0|
-| Pre   | Unused                        | Unused              | Prior history  |
-| !Pr  | Unused                        | Unused              | Inverse history|
+| Label | First value               | Second value      | Default         |
+|-------+---------------------------+-------------------+-----------------|
+| Prb   | Probability 0--100%       | Unused            | 50%             |
+| Euc   | A:B pair, 1:2 through 7:8 | Rotation 0--(B-1) | 1:2, rotation 0 |
+| Pre   | Unused                    | Unused            | Prior history   |
+| !Pr   | Unused                    | Unused            | Inverse history |
 
 There are 28 Euclidean pairs, ordered by increasing B, then increasing A.
 Changing the pair normalizes rotation modulo the new B. Rotation moves one
@@ -320,8 +320,12 @@ Preview and display redraws do not draw probability or change gate history.
 
 0% always fails; 100% always passes. Each evaluated probability gate draws
 once, and its result is shared across Bias Track/CCi and audible playback.
-Skipped gates do not draw. Each track has an independent repeatable stream:
-resetting restores its initial seed. Magic/editing do not change that stream.
+Skipped gates do not draw. Each track has its own probability sequence.
+It continues across Reset/Start, track resets and song loads. At startup,
+the hardware random generator supplies a changing seed, so power-cycling
+can produce different sequences. A bounded timing-based fallback is used
+if hardware randomness is unavailable; different startup results are not
+guaranteed in that fallback case. Magic/editing do not change these streams.
 
 Example: put an unconditional Note in slot 1, a 25% gate in slot 2, then an
 accent Note and CC in slots 3--4. The first Note always plays; the accent
@@ -383,7 +387,8 @@ resolution of cyclic automation relationships.
 ** Reset and scene boundaries
 
 Initialization, song load, transport Reset/MIDI Start and explicit track
-reset clear history, restore cycle zero and restore probability seeds.
+reset clear history and restore cycle zero, but preserve the probability
+generator's current state.
 Stop/Continue preserve conditions. Panel Run requests Continue; use Reset
 when you want to restart variation. Scenes preserve conditional state,
 unlike CCi overrides, which clear on scene activation. Only configuration

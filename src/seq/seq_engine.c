@@ -22,6 +22,7 @@
  */
 #include "seq_engine.h"
 #include "conditional.h"
+#include "../util/probability_seed.h"
 #include "seq_ctrl.h"
 #include "arp.h"
 #include "metronome.h"
@@ -182,6 +183,7 @@ int seq_engine_check_key_split_range(int mode, int note);
 // init the sequencer engine
 void seq_engine_init(void) {
     int i, j;
+    uint32_t probability_seed = probability_startup_seed();
 
     // init submodules
     arp_init();
@@ -204,7 +206,7 @@ void seq_engine_init(void) {
 
     // reset playback info
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
-        conditional_reset(&sestate.conditions[j], j);
+        conditional_seed(&sestate.conditions[j], j, probability_seed);
         sestate.bias_track_output[j] = 0;
         sestate.bar_divisions[j] = 0;
         sestate.bar_div_remainder[j] = 0;

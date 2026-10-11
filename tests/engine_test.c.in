@@ -108,7 +108,7 @@ static void setup(void) {
     selected = -1;
     seq_engine_clear_internal_cc();
     for(t = 0; t < SEQ_NUM_TRACKS; t ++) {
-        conditional_reset(&sestate.conditions[t], t);
+        conditional_init(&sestate.conditions[t], t);
         sestate.bias_track_map[t] = SONG_TRACK_BIAS_NULL;
         sestate.motion_len[t] = 8;
         sestate.step_size[t] = 24;
@@ -215,6 +215,7 @@ static void test_mask_mute_and_reset(void) {
     assert(sestate.conditions[0].history);
     seq_engine_reset_all_tracks_pos();
     assert(sestate.conditions[0].history); // scene position helper preserves state
+    seed = sestate.conditions[0].random;
     seq_engine_reset_track(0);
     assert(!sestate.conditions[0].history && sestate.conditions[0].random == seed);
 }
@@ -249,7 +250,7 @@ static void test_cross_track_tick(void) {
 static void test_tick_loop(void) {
     int mode;
     for(mode = 0; mode < 3; mode ++) {
-        uint32_t seed, evaluated;
+        uint32_t evaluated;
         setup();
         enabled[0] = 1;
         sestate.clock_div_count[0] = 0;
@@ -259,7 +260,6 @@ static void test_tick_loop(void) {
         put(0, 2, SONG_EVENT_NOTE, 67, 100);
         if(mode == 1) sestate.track_mute[0] = 1;
         if(mode == 2) { live_mode = SEQ_CTRL_LIVE_ON; selected = 0; }
-        seed = sestate.conditions[0].random;
         seq_engine_run(1);
         assert(sestate.track_mute[1] && sestate.conditions[0].history);
         assert(reads[0] == SEQ_TRACK_POLY);
@@ -276,7 +276,7 @@ static void test_tick_loop(void) {
         running = 0;
         seq_engine_run(0);
         assert(!sestate.conditions[0].history);
-        assert(sestate.conditions[0].random == seed);
+        assert(sestate.conditions[0].random == evaluated);
     }
     // A masked visit advances motion but performs no reads or random draws.
     setup();
