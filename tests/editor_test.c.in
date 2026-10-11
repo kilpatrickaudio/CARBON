@@ -6,6 +6,13 @@
 static struct track_event events[SEQ_TRACK_POLY];
 static struct midi_msg output[32];
 static int count, running;
+static int bias_targets[SEQ_NUM_TRACKS] = {-1,-1,-1,-1,-1,-1};
+static int target_lengths[SEQ_NUM_TRACKS] = {64,64,64,64,64,64};
+static int current_scene;
+int song_get_bias_track(int scene, int track) { return bias_targets[track]; }
+int song_get_motion_length(int scene, int track) { return 64; }
+int seq_engine_get_current_scene(void) { return current_scene; }
+int seq_engine_get_effective_motion_length(int track) { return target_lengths[track]; }
 static char rows[4][64];
 int seq_ctrl_get_run_state(void) { return running; }
 int seq_ctrl_get_scene(void) { return 0; }
@@ -158,7 +165,10 @@ int main(void) {
     assert(step_edit_adjust_cci_value(18, 127, -1) == 0);
     assert(step_edit_adjust_cci_value(17, 0, 1) == 18); // -24 -> -23
     assert(step_edit_adjust_cci_value(17, 64, 1) == 66);
-    assert(step_edit_adjust_cci_value(29, 64, 1) == 65);
+    assert(step_edit_adjust_cci_value(29, 64, 1) == 66);
+    assert(step_edit_adjust_cci_value(29, 0, -1) == 0);
+    assert(step_edit_adjust_cci_value(29, 126, 1) == 127);
+    assert(step_edit_adjust_cci_value(29, 127, -1) == 125);
     for(int cc = 16; cc <= 28; cc++) {
         int raw = 0, visits = 1;
         while(step_edit_adjust_cci_value(cc, raw, 1) != raw) { raw = step_edit_adjust_cci_value(cc, raw, 1); visits++; assert(visits <= 128); }
@@ -176,5 +186,35 @@ int main(void) {
     events[0].type = SONG_EVENT_INTERNAL_CC; events[0].data1 = 0;
     step_edit_adjust_velocity(1, 0); assert(events[0].data1 == 64);
     step_edit_adjust_velocity(-1, 0); assert(events[0].data1 == 0);
+    { char title[64];
+      step_edit_cci_value_title(title, 29, 127);
+      assert(!strcmp(title, "CCi 29: No Bias target"));
+      bias_targets[0] = 0; // self is not a receiving track
+      bias_targets[1] = bias_targets[4] = 0;
+      target_lengths[1] = 64; target_lengths[4] = 16;
+      step_edit_cci_value_title(title, 29, 127);
+      assert(!strcmp(title, "CCi 29: T2 Rot 63/64"));
+      for(int len = 1; len <= 64; len++) {
+          target_lengths[1] = len;
+          for(int raw = 0; raw <= 127; raw++) {
+              char expected[64];
+              snprintf(expected, sizeof(expected), "CCi 29: T2 Rot %d/%d", (raw * len) / 128, len);
+              step_edit_cci_value_title(title, 29, raw);
+              assert(!strcmp(title, expected) && strlen(title) <= 28);
+          }
+      }
+      events[0] = (struct track_event){.type = SONG_EVENT_INTERNAL_CC, .data0 = 29, .data1 = 126};
+      target_lengths[1] = 64; step_edit_adjust_velocity(1, 0);
+      assert(events[0].data1 == 127 && !strcmp(rows[0], "CCi 29: T2 Rot 63/64"));
+      char lower[3][64]; memcpy(lower, rows + 1, sizeof(lower));
+      target_lengths[1] = 16; sedits.edit_timeout = 10000;
+      for(int tick = 0; tick < 100; tick++) step_edit_timer_task();
+      assert(!strcmp(rows[0], "CCi 29: T2 Rot 15/16"));
+      assert(!memcmp(lower, rows + 1, sizeof(lower)) && !count);
+      bias_targets[1] = -1; step_edit_cci_value_title(title, 29, 127);
+      assert(!strcmp(title, "CCi 29: T5 Rot 15/16"));
+      current_scene = 1; step_edit_cci_value_title(title, 29, 127);
+      assert(!strcmp(title, "CCi 29: T5 Rot 63/64"));
+    }
     puts("editor tests passed"); return 0;
 }

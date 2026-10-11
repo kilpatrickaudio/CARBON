@@ -28,6 +28,7 @@
 #include "../seq/arp.h"
 #include "../seq/midi_ctrl.h"
 #include "../seq/seq_ctrl.h"
+#include "../seq/seq_engine.h"
 #include "../seq/song.h"
 #include "../util/log.h"
 #include "../util/panel_utils.h"
@@ -103,7 +104,11 @@ void step_edit_init(void) {
 // run step edit timer task
 void step_edit_timer_task(void) {
     if(sedits.enable && sedits.cci_hint_timeout > 0) {
-        if(--sedits.cci_hint_timeout == 0) step_edit_update_title();
+        if(--sedits.cci_hint_timeout == 0 ||
+                (sedits.cci_hint_show_value &&
+                 sedits.cci_hint_controller == MIDI_CTRL_CC_EUCLIDEAN_ROTATION &&
+                 sedits.cci_hint_timeout % 100 == 0))
+            step_edit_update_title();
     }
     // time out step edit mode
     if(sedits.edit_timeout) {
@@ -406,9 +411,9 @@ static int step_edit_adjust_cci_value(int controller, int raw, int change) {
     int decoded, next, candidate;
     if(!change) return raw;
     if(controller == MIDI_CTRL_CC_EUCLIDEAN_ROTATION) {
-        // Multiple Bias targets can have different motion lengths: every raw
-        // value may matter. Do not discard fractions based on the source length.
-        return seq_utils_clamp(raw + change, 0, 127);
+        // Usability compromise: retain intermediate fractions for all targets,
+        // rather than skipping buckets based on the first target's length.
+        return seq_utils_clamp(raw + change * 2, 0, 127);
     }
     if(!midi_ctrl_internal_cc_supported(controller))
         return seq_utils_clamp(raw + change * 2, 0, 127);
@@ -718,10 +723,24 @@ static void step_edit_cci_value_title(char *title, int controller, int raw) {
             label = "Euc density";
             snprintf(value, sizeof(value), "%d%%", decoded);
             break;
-        case MIDI_CTRL_CC_EUCLIDEAN_ROTATION:
-            // CCi routes to potentially several target lengths, not this source.
-            snprintf(title, GFX_LABEL_LEN, "CCi 29: Rot %d/128 of len", raw);
+        case MIDI_CTRL_CC_EUCLIDEAN_ROTATION: {
+            int target, length;
+            for(target = 0; target < SEQ_NUM_TRACKS; target++) {
+                if(target == sedits.track ||
+                        song_get_bias_track(sedits.scene, target) != sedits.track) continue;
+                // Only the active scene has live CCi overrides.
+                length = sedits.scene == seq_engine_get_current_scene()
+                    ? seq_engine_get_effective_motion_length(target)
+                    : song_get_motion_length(sedits.scene, target);
+                length = seq_utils_clamp(length, 1, SEQ_NUM_STEPS);
+                decoded = midi_ctrl_internal_cc_to_value(controller, raw, length);
+                snprintf(title, GFX_LABEL_LEN, "CCi 29: T%d Rot %d/%d",
+                    target + 1, decoded, length);
+                return;
+            }
+            snprintf(title, GFX_LABEL_LEN, "CCi 29: No Bias target");
             return;
+        }
         default:
             snprintf(value, sizeof(value), "%d", raw);
             break;
