@@ -45,6 +45,7 @@
 // constants
 #define STEP_EDIT_EVENT_POS_ALL -1
 #define STEP_EDIT_NOTE_SLOT_FREE -1
+#define STEP_EDIT_CCI_HINT_MS 2000
 
 struct step_edit_state {
     int enable;  // 0 = disabled, 1 = enabled
@@ -53,6 +54,8 @@ struct step_edit_state {
     int track;  // selected edit track
     int step_pos;  // current step pos for editing
     int event_pos;  // the event edit pos or STEP_EDIT_EVENT_POS_ALL for global
+    int cci_hint_timeout;  // milliseconds remaining for title help
+    int cci_hint_controller;
     int last_adjust_type;  // the last type of adjustment
     // preview events
     int8_t playing_notes[SEQ_TRACK_POLY];  // playing notes
@@ -65,6 +68,8 @@ struct step_edit_state sedits;
 // local functions
 void step_edit_adjust_step(int change, int mode, int single, int shift);
 void step_edit_update_display(void);
+static void step_edit_update_title(void);
+static void step_edit_show_cci_hint(void);
 void step_edit_play_step(void);
 void step_edit_stop_notes(void);
 void step_edit_send_note_on(int note, int velocity);
@@ -81,6 +86,7 @@ int step_edit_does_step_contain_event(int type, int data0);
 void step_edit_init(void) {
     sedits.enable = 0;
     sedits.edit_timeout = 0;
+    sedits.cci_hint_timeout = 0;
     sedits.scene = 0;
     sedits.track = 0;
     sedits.step_pos = 0;
@@ -93,6 +99,9 @@ void step_edit_init(void) {
 
 // run step edit timer task
 void step_edit_timer_task(void) {
+    if(sedits.enable && sedits.cci_hint_timeout > 0) {
+        if(--sedits.cci_hint_timeout == 0) step_edit_update_title();
+    }
     // time out step edit mode
     if(sedits.edit_timeout) {
         sedits.edit_timeout --;
@@ -198,6 +207,7 @@ int step_edit_get_enable(void) {
 
 // start and stop step edit mode
 void step_edit_set_enable(int enable) {
+    sedits.cci_hint_timeout = 0;
     // start edit
     if(enable) {
         // we're already editing - just trigger the note
@@ -235,11 +245,13 @@ void step_edit_set_enable(int enable) {
 void step_edit_adjust_cursor(int change, int shift) {
     int val;
     sedits.edit_timeout = panel_menu_get_timeout();
+    sedits.cci_hint_timeout = 0;
 
     // select event pos
     if(shift) {
         sedits.event_pos = seq_utils_clamp(sedits.event_pos + change,
             STEP_EDIT_EVENT_POS_ALL, SEQ_TRACK_POLY - 1);
+        step_edit_show_cci_hint();
         step_edit_update_display();
     }
     // select step
@@ -308,6 +320,8 @@ void step_edit_adjust_note(int change, int shift) {
         }
         song_set_step_event(sedits.scene, sedits.track, sedits.step_pos,
             sedits.event_pos, &event);
+        sedits.cci_hint_timeout = 0;
+        step_edit_show_cci_hint();
         step_edit_update_display();
         return;
     }
@@ -362,6 +376,7 @@ void step_edit_adjust_ratchet_mode(int change, int shift) {
 
 // clear the current step
 void step_edit_clear_step(void) {
+    sedits.cci_hint_timeout = 0;
     sedits.edit_timeout = panel_menu_get_timeout();
     step_edit_stop_notes();
     // clear specific event
@@ -501,6 +516,10 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                         event.data0 = seq_utils_clamp(event.data0 + change,
                             MIDI_CTRL_CC_STEP_LENGTH,
                             MIDI_CTRL_CC_EUCLIDEAN_ROTATION);
+                        if(single) {
+                            sedits.cci_hint_controller = event.data0;
+                            sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
+                        }
                         inhibit_preview = 1;
                     }
                     // probability occupies the first numeric field only
@@ -581,15 +600,47 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
     }
 }
 
+// CCi descriptions match the manual's internal stepped automation table.
+static const char *step_edit_cci_name(int controller) {
+    static const char *const names[] = {
+        "Step length", "Track transpose", "Track mute", "Motion start",
+        "Motion length", "Motion direction", "Gate time", "Pattern type",
+        "Arp enable", "Arp type", "Arp speed", "Arp gate time",
+        "Euclidean density", "Euclidean rotation"
+    };
+    if(controller < MIDI_CTRL_CC_STEP_LENGTH || controller > MIDI_CTRL_CC_EUCLIDEAN_ROTATION)
+        return NULL;
+    return names[controller - MIDI_CTRL_CC_STEP_LENGTH];
+}
+
+static void step_edit_show_cci_hint(void) {
+    struct track_event event;
+    if(sedits.event_pos < 0) return;
+    if(song_get_step_event(sedits.scene, sedits.track, sedits.step_pos,
+            sedits.event_pos, &event) == -1 || event.type != SONG_EVENT_INTERNAL_CC ||
+            !step_edit_cci_name(event.data0)) return;
+    sedits.cci_hint_controller = event.data0;
+    sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
+}
+
+static void step_edit_update_title(void) {
+    char title[GFX_LABEL_LEN];
+    const char *name = step_edit_cci_name(sedits.cci_hint_controller);
+    if(sedits.cci_hint_timeout > 0 && name)
+        snprintf(title, sizeof(title), "CCi %d: %s", sedits.cci_hint_controller, name);
+    else
+        snprintf(title, sizeof(title), "Edit - Track: %2d Step: %2d",
+            sedits.track + 1, sedits.step_pos + 1);
+    gui_set_status_text(0, title);
+}
+
 // update the display
 void step_edit_update_display(void) {
     int i, xpos, temp;
     char tempstr[GFX_LABEL_LEN];
     struct track_event event;
     gui_clear_status_text_all();
-    sprintf(tempstr, "Edit - Track: %2d Step: %2d",
-        (sedits.track + 1), (sedits.step_pos + 1));
-    gui_set_status_text(0, tempstr);
+    step_edit_update_title();
 
     // left title
     gui_set_status_text_part(1, 0, 3, "R  ");  // ratchet title

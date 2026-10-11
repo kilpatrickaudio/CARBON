@@ -9,6 +9,12 @@ static int count, running;
 static char rows[4][64];
 int seq_ctrl_get_run_state(void) { return running; }
 int seq_ctrl_get_scene(void) { return 0; }
+int seq_ctrl_get_first_track(void) { return 0; }
+void panel_menu_set_mode(int mode) {}
+void gui_grid_clear_overlay(void) {}
+void gui_grid_set_overlay_enable(int enable) {}
+void gui_grid_set_overlay_color(int step, int color) {}
+void gui_set_status_override(int enable) {}
 int panel_menu_get_timeout(void) { return 100; }
 int song_get_step_length(int scene, int track) { return 0; }
 int song_get_ratchet_mode(int scene, int track, int step) { return 1; }
@@ -25,7 +31,9 @@ int song_set_step_event(int scene, int track, int step, int slot, struct track_e
     events[slot] = *e; return 0;
 }
 void gui_clear_status_text_all(void) { memset(rows, ' ', sizeof(rows)); }
-void gui_set_status_text(int row, char *s) {}
+void gui_set_status_text(int row, char *s) {
+    assert(strlen(s) <= 28); snprintf(rows[row], sizeof(rows[row]), "%s", s);
+}
 void gui_set_status_text_part(int row, int pos, int width, char *s) {
     int len = strlen(s); assert(len <= width);
     memset(rows[row] + pos, ' ', width); memcpy(rows[row] + pos, s, len);
@@ -90,5 +98,27 @@ int main(void) {
     step_edit_run(1); assert(count == 4 && output[3].status == MIDI_NOTE_OFF);
     running = 1; step_edit_play_step(); assert(count == 4);
     step_edit_update_display(); assert(count == 4);
+    setup(); sedits.enable = 1; sedits.event_pos = -1;
+    events[0] = (struct track_event){.type = SONG_EVENT_INTERNAL_CC, .data0 = 16, .data1 = 64};
+    step_edit_adjust_cursor(1, 1);
+    assert(!strcmp(rows[0], "CCi 16: Step length"));
+    for(int cc = 16; cc <= 29; cc++) {
+        char expected[64];
+        events[0].data0 = cc; step_edit_adjust_note(0, 0);
+        snprintf(expected, sizeof(expected), "CCi %d: %s", cc, step_edit_cci_name(cc));
+        assert(!strcmp(rows[0], expected));
+        assert(sedits.cci_hint_timeout == 2000 && !count);
+    }
+    sedits.edit_timeout = 10000;
+    for(int tick = 0; tick < 1999; tick++) step_edit_timer_task();
+    assert(!strcmp(rows[0], "CCi 29: Euclidean rotation"));
+    char lower[3][64]; memcpy(lower, rows + 1, sizeof(lower));
+    step_edit_timer_task();
+    assert(!strcmp(rows[0], "Edit - Track:  1 Step:  1"));
+    assert(!memcmp(lower, rows + 1, sizeof(lower)) && !count);
+    step_edit_adjust_note(-1, 0); assert(!strcmp(rows[0], "CCi 28: Euclidean density"));
+    step_edit_adjust_cursor(1, 1);
+    assert(!sedits.cci_hint_timeout && !strcmp(rows[0], "Edit - Track:  1 Step:  1"));
+    assert(!step_edit_cci_name(15) && !step_edit_cci_name(30));
     puts("editor tests passed"); return 0;
 }
