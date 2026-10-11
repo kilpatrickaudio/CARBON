@@ -21,6 +21,7 @@
  *
  */
 #include "seq_engine.h"
+#include "conditional.h"
 #include "seq_ctrl.h"
 #include "arp.h"
 #include "metronome.h"
@@ -91,6 +92,7 @@ struct seq_engine_state {
     int bar_div_remainder[SEQ_NUM_TRACKS];  // fractional-tick error for bar divisions
     int step_pos[SEQ_NUM_TRACKS];  // current step position
     int bias_track_output[SEQ_NUM_TRACKS];  // bias track output
+    struct conditional_state conditions[SEQ_NUM_TRACKS];
     int16_t internal_cc[SEQ_NUM_TRACKS][14];  // CC 16-29; -1 = inactive
     int kbtrans;  // keyboard transpose state for tracks (no effect during song mode)
     int autolive;  // the autolive state
@@ -121,7 +123,16 @@ void seq_engine_song_mode_enable_changed(int enable);
 int seq_engine_song_mode_find_next_scene(int current_entry);
 int seq_engine_song_mode_load_entry(int entry);
 // track event handlers
-void seq_engine_track_play_step(int track, int step);
+struct seq_engine_step_visit {
+    struct track_event events[SEQ_TRACK_POLY];
+    uint8_t slots;
+    uint8_t prepared;
+};
+static void seq_engine_prepare_step(int track, struct seq_engine_step_visit *visit);
+void seq_engine_track_play_step(int track, int step,
+    const struct seq_engine_step_visit *visit);
+static void seq_engine_prepare_visits(struct seq_engine_step_visit *visits);
+static void seq_engine_set_direction(int track, int reverse);
 void seq_engine_track_start_note(int track, int step, int length, struct midi_msg *on_msg);
 void seq_engine_track_manage_notes(int track);
 void seq_engine_track_stop_all_notes(int track);
@@ -193,6 +204,7 @@ void seq_engine_init(void) {
 
     // reset playback info
     for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
+        conditional_reset(&sestate.conditions[j], j);
         sestate.bias_track_output[j] = 0;
         sestate.bar_divisions[j] = 0;
         sestate.bar_div_remainder[j] = 0;
@@ -221,6 +233,9 @@ void seq_engine_init(void) {
 
     // build the cache
     seq_engine_recalc_params();
+    for(j = 0; j < SEQ_NUM_TRACKS; j ++) {
+        conditional_reset(&sestate.conditions[j], j);
+    }
 
     // register for events
     state_change_register(seq_engine_handle_state_change, SCEC_SONG);
@@ -302,11 +317,14 @@ void seq_engine_timer_task(void) {
 
 // run the sequencer - called on each clock tick
 void seq_engine_run(uint32_t tick_count) {
-    struct track_event event;
-    int i, track, live_active, bias_note_found;
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    int track, live_active;
 
     // position was reset
     if(tick_count == 0) {
+        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+            conditional_reset(&sestate.conditions[track], track);
+        }
         seq_engine_clear_internal_cc();
         seq_engine_recalc_params();
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
@@ -318,6 +336,10 @@ void seq_engine_run(uint32_t tick_count) {
                 song_get_arp_gate_time(sestate.scene_current, track));
         }
         seq_engine_reset_all_tracks_pos();
+        // Reset wins over direction differences introduced by parameter refresh.
+        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+            conditional_reset(&sestate.conditions[track], track);
+        }
     }
 
     // other engine music tasks
@@ -351,33 +373,7 @@ void seq_engine_run(uint32_t tick_count) {
             seq_engine_change_scene_synced();
         }
 
-        // resolve bias track outputs (before step playback on each track)
-        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
-            // run the step
-            if(sestate.clock_div_count[track] == 0) {
-                // get events that are on this step
-                if(pattern_get_step_enable(sestate.scene_current, track,
-                        seq_engine_get_effective_pattern_type(track),
-                        sestate.step_pos[track])) {
-                    // The first Note updates pitch bias; all CCi events update
-                    // transient parameters on tracks using this Bias Track.
-                    bias_note_found = 0;
-                    for(i = 0; i < SEQ_TRACK_POLY; i ++) {
-                        if(song_get_step_event(sestate.scene_current, track,
-                                sestate.step_pos[track], i, &event) != -1) {
-                            if(event.type == SONG_EVENT_NOTE && !bias_note_found) {
-                                seq_engine_track_set_bias_output(track, event.data0);
-                                bias_note_found = 1;
-                            }
-                            else if(event.type == SONG_EVENT_INTERNAL_CC) {
-                                seq_engine_apply_internal_cc(track,
-                                    event.data0, event.data1);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        seq_engine_prepare_visits(visits);
 
         // process track notes / recording start/stop
         for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
@@ -431,7 +427,8 @@ void seq_engine_run(uint32_t tick_count) {
                             seq_engine_get_effective_pattern_type(track),
                             sestate.step_pos[track])) {
                     // play the events on this step
-                    seq_engine_track_play_step(track, sestate.step_pos[track]);
+                    seq_engine_track_play_step(track, sestate.step_pos[track],
+                        &visits[track]);
                 }
 
                 // fire event
@@ -537,6 +534,7 @@ void seq_engine_reset_track(int track) {
         return;
     }
     seq_engine_cancel_pending_scene_change();
+    conditional_reset(&sestate.conditions[track], track);
     sestate.clock_div_count[track] = 0;
     sestate.bar_div_remainder[track] = 0;
     seq_engine_schedule_bar_div_step(track);
@@ -987,7 +985,57 @@ int seq_engine_song_mode_load_entry(int entry) {
 //
 // track event handling
 //
-void seq_engine_track_play_step(int track, int step) {
+// Resolve newly eligible tracks to a bounded fixed point before playback.
+static void seq_engine_prepare_visits(struct seq_engine_step_visit *visits) {
+    int track;
+    // Resolve each eligible visit once. CCi can make an earlier track
+    // newly due or unmask it; bounded rescans handle those targets before
+    // audible playback. Prepared tracks never evaluate twice on this tick.
+    {
+        int pass, prepared;
+        for(pass = 0; pass < SEQ_NUM_TRACKS; pass ++) {
+            prepared = 0;
+            for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+                if(!visits[track].prepared &&
+                        sestate.clock_div_count[track] == 0 &&
+                        pattern_get_step_enable(sestate.scene_current, track,
+                            seq_engine_get_effective_pattern_type(track),
+                            sestate.step_pos[track])) {
+                    seq_engine_prepare_step(track, &visits[track]);
+                    prepared = 1;
+                }
+            }
+            if(!prepared) break;
+        }
+    }
+
+}
+
+// Ordered gates and control resolution share one event snapshot with playback.
+static void seq_engine_prepare_step(int track, struct seq_engine_step_visit *visit) {
+    struct conditional_visit gates = {0};
+    struct track_event *event;
+    int i, bias_note_found = 0;
+    visit->prepared = 1;
+    for(i = 0; i < SEQ_TRACK_POLY; i ++) {
+        event = &visit->events[i];
+        if(song_get_step_event(sestate.scene_current, track,
+                sestate.step_pos[track], i, event) == -1) continue;
+        if(!conditional_slot(&sestate.conditions[track], &gates, event)) continue;
+        visit->slots |= 1u << i;
+        if(event->type == SONG_EVENT_NOTE && !bias_note_found) {
+            seq_engine_track_set_bias_output(track, event->data0);
+            bias_note_found = 1;
+        }
+        else if(event->type == SONG_EVENT_INTERNAL_CC) {
+            seq_engine_apply_internal_cc(track, event->data0, event->data1);
+        }
+    }
+    conditional_commit(&sestate.conditions[track], &gates);
+}
+
+void seq_engine_track_play_step(int track, int step,
+        const struct seq_engine_step_visit *visit) {
     int i, bias, temp;
     struct track_event event;
     struct midi_msg msg;
@@ -995,7 +1043,8 @@ void seq_engine_track_play_step(int track, int step) {
     // play each event on the step
     for(i = 0; i < SEQ_TRACK_POLY; i ++) {
         // get the event and make sure it's valid
-        if(song_get_step_event(sestate.scene_current, track, step, i, &event) != -1) {
+        if(visit->slots & (1u << i)) {
+            event = visit->events[i];
             // handle event types
             switch(event.type) {
                 case SONG_EVENT_NOTE:
@@ -1316,7 +1365,7 @@ void seq_engine_refresh_internal_cc_target(int track, int controller) {
             sestate.motion_len[track] = value;
             break;
         case MIDI_CTRL_CC_MOTION_DIR:
-            sestate.dir_reverse[track] = value;
+            seq_engine_set_direction(track, value);
             break;
         case MIDI_CTRL_CC_GATE_TIME:
             sestate.gate_time[track] = value;
@@ -2050,6 +2099,9 @@ void seq_engine_arp_enable_changed(int scene, int track, int enable) {
 // a song was loaded - time to reset stuff
 void seq_engine_song_loaded(int song) {
     int track, mapnum;
+    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        conditional_reset(&sestate.conditions[track], track);
+    }
     seq_engine_clear_internal_cc();
     sestate.scene_current = (SEQ_NUM_SCENES - 1);
     sestate.scene_next = 0;
@@ -2062,6 +2114,9 @@ void seq_engine_song_loaded(int song) {
     }
     sestate.autolive = song_get_midi_autolive();
     seq_engine_recalc_params();
+    for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        conditional_reset(&sestate.conditions[track], track);
+    }
 }
 
 // recalculate the running parameters from the song
@@ -2098,9 +2153,9 @@ void seq_engine_recalc_params(void) {
         }
         sestate.motion_start[track] = seq_engine_get_effective_motion_start(track);
         sestate.motion_len[track] = seq_engine_get_effective_motion_length(track);
-        sestate.dir_reverse[track] = seq_engine_get_internal_cc(track,
+        seq_engine_set_direction(track, seq_engine_get_internal_cc(track,
             MIDI_CTRL_CC_MOTION_DIR,
-            song_get_motion_dir(sestate.scene_current, track));
+            song_get_motion_dir(sestate.scene_current, track)));
         sestate.gate_time[track] = seq_engine_get_internal_cc(track,
             MIDI_CTRL_CC_GATE_TIME,
             song_get_gate_time(sestate.scene_current, track));
@@ -2156,15 +2211,28 @@ int seq_engine_is_first_step(int track) {
 
 // move to the next step on a track - this handles direction of playback
 // returns 1 if the position wrapped around to the start/end
-int seq_engine_move_to_next_step(int track) {
-    // backwards
-    if(sestate.dir_reverse[track]) {
-        return seq_engine_compute_next_pos(track,
-            &sestate.step_pos[track], -1);
+static void seq_engine_set_direction(int track, int reverse) {
+    reverse = !!reverse;
+    if(sestate.dir_reverse[track] != reverse) {
+        sestate.dir_reverse[track] = reverse;
+        conditional_advance(&sestate.conditions[track]);
     }
-    // forwards
-    return seq_engine_compute_next_pos(track,
-        &sestate.step_pos[track], 1);
+}
+
+int seq_engine_move_to_next_step(int track) {
+    int oldpos = sestate.step_pos[track];
+    int start = sestate.motion_start[track];
+    int length = sestate.motion_len[track];
+    int reverse = sestate.dir_reverse[track];
+    int in_window = ((oldpos - start) & (SEQ_NUM_STEPS - 1)) < length;
+    int boundary = reverse ? oldpos == start :
+        oldpos == ((start + length - 1) & (SEQ_NUM_STEPS - 1));
+    int wrapped = seq_engine_compute_next_pos(track,
+        &sestate.step_pos[track], reverse ? -1 : 1);
+    // A full 64-step window wraps naturally in the position bitmask, so
+    // compute_next_pos alone cannot detect its completed loops.
+    if(in_window && boundary) conditional_advance(&sestate.conditions[track]);
+    return wrapped;
 }
 
 // compute the position of the next step and return it - handling wrapping

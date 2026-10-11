@@ -1,0 +1,56 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later
+ * Production clock plus engine fixtures. Callbacks match seq_ctrl routing.
+ */
+#define CARBON_TEST_CLOCK
+#define main engine_fixture_tests
+#include "engine_test.c.in"
+#undef main
+void midi_clock_ticked_swing(uint32_t tick) { seq_engine_run(tick); }
+void midi_clock_beat_crossed(void) { sestate.beat_cross = 1; }
+void midi_clock_run_state_changed(int run) { running = run; }
+static void pump(int milliseconds) {
+    int i; for(i = 0; i < milliseconds; i ++) midi_clock_timer_task();
+}
+int main(void) {
+    struct conditional_state expected;
+    setup(); midi_clock_init();
+    // Keep events masked so transport tests cannot overwrite gate history.
+    sestate.conditions[0].history = 1;
+    sestate.conditions[0].cycle = 15;
+    midi_clock_midi_rx_start(); pump(8);
+    assert(midi_clock_get_running());
+    assert(!sestate.conditions[0].history && !sestate.conditions[0].cycle);
+    sestate.conditions[0].history = 1;
+    sestate.conditions[0].cycle = 17;
+    expected = sestate.conditions[0];
+    midi_clock_midi_rx_stop(); pump(20);
+    assert(!midi_clock_get_running());
+    assert(sestate.conditions[0].history == expected.history);
+    assert(sestate.conditions[0].random == expected.random);
+    assert(sestate.conditions[0].cycle == expected.cycle);
+    midi_clock_midi_rx_continue(); pump(8);
+    assert(midi_clock_get_running());
+    assert(sestate.conditions[0].history == expected.history);
+    assert(sestate.conditions[0].cycle == expected.cycle);
+    midi_clock_request_reset_pos(); pump(8);
+    assert(!sestate.conditions[0].history && !sestate.conditions[0].cycle);
+    // Swing can issue several engine passes at the same straight tick.
+    // The clock must still leave gate state untouched on masked visits.
+    midi_clock_set_swing(80); pump(600);
+    assert(!sestate.conditions[0].history);
+    // Repeated swing passes still draw once per visited gate, not per pass.
+    setup(); midi_clock_init();
+    enabled[0] = 1;
+    put(0, 0, SONG_EVENT_PROBABILITY, 50, 0);
+    midi_clock_set_swing(80);
+    midi_clock_midi_rx_start(); pump(1000);
+    conditional_reset(&expected, 0);
+    assert(reads[0] > 0 && reads[0] % SEQ_TRACK_POLY == 0);
+    {
+        int i;
+        for(i = 0; i < reads[0] / SEQ_TRACK_POLY; i ++)
+            conditional_probability(&expected, 50);
+    }
+    assert(sestate.conditions[0].random == expected.random);
+    puts("clock integration tests passed"); return 0;
+}

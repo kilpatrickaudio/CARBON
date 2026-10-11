@@ -19,6 +19,7 @@
  *
  */
 #include "step_edit.h"
+#include "../seq/conditional.h"
 #include "gui.h"
 #include "panel_menu.h"
 #include "../config.h"
@@ -271,57 +272,39 @@ void step_edit_adjust_note(int change, int shift) {
     if(shift && sedits.event_pos != STEP_EDIT_EVENT_POS_ALL &&
             song_get_step_event(sedits.scene, sedits.track, sedits.step_pos,
             sedits.event_pos, &event) != -1) {
-        if(change > 0) {
-            if(event.type == SONG_EVENT_NOTE) {
-                event.type = SONG_EVENT_CC;
-                event.data0 = STEP_EDIT_NEW_CC;
-                event.data1 = STEP_EDIT_NEW_CC_VAL;
-            }
-            else if(event.type == SONG_EVENT_CC) {
-                event.type = SONG_EVENT_INTERNAL_CC;
-                event.data0 = MIDI_CTRL_CC_EUCLIDEAN_DENSITY;
-                event.data1 = STEP_EDIT_NEW_CC_VAL;
-                event.length = 0;
-            }
-            else if(event.type == SONG_EVENT_INTERNAL_CC) {
-                event.type = SONG_EVENT_PROGCHG;
-                event.data0 = 0;
-                event.data1 = 0;
-                event.length = 0;
-            }
-            else if(event.type == SONG_EVENT_PROGCHG) {
-                event.type = SONG_EVENT_NOTE;
-                event.data0 = STEP_EDIT_NEW_NOTE;
-                event.data1 = STEP_EDIT_NEW_NOTE_VELOCITY;
-                event.length = seq_utils_step_len_to_ticks(
-                    song_get_step_length(sedits.scene, sedits.track)) >> 1;
-            }
+        static const uint8_t types[] = {SONG_EVENT_NOTE, SONG_EVENT_CC,
+            SONG_EVENT_INTERNAL_CC, SONG_EVENT_PROGCHG, SONG_EVENT_PROBABILITY,
+            SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE};
+        int index;
+        for(index = 0; index < 8; index ++) {
+            if(types[index] == event.type) break;
         }
-        else {
-            if(event.type == SONG_EVENT_NOTE) {
-                event.type = SONG_EVENT_PROGCHG;
-                event.data0 = 0;
-                event.data1 = 0;
-                event.length = 0;
-            }
-            else if(event.type == SONG_EVENT_PROGCHG) {
-                event.type = SONG_EVENT_INTERNAL_CC;
-                event.data0 = MIDI_CTRL_CC_EUCLIDEAN_DENSITY;
-                event.data1 = STEP_EDIT_NEW_CC_VAL;
-                event.length = 0;
-            }
-            else if(event.type == SONG_EVENT_INTERNAL_CC) {
-                event.type = SONG_EVENT_CC;
-                event.data0 = STEP_EDIT_NEW_CC;
-                event.data1 = STEP_EDIT_NEW_CC_VAL;
-            }
-            else if(event.type == SONG_EVENT_CC) {
-                event.type = SONG_EVENT_NOTE;
+        index = (index + (change > 0 ? 1 : 7)) % 8;
+        event.type = types[index];
+        event.data0 = 0;
+        event.data1 = 0;
+        event.length = 0;
+        switch(event.type) {
+            case SONG_EVENT_NOTE:
                 event.data0 = STEP_EDIT_NEW_NOTE;
                 event.data1 = STEP_EDIT_NEW_NOTE_VELOCITY;
                 event.length = seq_utils_step_len_to_ticks(
                     song_get_step_length(sedits.scene, sedits.track)) >> 1;
-            }
+                break;
+            case SONG_EVENT_CC:
+                event.data0 = STEP_EDIT_NEW_CC;
+                event.data1 = STEP_EDIT_NEW_CC_VAL;
+                break;
+            case SONG_EVENT_INTERNAL_CC:
+                event.data0 = MIDI_CTRL_CC_EUCLIDEAN_DENSITY;
+                event.data1 = STEP_EDIT_NEW_CC_VAL;
+                break;
+            case SONG_EVENT_PROBABILITY:
+                event.data0 = 50;
+                break;
+            default:
+                // PC=1, Euclidean=1:2 rotation 0, Pre/non-Pre unused.
+                break;
         }
         song_set_step_event(sedits.scene, sedits.track, sedits.step_pos,
             sedits.event_pos, &event);
@@ -341,10 +324,10 @@ void step_edit_adjust_note(int change, int shift) {
 void step_edit_adjust_velocity(int change, int shift) {
     sedits.edit_timeout = panel_menu_get_timeout();
     if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {
-        step_edit_adjust_step(change << 1, STEP_EDIT_ADJUST_VELO, 0, shift);
+        step_edit_adjust_step(change, STEP_EDIT_ADJUST_VELO, 0, shift);
     }
     else {
-        step_edit_adjust_step(change << 1, STEP_EDIT_ADJUST_VELO, 1, shift);
+        step_edit_adjust_step(change, STEP_EDIT_ADJUST_VELO, 1, shift);
     }
 }
 
@@ -520,6 +503,18 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                             MIDI_CTRL_CC_EUCLIDEAN_ROTATION);
                         inhibit_preview = 1;
                     }
+                    // probability occupies the first numeric field only
+                    else if(event.type == SONG_EVENT_PROBABILITY) {
+                        event.data0 = seq_utils_clamp(event.data0 + change, 0, 100);
+                        inhibit_preview = 1;
+                    }
+                    else if(event.type == SONG_EVENT_EUCLIDEAN) {
+                        unsigned a, b;
+                        event.data0 = seq_utils_clamp(event.data0 + change, 0, 27);
+                        conditional_pair(event.data0, &a, &b);
+                        event.data1 %= b;
+                        inhibit_preview = 1;
+                    }
                     // program change
                     else if(event.type == SONG_EVENT_PROGCHG) {
                         event.data0 = seq_utils_clamp(event.data0 + change, 0, 127);
@@ -532,13 +527,19 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                 case STEP_EDIT_ADJUST_VELO:  // note velocity and CC value
                     // note or CC
                     if(event.type == SONG_EVENT_NOTE) {
-                        event.data1 = seq_utils_clamp(event.data1 + change, 0, 127);
+                        event.data1 = seq_utils_clamp(event.data1 + change * 2, 0, 127);
                     }
                     // external or internal CC
                     else if(event.type == SONG_EVENT_CC ||
                             event.type == SONG_EVENT_INTERNAL_CC) {
-                        event.data1 = seq_utils_clamp(event.data1 + change, 0, 127);
+                        event.data1 = seq_utils_clamp(event.data1 + change * 2, 0, 127);
                         inhibit_preview = 1;  // user must retrigger edit to hear
+                    }
+                    else if(event.type == SONG_EVENT_EUCLIDEAN) {
+                        unsigned a, b;
+                        conditional_pair(event.data0, &a, &b);
+                        event.data1 = seq_utils_clamp(event.data1 + change, 0, b - 1);
+                        inhibit_preview = 1;
                     }
                     sedits.last_adjust_type = STEP_EDIT_ADJUST_VELO;
                     // put back modified event
@@ -687,6 +688,29 @@ void step_edit_update_display(void) {
                 gui_set_status_text_part(2, xpos, 4, tempstr);
                 sprintf(tempstr, "%-3d", event.data1);
                 gui_set_status_text_part(3, xpos, 4, tempstr);
+                break;
+            case SONG_EVENT_PROBABILITY:
+                gui_set_status_text_part(1, xpos, 4, "Prob");
+                sprintf(tempstr, "%d%%", event.data0);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                gui_set_status_text_part(3, xpos, 4, "---");
+                break;
+            case SONG_EVENT_EUCLIDEAN: {
+                unsigned a, b;
+                conditional_pair(event.data0, &a, &b);
+                gui_set_status_text_part(1, xpos, 4, "Eucl");
+                sprintf(tempstr, "%u:%u", a, b);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                sprintf(tempstr, "%u", event.data1 % b);
+                gui_set_status_text_part(3, xpos, 4, tempstr);
+                break;
+            }
+            case SONG_EVENT_PRE:
+            case SONG_EVENT_NON_PRE:
+                gui_set_status_text_part(1, xpos, 4,
+                    event.type == SONG_EVENT_PRE ? "Pre" : "!Pre");
+                gui_set_status_text_part(2, xpos, 4, "---");
+                gui_set_status_text_part(3, xpos, 4, "---");
                 break;
             case SONG_EVENT_PROGCHG:
                 gui_set_status_text_part(1, xpos, 4, "PC");

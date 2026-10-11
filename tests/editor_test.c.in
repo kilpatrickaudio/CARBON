@@ -1,0 +1,86 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include "../src/gui/step_edit.c"
+static struct track_event events[SEQ_TRACK_POLY];
+static struct midi_msg output[32];
+static int count, running;
+static char rows[4][64];
+int seq_ctrl_get_run_state(void) { return running; }
+int seq_ctrl_get_scene(void) { return 0; }
+int panel_menu_get_timeout(void) { return 100; }
+int song_get_step_length(int scene, int track) { return 0; }
+int song_get_ratchet_mode(int scene, int track, int step) { return 1; }
+int song_get_start_delay(int scene, int track, int step) { return 0; }
+void song_set_start_delay(int scene, int track, int step, int delay) {}
+int song_get_num_step_events(int scene, int track, int step) {
+    int i, n = 0; for(i = 0; i < SEQ_TRACK_POLY; i ++) n += !!events[i].type;
+    return n;
+}
+int song_get_step_event(int scene, int track, int step, int slot, struct track_event *e) {
+    *e = events[slot]; return e->type ? 0 : -1;
+}
+int song_set_step_event(int scene, int track, int step, int slot, struct track_event *e) {
+    events[slot] = *e; return 0;
+}
+void gui_clear_status_text_all(void) { memset(rows, ' ', sizeof(rows)); }
+void gui_set_status_text(int row, char *s) {}
+void gui_set_status_text_part(int row, int pos, int width, char *s) {
+    int len = strlen(s); assert(len <= width);
+    memset(rows[row] + pos, ' ', width); memcpy(rows[row] + pos, s, len);
+}
+void gui_set_status_highlight_part(int row, int pos, int width, int mode) {}
+void outproc_deliver_msg(int scene, int track, struct midi_msg *msg, int deliver, int mode) {
+    assert(count < 32); output[count ++] = *msg;
+}
+void log_error(char *fmt, ...) { assert(!"unexpected error"); }
+void log_warn(char *fmt, ...) { assert(!"unexpected warning"); }
+static void setup(void) {
+    int i; memset(&sedits, 0, sizeof(sedits));
+    memset(events, 0, sizeof(events)); count = running = 0;
+    for(i = 0; i < SEQ_TRACK_POLY; i ++) sedits.playing_notes[i] = -1;
+}
+int main(void) {
+    int i;
+    static const uint8_t types[] = {SONG_EVENT_NOTE, SONG_EVENT_CC,
+        SONG_EVENT_INTERNAL_CC, SONG_EVENT_PROGCHG, SONG_EVENT_PROBABILITY,
+        SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE};
+    setup(); events[0].type = SONG_EVENT_NOTE;
+    for(i = 1; i <= 8; i ++) {
+        step_edit_adjust_note(1, 1);
+        assert(events[0].type == types[i % 8]);
+    }
+    for(i = 7; i >= 0; i --) {
+        step_edit_adjust_note(-1, 1); assert(events[0].type == types[i]);
+    }
+    events[0] = (struct track_event){.type = SONG_EVENT_PROBABILITY, .data0 = 50};
+    step_edit_adjust_note(100, 0); assert(events[0].data0 == 100);
+    assert(!memcmp(rows[2] + 3, "100%", 4));
+    step_edit_adjust_note(-200, 0); assert(events[0].data0 == 0);
+    events[0] = (struct track_event){.type = SONG_EVENT_EUCLIDEAN, .data0 = 27, .data1 = 7};
+    step_edit_adjust_note(-27, 0);
+    assert(events[0].data0 == 0 && events[0].data1 == 1);
+    assert(!memcmp(rows[2] + 3, "1:2", 3));
+    step_edit_adjust_velocity(100, 0); assert(events[0].data1 == 1);
+    step_edit_adjust_velocity(-100, 0); assert(events[0].data1 == 0);
+    events[0].data0 = 27;
+    step_edit_adjust_velocity(1, 0); assert(events[0].data1 == 1);
+    step_edit_adjust_velocity(1, 0); assert(events[0].data1 == 2);
+    step_edit_adjust_velocity(-1, 0); assert(events[0].data1 == 1);
+    // Preview deliberately ignores false and true gates, but not normal MIDI.
+    setup();
+    events[0] = (struct track_event){.type = SONG_EVENT_PROBABILITY, .data0 = 0};
+    events[1] = (struct track_event){.type = SONG_EVENT_NOTE, .data0 = 60, .data1 = 100, .length = 1};
+    events[2] = (struct track_event){.type = SONG_EVENT_PRE};
+    events[3] = (struct track_event){.type = SONG_EVENT_CC, .data0 = 7, .data1 = 99};
+    events[4] = (struct track_event){.type = SONG_EVENT_NON_PRE};
+    events[5] = (struct track_event){.type = SONG_EVENT_PROGCHG, .data0 = 11};
+    step_edit_play_step();
+    assert(count == 3 && output[0].status == MIDI_NOTE_ON);
+    assert(output[1].status == MIDI_CONTROL_CHANGE && output[2].status == MIDI_PROGRAM_CHANGE);
+    step_edit_run(1); assert(count == 4 && output[3].status == MIDI_NOTE_OFF);
+    running = 1; step_edit_play_step(); assert(count == 4);
+    step_edit_update_display(); assert(count == 4);
+    puts("editor tests passed"); return 0;
+}

@@ -1,6 +1,19 @@
-#+title: CARBON firmware additions — 1.29-johanwk
-#+author: Johan W. Klüwer using gpt-5.6-sol in Emacs gptel
+#+title: CARBON firmware additions — 1.30-johanwk-ch9-dev
+#+author: Johan W. Klüwer using gpt--sol in Emacs gptel
 #+date: 2026-09-30
+
+* Development status: Chapter 9
+
+This local development branch identifies itself as =1.30-johanwk-ch9-dev=.
+It adds conditional gates to the submitted, hardware-tested 1.29 build.
+Chapter 9 has passed host tests and release builds but has NOT been flashed
+or verified on CARBON hardware. Hardware claims and historical measurements
+elsewhere in this document refer only to the earlier features/builds.
+The submitted PR #10 and its =1.29-johanwk= branch remain unchanged.
+
+Do not install this development image without a separate testing decision.
+Back up songs first. Songs saved with gates must not be used in older
+firmware, which cannot interpret them and may suppress later events.
 
 * Introduction
 
@@ -174,7 +187,8 @@ encountered during practical use.
 1. Enter Step Edit and select the step.
 2. Use Shift + Motion Start to select one event slot rather than all slots.
 3. Use Shift + Transpose to cycle the event type:
-   =Note → CC → CCi → PC → Note=.
+   =Note → CC → CCi → PC → Prob → Eucl → Pre → !Pre → Note=.
+   (The submitted 1.29 build ends the cycle after PC.)
 4. Select =PC=.
 5. Use Transpose to choose program 1--128.
 
@@ -249,7 +263,136 @@ No MIDI loopback cable is needed. Physical MIDI loopback was tested and produced
 feedback symptoms, including doubled note onsets and display flicker. =CCi= is the
 intended internal solution.
 
+* Chapter 9: Conditional gates (1.30 development)
+
+** Ordered slots
+
+Each step has six event slots. Events are evaluated in slot order. A gate
+occupies one slot; if it fails, every later slot on that step is skipped,
+including later gates. Earlier events are unaffected. Each step visit starts
+afresh: a failed gate does not disable subsequent sequencer steps.
+
+Gates control Note, CC, PC and internal CCi events, including Note-derived
+Bias Track output. A suppressed Note On does not suppress cleanup of notes
+that were already sounding. Gate events themselves send no MIDI/CV output.
+
+** Add and edit a gate
+
+1. Enter Step Edit and select a slot with Shift + Motion Start.
+2. Use Shift + Transpose to cycle to =Prob=, =Eucl=, =Pre= or =!Pre=.
+3. Use Transpose for the first value and Velocity for the second value.
+
+| Label | First value                   | Second value        | Default        |
+|-------+-------------------------------+---------------------+----------------|
+| Prob  | Probability 0--100%            | Unused              | 50%            |
+| Eucl  | A:B pair, 1:2 through 7:8      | Rotation 0--(B-1)   | 1:2, rotation 0|
+| Pre   | Unused                        | Unused              | Prior history  |
+| !Pre  | Unused                        | Unused              | Inverse history|
+
+There are 28 Euclidean pairs, ordered by increasing B, then increasing A.
+Changing the pair normalizes rotation modulo the new B. Rotation moves one
+position per Velocity increment. Gate length is unused.
+
+Stopped editor preview ignores gates and auditions ordinary Note/CC/PC
+events, including events after a failing gate. CCi remains playback-only.
+Preview and display redraws do not draw probability or change gate history.
+
+** Probability
+
+0% always fails; 100% always passes. Each evaluated probability gate draws
+once, and its result is shared across Bias Track/CCi and audible playback.
+Skipped gates do not draw. Each track has an independent repeatable stream:
+resetting restores its initial seed. Magic/editing do not change that stream.
+
+Example: put an unconditional Note in slot 1, a 25% gate in slot 2, then an
+accent Note and CC in slots 3--4. The first Note always plays; the accent
+and CC play together only when the gate passes.
+
+** Euclidean loops and rotation
+
+A:B passes on A evenly distributed positions out of B track loops. This is
+loop-based variation, not the step-based Euclidean Density playback mask.
+At rotation 0, cycle position zero passes. Positive rotation shifts the
+pattern forward. The integer rule is:
+
+#+begin_example
+r = (position + B - rotation) % B
+pass if ((r * A) % B) < A
+#+end_example
+
+Cycle starts at zero. A visit uses the current position; leaving the motion
+window's final step advances it for the next loop. Reverse motion counts
+its outgoing boundary too. A one-step window advances after every visit.
+Masked/muted visits still advance motion and loop position.
+
+An actual effective forward/backward reversal advances cycle once; assigning
+the same direction does nothing. Motion-window edits do not themselves
+advance it; correcting an out-of-window position is not a completed loop.
+Scene activation preserves cycle position, although a changed scene direction
+counts as a reversal. Scene-driven repositioning alone is not a loop.
+
+** Pre and Non-Pre history
+
+Each track retains the result of its last visit with evaluated contributing
+gates: true if ANY evaluated Probability, Euclidean or Pre gate passed.
+All Pre and !Pre gates on a visit read the prior history, not results from
+earlier slots on that same visit. The new OR aggregate commits once after
+evaluation. Skipped gates contribute nothing.
+
+=!Pre= negates prior history and NEVER contributes, whether it passes or
+fails. No-gate and !Pre-only visits preserve history. A true gate followed
+by a false gate records true history despite blocking later slots. A true
+Pre can sustain subsequent Pre visits. Reset history is false.
+
+Example: use a Probability-gated phrase, then Pre before an answering phrase
+on a later step and !Pre before an alternative. The alternative does not
+change history, allowing several alternative steps.
+
+** Masks, muted control sources and timing
+
+Pattern-masked visits do not evaluate gates or update history. Pattern-enabled
+muted/Live control sources still evaluate gates for Bias Track and CCi, as
+in the previous firmware; their ordinary audible playback remains suppressed.
+
+Control resolution runs in track order before audible playback. CCi can make
+an earlier track newly due or unmask it; bounded follow-up scans prepare
+such tracks. Each prepared visit stays frozen for that tick. Later CCi
+changes do not redraw its gates; a later reversal advances cycle state for
+the next visit. This is ordered control processing, not simultaneous
+resolution of cyclic automation relationships.
+
+** Reset and scene boundaries
+
+Initialization, song load, transport Reset/MIDI Start and explicit track
+reset clear history, restore cycle zero and restore probability seeds.
+Stop/Continue preserve conditions. Panel Run requests Continue; use Reset
+when you want to restart variation. Scenes preserve conditional state,
+unlike CCi overrides, which clear on scene activation. Only configuration
+is saved; transient history, cycle position and PRNG state are not.
+
+** Verification status
+
+Five host suites exercise the production evaluator, engine, editor, song
+serialization with mocked flash, and MIDI clock callbacks. Sanitized
+integration tests pass, as does the forced release build. Physical MIDI/CV,
+flash, encoder/display behavior, interrupt-stack high-water and realtime
+CPU timing remain hardware verification tasks.
+
+Current development figures versus submitted =fc00313=:
+text/binary +1208 bytes, initialized data unchanged, BSS +48 bytes.
+ARM -O2 static engine tick frame grows from 64 to 312 bytes; this is not a
+worst-case nested call/interrupt stack measurement.
+
 * Compatibility and storage
+
+For Chapter 9, the local numeric firmware/song version is 1.30, with
+display-only =johanwk-ch9-dev=. Event codes 2--5 add the four gates in the
+existing six-byte event records, preserving all field offsets and the
+=0x5000=-byte song size. No new persistent extension fields are needed.
+Older songs migrate through the existing loader; gate-containing songs
+are not backward compatible with firmware that does not implement gates.
+The 1.29 details below describe the preceding submitted feature set.
+
 
 - The work is based on upstream =master= commit =bd5f5d4=, which identifies itself
   as firmware 1.27.

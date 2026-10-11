@@ -26,6 +26,7 @@
 #include "../midi/midi_protocol.h"
 #include "../cvproc.h"
 #include <inttypes.h>
+#include <stddef.h>
 
 // note modes
 #define SONG_NOTE_MODE_PER_SONG 0
@@ -98,6 +99,16 @@ struct track_event {
 // song event types - map to real status messages where possible
 #define SONG_EVENT_NULL 0
 #define SONG_EVENT_INTERNAL_CC 1  // transient control routed through Bias Track
+#define SONG_EVENT_PROBABILITY 2  // data0: 0-100%; other fields unused
+#define SONG_EVENT_EUCLIDEAN 3  // data0: pair index 0-27; data1: rotation
+#define SONG_EVENT_PRE 4  // previous contributing visit's OR history
+#define SONG_EVENT_NON_PRE 5  // inverse history; never contributes
+
+_Static_assert(sizeof(struct track_event) == 6, "event storage size changed");
+_Static_assert(offsetof(struct track_event, type) == 0 &&
+    offsetof(struct track_event, data0) == 1 &&
+    offsetof(struct track_event, data1) == 2 &&
+    offsetof(struct track_event, length) == 4, "event storage offsets changed");
 #define SONG_EVENT_NOTE MIDI_NOTE_ON
 #define SONG_EVENT_CC MIDI_CONTROL_CHANGE
 #define SONG_EVENT_PROGCHG MIDI_PROGRAM_CHANGE
