@@ -386,6 +386,9 @@ void panel_utils_clock_ppq_to_str(char *tempstr, int ppq) {
         case SEQ_UTILS_CLOCK_24PPQ:
             sprintf(tempstr, "24 PPQ");
             break;
+        case SEQ_UTILS_CLOCK_16PPQ:
+            sprintf(tempstr, "16 PPQ");
+            break;
         default:
             sprintf(tempstr, "OFF");
             break;

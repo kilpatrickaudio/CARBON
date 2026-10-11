@@ -54,7 +54,7 @@
 #define SEQ_UTILS_STEP_BAR_DIV_13 22
 
 // clock PPQ
-#define SEQ_UTILS_CLOCK_PPQS 9  // enumerated
+#define SEQ_UTILS_CLOCK_PPQS 10  // enumerated
 #define SEQ_UTILS_CLOCK_OFF 0
 #define SEQ_UTILS_CLOCK_1PPQ 1
 #define SEQ_UTILS_CLOCK_2PPQ 2
@@ -64,6 +64,7 @@
 #define SEQ_UTILS_CLOCK_8PPQ 6
 #define SEQ_UTILS_CLOCK_12PPQ 7
 #define SEQ_UTILS_CLOCK_24PPQ 8
+#define SEQ_UTILS_CLOCK_16PPQ 9  // appended to preserve saved clock indices
 
 // convert a MIDI-style encoder value to a change amount
 // input is 0x01-0x3f for up, and 0x7f down to 0x40 for down

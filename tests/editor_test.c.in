@@ -46,6 +46,14 @@ int main(void) {
     static const uint8_t types[] = {SONG_EVENT_NOTE, SONG_EVENT_CC,
         SONG_EVENT_INTERNAL_CC, SONG_EVENT_PROGCHG, SONG_EVENT_PROBABILITY,
         SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE};
+    {
+        char label[16];
+        assert(SEQ_UTILS_CLOCK_24PPQ == 8);
+        assert(seq_utils_clock_pqq_to_divisor(SEQ_UTILS_CLOCK_24PPQ) == 4);
+        assert(seq_utils_clock_pqq_to_divisor(SEQ_UTILS_CLOCK_16PPQ) == 6);
+        panel_utils_clock_ppq_to_str(label, SEQ_UTILS_CLOCK_16PPQ);
+        assert(!strcmp(label, "16 PPQ"));
+    }
     setup(); events[0].type = SONG_EVENT_NOTE;
     for(i = 1; i <= 8; i ++) {
         step_edit_adjust_note(1, 1);

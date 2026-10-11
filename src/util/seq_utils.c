@@ -195,6 +195,8 @@ int seq_utils_clock_pqq_to_divisor(int ppq) {
             return (MIDI_CLOCK_PPQ / 12);
         case SEQ_UTILS_CLOCK_24PPQ:
             return (MIDI_CLOCK_PPQ / 24);
+        case SEQ_UTILS_CLOCK_16PPQ:
+            return (MIDI_CLOCK_PPQ / 16);
         default:
             return 0;
     }

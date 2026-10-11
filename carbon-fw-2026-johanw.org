@@ -263,6 +263,15 @@ No MIDI loopback cable is needed. Physical MIDI loopback was tested and produced
 feedback symptoms, including doubled note onsets and display flicker. =CCi= is the
 intended internal solution.
 
+* Additional 1.30 option: 16 PPQ clock output
+
+The shared clock-output rate list now includes =16 PPQ=, available for
+CV/Gate and the other clock outputs. It is appended after =24 PPQ= to
+preserve existing saved rate indices. Select it with the normal clock-rate
+menu control. It outputs one pulse every six ticks of the 96-PPQ master
+clock; no fractional scheduling is needed. Older firmware does not
+understand this new rate index. Physical output remains to be verified.
+
 * Chapter 9: Conditional gates (1.30 development)
 
 ** Ordered slots
@@ -279,6 +288,7 @@ that were already sounding. Gate events themselves send no MIDI/CV output.
 ** Add and edit a gate
 
 1. Enter Step Edit and select a slot with Shift + Motion Start.
+
 2. Use Shift + Transpose to cycle to =Prob=, =Eucl=, =Pre= or =!Pre=.
 3. Use Transpose for the first value and Velocity for the second value.
 
