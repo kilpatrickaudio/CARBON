@@ -191,7 +191,7 @@ void midi_utils_enc_note_on(struct midi_msg *msg, int port, int channel,
     msg->port = port;
     msg->len = 3;
     msg->status = MIDI_NOTE_ON | (channel & 0x0f);
-    msg->data0 = note & 0x7f;
+    msg->data0 = note;
     msg->data1 = velocity & 0x7f;
 }
 
@@ -201,7 +201,7 @@ void midi_utils_enc_note_off(struct midi_msg *msg, int port, int channel,
     msg->port = port;
     msg->len = 3;
     msg->status = MIDI_NOTE_OFF | (channel & 0x0f);
-    msg->data0 = note & 0x7f;
+    msg->data0 = note;
     msg->data1 = velocity & 0x7f;
 }
 
@@ -211,7 +211,7 @@ void midi_utils_enc_key_pressure(struct midi_msg *msg, int port, int channel,
     msg->port = port;
     msg->len = 3;
     msg->status = MIDI_POLY_KEY_PRESSURE | (channel & 0x0f);
-    msg->data0 = note & 0x7f;
+    msg->data0 = note;
     msg->data1 = pressure & 0x7f;
 }
 

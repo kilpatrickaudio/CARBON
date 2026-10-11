@@ -90,6 +90,7 @@ enum STATE_CHANGE_EVENT {
     SCE_SONG_SCENE_MIDI_PROGRAM,  // arg0 = scene, arg1 = track, arg2 = mapnum
     SCE_SONG_EUCLIDEAN_DENSITY,  // arg0 = scene, arg1 = track, arg2 = density
     SCE_SONG_EUCLIDEAN_ROTATION,  // arg0 = scene, arg1 = track, arg2 = rotation
+    SCE_SONG_ROOT,  // song or scene root changed; no args
     // control events
     SCE_CTRL_RUN_STATE = SCEC_CTRL,  // arg0 = state
     SCE_CTRL_TRACK_SELECT,  // arg0 = track, arg1 = select

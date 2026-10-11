@@ -28,10 +28,18 @@ void seq_ctrl_set_song_mode(int value) {}
 void seq_ctrl_set_pattern_type(int track, int value) {}
 void seq_ctrl_reset_pos(void) {}
 void metronome_run(int tick) {}
+#ifndef CARBON_TEST_PITCH
 void arp_run(int tick) {}
+#endif
 void step_edit_run(uint32_t tick) {}
+#ifndef CARBON_TEST_PITCH
+void outproc_pitch_changed(int scene, int track) {}
+void outproc_root_changed(void) {}
 void outproc_tonality_changed(int scene, int track) {}
 void outproc_transpose_changed(int scene, int track) {}
+#endif
+static int test_root = SONG_ROOT_OFF;
+int song_get_effective_root(int scene) { return test_root; }
 void state_change_fire0(int event) {}
 void state_change_fire1(int event, int value) {}
 
@@ -47,12 +55,27 @@ static int scene_reverse;
 SONG_GET2(song_get_motion_dir, scene == 1 ? scene_reverse : 0)
 SONG_GET2(song_get_mute, sestate.track_mute[track])
 SONG_GET2(song_get_step_length, 0)
-int song_get_track_type(int track) { return SONG_TRACK_TYPE_VOICE; }
+#ifdef CARBON_TEST_PITCH
+static int test_scale = 1, test_transpose, test_drum;
+#endif
+int song_get_track_type(int track) {
+#ifdef CARBON_TEST_PITCH
+    return test_drum;
+#else
+    return SONG_TRACK_TYPE_VOICE;
+#endif
+}
 int song_get_key_split(int track) { return 0; }
 int song_get_key_velocity_scale(void) { return 0; }
 int song_get_midi_clock_source(void) { return -1; }
 int song_get_scene_sync(void) { return SONG_SCENE_SYNC_BEAT; }
+#ifdef CARBON_TEST_PITCH
+int song_get_tonality(int scene, int track) { return test_scale; }
+int song_get_midi_channel_map(int track, int map) { return track; }
+int song_get_midi_port_map(int track, int map) { return map; }
+#else
 int song_get_midi_port_map(int track, int map) { return SONG_PORT_DISABLE; }
+#endif
 int song_get_scene_midi_program(int scene, int track, int map) { return SONG_MIDI_PROG_NULL; }
 int song_get_song_list_scene(int entry) { return SONG_LIST_SCENE_NULL; }
 int song_get_song_list_length(int entry) { return 0; }
@@ -71,14 +94,36 @@ int song_get_step_event(int scene, int track, int step, int slot,
 }
 int song_get_motion_length(int scene, int track) { return 8; }
 int song_get_pattern_type(int scene, int track) { return enabled[track]; }
-int song_get_transpose(int scene, int track) { return 0; }
-int song_get_start_delay(int scene, int track, int step) { return 0; }
-int song_get_ratchet_mode(int scene, int track, int step) { return 1; }
+int song_get_transpose(int scene, int track) {
+#ifdef CARBON_TEST_PITCH
+    return test_transpose;
+#else
+    return 0;
+#endif
+}
+#ifdef CARBON_TEST_PITCH
+static int test_delay, test_ratchet = 1;
+#endif
+int song_get_start_delay(int scene, int track, int step) {
+#ifdef CARBON_TEST_PITCH
+    return test_delay;
+#else
+    return 0;
+#endif
+}
+int song_get_ratchet_mode(int scene, int track, int step) {
+#ifdef CARBON_TEST_PITCH
+    return test_ratchet;
+#else
+    return 1;
+#endif
+}
 int pattern_get_step_enable(int scene, int track, int pattern, int step) {
     return pattern != 0;
 }
 void log_error(char *fmt, ...) { assert(!"unexpected log_error"); }
 void log_warn(char *fmt, ...) { assert(!"unexpected log_warn"); }
+#ifndef CARBON_TEST_PITCH
 void outproc_deliver_msg(int scene, int track, struct midi_msg *msg,
         int deliver, int mode) {
     assert(output_count < 64);
@@ -91,6 +136,7 @@ void arp_set_arp_enable(int track, int value) {}
 void arp_set_type(int track, int value) {}
 void arp_set_speed(int track, int value) {}
 void arp_set_gate_time(int track, int value) {}
+#endif
 void state_change_fire2(int event, int a, int b) {}
 
 /* Use the production MIDI CC conversion helpers and MIDI message utilities
@@ -104,6 +150,7 @@ static void setup(void) {
     memset(enabled, 0, sizeof(enabled));
     output_count = 0;
     running = 1;
+    test_root = SONG_ROOT_OFF;
     live_mode = SEQ_CTRL_LIVE_OFF;
     selected = -1;
     seq_engine_clear_internal_cc();
@@ -424,7 +471,27 @@ static void test_control_cycles(void) {
     assert(!visits[0].slots && sestate.conditions[0].cycle == 1);
 }
 
+static void test_root_offsets(void) {
+    struct seq_engine_step_visit visit = {0};
+    setup(); test_root = 0;
+    sestate.kbtrans = -12;
+    sestate.bias_track_map[1] = 0;
+    sestate.bias_track_output[0] = -12;
+    sestate.internal_cc[1][1] = 12; // CCi17 belongs at output in root mode
+    visit.slots = 1; visit.events[0] = (struct track_event){
+        .type = SONG_EVENT_NOTE, .data0 = 22, .data1 = 100, .length = 1};
+    seq_engine_track_play_step(1, 0, &visit);
+    assert(output_count == 1 && output[0].data0 == -2);
+    seq_engine_track_manage_notes(1);
+    assert(output_count == 2 && output[1].data0 == -2 && output[1].status == MIDI_NOTE_OFF);
+    setup(); test_root = 0;
+    sestate.internal_cc[0][1] = 12;
+    seq_engine_arp_start_note(0, &(struct midi_msg){.status = MIDI_NOTE_ON, .data0 = 64});
+    assert(output_count == 1 && output[0].data0 == 64); // no offset twice
+}
+
 int main(void) {
+    test_root_offsets();
     test_mixed_and_cleanup();
     test_cycles_and_history();
     test_scene_activation();

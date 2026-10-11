@@ -37,9 +37,19 @@ int main(void) {
             .data1 = i == 1 ? 7 : 100, .length = i < 4 ? 0 : 24};
         assert(!song_set_step_event(0, 0, 0, i, &expected[i]));
     }
+    song_init_roots();
+    assert(song_get_effective_root(0) == SONG_ROOT_OFF);
+    song_set_root(2);
+    assert(song_get_effective_root(0) == 2);
+    song_set_scene_root(0, 6);
+    song_set_scene_root(2, SONG_ROOT_OFF);
+    assert(song_get_effective_root(0) == 6 && song_get_effective_root(2) == SONG_ROOT_OFF);
+    song_copy_scene(3, 0);
+    assert(song_get_scene_root(3) == 6);
     assert(!song_save(0)); song_timer_task();
     memset(&song, 0, sizeof(song));
     assert(!song_load(0)); song_timer_task(); assert(loaded == 1);
+    assert(song_get_root() == 2 && song_get_scene_root(0) == 6);
     for(i = 0; i < 6; i ++) {
         assert(!song_get_step_event(0, 0, 0, i, &actual));
         assert(actual.type == expected[i].type && actual.data0 == expected[i].data0);
@@ -53,13 +63,27 @@ int main(void) {
     assert(!song_get_step_event(1, 0, 0, 0, &actual));
     assert(actual.type == SONG_EVENT_PROBABILITY); // notes shared per song
     // Old songs migrate added parameters, without altering existing event codes.
-    song.song_version = 0x0001001b;
+    song.song_version = 0x0001001e;
+    song.root = 11; memset(song.scene_root, 11, sizeof(song.scene_root));
     song_init_scene_midi_programs(); song_init_euclidean();
     assert(!song_save(0)); song_timer_task();
     memset(&song, 0, sizeof(song));
     assert(!song_load(0)); song_timer_task();
     assert(song.song_version == CARBON_VERSION_MAJMIN && loaded == 2);
+    assert(song_get_root() == SONG_ROOT_OFF);
+    for(i = 0; i < SEQ_NUM_SCENES; i ++) assert(song_get_scene_root(i) == SONG_ROOT_INHERIT);
     assert(!song_get_step_event(0, 0, 0, 4, &actual));
     assert(actual.type == SONG_EVENT_NOTE && actual.data0 == 60);
+    for(int version = 27; version <= 30; version++) {
+        song.song_version = (1u << 16) | version;
+        song.root = 11; memset(song.scene_root, 11, sizeof(song.scene_root));
+        assert(!song_save(0)); song_timer_task();
+        assert(!song_load(0)); song_timer_task();
+        assert(song_get_root() == SONG_ROOT_OFF);
+        for(i = 0; i < 6; i++) assert(song_get_scene_root(i) == SONG_ROOT_INHERIT);
+    }
+    song_set_root(6); song_set_scene_root(0, 2); song_clear();
+    assert(song_get_root() == SONG_ROOT_OFF);
+    for(i = 0; i < 6; i++) assert(song_get_scene_root(i) == SONG_ROOT_INHERIT);
     puts("song tests passed"); return 0;
 }

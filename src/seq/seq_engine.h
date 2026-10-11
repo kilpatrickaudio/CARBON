@@ -108,4 +108,7 @@ void seq_engine_arp_stop_note(int track, struct midi_msg *msg);
 // handle MIDI input from a controller / keyboard
 void seq_engine_midi_rx_msg(struct midi_msg *msg);
 
+// Effective transient internal control (stored fallback when not overridden).
+int seq_engine_get_internal_cc(int track, int cc, int stored_value);
+
 #endif

@@ -1,0 +1,155 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include "../src/seq/outproc.c"
+#include "../src/seq/arp.c"
+void seq_engine_arp_start_note(int track, struct midi_msg *msg) {
+    outproc_deliver_msg(0, track, msg, 2, 1);
+}
+void seq_engine_arp_stop_note(int track, struct midi_msg *msg) {
+    outproc_deliver_msg(0, track, msg, 2, 1);
+}
+void log_error(char *fmt, ...) { assert(!"unexpected error"); }
+static int root = -1, tonality = 1, transpose, effective = -999, drum, scene;
+static struct midi_msg sent[4096];
+static int count, routing;
+static int copy_busy;
+int song_scene_copy_in_progress(void) { return copy_busy; }
+int song_get_effective_root(int s) { return root; }
+int song_get_track_type(int t) { return drum; }
+int song_get_transpose(int s, int t) { return transpose; }
+int song_get_tonality(int s, int t) { return tonality; }
+int song_get_midi_port_map(int t, int out) { return routing ? -1 : out + 1; }
+int song_get_midi_channel_map(int t, int out) { return t; }
+int seq_engine_get_current_scene(void) { return scene; }
+int seq_engine_get_internal_cc(int t, int cc, int fallback) {
+    assert(cc == 17); return effective == -999 ? fallback : effective;
+}
+int midi_stream_send_msg(struct midi_msg *msg) {
+    assert(msg->data0 >= 0 && msg->data0 <= 127);
+    assert(count < 4096); sent[count++] = *msg; return 0;
+}
+static void send(int status, int note) {
+    struct midi_msg msg;
+    midi_utils_enc_3byte(&msg, 0, status, 0, 100);
+    msg.data0 = note;
+    outproc_deliver_msg(scene, 0, &msg, OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
+}
+static void pair(int note, int expected) {
+    count = 0; send(MIDI_NOTE_ON, note); send(MIDI_NOTE_OFF, note);
+    if(expected < 0 || expected > 127) assert(count == 0);
+    else {
+        assert(count == 4);
+        for(int i = 0; i < count; i++) assert(sent[i].data0 == expected);
+        assert((sent[2].status & 0xf0) == MIDI_NOTE_OFF);
+    }
+}
+int main(void) {
+    char name[64];
+    // Exhaustive reference: nearest permitted pitch at or below signed input.
+    for(int s = 0; s < SCALE_NUM_TONALITIES; s++)
+        for(int r = 0; r < 12; r++)
+            for(int n = -100; n <= 250; n++) {
+                int q = n;
+                while(scale_quantize(((q-r)%12+12)%12, s) != ((q-r)%12+12)%12) q--;
+                assert(scale_quantize_root(n, s, r) == (q < 0 || q > 127 ? -1 : q));
+            }
+    assert(scale_quantize_root(62, SCALE_MAJOR, 0) == 62);
+    assert(scale_quantize_root(66, SCALE_MAJOR, 0) == 65);
+    assert(scale_quantize_root(73, SCALE_MAJOR, 0) == 72);
+    assert(scale_quantize_root(60, SCALE_MAJOR, 2) == 59);
+    scale_name_with_root(name, SCALE_MAJOR, -1); assert(!strcmp(name, "Major (Root Off)"));
+    scale_name_with_root(name, SCALE_NAT_MINOR, 6); assert(!strcmp(name, "F# Nat Minor"));
+    outproc_init(); outproc_pitch_changed(scene, 0);
+    // All valid legacy inputs/scales/transpositions match old processing.
+    for(tonality = 0; tonality < 16; tonality++)
+        for(transpose = -24; transpose <= 24; transpose++) {
+            outproc_pitch_changed(scene, 0);
+            for(int n = 0; n <= 127; n++) pair(n, scale_quantize(n, tonality) + transpose);
+        }
+    tonality = SCALE_MAJOR; transpose = 2; root = 0;
+    outproc_pitch_changed(scene, 0); pair(60, 62); pair(64, 65); pair(71, 72);
+    // CCi replaces stored transpose, not an additional offset.
+    effective = 4; pair(60, 64);
+    count = 0; send(MIDI_NOTE_ON, 60); effective = -2; send(MIDI_NOTE_OFF, 60);
+    assert(count == 4 && sent[2].data0 == 64);
+    effective = -999;
+    // Signed keyboard/Bias/arp intermediate survives before final transpose.
+    transpose = 12; outproc_pitch_changed(scene, 0); pair(-2, 9);
+    transpose = -12; outproc_pitch_changed(scene, 0); pair(130, 117);
+    count = 0; send(MIDI_NOTE_ON, 60); root = 2; outproc_root_changed();
+    assert(count == 2); // harmony change does not cut/retrigger held notes
+    send(MIDI_NOTE_OFF, 60); assert(count == 4 && sent[2].data0 == sent[0].data0);
+    // Pressure and note off reference the sounding pitch.
+    count = 0; send(MIDI_NOTE_ON, 60); send(MIDI_POLY_KEY_PRESSURE, 60);
+    assert(sent[2].data0 == sent[0].data0);
+    tonality = SCALE_BLUES; outproc_pitch_changed(scene, 0);
+    assert(count == 4);
+    send(MIDI_NOTE_OFF, 60);
+    assert((sent[4].status & 0xf0) == MIDI_NOTE_OFF && sent[4].data0 == sent[0].data0);
+    // Harmony changes must not lift the musician's damper pedal.
+    count = 0; send(MIDI_NOTE_ON, 60);
+    { struct midi_msg cc; midi_utils_enc_control_change(&cc, 0, 0, 64, 127);
+      outproc_deliver_msg(scene, 0, &cc, 2, 1); }
+    send(MIDI_NOTE_OFF, 60); root = 4; outproc_root_changed();
+    assert(count == 6);
+    { struct midi_msg cc; midi_utils_enc_control_change(&cc, 0, 0, 64, 0);
+      outproc_deliver_msg(scene, 0, &cc, 2, 1); }
+    assert(count == 8 && sent[6].data1 == 0);
+    // Root changes do not alter drum transformation or stop its notes.
+    drum = 1; transpose = 0; tonality = SCALE_MAJOR; outproc_pitch_changed(scene, 0);
+    count = 0; send(MIDI_NOTE_ON, 61); root = 11; outproc_root_changed();
+    assert(count == 2); send(MIDI_NOTE_OFF, 61); assert(count == 4 && sent[2].data0 == 60);
+    // Releases still reach saved outputs after routing is disabled.
+    count = 0; send(MIDI_NOTE_ON, 64); routing = 1; send(MIDI_NOTE_OFF, 64);
+    assert(count == 4 && sent[2].port == sent[0].port); routing = 0;
+    // Scene-copy refresh must not use partially copied root/transpose values.
+    root = -1; transpose = 0; outproc_pitch_changed(scene, 0); count = 0; send(MIDI_NOTE_ON, 60);
+    copy_busy = 1; transpose = 2; outproc_pitch_changed(scene, 0); assert(count == 2);
+    root = 2; copy_busy = 0; outproc_root_changed(); assert(count == 2);
+    send(MIDI_NOTE_OFF, 60); assert(count == 4 && sent[2].data0 == 60);
+    // Reused queue holes must not change repeated-note FIFO release order.
+    drum = 0; root = 0; tonality = SCALE_CHROMATIC; transpose = 0; outproc_root_changed();
+    count = 0; send(MIDI_NOTE_ON, 55); send(MIDI_NOTE_ON, 60);
+    send(MIDI_NOTE_OFF, 55); transpose = 2; outproc_pitch_changed(scene, 0);
+    send(MIDI_NOTE_ON, 60); send(MIDI_NOTE_OFF, 60);
+    assert(sent[8].data0 == 60); send(MIDI_NOTE_OFF, 60); assert(sent[10].data0 == 62);
+    // Invalid attack's release must not consume a later valid repeated attack.
+    transpose = -24; outproc_pitch_changed(scene, 0); count = 0; send(MIDI_NOTE_ON, 0);
+    transpose = 12; outproc_pitch_changed(scene, 0); send(MIDI_NOTE_ON, 0);
+    assert(count == 2); send(MIDI_NOTE_OFF, 0); assert(count == 2);
+    send(MIDI_NOTE_OFF, 0); assert(count == 4 && sent[2].data0 == 12);
+    transpose = 0; outproc_pitch_changed(scene, 0);
+    // Full slots / invalid notes never send untracked note-ons.
+    drum = 0; root = 0; outproc_pitch_changed(scene, 0); count = 0;
+    for(int i = 0; i < 20; i++) send(MIDI_NOTE_ON, 60 + i);
+    assert(count == 32); outproc_stop_all_notes(0); assert(count == 64);
+    // Legacy/drum arp wrapping remains byte-for-byte at extreme octaves.
+    memset(astate, 0, sizeof(astate));
+    for(int i = 0; i < ARP_MAX_PLAYING_NOTES; i++) astate[0].playing_notes[i] = ARP_NOTE_SLOT_FREE;
+    astate[0].held_velo = 100; tonality = SCALE_CHROMATIC; transpose = 0;
+    for(int mode = 0; mode < 2; mode++) {
+        root = mode ? 6 : -1; drum = mode; outproc_root_changed();
+        for(int pitch = -96; pitch <= 223; pitch++) {
+            count = 0; arp_start_note(0, pitch); arp_stop_all_notes(0);
+            assert(count == 4 && sent[0].data0 == (pitch & 127) && sent[2].data0 == (pitch & 127));
+        }
+    }
+    drum = 0; root = 0; outproc_root_changed();
+    // Real arp held-note/snapshot and output paths preserve signed notes.
+    memset(astate, 0, sizeof(astate));
+    for(int i = 0; i < ARP_MAX_HELD_NOTES; i++) astate[0].held_notes[i] = ARP_NOTE_SLOT_FREE;
+    for(int i = 0; i < ARP_MAX_PLAYING_NOTES; i++) astate[0].playing_notes[i] = ARP_NOTE_SLOT_FREE;
+    { struct midi_msg input = {.status = MIDI_NOTE_ON, .data0 = -1, .data1 = 100};
+      arp_handle_input(0, &input); arp_take_snapshot(0);
+      assert(arp_find_lowest_note(0) == -1 && arp_find_highest_note(0) == -1);
+      assert(arp_find_random_note(0, 0) == -1);
+      transpose = 12; outproc_pitch_changed(scene, 0); count = 0;
+      arp_start_note(0, -1); arp_stop_all_notes(0);
+      assert(count == 4 && sent[0].data0 == 11 && sent[2].data0 == 11);
+      input.status = MIDI_NOTE_OFF; arp_handle_input(0, &input);
+      assert(astate[0].held_note_count == 0); }
+    puts("root/output tests passed");
+    return 0;
+}

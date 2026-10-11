@@ -84,3 +84,14 @@ clear history and loop position, but preserve probability state. Song loads
 also preserve probability state. Fixed initialization in host fixtures makes
 tests reproducible; it is not the device's startup seed policy. Practical
 hardware testing confirmed different random events after reboot.
+
+Chapter 10 adds root/output, pitch integration, song-layout and root-UI suites.
+The integration suite runs production engine, arp and output processing together
+with song/hardware fixtures. It covers bipolar CCi17, keyboard/Bias offsets,
+scene activation, delayed starts, ratchets, voice stealing, live pressure,
+repeated attacks and damper cleanup. Layout assertions compare all persistent
+field offsets with the c7c4a02 layout. UI tests exercise shared label buffers
+for both LCD types; they do not replace a physical LCD audition.
+
+Harmony changes apply to subsequent note attacks; already sounding voices keep
+their pitch until release. Legacy Root Off transpose-only revoicing is retained.

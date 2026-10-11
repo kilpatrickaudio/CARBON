@@ -113,6 +113,15 @@ _Static_assert(offsetof(struct track_event, type) == 0 &&
 #define SONG_EVENT_CC MIDI_CONTROL_CHANGE
 #define SONG_EVENT_PROGCHG MIDI_PROGRAM_CHANGE
 
+// Roots: pitch classes 0--11, Off=-1; scene Song=-2.
+#define SONG_ROOT_OFF -1
+#define SONG_ROOT_INHERIT -2
+int song_get_root(void);
+void song_set_root(int root);
+int song_get_scene_root(int scene);
+void song_set_scene_root(int scene, int root);
+int song_get_effective_root(int scene);
+
 // init the song
 void song_init(void);
 
@@ -133,6 +142,7 @@ int song_save(int song_num);
 
 // copy a scene to another scene replacing all data
 void song_copy_scene(int dest, int src);
+int song_scene_copy_in_progress(void);
 
 //
 // getters and setters

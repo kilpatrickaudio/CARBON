@@ -953,6 +953,10 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_ARP_ENABLE:
             gui_update_arp_enable(data[0], data[1], data[2]);
             break;
+        case SCE_SONG_ROOT:
+            gui_update_tonality(gstate.current_scene, gstate.first_track,
+                song_get_tonality(gstate.current_scene, gstate.first_track));
+            break;
         case SCE_SONG_TONALITY:
             gui_update_tonality(data[0], data[1], data[2]);
             break;
@@ -1570,10 +1574,16 @@ void gui_update_tonality(int scene, int track, int tonality) {
     }
     // update info display
     if(!gstate.status_override) {
-        gui_set_status_text_part(3, 0, 6, "Tona: ");
-        scale_type_to_name(tempstr,
-            song_get_tonality(seq_ctrl_get_scene(), gstate.first_track));
-        gui_set_status_text_part(3, 7, 10, tempstr);
+        scale_name_with_root(tempstr,
+            song_get_tonality(seq_ctrl_get_scene(), gstate.first_track),
+            song_get_effective_root(seq_ctrl_get_scene()));
+        // Leave columns 19 onward for VOICE/DRUM on both LCD layouts.
+        if(song_get_effective_root(seq_ctrl_get_scene()) < 0) {
+            char name[32];
+            scale_type_to_name(name, song_get_tonality(seq_ctrl_get_scene(), gstate.first_track));
+            sprintf(tempstr, "%s (Off)", name);
+        }
+        gui_set_status_text_part(3, 0, 18, tempstr);
     }
 }
 

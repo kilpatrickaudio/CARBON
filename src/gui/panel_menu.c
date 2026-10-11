@@ -266,11 +266,17 @@ void panel_menu_set_timeout(int timeout) {
 void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
     switch(event_type) {
         case SCE_SONG_SWING:
-            if(pmstate.menu_mode == PANEL_MENU_SWING &&
-                    pmstate.menu_submode == PANEL_MENU_SWING_SWING) {
+            if((pmstate.menu_mode == PANEL_MENU_SWING &&
+                    pmstate.menu_submode == PANEL_MENU_SWING_SWING) ||
+                    (pmstate.menu_mode == PANEL_MENU_TONALITY &&
+                    pmstate.menu_submode == PANEL_MENU_TONALITY_SWING)) {
                 panel_menu_update_display();
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
+            break;
+        case SCE_SONG_ROOT:
+            if(pmstate.menu_mode == PANEL_MENU_TONALITY || pmstate.menu_mode == PANEL_MENU_SWING)
+                panel_menu_update_display();
             break;
         case SCE_SONG_TONALITY:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY &&
@@ -594,6 +600,14 @@ void panel_menu_update_display(void) {
 // display the swing menu
 void panel_menu_display_swing(void) {
     char tempstr[64];
+    if(pmstate.menu_submode >= PANEL_MENU_SWING_SONG_ROOT) {
+        int saved = pmstate.menu_submode;
+        pmstate.menu_submode += PANEL_MENU_TONALITY_SONG_ROOT - PANEL_MENU_SWING_SONG_ROOT;
+        panel_menu_display_tonality();
+        pmstate.menu_submode = saved;
+        gui_set_menu_title("SWING / ROOT");
+        return;
+    }
     gui_set_menu_title("SWING");
     switch(pmstate.menu_submode) {
         case PANEL_MENU_SWING_SWING:
@@ -609,17 +623,39 @@ void panel_menu_display_tonality(void) {
     char tempstr[64];
     int temp;
     gui_set_menu_title("TONALITY");
+    if(pmstate.menu_submode >= PANEL_MENU_TONALITY_SONG_ROOT) {
+        if(pmstate.menu_submode == PANEL_MENU_TONALITY_SONG_ROOT) {
+            gui_set_menu_subtitle("Song");
+            gui_set_menu_param("Song Root");
+            temp = song_get_root();
+        }
+        else {
+            int scene = pmstate.menu_submode - PANEL_MENU_TONALITY_SCENE_ROOT1;
+            sprintf(tempstr, "Scene %d Root", scene + 1);
+            gui_set_menu_subtitle("Scene Override");
+            gui_set_menu_param(tempstr);
+            temp = song_get_scene_root(scene);
+        }
+        gui_set_menu_value((char *)scale_root_name(temp));
+        return;
+    }
     switch(pmstate.menu_submode) {
+        case PANEL_MENU_TONALITY_SWING:
+            gui_set_menu_subtitle("Song");
+            gui_set_menu_param("Swing");
+            sprintf(tempstr, "%d%%", song_get_swing());
+            gui_set_menu_value(tempstr);
+            break;
         case PANEL_MENU_TONALITY_SCALE:
             sprintf(tempstr, "Scene %d Track %d",
                 (seq_ctrl_get_scene() + 1),
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
-            gui_set_menu_param("Scale");
-            scale_type_to_name(tempstr,
-                song_get_tonality(seq_ctrl_get_scene(),
-                seq_ctrl_get_first_track()));
-            gui_set_menu_value(tempstr);
+            scale_name_with_root(tempstr,
+                song_get_tonality(seq_ctrl_get_scene(), seq_ctrl_get_first_track()),
+                song_get_effective_root(seq_ctrl_get_scene()));
+            // Scale/root names exceed the generic 13-character value field.
+            gui_set_status_text_part(3, 0, 27, tempstr);
             break;
         case PANEL_MENU_TONALITY_TRANSPOSE:
             sprintf(tempstr, "Scene %d Track %d",
@@ -1159,8 +1195,21 @@ void panel_menu_edit_song(int change) {
     panel_menu_update_display();
 }
 
+// Shared editor for roots in both Tonality and Shift+Tonality menus.
+static void panel_menu_edit_root(int item, int change) {
+    if(item == 0)
+        song_set_root(seq_utils_clamp(song_get_root() + change, SONG_ROOT_OFF, 11));
+    else if(item >= 1 && item <= SEQ_NUM_SCENES) {
+        int scene = item - 1;
+        song_set_scene_root(scene, seq_utils_clamp(song_get_scene_root(scene) + change,
+            SONG_ROOT_INHERIT, 11));
+    }
+}
+
 // edit a value in the swing menu
 void panel_menu_edit_swing(int change) {
+    if(pmstate.menu_submode >= PANEL_MENU_SWING_SONG_ROOT)
+        panel_menu_edit_root(pmstate.menu_submode - PANEL_MENU_SWING_SONG_ROOT, change);
     switch(pmstate.menu_submode) {
         case PANEL_MENU_SWING_SWING:
             seq_ctrl_adjust_swing(change);
@@ -1171,7 +1220,12 @@ void panel_menu_edit_swing(int change) {
 
 // edit a value in the tonality menu
 void panel_menu_edit_tonality(int change) {
+    if(pmstate.menu_submode >= PANEL_MENU_TONALITY_SONG_ROOT)
+        panel_menu_edit_root(pmstate.menu_submode - PANEL_MENU_TONALITY_SONG_ROOT, change);
     switch(pmstate.menu_submode) {
+        case PANEL_MENU_TONALITY_SWING:
+            seq_ctrl_adjust_swing(change);
+            break;
         case PANEL_MENU_TONALITY_SCALE:
             seq_ctrl_adjust_tonality(change);
             break;

@@ -33,6 +33,7 @@
 // versions in which data stored in the reserved extension area was introduced
 #define SONG_VERSION_SCENE_MIDI_PROGRAM 0x0001001c
 #define SONG_VERSION_EUCLIDEAN 0x0001001d
+#define SONG_VERSION_ROOT 0x0001001f
 
 // list of notes to reset steps to on init
 uint8_t song_reset_scale[] = {
@@ -137,17 +138,21 @@ struct song_data {
     uint8_t euclidean_density[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];
     uint8_t euclidean_rotation[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];
 
+    // CARBON version 1.31: seven reserved bytes, no older offsets move.
+    int8_t root;
+    int8_t scene_root[SEQ_NUM_SCENES];
+
     // dummy padding - to make it an even number of 4096 byte sectors in the flash
     // - be VERY careful that this is correct or other RAM could be overwritten
 #ifdef SONG_NOTES_PER_SCENE
     uint8_t dummy0[1024];
-    uint8_t dummy1[329];
+    uint8_t dummy1[329 - 7];
 #else
     uint8_t dummy0[1024];
     uint8_t dummy1[1024];
     uint8_t dummy2[1024];
     uint8_t dummy3[1024];
-    uint8_t dummy4[628 - (SEQ_NUM_SCENES * SEQ_NUM_TRACKS * 2)];
+    uint8_t dummy4[628 - (SEQ_NUM_SCENES * SEQ_NUM_TRACKS * 2) - 7];
     uint8_t dummy5[13];
 #endif
     // token to identify correct loading of file
@@ -166,10 +171,16 @@ struct song_state {
     int loadsave_song;  // which song number is loading or saving
 };
 struct song_state songs;
+// Scene copies dispatch many setters synchronously. Defer pitch refresh until
+// the complete scene has been written, avoiding partial legacy revoicing.
+static int song_scene_copying;
+int song_scene_copy_in_progress(void) { return song_scene_copying; }
+
 
 // local functions
 static void song_init_scene_midi_programs(void);
 static void song_init_euclidean(void);
+static void song_init_roots(void);
 
 // init the song
 void song_init(void) {
@@ -210,6 +221,7 @@ void song_timer_task(void) {
                 if(song.song_version < SONG_VERSION_EUCLIDEAN) {
                     song_init_euclidean();
                 }
+                if(song.song_version < SONG_VERSION_ROOT) song_init_roots();
                 if(song.song_version < CARBON_VERSION_MAJMIN) {
                     song_set_version_to_current();
                 }
@@ -245,6 +257,7 @@ void song_clear(void) {
     // global params (per song)
     song_set_tempo(120.0);
     song_set_swing(50);
+    song_init_roots();
     song_set_metronome_mode(SONG_METRONOME_INTERNAL);
     song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
     song_set_key_velocity_scale(0);
@@ -400,6 +413,8 @@ void song_copy_scene(int dest, int src) {
         log_error("scs - src invalid: %d", src);
         return;
     }
+    song_scene_copying = 1;
+    song_set_scene_root(dest, song_get_scene_root(src));
     // copy all trkscene items
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         song_set_step_length(dest, track, song_get_step_length(src, track));
@@ -425,6 +440,8 @@ void song_copy_scene(int dest, int src) {
                 song_get_scene_midi_program(src, track, mapnum));
         }
     }
+    song_scene_copying = 0;
+    state_change_fire0(SCE_SONG_ROOT);
 }
 
 //
@@ -2004,4 +2021,34 @@ void song_set_ratchet_mode(int scene, int track, int step, int ratchet) {
 #endif
     // fire event
     state_change_fire3(SCE_SONG_RATCHET_MODE, scene, track, step);
+}
+
+static void song_init_roots(void) {
+    int scene;
+    song.root = SONG_ROOT_OFF;
+    for(scene = 0; scene < SEQ_NUM_SCENES; scene ++)
+        song.scene_root[scene] = SONG_ROOT_INHERIT;
+}
+int song_get_root(void) {
+    return song.root >= SONG_ROOT_OFF && song.root <= 11 ? song.root : SONG_ROOT_OFF;
+}
+void song_set_root(int root) {
+    if(root < SONG_ROOT_OFF || root > 11 || song.root == root) return;
+    song.root = root;
+    state_change_fire0(SCE_SONG_ROOT);
+}
+int song_get_scene_root(int scene) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) return SONG_ROOT_INHERIT;
+    return song.scene_root[scene] >= SONG_ROOT_INHERIT && song.scene_root[scene] <= 11
+        ? song.scene_root[scene] : SONG_ROOT_INHERIT;
+}
+void song_set_scene_root(int scene, int root) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES || root < SONG_ROOT_INHERIT || root > 11) return;
+    if(song.scene_root[scene] == root) return;
+    song.scene_root[scene] = root;
+    state_change_fire0(SCE_SONG_ROOT);
+}
+int song_get_effective_root(int scene) {
+    int root = song_get_scene_root(scene);
+    return root == SONG_ROOT_INHERIT ? song_get_root() : root;
 }

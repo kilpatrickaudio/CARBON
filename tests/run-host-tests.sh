@@ -37,6 +37,34 @@ trap 'rm -rf "$TMP"' EXIT HUP INT TERM
     tests/song_test.c.in src/util/seq_utils.c "$LINK_GC" -o "$TMP/song"
 "$TMP/song"
 
+"$CC" -x c -std=c11 -Wall -Wextra -Werror \
+    -Wno-unused-parameter -Wno-sign-compare \
+    -ffunction-sections -fdata-sections -fsanitize=address,undefined \
+    -Wno-deprecated-declarations tests/root_test.c.in src/seq/scale.c src/midi/midi_utils.c \
+    src/util/seq_utils.c "$LINK_GC" -o "$TMP/root"
+"$TMP/root"
+
+"$CC" -x c -std=c11 -Wall -Wextra -Werror \
+    -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations \
+    -ffunction-sections -fdata-sections -fsanitize=address,undefined \
+    tests/pitch_integration_test.c.in src/seq/scale.c src/midi/midi_utils.c \
+    src/util/seq_utils.c src/seq/midi_ctrl.c "$LINK_GC" -o "$TMP/pitch-integration"
+"$TMP/pitch-integration"
+
+"$CC" -x c -std=c11 -Wall -Wextra -Werror -Wno-cpp \
+    -Wno-unused-parameter -Wno-sign-compare \
+    -ffunction-sections -fdata-sections tests/song_layout_test.c.in \
+    "$LINK_GC" -o "$TMP/song-layout"
+"$TMP/song-layout"
+
+"$CC" -x c -std=c11 -Wall -Wextra -Werror \
+    -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations \
+    -Wno-tautological-constant-out-of-range-compare \
+    -ffunction-sections -fdata-sections -fsanitize=address,undefined \
+    tests/root_ui_test.c.in src/seq/scale.c src/util/panel_utils.c src/util/seq_utils.c \
+    "$LINK_GC" -o "$TMP/root-ui"
+"$TMP/root-ui"
+
 # Apple clang predefines __weak for Objective-C, not ELF-style callbacks.
 "$CC" -U__weak '-D__weak=__attribute__((weak))' \
     -x c -std=c11 -Wall -Wextra -Werror \

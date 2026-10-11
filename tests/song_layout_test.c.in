@@ -1,0 +1,103 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#include <stdio.h>
+#include "../src/seq/song.c"
+struct legacy_song_data {
+    // firwmare version that wrote this song - this should be first
+    uint32_t song_version;  // version major: upper 16 bits, version mintor: lower 16 bits
+    // global
+    float tempo;  // song tempo in BPM
+    int8_t swing;  // track swing - 50-80 = 50-80%
+    int8_t metronome;  // 0 = off, 1 = internal, 24-84 = track 6 note
+    int16_t midi_key_vel_scale;  // -100 to +100
+    int8_t cv_bend_range;  // number of semis to bend
+    int8_t cvgate_pairs;  // see values
+    int8_t cvgate_pair_mode[SONG_CVGATE_NUM_PAIRS];  // see values
+    int8_t cv_output_scaling[SONG_CVGATE_NUM_OUTPUTS];  // see value
+    int8_t cvcal[SONG_CVGATE_NUM_OUTPUTS];  // cal value used to init the CV scale
+    int midi_clock_out[MIDI_PORT_NUM_TRACK_OUTPUTS];  // PPQ setting
+    // song list
+    struct song_list_entry snglist[SEQ_SONG_LIST_ENTRIES];  // song list
+    // track/scene params
+    struct track_param trkparam[SEQ_NUM_TRACKS];  // params for tracks
+    struct track_scene trkscene[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];  // scene data for tracks
+#ifdef SONG_NOTES_PER_SCENE
+#warning song compiled with notes per scene
+    struct track_step_param trkstepparam[SEQ_NUM_TRACKS][SEQ_NUM_SCENES][SEQ_NUM_STEPS];  // step params
+    struct track_event trkevents[SEQ_NUM_TRACKS][SEQ_NUM_SCENES][SEQ_NUM_STEPS][SEQ_TRACK_POLY];  // events
+#else
+#warning song compiled with notes per song
+    struct track_step_param trkstepparam[SEQ_NUM_TRACKS][SEQ_NUM_STEPS];  // step params
+    struct track_event trkevents[SEQ_NUM_TRACKS][SEQ_NUM_STEPS][SEQ_TRACK_POLY];  // events
+#endif
+    //
+    // additional data (from original song layout
+    //  - do not move this up or you will break existing songs
+    //  - new data here must be checked against the song version number
+    //
+    // CARBON version 1.01
+    uint8_t midi_remote_ctrl;  // MIDI remote control - 0 = disabled, 1 = enabled
+    // CARBON version 1.03
+    uint8_t metronome_sound_len;  // metronome sound length in ms
+    int8_t midi_clock_source;  // see lookup table
+    uint8_t dummy999[2];  // DO NOT REMOVE THIS - fills in old MIDI clock in space
+    // CARBON version 1.12
+    int16_t cvoffset[SONG_CVGATE_NUM_OUTPUTS];  // CV output offset
+    uint8_t midi_autolive;  // autolive function - 0 = off, 1 = on
+    // CARBON version 1.14
+    uint8_t scene_sync;  // scene sync type - 0 = beat, 1 = track 1 end
+    uint8_t magic_range;  // magic seed range in semitones
+    uint8_t magic_chance;  // magic change amount in percent
+    // CARBON version 1.28
+    int8_t scene_midi_program[SEQ_NUM_SCENES][SEQ_NUM_TRACKS][SEQ_NUM_TRACK_OUTPUTS];
+    // CARBON version 1.29
+    uint8_t euclidean_density[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];
+    uint8_t euclidean_rotation[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];
+
+    // dummy padding - to make it an even number of 4096 byte sectors in the flash
+    // - be VERY careful that this is correct or other RAM could be overwritten
+#ifdef SONG_NOTES_PER_SCENE
+    uint8_t dummy0[1024];
+    uint8_t dummy1[329];
+#else
+    uint8_t dummy0[1024];
+    uint8_t dummy1[1024];
+    uint8_t dummy2[1024];
+    uint8_t dummy3[1024];
+    uint8_t dummy4[628 - (SEQ_NUM_SCENES * SEQ_NUM_TRACKS * 2)];
+    uint8_t dummy5[13];
+#endif
+    // token to identify correct loading of file
+    uint32_t magic_num;
+};
+_Static_assert(offsetof(struct song_data, song_version) == offsetof(struct legacy_song_data, song_version), "song_version offset changed");
+_Static_assert(offsetof(struct song_data, tempo) == offsetof(struct legacy_song_data, tempo), "tempo offset changed");
+_Static_assert(offsetof(struct song_data, swing) == offsetof(struct legacy_song_data, swing), "swing offset changed");
+_Static_assert(offsetof(struct song_data, metronome) == offsetof(struct legacy_song_data, metronome), "metronome offset changed");
+_Static_assert(offsetof(struct song_data, midi_key_vel_scale) == offsetof(struct legacy_song_data, midi_key_vel_scale), "midi_key_vel_scale offset changed");
+_Static_assert(offsetof(struct song_data, cv_bend_range) == offsetof(struct legacy_song_data, cv_bend_range), "cv_bend_range offset changed");
+_Static_assert(offsetof(struct song_data, cvgate_pairs) == offsetof(struct legacy_song_data, cvgate_pairs), "cvgate_pairs offset changed");
+_Static_assert(offsetof(struct song_data, cvgate_pair_mode) == offsetof(struct legacy_song_data, cvgate_pair_mode), "cvgate_pair_mode offset changed");
+_Static_assert(offsetof(struct song_data, cv_output_scaling) == offsetof(struct legacy_song_data, cv_output_scaling), "cv_output_scaling offset changed");
+_Static_assert(offsetof(struct song_data, cvcal) == offsetof(struct legacy_song_data, cvcal), "cvcal offset changed");
+_Static_assert(offsetof(struct song_data, midi_clock_out) == offsetof(struct legacy_song_data, midi_clock_out), "midi_clock_out offset changed");
+_Static_assert(offsetof(struct song_data, snglist) == offsetof(struct legacy_song_data, snglist), "snglist offset changed");
+_Static_assert(offsetof(struct song_data, trkparam) == offsetof(struct legacy_song_data, trkparam), "trkparam offset changed");
+_Static_assert(offsetof(struct song_data, trkscene) == offsetof(struct legacy_song_data, trkscene), "trkscene offset changed");
+_Static_assert(offsetof(struct song_data, trkstepparam) == offsetof(struct legacy_song_data, trkstepparam), "trkstepparam offset changed");
+_Static_assert(offsetof(struct song_data, trkevents) == offsetof(struct legacy_song_data, trkevents), "trkevents offset changed");
+_Static_assert(offsetof(struct song_data, midi_remote_ctrl) == offsetof(struct legacy_song_data, midi_remote_ctrl), "midi_remote_ctrl offset changed");
+_Static_assert(offsetof(struct song_data, metronome_sound_len) == offsetof(struct legacy_song_data, metronome_sound_len), "metronome_sound_len offset changed");
+_Static_assert(offsetof(struct song_data, midi_clock_source) == offsetof(struct legacy_song_data, midi_clock_source), "midi_clock_source offset changed");
+_Static_assert(offsetof(struct song_data, dummy999) == offsetof(struct legacy_song_data, dummy999), "dummy999 offset changed");
+_Static_assert(offsetof(struct song_data, cvoffset) == offsetof(struct legacy_song_data, cvoffset), "cvoffset offset changed");
+_Static_assert(offsetof(struct song_data, midi_autolive) == offsetof(struct legacy_song_data, midi_autolive), "midi_autolive offset changed");
+_Static_assert(offsetof(struct song_data, scene_sync) == offsetof(struct legacy_song_data, scene_sync), "scene_sync offset changed");
+_Static_assert(offsetof(struct song_data, magic_range) == offsetof(struct legacy_song_data, magic_range), "magic_range offset changed");
+_Static_assert(offsetof(struct song_data, magic_chance) == offsetof(struct legacy_song_data, magic_chance), "magic_chance offset changed");
+_Static_assert(offsetof(struct song_data, scene_midi_program) == offsetof(struct legacy_song_data, scene_midi_program), "scene_midi_program offset changed");
+_Static_assert(offsetof(struct song_data, euclidean_density) == offsetof(struct legacy_song_data, euclidean_density), "euclidean_density offset changed");
+_Static_assert(offsetof(struct song_data, euclidean_rotation) == offsetof(struct legacy_song_data, euclidean_rotation), "euclidean_rotation offset changed");
+_Static_assert(offsetof(struct song_data, magic_num) == offsetof(struct legacy_song_data, magic_num), "magic_num offset changed");
+_Static_assert(sizeof(struct song_data) == sizeof(struct legacy_song_data), "slot changed");
+int main(void) { printf("song layout passed: size=%zu root=%zu scenes=%zu magic=%zu\n", sizeof(struct song_data), offsetof(struct song_data, root), offsetof(struct song_data, scene_root), offsetof(struct song_data, magic_num)); return 0; }

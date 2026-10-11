@@ -138,7 +138,7 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
 void seq_engine_track_manage_notes(int track);
 void seq_engine_track_stop_all_notes(int track);
 void seq_engine_track_set_bias_output(int track, int bias_note);
-static int seq_engine_get_internal_cc(int track, int controller, int fallback);
+int seq_engine_get_internal_cc(int track, int controller, int fallback);
 void seq_engine_apply_internal_cc(int source_track, int controller, int value);
 void seq_engine_refresh_internal_cc_target(int track, int controller);
 void seq_engine_clear_internal_cc(void);
@@ -551,12 +551,14 @@ int seq_engine_get_current_scene(void) {
 }
 
 // get a transient override, falling back to the stored song value
-static int seq_engine_get_internal_cc(int track, int controller, int fallback) {
+int seq_engine_get_internal_cc(int track, int controller, int fallback) {
     int index = controller - MIDI_CTRL_CC_STEP_LENGTH;
     if(track < 0 || track >= SEQ_NUM_TRACKS || index < 0 || index >= 14) {
         return fallback;
     }
-    if(sestate.internal_cc[track][index] >= 0) {
+    if(index == MIDI_CTRL_CC_TRACK_TRANSPOSE - MIDI_CTRL_CC_STEP_LENGTH
+            ? sestate.internal_cc[track][index] != -32768
+            : sestate.internal_cc[track][index] >= 0) {
         return sestate.internal_cc[track][index];
     }
     return fallback;
@@ -605,6 +607,9 @@ void seq_engine_handle_state_change(int event_type, int *data, int data_len) {
     switch(event_type) {
         case SCE_SONG_LOADED:
             seq_engine_song_loaded(data[0]);
+            break;
+        case SCE_SONG_ROOT:
+            outproc_root_changed();
             break;
         case SCE_SONG_TONALITY:
             outproc_tonality_changed(data[0], data[1]);
@@ -1076,7 +1081,11 @@ void seq_engine_track_play_step(int track, int step,
                                 MIDI_CTRL_CC_TRACK_TRANSPOSE,
                                 song_get_transpose(sestate.scene_current, track)) -
                             song_get_transpose(sestate.scene_current, track);
-                        if(!seq_utils_check_note_range(temp)) {
+                        if(song_get_effective_root(sestate.scene_current) >= 0) {
+                            // Named roots process the effective transpose at output, once.
+                            temp = event.data0 + sestate.kbtrans + bias;
+                        }
+                        else if(!seq_utils_check_note_range(temp)) {
                             return;
                         }
                         midi_utils_enc_note_on(&msg, 0, 0, temp, event.data1);
@@ -1110,6 +1119,7 @@ void seq_engine_track_play_step(int track, int step,
 // start a note on a track playback - also figures out ratcheting and start delay
 void seq_engine_track_start_note(int track, int step, int length, struct midi_msg *on_msg) {
     int i, free_slot = -1, total_len;
+    struct midi_msg stolen;
     int min_time_remain = 0xffff;
     int min_time_remain_slot = -1;
     // search for a free slot to put this event
@@ -1126,15 +1136,17 @@ void seq_engine_track_start_note(int track, int step, int length, struct midi_ms
     }
     // if there are no free slots, kill the shortest note and free the slot
     if(free_slot == -1) {
+        // Release the stolen voice, never resend its note-on.
+        stolen = sestate.track_active_notes[track][min_time_remain_slot].note.msg;
+        midi_utils_note_on_to_off(&stolen);
         // arp input
         if(sestate.arp_enable[track]) {
-            arp_handle_input(track,
-                &sestate.track_active_notes[track][min_time_remain_slot].note.msg);
+            arp_handle_input(track, &stolen);
         }
         // normal playback
         else {
             outproc_deliver_msg(sestate.scene_current, track,
-                &sestate.track_active_notes[track][min_time_remain_slot].note.msg,
+                &stolen,
                 OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_PROCESSED);
         }
         free_slot = min_time_remain_slot;
@@ -1326,7 +1338,7 @@ void seq_engine_apply_internal_cc(int source_track, int controller, int value) {
         }
         motion_length = seq_engine_get_effective_motion_length(target);
         scaled = midi_ctrl_internal_cc_to_value(controller, value, motion_length);
-        if(scaled < 0 || sestate.internal_cc[target]
+        if((scaled < 0 && controller != MIDI_CTRL_CC_TRACK_TRANSPOSE) || sestate.internal_cc[target]
                 [controller - MIDI_CTRL_CC_STEP_LENGTH] == scaled) {
             continue;
         }
@@ -1401,7 +1413,8 @@ void seq_engine_clear_internal_cc(void) {
     int track, index;
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         for(index = 0; index < 14; index ++) {
-            sestate.internal_cc[track][index] = -1;
+            sestate.internal_cc[track][index] =
+                index == MIDI_CTRL_CC_TRACK_TRANSPOSE - MIDI_CTRL_CC_STEP_LENGTH ? -32768 : -1;
         }
     }
 }
@@ -1413,6 +1426,13 @@ void seq_engine_clear_internal_cc(void) {
 // events get filtered for arp and key split here
 // by the time we get here we know that live mode is on or we're not recording
 void seq_engine_live_send_msg(int track, struct midi_msg *msg) {
+    struct midi_msg release;
+    if((msg->status & 0xf0) == MIDI_NOTE_ON && msg->data1 == 0) {
+        release = *msg;
+        midi_utils_rewrite_note_off(&release);
+        seq_engine_live_send_msg(track, &release);
+        return;
+    }
     // handle event types
     switch(msg->status & 0xf0) {
         case MIDI_NOTE_OFF:
@@ -1473,7 +1493,7 @@ void seq_engine_live_send_msg(int track, struct midi_msg *msg) {
         case MIDI_CONTROL_CHANGE:
             // keep track of damper pedal
             if(msg->data0 == MIDI_CONTROLLER_DAMPER) {
-                if(msg->data1 > 0) {
+                if(msg->data1 >= 64) {
                     sestate.live_damper_pedal[track] = 1;
                 }
                 else {
@@ -1559,6 +1579,7 @@ void seq_engine_live_stop_all_notes(int track) {
             OUTPROC_DELIVER_BOTH,
             OUTPROC_OUTPUT_PROCESSED);
     }
+    sestate.live_damper_pedal[track] = 0;
     // reset pitch bend if we used it
     if(sestate.live_active_bend[track]) {
         midi_utils_enc_pitch_bend(&msg, 0, 0, 0);
@@ -2306,8 +2327,7 @@ int seq_engine_change_scene_synced(void) {
     // update engine with new transpose info
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         // update outproc for tonality and transpose
-        outproc_transpose_changed(sestate.scene_current, track);
-        outproc_tonality_changed(sestate.scene_current, track);
+        outproc_pitch_changed(sestate.scene_current, track);
         // update arp settings for new scene
         arp_set_arp_enable(track,
             song_get_arp_enable(sestate.scene_current, track));

@@ -40,6 +40,10 @@ void outproc_transpose_changed(int scene, int track);
 // the tonality changed on a track
 void outproc_tonality_changed(int scene, int track);
 
+// Refresh pitch parameters together; held voices retain their output pitches.
+void outproc_pitch_changed(int scene, int track);
+void outproc_root_changed(void);
+
 // deliver a track message to assigned outputs
 void outproc_deliver_msg(int scene, int track, 
     struct midi_msg *msg, int deliver, int process);
