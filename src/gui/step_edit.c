@@ -25,6 +25,7 @@
 #include "../config.h"
 #include "../gfx.h"
 #include "../seq/outproc.h"
+#include "../seq/arp.h"
 #include "../seq/midi_ctrl.h"
 #include "../seq/seq_ctrl.h"
 #include "../seq/song.h"
@@ -397,6 +398,37 @@ void step_edit_clear_step(void) {
 //
 // local functions
 //
+// One detent per distinct playback setting, using a stable representative raw
+// value for each bucket. External CCs retain their ordinary raw-value editor.
+static int step_edit_adjust_cci_value(int controller, int raw, int change) {
+    int direction = change > 0 ? 1 : -1;
+    int steps = seq_utils_clamp(change > 0 ? change : -change, 0, 128);
+    int decoded, next, candidate;
+    if(!change) return raw;
+    if(controller == MIDI_CTRL_CC_EUCLIDEAN_ROTATION) {
+        // Multiple Bias targets can have different motion lengths: every raw
+        // value may matter. Do not discard fractions based on the source length.
+        return seq_utils_clamp(raw + change, 0, 127);
+    }
+    if(!midi_ctrl_internal_cc_supported(controller))
+        return seq_utils_clamp(raw + change * 2, 0, 127);
+    while(steps-- > 0) {
+        decoded = midi_ctrl_internal_cc_to_value(controller, raw, SEQ_NUM_STEPS);
+        candidate = raw + direction;
+        while(candidate >= 0 && candidate <= 127 &&
+                midi_ctrl_internal_cc_to_value(controller, candidate, SEQ_NUM_STEPS) == decoded)
+            candidate += direction;
+        if(candidate < 0 || candidate > 127) break;
+        next = midi_ctrl_internal_cc_to_value(controller, candidate, SEQ_NUM_STEPS);
+        // Canonical first raw value makes forward/backward navigation stable.
+        while(candidate > 0 &&
+                midi_ctrl_internal_cc_to_value(controller, candidate - 1, SEQ_NUM_STEPS) == next)
+            candidate--;
+        raw = candidate;
+    }
+    return raw;
+}
+
 // adjust all events on a step
 void step_edit_adjust_step(int change, int mode, int single, int shift) {
     int inhibit_preview = 0;
@@ -554,7 +586,9 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                     // external or internal CC
                     else if(event.type == SONG_EVENT_CC ||
                             event.type == SONG_EVENT_INTERNAL_CC) {
-                        event.data1 = seq_utils_clamp(event.data1 + change * 2, 0, 127);
+                        event.data1 = event.type == SONG_EVENT_INTERNAL_CC
+                            ? step_edit_adjust_cci_value(event.data0, event.data1, change)
+                            : seq_utils_clamp(event.data1 + change * 2, 0, 127);
                         if(single && event.type == SONG_EVENT_INTERNAL_CC) {
                             sedits.cci_hint_controller = event.data0;
                             sedits.cci_hint_value = event.data1;
@@ -665,13 +699,16 @@ static void step_edit_cci_value_title(char *title, int controller, int raw) {
             break;
         case MIDI_CTRL_CC_GATE_TIME:
             label = "Gate time";
-            int tenths = (decoded * 1000 + 64) / 128;
-            snprintf(value, sizeof(value), "%d.%d%%", tenths / 10, tenths % 10);
+            // Match gui_update_gate_time_override, including max=200%.
+            snprintf(value, sizeof(value), "%d%%", (decoded + 1) * 200 / 256);
             break;
         case MIDI_CTRL_CC_PATTERN_TYPE:
-        case MIDI_CTRL_CC_ARP_TYPE:
-            label = controller == MIDI_CTRL_CC_PATTERN_TYPE ? "Pattern type" : "Arp type";
+            label = "Pattern type";
             snprintf(value, sizeof(value), "%d", decoded + 1);
+            break;
+        case MIDI_CTRL_CC_ARP_TYPE:
+            label = "Arp type";
+            arp_type_to_name(value, decoded);
             break;
         case MIDI_CTRL_CC_ARP_GATE_TIME:
             label = "Arp gate";

@@ -28,7 +28,7 @@ trap 'rm -rf "$TMP"' EXIT HUP INT TERM
     -ffunction-sections -fdata-sections -fsanitize=address,undefined \
     -Wno-deprecated-declarations \
     tests/editor_test.c.in src/midi/midi_utils.c src/util/seq_utils.c \
-    src/util/panel_utils.c src/seq/midi_ctrl.c "$LINK_GC" -o "$TMP/editor"
+    src/util/panel_utils.c src/seq/midi_ctrl.c src/seq/arp_progs.c "$LINK_GC" -o "$TMP/editor"
 "$TMP/editor"
 
 "$CC" -x c -std=c11 -Wall -Wextra -Werror -Wno-cpp \
