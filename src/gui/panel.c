@@ -81,6 +81,7 @@ struct panel_state {
     int key_queue_inp;  // input queue in pos
     int key_queue_outp;  // input queue out pos
     int beat_led_timeout;  // timeout for beat LED
+    int euclidean_display_timeout;  // timeout for Euclidean status overlay
 };
 
 //
@@ -108,6 +109,7 @@ void panel_update_track_led(int track, int state);
 int panel_get_edit_mode(void);
 void panel_cancel_edit_mode(void);
 void panel_handle_shift_double_tap(void);
+void panel_show_euclidean_status(void);
 
 // init the panel
 void panel_init(void) {
@@ -117,6 +119,7 @@ void panel_init(void) {
     pstate.key_queue_inp = 0;
     pstate.key_queue_outp = 0;
     pstate.beat_led_timeout = 0;
+    pstate.euclidean_display_timeout = 0;
 
     // init modes
     pstate.shift_state = 0;
@@ -174,6 +177,20 @@ void panel_timer_task(void) {
     // timeout the shift double tap counter
     if(pstate.shift_tap_timeout) {
         pstate.shift_tap_timeout --;
+    }
+
+    // time out the Euclidean status overlay unless another mode took it over
+    if(pstate.euclidean_display_timeout) {
+        if(panel_menu_get_mode() != PANEL_MENU_NONE ||
+                panel_get_edit_mode() != PANEL_EDIT_MODE_NONE) {
+            pstate.euclidean_display_timeout = 0;
+        }
+        else if(pstate.euclidean_display_timeout != PANEL_MENU_TIMEOUT_MAX) {
+            pstate.euclidean_display_timeout --;
+            if(pstate.euclidean_display_timeout == 0) {
+                gui_set_status_override(0);
+            }
+        }
     }
 
     // menu tasks
@@ -280,9 +297,22 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
             // update all the things that depend on track
             panel_update_track_led(data[0], data[1]);
             break;
+        case SCE_SONG_EUCLIDEAN_DENSITY:
+        case SCE_SONG_EUCLIDEAN_ROTATION:
+            if(pstate.euclidean_display_timeout) {
+                int timeout = pstate.euclidean_display_timeout;
+                panel_show_euclidean_status();
+                // Remote edits refresh an explicitly opened overlay, not its lifetime.
+                pstate.euclidean_display_timeout = timeout;
+            }
+            break;
         case SCE_CTRL_FIRST_TRACK:
             panel_update_arp_led();
             panel_update_dir_led();
+            if(pstate.euclidean_display_timeout) {
+                pstate.euclidean_display_timeout = 0;
+                gui_set_status_override(0);
+            }
             break;
         case SCE_CTRL_SONG_MODE:
             panel_update_song_led();
@@ -298,6 +328,10 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_ENG_CURRENT_SCENE:
             panel_update_arp_led();
             panel_update_dir_led();
+            if(pstate.euclidean_display_timeout) {
+                pstate.euclidean_display_timeout = 0;
+                gui_set_status_override(0);
+            }
             break;
         case SCE_POWER_STATE:
             switch(data[0]) {
@@ -793,8 +827,20 @@ void panel_handle_seq_input(int ctrl, int val) {
                             pstate.shift_state);
                         break;
                     case PANEL_EDIT_MODE_PATTERN:
-                    default:
                         seq_ctrl_adjust_pattern_type(seq_utils_enc_val_to_change(val));
+                        break;
+                    default:
+                        if(pstate.shift_state) {
+                            if(panel_menu_get_mode() == PANEL_MENU_NONE) {
+                                seq_ctrl_adjust_euclidean_density(
+                                    seq_utils_enc_val_to_change(val));
+                                panel_show_euclidean_status();
+                            }
+                        }
+                        else {
+                            seq_ctrl_adjust_pattern_type(
+                                seq_utils_enc_val_to_change(val));
+                        }
                         break;
                 }
                 break;
@@ -812,7 +858,16 @@ void panel_handle_seq_input(int ctrl, int val) {
                         // no action
                         break;
                     default:
-                        seq_ctrl_adjust_transpose(seq_utils_enc_val_to_change(val));
+                        if(pstate.shift_state) {
+                            if(panel_menu_get_mode() == PANEL_MENU_NONE) {
+                                seq_ctrl_adjust_euclidean_rotation(
+                                    seq_utils_enc_val_to_change(val));
+                                panel_show_euclidean_status();
+                            }
+                        }
+                        else {
+                            seq_ctrl_adjust_transpose(seq_utils_enc_val_to_change(val));
+                        }
                         break;
                 }
                 break;
@@ -1171,6 +1226,30 @@ void panel_cancel_edit_mode(void) {
     else if(panel_get_edit_mode() == PANEL_EDIT_MODE_PATTERN) {
         pattern_edit_set_enable(0);  // cancel pattern edit
     }
+}
+
+// show the current Euclidean settings temporarily in the status area
+void panel_show_euclidean_status(void) {
+    char tempstr[64];
+    int scene = seq_ctrl_get_scene();
+    int track = seq_ctrl_get_first_track();
+
+    gui_set_status_override(1);
+    if(!pstate.euclidean_display_timeout) {
+        // Clear inherited text/highlights only when opening, not every edit.
+        gui_clear_status_text_all();
+    }
+    sprintf(tempstr, "Track %d Euclidean", track + 1);
+    gui_set_status_text(0, tempstr);
+    sprintf(tempstr, "Density: %d%%",
+        song_get_euclidean_density(scene, track));
+    gui_set_status_text(1, tempstr);
+    sprintf(tempstr, "Rotation: %d",
+        song_get_euclidean_rotation(scene, track) %
+        song_get_motion_length(scene, track));
+    gui_set_status_text(2, tempstr);
+    gui_set_status_text(3, "Shift: Pattern / Transpose");
+    pstate.euclidean_display_timeout = panel_menu_get_timeout();
 }
 
 // handle shift double-tap to exit menu

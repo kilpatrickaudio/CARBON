@@ -24,7 +24,11 @@
 #define SEQ_UTILS_H
 
 // step length
-#define SEQ_UTILS_STEP_LENS 17  // enumerated
+// Keep the original 0-16 indices stable for song compatibility. Bar-relative
+// track lengths are appended and deliberately excluded from arp speed choices.
+#define SEQ_UTILS_STANDARD_STEP_LENS 17
+#define SEQ_UTILS_STEP_LENS 23  // enumerated track step lengths
+#define SEQ_UTILS_ARP_SPEEDS SEQ_UTILS_STANDARD_STEP_LENS
 #define SEQ_UTILS_STEP_32ND_T 0
 #define SEQ_UTILS_STEP_32ND 1
 #define SEQ_UTILS_STEP_16TH_T 2
@@ -42,9 +46,15 @@
 #define SEQ_UTILS_STEP_WHOLE_T 14
 #define SEQ_UTILS_STEP_DOT_HALF 15
 #define SEQ_UTILS_STEP_WHOLE 16
+#define SEQ_UTILS_STEP_BAR_DIV_3 17
+#define SEQ_UTILS_STEP_BAR_DIV_5 18
+#define SEQ_UTILS_STEP_BAR_DIV_7 19
+#define SEQ_UTILS_STEP_BAR_DIV_9 20
+#define SEQ_UTILS_STEP_BAR_DIV_11 21
+#define SEQ_UTILS_STEP_BAR_DIV_13 22
 
 // clock PPQ
-#define SEQ_UTILS_CLOCK_PPQS 9  // enumerated
+#define SEQ_UTILS_CLOCK_PPQS 10  // enumerated
 #define SEQ_UTILS_CLOCK_OFF 0
 #define SEQ_UTILS_CLOCK_1PPQ 1
 #define SEQ_UTILS_CLOCK_2PPQ 2
@@ -54,6 +64,7 @@
 #define SEQ_UTILS_CLOCK_8PPQ 6
 #define SEQ_UTILS_CLOCK_12PPQ 7
 #define SEQ_UTILS_CLOCK_24PPQ 8
+#define SEQ_UTILS_CLOCK_16PPQ 9  // appended to preserve saved clock indices
 
 // convert a MIDI-style encoder value to a change amount
 // input is 0x01-0x3f for up, and 0x7f down to 0x40 for down
@@ -72,8 +83,11 @@ int seq_utils_bits_to_count(int bits);
 int seq_utils_is_step_active(int step, int motion_start, 
         int motion_len, int num_steps);
 
-// convert a step length to a number of ticks
+// convert a step length to a nominal number of ticks
 int seq_utils_step_len_to_ticks(int speed);
+
+// return divisions per 4/4 bar for a bar-relative step length, or 0
+int seq_utils_step_len_to_bar_divisions(int speed);
 
 // remap a step len for ver <= 1.02 to the new step len entry
 // this adds support for triplets

@@ -25,8 +25,10 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 27
+#define CARBON_VERSION_MINOR 30
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
+// Display-only community identity; numeric versions remain authoritative for storage.
+#define CARBON_VERSION_VARIANT "johanwk-ch9-dev"
 
 // memory mapping
 // - while not actual config data this is a nice place to mention it
@@ -201,6 +203,12 @@
 #define SEQ_GATE_TIME_STEP_SIZE 8  // gate time track override
 #define SEQ_NUM_PATTERNS 32  // enumerated
 #define SEQ_NUM_TRACK_OUTPUTS 2  // number of MIDI outputs from a track
+#define SEQ_EUCLIDEAN_DENSITY_MIN 0
+#define SEQ_EUCLIDEAN_DENSITY_MAX 100
+#define SEQ_EUCLIDEAN_DENSITY_DEFAULT 100
+#define SEQ_EUCLIDEAN_ROTATION_MIN 0
+#define SEQ_EUCLIDEAN_ROTATION_MAX (SEQ_NUM_STEPS - 1)
+#define SEQ_EUCLIDEAN_ROTATION_DEFAULT 0
 #define SEQ_KEY_SPLIT_NOTE 60
 #define SEQ_RATCHET_MIN 1  // min ratchet setting
 #define SEQ_RATCHET_MAX 8  // max ratchet setting

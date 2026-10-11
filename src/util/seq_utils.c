@@ -42,8 +42,16 @@ const int seq_utils_step_size[] = {
     (48 * MIDI_CLOCK_UPSAMPLE),     // half         - old 8     - new 13
     (64 * MIDI_CLOCK_UPSAMPLE),     // whole T      - xxx       - new 14
     (72 * MIDI_CLOCK_UPSAMPLE),     // .half        - old 9     - new 15
-    (96 * MIDI_CLOCK_UPSAMPLE)      // whole        - old 10    - new 16
+    (96 * MIDI_CLOCK_UPSAMPLE),     // whole        - old 10    - new 16
+    (MIDI_CLOCK_PPQ * 4) / 3,       // 3 equal divisions per 4/4 bar
+    (MIDI_CLOCK_PPQ * 4) / 5,       // nominal; engine distributes remainder
+    (MIDI_CLOCK_PPQ * 4) / 7,       // nominal; engine distributes remainder
+    (MIDI_CLOCK_PPQ * 4) / 9,       // nominal; engine distributes remainder
+    (MIDI_CLOCK_PPQ * 4) / 11,      // nominal; engine distributes remainder
+    (MIDI_CLOCK_PPQ * 4) / 13       // nominal; engine distributes remainder
 };
+_Static_assert((sizeof(seq_utils_step_size) / sizeof(seq_utils_step_size[0])) ==
+    SEQ_UTILS_STEP_LENS, "step length table size mismatch");
 
 // convert a MIDI-style encoder value to a change amount
 // input is 0x01-0x3f for up, and 0x7f down to 0x40 for down
@@ -110,6 +118,26 @@ int seq_utils_step_len_to_ticks(int speed) {
     return seq_utils_step_size[speed];
 }
 
+// return divisions per 4/4 bar for a bar-relative step length, or 0
+int seq_utils_step_len_to_bar_divisions(int speed) {
+    switch(speed) {
+        case SEQ_UTILS_STEP_BAR_DIV_3:
+            return 3;
+        case SEQ_UTILS_STEP_BAR_DIV_5:
+            return 5;
+        case SEQ_UTILS_STEP_BAR_DIV_7:
+            return 7;
+        case SEQ_UTILS_STEP_BAR_DIV_9:
+            return 9;
+        case SEQ_UTILS_STEP_BAR_DIV_11:
+            return 11;
+        case SEQ_UTILS_STEP_BAR_DIV_13:
+            return 13;
+        default:
+            return 0;
+    }
+}
+
 // remap a step len for ver <= 1.02 to the new step len entry
 // this adds support for triplets
 int seq_utils_remap_step_len_102(int oldspeed) {
@@ -167,6 +195,8 @@ int seq_utils_clock_pqq_to_divisor(int ppq) {
             return (MIDI_CLOCK_PPQ / 12);
         case SEQ_UTILS_CLOCK_24PPQ:
             return (MIDI_CLOCK_PPQ / 24);
+        case SEQ_UTILS_CLOCK_16PPQ:
+            return (MIDI_CLOCK_PPQ / 16);
         default:
             return 0;
     }

@@ -26,6 +26,7 @@
 #include "../midi/midi_protocol.h"
 #include "../cvproc.h"
 #include <inttypes.h>
+#include <stddef.h>
 
 // note modes
 #define SONG_NOTE_MODE_PER_SONG 0
@@ -97,8 +98,20 @@ struct track_event {
 
 // song event types - map to real status messages where possible
 #define SONG_EVENT_NULL 0
+#define SONG_EVENT_INTERNAL_CC 1  // transient control routed through Bias Track
+#define SONG_EVENT_PROBABILITY 2  // data0: 0-100%; other fields unused
+#define SONG_EVENT_EUCLIDEAN 3  // data0: pair index 0-27; data1: rotation
+#define SONG_EVENT_PRE 4  // previous contributing visit's OR history
+#define SONG_EVENT_NON_PRE 5  // inverse history; never contributes
+
+_Static_assert(sizeof(struct track_event) == 6, "event storage size changed");
+_Static_assert(offsetof(struct track_event, type) == 0 &&
+    offsetof(struct track_event, data0) == 1 &&
+    offsetof(struct track_event, data1) == 2 &&
+    offsetof(struct track_event, length) == 4, "event storage offsets changed");
 #define SONG_EVENT_NOTE MIDI_NOTE_ON
 #define SONG_EVENT_CC MIDI_CONTROL_CHANGE
+#define SONG_EVENT_PROGCHG MIDI_PROGRAM_CHANGE
 
 // init the song
 void song_init(void);
@@ -308,6 +321,12 @@ void song_set_track_type(int track, int mode);
 //
 // track params (per scene)
 //
+// get a scene MIDI program for a track output
+int song_get_scene_midi_program(int scene, int track, int mapnum);
+
+// set a scene MIDI program for a track output
+void song_set_scene_midi_program(int scene, int track, int mapnum, int program);
+
 // get the step length - returns -1 on error
 int song_get_step_length(int scene, int track);
 
@@ -343,6 +362,18 @@ int song_get_motion_length(int scene, int track);
 
 // set the motion length on a track
 void song_set_motion_length(int scene, int track, int length);
+
+// get the Euclidean density for a track - returns -1 on error
+int song_get_euclidean_density(int scene, int track);
+
+// set the Euclidean density for a track
+void song_set_euclidean_density(int scene, int track, int density);
+
+// get the Euclidean rotation for a track - returns -1 on error
+int song_get_euclidean_rotation(int scene, int track);
+
+// set the Euclidean rotation for a track
+void song_set_euclidean_rotation(int scene, int track, int rotation);
 
 // get the gate time on a track in ticks - returns -1 on error
 int song_get_gate_time(int scene, int track);

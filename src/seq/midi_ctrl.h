@@ -23,11 +23,32 @@
 
 #include "../midi/midi_utils.h"
 
+// per-track controller numbers shared by MIDI Remote and internal CC events
+#define MIDI_CTRL_CC_STEP_LENGTH 16
+#define MIDI_CTRL_CC_TRACK_TRANSPOSE 17
+#define MIDI_CTRL_CC_TRACK_MUTE 18
+#define MIDI_CTRL_CC_MOTION_START 19
+#define MIDI_CTRL_CC_MOTION_LENGTH 20
+#define MIDI_CTRL_CC_MOTION_DIR 21
+#define MIDI_CTRL_CC_GATE_TIME 22
+#define MIDI_CTRL_CC_PATTERN_TYPE 23
+#define MIDI_CTRL_CC_ARP_ENABLE 24
+#define MIDI_CTRL_CC_ARP_TYPE 25
+#define MIDI_CTRL_CC_ARP_SPEED 26
+#define MIDI_CTRL_CC_ARP_GATE_TIME 27
+#define MIDI_CTRL_CC_EUCLIDEAN_DENSITY 28
+#define MIDI_CTRL_CC_EUCLIDEAN_ROTATION 29
+#define MIDI_CTRL_CC_RUN_STOP 80
+
 // init the MIDI control module
 void midi_ctrl_init(void);
 
 // handle a MIDI message from the keyboard / MIDI input
 void midi_ctrl_handle_midi_msg(struct midi_msg *msg);
+
+// internal CC support
+int midi_ctrl_internal_cc_supported(int controller);
+int midi_ctrl_internal_cc_to_value(int controller, int value, int motion_length);
 
 #endif
 
