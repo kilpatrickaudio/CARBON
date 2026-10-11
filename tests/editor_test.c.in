@@ -120,5 +120,26 @@ int main(void) {
     step_edit_adjust_cursor(1, 1);
     assert(!sedits.cci_hint_timeout && !strcmp(rows[0], "Edit - Track:  1 Step:  1"));
     assert(!step_edit_cci_name(15) && !step_edit_cci_name(30));
+    for(int cc = 16; cc <= 29; cc++)
+        for(int raw = 0; raw <= 127; raw++) {
+            char decoded[64]; step_edit_cci_value_title(decoded, cc, raw);
+            assert(strlen(decoded) <= 28);
+        }
+    { char decoded[64];
+      step_edit_cci_value_title(decoded, 17, 64); assert(!strcmp(decoded, "CCi 17: Transpose +0 semis"));
+      step_edit_cci_value_title(decoded, 17, 0); assert(!strcmp(decoded, "CCi 17: Transpose -24 semis"));
+      step_edit_cci_value_title(decoded, 18, 63); assert(!strcmp(decoded, "CCi 18: Mute Off"));
+      step_edit_cci_value_title(decoded, 18, 64); assert(!strcmp(decoded, "CCi 18: Mute On"));
+      step_edit_cci_value_title(decoded, 19, 127); assert(!strcmp(decoded, "CCi 19: Start 64"));
+      step_edit_cci_value_title(decoded, 22, 64); assert(!strcmp(decoded, "CCi 22: Gate time 100.8%"));
+      step_edit_cci_value_title(decoded, 27, 127); assert(!strcmp(decoded, "CCi 27: Arp gate 384 ticks"));
+      step_edit_cci_value_title(decoded, 28, 127); assert(!strcmp(decoded, "CCi 28: Euc density 100%"));
+    }
+    sedits.event_pos = 0; events[0] = (struct track_event){.type = SONG_EVENT_INTERNAL_CC, .data0 = 18, .data1 = 62};
+    step_edit_adjust_velocity(1, 0);
+    assert(events[0].data1 == 64 && !strcmp(rows[0], "CCi 18: Mute On") && !count);
+    sedits.edit_timeout = 10000;
+    for(int tick = 0; tick < 2000; tick++) step_edit_timer_task();
+    assert(!strcmp(rows[0], "Edit - Track:  1 Step:  1"));
     puts("editor tests passed"); return 0;
 }

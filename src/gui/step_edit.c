@@ -56,6 +56,8 @@ struct step_edit_state {
     int event_pos;  // the event edit pos or STEP_EDIT_EVENT_POS_ALL for global
     int cci_hint_timeout;  // milliseconds remaining for title help
     int cci_hint_controller;
+    int cci_hint_value;
+    int cci_hint_show_value;
     int last_adjust_type;  // the last type of adjustment
     // preview events
     int8_t playing_notes[SEQ_TRACK_POLY];  // playing notes
@@ -518,6 +520,7 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                             MIDI_CTRL_CC_EUCLIDEAN_ROTATION);
                         if(single) {
                             sedits.cci_hint_controller = event.data0;
+                            sedits.cci_hint_show_value = 0;
                             sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
                         }
                         inhibit_preview = 1;
@@ -552,6 +555,12 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                     else if(event.type == SONG_EVENT_CC ||
                             event.type == SONG_EVENT_INTERNAL_CC) {
                         event.data1 = seq_utils_clamp(event.data1 + change * 2, 0, 127);
+                        if(single && event.type == SONG_EVENT_INTERNAL_CC) {
+                            sedits.cci_hint_controller = event.data0;
+                            sedits.cci_hint_value = event.data1;
+                            sedits.cci_hint_show_value = 1;
+                            sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
+                        }
                         inhibit_preview = 1;  // user must retrigger edit to hear
                     }
                     else if(event.type == SONG_EVENT_EUCLIDEAN) {
@@ -620,13 +629,75 @@ static void step_edit_show_cci_hint(void) {
             sedits.event_pos, &event) == -1 || event.type != SONG_EVENT_INTERNAL_CC ||
             !step_edit_cci_name(event.data0)) return;
     sedits.cci_hint_controller = event.data0;
+    sedits.cci_hint_value = event.data1;
+    sedits.cci_hint_show_value = 0;
     sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
+}
+
+// Decode through the same conversion as playback; never alter stored MIDI values.
+static void step_edit_cci_value_title(char *title, int controller, int raw) {
+    char value[32];
+    int decoded = midi_ctrl_internal_cc_to_value(controller, raw, SEQ_NUM_STEPS);
+    const char *label = "Value";
+    switch(controller) {
+        case MIDI_CTRL_CC_STEP_LENGTH:
+        case MIDI_CTRL_CC_ARP_SPEED:
+            panel_utils_step_len_to_str(value, decoded);
+            label = controller == MIDI_CTRL_CC_STEP_LENGTH ? "Step length" : "Arp speed";
+            break;
+        case MIDI_CTRL_CC_TRACK_TRANSPOSE:
+            label = "Transpose";
+            snprintf(value, sizeof(value), "%+d semis", decoded);
+            break;
+        case MIDI_CTRL_CC_TRACK_MUTE:
+        case MIDI_CTRL_CC_ARP_ENABLE:
+            label = controller == MIDI_CTRL_CC_TRACK_MUTE ? "Mute" : "Arp enable";
+            snprintf(value, sizeof(value), "%s", decoded ? "On" : "Off");
+            break;
+        case MIDI_CTRL_CC_MOTION_DIR:
+            label = "Direction";
+            snprintf(value, sizeof(value), "%s", decoded ? "Reverse" : "Forward");
+            break;
+        case MIDI_CTRL_CC_MOTION_START:
+        case MIDI_CTRL_CC_MOTION_LENGTH:
+            label = controller == MIDI_CTRL_CC_MOTION_START ? "Start" : "Length";
+            snprintf(value, sizeof(value), "%d", decoded + (controller == MIDI_CTRL_CC_MOTION_START));
+            break;
+        case MIDI_CTRL_CC_GATE_TIME:
+            label = "Gate time";
+            int tenths = (decoded * 1000 + 64) / 128;
+            snprintf(value, sizeof(value), "%d.%d%%", tenths / 10, tenths % 10);
+            break;
+        case MIDI_CTRL_CC_PATTERN_TYPE:
+        case MIDI_CTRL_CC_ARP_TYPE:
+            label = controller == MIDI_CTRL_CC_PATTERN_TYPE ? "Pattern type" : "Arp type";
+            snprintf(value, sizeof(value), "%d", decoded + 1);
+            break;
+        case MIDI_CTRL_CC_ARP_GATE_TIME:
+            label = "Arp gate";
+            snprintf(value, sizeof(value), "%d ticks", decoded);
+            break;
+        case MIDI_CTRL_CC_EUCLIDEAN_DENSITY:
+            label = "Euc density";
+            snprintf(value, sizeof(value), "%d%%", decoded);
+            break;
+        case MIDI_CTRL_CC_EUCLIDEAN_ROTATION:
+            // CCi routes to potentially several target lengths, not this source.
+            snprintf(title, GFX_LABEL_LEN, "CCi 29: Rot %d/128 of len", raw);
+            return;
+        default:
+            snprintf(value, sizeof(value), "%d", raw);
+            break;
+    }
+    snprintf(title, GFX_LABEL_LEN, "CCi %d: %s %s", controller, label, value);
 }
 
 static void step_edit_update_title(void) {
     char title[GFX_LABEL_LEN];
     const char *name = step_edit_cci_name(sedits.cci_hint_controller);
-    if(sedits.cci_hint_timeout > 0 && name)
+    if(sedits.cci_hint_timeout > 0 && name && sedits.cci_hint_show_value)
+        step_edit_cci_value_title(title, sedits.cci_hint_controller, sedits.cci_hint_value);
+    else if(sedits.cci_hint_timeout > 0 && name)
         snprintf(title, sizeof(title), "CCi %d: %s", sedits.cci_hint_controller, name);
     else
         snprintf(title, sizeof(title), "Edit - Track: %2d Step: %2d",
