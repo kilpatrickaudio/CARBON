@@ -300,14 +300,18 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_EUCLIDEAN_DENSITY:
         case SCE_SONG_EUCLIDEAN_ROTATION:
             if(pstate.euclidean_display_timeout) {
+                int timeout = pstate.euclidean_display_timeout;
                 panel_show_euclidean_status();
+                // Remote edits refresh an explicitly opened overlay, not its lifetime.
+                pstate.euclidean_display_timeout = timeout;
             }
             break;
         case SCE_CTRL_FIRST_TRACK:
             panel_update_arp_led();
             panel_update_dir_led();
             if(pstate.euclidean_display_timeout) {
-                panel_show_euclidean_status();
+                pstate.euclidean_display_timeout = 0;
+                gui_set_status_override(0);
             }
             break;
         case SCE_CTRL_SONG_MODE:
@@ -325,7 +329,8 @@ void panel_handle_state_change(int event_type, int *data, int data_len) {
             panel_update_arp_led();
             panel_update_dir_led();
             if(pstate.euclidean_display_timeout) {
-                panel_show_euclidean_status();
+                pstate.euclidean_display_timeout = 0;
+                gui_set_status_override(0);
             }
             break;
         case SCE_POWER_STATE:
@@ -1230,7 +1235,10 @@ void panel_show_euclidean_status(void) {
     int track = seq_ctrl_get_first_track();
 
     gui_set_status_override(1);
-    gui_clear_status_text_all();
+    if(!pstate.euclidean_display_timeout) {
+        // Clear inherited text/highlights only when opening, not every edit.
+        gui_clear_status_text_all();
+    }
     sprintf(tempstr, "Track %d Euclidean", track + 1);
     gui_set_status_text(0, tempstr);
     sprintf(tempstr, "Density: %d%%",

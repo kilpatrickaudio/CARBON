@@ -690,7 +690,7 @@ void step_edit_update_display(void) {
                 gui_set_status_text_part(3, xpos, 4, tempstr);
                 break;
             case SONG_EVENT_PROBABILITY:
-                gui_set_status_text_part(1, xpos, 4, "Prob");
+                gui_set_status_text_part(1, xpos, 4, "Prb");
                 sprintf(tempstr, "%d%%", event.data0);
                 gui_set_status_text_part(2, xpos, 4, tempstr);
                 gui_set_status_text_part(3, xpos, 4, "---");
@@ -698,7 +698,7 @@ void step_edit_update_display(void) {
             case SONG_EVENT_EUCLIDEAN: {
                 unsigned a, b;
                 conditional_pair(event.data0, &a, &b);
-                gui_set_status_text_part(1, xpos, 4, "Eucl");
+                gui_set_status_text_part(1, xpos, 4, "Euc");
                 sprintf(tempstr, "%u:%u", a, b);
                 gui_set_status_text_part(2, xpos, 4, tempstr);
                 sprintf(tempstr, "%u", event.data1 % b);
@@ -708,7 +708,7 @@ void step_edit_update_display(void) {
             case SONG_EVENT_PRE:
             case SONG_EVENT_NON_PRE:
                 gui_set_status_text_part(1, xpos, 4,
-                    event.type == SONG_EVENT_PRE ? "Pre" : "!Pre");
+                    event.type == SONG_EVENT_PRE ? "Pre" : "!Pr");
                 gui_set_status_text_part(2, xpos, 4, "---");
                 gui_set_status_text_part(3, xpos, 4, "---");
                 break;

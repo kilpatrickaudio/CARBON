@@ -36,10 +36,10 @@ later events. Back up songs before testing this development firmware.
 ## All four gate types
 
 Event codes 2/3/4/5 are Probability/Euclidean/Pre/Non-Pre. The type cycle is
-Note -> CC -> CCi -> PC -> Prob -> Eucl -> Pre -> !Pre -> Note. Euclidean
+Note -> CC -> CCi -> PC -> Prb -> Euc -> Pre -> !Pr -> Note. Euclidean
 defaults to 1:2, rotation 0. Transpose selects its pair (28 entries through
 7:8); velocity edits rotation. Pair changes normalize rotation modulo B.
-Pre and !Pre have no numeric fields. All gate lengths are unused.
+Pre and !Pr have no numeric fields. All gate lengths are unused.
 
 Euclidean positions start at zero, advance after a boundary step, and
 advance once for an effective direction reversal. Same-direction assignments

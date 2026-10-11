@@ -45,3 +45,10 @@ trap 'rm -rf "$TMP"' EXIT HUP INT TERM
     tests/clock_test.c.in src/midi/midi_clock.c src/midi/midi_utils.c \
     src/util/seq_utils.c src/seq/midi_ctrl.c "$LINK_GC" -o "$TMP/clock"
 "$TMP/clock"
+
+"$CC" -x c -std=c11 -Wall -Wextra -Werror \
+    -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations \
+    -ffunction-sections -fdata-sections -fsanitize=address,undefined \
+    -Wno-tautological-constant-out-of-range-compare \
+    tests/gui_status_test.c.in src/util/seq_utils.c "$LINK_GC" -o "$TMP/gui-status"
+"$TMP/gui-status"

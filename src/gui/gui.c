@@ -295,7 +295,10 @@ struct gui_state {
     uint8_t started;  // 0 = not started, 1 = started
 };
 // put data into CCMRAM instead of regular RAM
-struct gui_state gstate __attribute__ ((section (".ccm")));
+#ifndef GUI_STATE_SECTION
+#define GUI_STATE_SECTION __attribute__ ((section (".ccm")))
+#endif
+struct gui_state gstate GUI_STATE_SECTION;
 
 char tempstr[GFX_LABEL_LEN];
 
@@ -492,7 +495,7 @@ void gui_startup(void) {
 
         gui_set_label_prefs(GUI_LABEL_SONG_MODE,
             GUI_DISP_A_LABEL_SONG_MODE_X, GUI_DISP_A_LABEL_SONG_MODE_Y,
-            20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
+            224, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
 
         gui_set_label_prefs(GUI_LABEL_STATUS_L1,
@@ -574,7 +577,7 @@ void gui_startup(void) {
 
         gui_set_label_prefs(GUI_LABEL_SONG_MODE,
             GUI_DISP_B_LABEL_SONG_MODE_X, GUI_DISP_B_LABEL_SONG_MODE_Y,
-            20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
+            224, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
 
         gui_set_label_prefs(GUI_LABEL_STATUS_L1,
@@ -626,6 +629,9 @@ void gui_refresh_task(void) {
     if(!gstate.started) {
         return;
     }
+
+    // CCi overrides need no stored-song event; unchanged labels do not redraw.
+    gui_update_song_mode();
 
 	// force LCD reinit
 	if(gstate.force_reinit) {
@@ -970,8 +976,9 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_SONG_EUCLIDEAN_DENSITY:
         case SCE_SONG_EUCLIDEAN_ROTATION:
-            // Euclidean settings affect pattern previews immediately.
-            gui_force_refresh();
+            // Preview grids recompute effective masks each refresh and redraw
+            // changed squares only. Do not clear the entire LCD on each edit.
+            gui_update_song_mode();
             break;
         case SCE_SONG_TRACK_TYPE:
             gui_update_track_type(data[0], data[1], data[2]);
@@ -1191,6 +1198,11 @@ void gui_set_label_prefs(int index, int x, int y, int w, int h,
 void gui_set_label_color(int index, uint32_t fg_color, uint32_t bg_color) {
     if(index < 0 || index >= GUI_MAX_LABELS) {
         log_error("gslc - index invalid: %d", index);
+        return;
+    }
+    // Polling status must not invalidate an unchanged label on every frame.
+    if(gstate.glabels[index].fg_color == fg_color &&
+            gstate.glabels[index].bg_color == bg_color) {
         return;
     }
     gstate.glabels[index].fg_color = fg_color;
@@ -1773,18 +1785,43 @@ void gui_update_song_mode(void) {
         gui_set_label_color(GUI_LABEL_SONG_MODE,
             GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
     }
-    // display the status bar - song mode disabled
-    if(sngmode->current_entry == -1 || !seq_ctrl_get_song_mode()) {
-        sprintf(tempstr, "SONG - Slot: x: x/x  ");
+    {
+        char song_status[32], euclidean[32];
+        int track = gstate.first_track;
+        int length = seq_engine_get_effective_motion_length(track);
+        int density = seq_engine_get_effective_euclidean_density(track);
+        int rotation = seq_engine_get_effective_euclidean_rotation(track);
+        int hits;
+        if(sngmode->current_entry == -1 || !seq_ctrl_get_song_mode()) {
+            snprintf(song_status, sizeof(song_status), "SONG - x: x/x");
+        }
+        else {
+            snprintf(song_status, sizeof(song_status), "SONG - %d: %d/%d",
+                sngmode->current_entry + 1,
+                seq_utils_clamp(sngmode->beat_count,
+                    SEQ_SONG_LIST_MIN_LENGTH, SEQ_SONG_LIST_MAX_LENGTH),
+                sngmode->total_beats);
+        }
+        // Match playback rounding: mask positions, not sounding notes.
+        if(density < 100 && length >= 1 && length <= SEQ_NUM_STEPS) {
+            hits = (density * length + 50) / 100;
+            snprintf(euclidean, sizeof(euclidean), "%d:%d:%d",
+                length, hits, rotation % length);
+            {
+                size_t right = strlen(euclidean);
+                size_t left = strlen(song_status);
+                if(right > 8) right = 8;
+                if(left > GUI_STATUS_LINE_LEN - right - 1)
+                    left = GUI_STATUS_LINE_LEN - right - 1;
+                memset(tempstr, ' ', GUI_STATUS_LINE_LEN);
+                memcpy(tempstr, song_status, left);
+                memcpy(tempstr + GUI_STATUS_LINE_LEN - right, euclidean, right);
+                tempstr[GUI_STATUS_LINE_LEN] = '\0';
+            }
+        }
+        else {
+            snprintf(tempstr, sizeof(tempstr), "%-28s", song_status);
+        }
+        gui_set_label(GUI_LABEL_SONG_MODE, tempstr);
     }
-    // display the status bar - song mode enabled
-    else {
-        sprintf(tempstr, "SONG - Slot: %d: %d/%d  ",
-            (sngmode->current_entry + 1),
-            seq_utils_clamp(sngmode->beat_count,
-                SEQ_SONG_LIST_MIN_LENGTH,
-                SEQ_SONG_LIST_MAX_LENGTH),
-            sngmode->total_beats);
-    }
-    gui_set_label(GUI_LABEL_SONG_MODE, tempstr);
 }

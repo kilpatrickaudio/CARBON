@@ -187,7 +187,7 @@ encountered during practical use.
 1. Enter Step Edit and select the step.
 2. Use Shift + Motion Start to select one event slot rather than all slots.
 3. Use Shift + Transpose to cycle the event type:
-   =Note → CC → CCi → PC → Prob → Eucl → Pre → !Pre → Note=.
+   =Note → CC → CCi → PC → Prb → Euc → Pre → !Pr → Note=.
    (The submitted 1.29 build ends the cycle after PC.)
 4. Select =PC=.
 5. Use Transpose to choose program 1--128.
@@ -209,6 +209,15 @@ track's corresponding A or B output before the scene's first notes. Disabled and
 CV/gate outputs do not send Program Change.
 
 ** Set Euclidean density and rotation
+
+The SONG status line shows the selected track's effective =length:hits:rotation=
+flush-right whenever density is below 100%. For example, =16:7:3= means
+seven active mask positions in a 16-step motion window, rotated by three.
+The hit count uses playback rounding and includes CCi overrides; it is not
+a count of sounding notes. At 100% density this status is hidden. The word
+Slot is omitted from the song-mode readout to make room. This does not
+open the Euclidean edit overlay or replace normal Track/Start/Step status.
+
 
 In normal sequencer mode:
 
@@ -289,15 +298,15 @@ that were already sounding. Gate events themselves send no MIDI/CV output.
 
 1. Enter Step Edit and select a slot with Shift + Motion Start.
 
-2. Use Shift + Transpose to cycle to =Prob=, =Eucl=, =Pre= or =!Pre=.
+2. Use Shift + Transpose to cycle to =Prb=, =Euc=, =Pre= or =!Pr=.
 3. Use Transpose for the first value and Velocity for the second value.
 
 | Label | First value                   | Second value        | Default        |
 |-------+-------------------------------+---------------------+----------------|
-| Prob  | Probability 0--100%            | Unused              | 50%            |
-| Eucl  | A:B pair, 1:2 through 7:8      | Rotation 0--(B-1)   | 1:2, rotation 0|
+| Prb  | Probability 0--100%            | Unused              | 50%            |
+| Euc  | A:B pair, 1:2 through 7:8      | Rotation 0--(B-1)   | 1:2, rotation 0|
 | Pre   | Unused                        | Unused              | Prior history  |
-| !Pre  | Unused                        | Unused              | Inverse history|
+| !Pr  | Unused                        | Unused              | Inverse history|
 
 There are 28 Euclidean pairs, ordered by increasing B, then increasing A.
 Changing the pair normalizes rotation modulo the new B. Rotation moves one
@@ -345,17 +354,17 @@ counts as a reversal. Scene-driven repositioning alone is not a loop.
 
 Each track retains the result of its last visit with evaluated contributing
 gates: true if ANY evaluated Probability, Euclidean or Pre gate passed.
-All Pre and !Pre gates on a visit read the prior history, not results from
+All Pre and !Pr gates on a visit read the prior history, not results from
 earlier slots on that same visit. The new OR aggregate commits once after
 evaluation. Skipped gates contribute nothing.
 
-=!Pre= negates prior history and NEVER contributes, whether it passes or
-fails. No-gate and !Pre-only visits preserve history. A true gate followed
+=!Pr= negates prior history and NEVER contributes, whether it passes or
+fails. No-gate and !Pr-only visits preserve history. A true gate followed
 by a false gate records true history despite blocking later slots. A true
 Pre can sustain subsequent Pre visits. Reset history is false.
 
 Example: use a Probability-gated phrase, then Pre before an answering phrase
-on a later step and !Pre before an alternative. The alternative does not
+on a later step and !Pr before an alternative. The alternative does not
 change history, allowing several alternative steps.
 
 ** Masks, muted control sources and timing
