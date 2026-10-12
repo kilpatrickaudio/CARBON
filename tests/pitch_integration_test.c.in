@@ -143,5 +143,33 @@ int main(void) {
     put(0, 1, SONG_EVENT_NOTE, 64, 100);
     seq_engine_run(1); assert(wires == 2 && wire[0].data0 == 66);
     running = 0; seq_engine_run(0); assert(!sestate.harmony_active);
+    // Bias Inv affects only targets; eligible chord retains slot identities.
+    init(); test_scale = SCALE_CHROMATIC; test_transpose = 0; outproc_root_changed();
+    enabled[0] = enabled[1] = 1; sestate.clock_div_count[0] = sestate.clock_div_count[1] = 0;
+    sestate.bias_track_map[1] = 0;
+    put(0, 0, SONG_EVENT_INVERSION, 1, 0);
+    put(1, 0, SONG_EVENT_NOTE, 60, 100); put(1, 1, SONG_EVENT_NOTE, 64, 90);
+    put(1, 2, SONG_EVENT_NOTE, 67, 80);
+    seq_engine_run(1); assert(sestate.inversion[0] == 0 && sestate.inversion[1] == 1);
+    assert(wires == 6 && wire[0].data0 == 72 && wire[2].data0 == 64 && wire[4].data0 == 67);
+    assert(fixture[1][0].data0 == 60 && wire[0].data1 == 100 && wire[2].data1 == 90);
+    seq_engine_track_manage_notes(1); assert(wires == 12);
+    for(int i = 0; i < OUTPROC_MAX_NOTES; i++) assert(!opstate.notes[1][i].input.status);
+    // Source gate blocks Inv control; no target and self-only mappings are inert.
+    init(); enabled[0] = 1; sestate.clock_div_count[0] = 0; sestate.bias_track_map[1] = 0;
+    put(0, 0, SONG_EVENT_PROBABILITY, 0, 0); put(0, 1, SONG_EVENT_INVERSION, 5, 1);
+    seq_engine_run(1); assert(sestate.inversion[1] == 0);
+    seq_engine_remote_inversion(1, 2); seq_engine_remote_compact(1, 1);
+    assert(sestate.inversion[1] == 2 && sestate.compact[1] == 1);
+    seq_engine_clear_internal_cc(); assert(sestate.inversion[1] == 0 && sestate.compact[1] == 0);
+    // Overflow omits only invalid voices, not later in-range slots.
+    init(); test_scale = SCALE_CHROMATIC; test_transpose = 0; outproc_root_changed(); test_root = 0;
+    seq_engine_remote_inversion(0, 1);
+    struct seq_engine_step_visit inv = {0}; inv.slots = 7;
+    inv.events[0] = (struct track_event){.type = SONG_EVENT_NOTE, .data0 = 120, .data1 = 100, .length = 1};
+    inv.events[1] = (struct track_event){.type = SONG_EVENT_NOTE, .data0 = 124, .data1 = 100, .length = 1};
+    inv.events[2] = (struct track_event){.type = SONG_EVENT_NOTE, .data0 = 127, .data1 = 100, .length = 1};
+    seq_engine_track_play_step(0, 0, &inv); assert(wires == 4 && wire[0].data0 == 124);
+    seq_engine_track_manage_notes(0); assert(wires == 8);
     puts("pitch integration tests passed"); return 0;
 }

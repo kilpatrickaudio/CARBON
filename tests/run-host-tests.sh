@@ -14,6 +14,10 @@ trap 'rm -rf "$TMP"' EXIT HUP INT TERM
 
 "$CC" -x c -std=c11 -Wall -Wextra -Werror \
     tests/conditional_test.c.in -o "$TMP/conditional"
+
+"$CC" -x c -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined \
+    tests/voicing_test.c.in -o "$TMP/voicing"
+"$TMP/voicing"
 "$TMP/conditional"
 
 "$CC" -x c -std=c11 -Wall -Wextra -Werror \

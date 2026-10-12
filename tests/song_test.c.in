@@ -95,5 +95,10 @@ int main(void) {
     assert(actual.type == SONG_EVENT_HARMONY && actual.data0 == 15 && actual.data1 == 13);
     song_copy_scene(1, 0);
     assert(!song_get_step_event(1, 0, 0, 0, &actual) && actual.type == SONG_EVENT_HARMONY);
+    actual = (struct track_event){.type = SONG_EVENT_INVERSION, .data0 = 5, .data1 = 1};
+    song_set_step_event(0, 0, 0, 0, &actual);
+    song_save(0); song_timer_task(); memset(&song, 0, sizeof(song));
+    song_load(0); song_timer_task(); song_get_step_event(0, 0, 0, 0, &actual);
+    assert(actual.type == SONG_EVENT_INVERSION && actual.data0 == 5 && actual.data1 == 1);
     puts("song tests passed"); return 0;
 }

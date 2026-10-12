@@ -29,6 +29,7 @@
 #include "midi_ctrl.h"
 #include "song.h"
 #include "scale.h"
+#include "voicing.h"
 #include "pattern.h"
 #include "outproc.h"
 #include "sysex.h"
@@ -96,6 +97,8 @@ struct seq_engine_state {
     int bias_track_output[SEQ_NUM_TRACKS];  // bias track output
     struct conditional_state conditions[SEQ_NUM_TRACKS];
     int16_t internal_cc[SEQ_NUM_TRACKS][14];  // CC 16-29; -1 = inactive
+    uint8_t inversion[SEQ_NUM_TRACKS];
+    uint8_t compact[SEQ_NUM_TRACKS];
     int harmony_active;
     int harmony_root;  // -2: stored scene/song root; -1: Off; 0--11: C--B
     int8_t harmony_scale[SEQ_NUM_TRACKS];  // -1: stored scale
@@ -617,6 +620,21 @@ void seq_engine_remote_harmony_scale(int track, int value) {
     if(changed) state_change_fire0(SCE_ENG_HARMONY);
 }
 
+void seq_engine_remote_inversion(int track, int rotations) {
+    int target;
+    if(rotations < 0 || rotations > SONG_INVERSION_MAX) return;
+    for(target = 0; target < SEQ_NUM_TRACKS; target++)
+        if(track == SEQ_CTRL_TRACK_OMNI ? seq_ctrl_get_track_select(target) : target == track)
+            sestate.inversion[target] = rotations;
+}
+void seq_engine_remote_compact(int track, int compact) {
+    int target;
+    if(compact < 0 || compact > 1) return;
+    for(target = 0; target < SEQ_NUM_TRACKS; target++)
+        if(track == SEQ_CTRL_TRACK_OMNI ? seq_ctrl_get_track_select(target) : target == track)
+            sestate.compact[target] = compact;
+}
+
 void seq_engine_remote_harmony_root(int value) {
     if(value <= SONG_HARMONY_ROOT_KEEP || value > SONG_HARMONY_ROOT_MAX) return;
     seq_engine_init_harmony_override();
@@ -1098,6 +1116,14 @@ static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visit
     for(source = 0; source < SEQ_NUM_TRACKS; source++) {
         for(slot = 0; slot < SEQ_TRACK_POLY; slot++) {
             const struct track_event *event = &visits[source].events[slot];
+            if((visits[source].slots & (1u << slot)) && event->type == SONG_EVENT_INVERSION &&
+                    event->data0 <= SONG_INVERSION_MAX && event->data1 <= 1) {
+                for(target = 0; target < SEQ_NUM_TRACKS; target++)
+                    if(target != source && sestate.bias_track_map[target] == source) {
+                        sestate.inversion[target] = event->data0;
+                        sestate.compact[target] = event->data1;
+                    }
+            }
             if(!(visits[source].slots & (1u << slot)) ||
                     event->type != SONG_EVENT_HARMONY ||
                     event->data0 > SONG_HARMONY_SCALE_MAX ||
@@ -1128,10 +1154,22 @@ static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visit
 
 void seq_engine_track_play_step(int track, int step,
         const struct seq_engine_step_visit *visit) {
-    int i, bias, temp;
+    int i, bias, temp, count = 0;
+    int pitches[SEQ_TRACK_POLY], slots[SEQ_TRACK_POLY], voiced[SEQ_TRACK_POLY];
     struct track_event event;
     struct midi_msg msg;
 
+    for(i = 0; i < SEQ_TRACK_POLY; i++) {
+        voiced[i] = visit->events[i].data0;
+        if((visit->slots & (1u << i)) && visit->events[i].type == SONG_EVENT_NOTE &&
+                visit->events[i].data1 > 0) {
+            slots[count] = i; pitches[count++] = visit->events[i].data0;
+        }
+    }
+    if(sestate.track_type[track] != SONG_TRACK_TYPE_DRUM && !sestate.arp_enable[track]) {
+        voicing_transform(pitches, count, sestate.inversion[track], sestate.compact[track]);
+        for(i = 0; i < count; i++) voiced[slots[i]] = pitches[i];
+    }
     // play each event on the step
     for(i = 0; i < SEQ_TRACK_POLY; i ++) {
         // get the event and make sure it's valid
@@ -1161,17 +1199,17 @@ void seq_engine_track_play_step(int track, int step,
                     else {
                         // Internal CC 17 is transient, so compensate for the
                         // stored transpose that outproc will add later.
-                        temp = event.data0 + sestate.kbtrans + bias +
+                        temp = voiced[i] + sestate.kbtrans + bias +
                             seq_engine_get_internal_cc(track,
                                 MIDI_CTRL_CC_TRACK_TRANSPOSE,
                                 song_get_transpose(sestate.scene_current, track)) -
                             song_get_transpose(sestate.scene_current, track);
                         if(seq_engine_get_effective_root(sestate.scene_current) >= 0) {
                             // Named roots process the effective transpose at output, once.
-                            temp = event.data0 + sestate.kbtrans + bias;
+                            temp = voiced[i] + sestate.kbtrans + bias;
                         }
                         else if(!seq_utils_check_note_range(temp)) {
-                            return;
+                            continue;
                         }
                         midi_utils_enc_note_on(&msg, 0, 0, temp, event.data1);
                     }
@@ -1189,6 +1227,7 @@ void seq_engine_track_play_step(int track, int step,
                     outproc_deliver_msg(sestate.scene_current, track, &msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);
                     break;
+                case SONG_EVENT_INVERSION:
                 case SONG_EVENT_HARMONY:
                     // Resolved atomically across all visits before any attacks.
                     break;
@@ -1504,6 +1543,8 @@ void seq_engine_clear_internal_cc(void) {
     sestate.harmony_root = SONG_ROOT_INHERIT;
     if(had_harmony) state_change_fire0(SCE_ENG_HARMONY);
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+        sestate.inversion[track] = 0;
+        sestate.compact[track] = 0;
         for(index = 0; index < 14; index ++) {
             sestate.internal_cc[track][index] =
                 index == MIDI_CTRL_CC_TRACK_TRANSPOSE - MIDI_CTRL_CC_STEP_LENGTH ? -32768 : -1;

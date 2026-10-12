@@ -60,7 +60,7 @@ int main(void) {
     int i;
     static const uint8_t types[] = {SONG_EVENT_NOTE, SONG_EVENT_CC,
         SONG_EVENT_INTERNAL_CC, SONG_EVENT_PROGCHG, SONG_EVENT_PROBABILITY,
-        SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE, SONG_EVENT_HARMONY};
+        SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE, SONG_EVENT_HARMONY, SONG_EVENT_INVERSION};
     {
         char label[16];
         assert(SEQ_UTILS_CLOCK_24PPQ == 8);
@@ -70,11 +70,11 @@ int main(void) {
         assert(!strcmp(label, "16 PPQ"));
     }
     setup(); events[0].type = SONG_EVENT_NOTE;
-    for(i = 1; i <= 9; i ++) {
+    for(i = 1; i <= 10; i ++) {
         step_edit_adjust_note(1, 1);
-        assert(events[0].type == types[i % 9]);
+        assert(events[0].type == types[i % 10]);
     }
-    for(i = 8; i >= 0; i --) {
+    for(i = 9; i >= 0; i --) {
         step_edit_adjust_note(-1, 1); assert(events[0].type == types[i]);
     }
     events[0] = (struct track_event){.type = SONG_EVENT_PROBABILITY, .data0 = 50};
@@ -256,5 +256,12 @@ int main(void) {
             events[0].data0 = scale; events[0].data1 = root;
             step_edit_update_display(); assert(strlen(rows[0]) <= 28);
         }
+    setup(); sedits.event_pos = 0; events[0].type = SONG_EVENT_INVERSION;
+    step_edit_adjust_note(100, 0); assert(events[0].data0 == 5);
+    step_edit_adjust_velocity(1, 0); assert(events[0].data1 == 1);
+    assert(!strcmp(rows[0], "Inv: 5 Compact On"));
+    step_edit_adjust_note(-100, 0); step_edit_adjust_velocity(-1, 0);
+    assert(!strcmp(rows[0], "Inv: 0 Compact Off"));
+    step_edit_play_step(); assert(!count);
     puts("editor tests passed"); return 0;
 }

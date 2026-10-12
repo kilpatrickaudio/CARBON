@@ -283,6 +283,12 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
         }
 
         switch(msg->data0) {
+            case MIDI_CTRL_CC_INVERSION:
+                seq_engine_remote_inversion(track, msg->data1);
+                break;
+            case MIDI_CTRL_CC_COMPACT:
+                seq_engine_remote_compact(track, msg->data1 >= 64);
+                break;
             case MIDI_CTRL_CC_HARMONY_SCALE:
                 seq_engine_remote_harmony_scale(track, msg->data1);
                 break;

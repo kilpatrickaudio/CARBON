@@ -67,5 +67,14 @@ int main(void) {
     assert(!sestate.harmony_active);
     assert(test_scale == SCALE_MAJOR && test_root == 0); // bases untouched
     assert(!midi_ctrl_internal_cc_supported(30) && !midi_ctrl_internal_cc_supported(31));
+    for(int channel = 11; channel <= 16; channel++) for(int value = 0; value < 128; value++) {
+        init(); cc(channel, 32, value); cc(channel, 33, value);
+        assert(sestate.inversion[channel - 11] == (value <= 5 ? value : 0));
+        assert(sestate.compact[channel - 11] == (value >= 64));
+    }
+    init(); remote = 0; cc(11, 32, 5); cc(11, 33, 127);
+    assert(sestate.inversion[0] == 0 && sestate.compact[0] == 0); remote = 1;
+    init(); remote_selection = (1u << 1) | (1u << 3); cc(10, 32, 2); cc(10, 33, 64);
+    assert(sestate.inversion[1] == 2 && sestate.inversion[3] == 2 && sestate.inversion[0] == 0);
     puts("remote harmony tests passed"); return 0;
 }

@@ -104,6 +104,8 @@ struct track_event {
 #define SONG_EVENT_PRE 4  // previous contributing visit's OR history
 #define SONG_EVENT_NON_PRE 5  // inverse history; never contributes
 #define SONG_EVENT_HARMONY 6  // data0: Keep=0, scales=1--16; data1: Keep/Off/C--B
+#define SONG_EVENT_INVERSION 7  // data0: rotations 0--5; data1: Compact 0/1
+#define SONG_INVERSION_MAX 5
 #define SONG_HARMONY_SCALE_KEEP 0
 #define SONG_HARMONY_SCALE_MAX 16
 #define SONG_HARMONY_ROOT_KEEP 0

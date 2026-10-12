@@ -80,6 +80,10 @@ int seq_engine_get_effective_tonality(int scene, int track);
 void seq_engine_remote_harmony_scale(int track, int value);
 void seq_engine_remote_harmony_root(int value);
 
+// External transient voicing controls (direct track, no Bias fan-out).
+void seq_engine_remote_inversion(int track, int rotations);
+void seq_engine_remote_compact(int track, int compact);
+
 // change the scene
 void seq_engine_change_scene(int scene);
 

@@ -41,6 +41,8 @@
 // External Remote only; deliberately not CCi destinations.
 #define MIDI_CTRL_CC_HARMONY_SCALE 30
 #define MIDI_CTRL_CC_HARMONY_ROOT 31
+#define MIDI_CTRL_CC_INVERSION 32
+#define MIDI_CTRL_CC_COMPACT 33
 #define MIDI_CTRL_CC_RUN_STOP 80
 
 // init the MIDI control module

@@ -1,0 +1,49 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include "../src/seq/voicing.h"
+static unsigned seed = 1;
+static unsigned rng(void) { seed = seed * 1664525u + 1013904223u; return seed; }
+int main(void) {
+    const int expected[6][3] = {{60,64,67},{72,64,67},{72,76,67},
+        {72,76,79},{84,76,79},{84,88,79}};
+    for(int rot = 0; rot <= 5; rot++) {
+        int chord[3] = {60,64,67}; voicing_transform(chord, 3, rot, 0);
+        assert(!memcmp(chord, expected[rot], sizeof(chord)));
+    }
+    int empty = 55; voicing_transform(&empty, 0, 5, 1); assert(empty == 55);
+    int single = 60; voicing_transform(&single, 1, 5, 1); assert(single == 60);
+    int doubled[] = {72,60,64,67,60}; voicing_transform(doubled, 5, 1, 0);
+    assert(doubled[0] == 96 && doubled[1] == 84 && doubled[4] == 84);
+    assert(doubled[2] == 64 && doubled[3] == 67);
+    int unison[] = {60,72,84}; voicing_transform(unison, 3, 5, 1);
+    assert(unison[0] == 60 && unison[1] == 72 && unison[2] == 84);
+    for(int n = 2; n <= 6; n++) for(int trial = 0; trial < 1000; trial++) {
+        int input[6], output[6], compact[6], min = 10000;
+        for(int i = 0; i < n; i++) input[i] = rng() % 128;
+        for(int rot = 0; rot <= 5; rot++) {
+            memcpy(output, input, sizeof(input)); memcpy(compact, input, sizeof(input));
+            voicing_transform(output, n, rot, 0); voicing_transform(compact, n, rot, 1);
+            min = 10000; for(int i = 0; i < n; i++) if(output[i] < min) min = output[i];
+            int compact_min = 10000;
+            for(int i = 0; i < n; i++) {
+                assert(output[i] % 12 == input[i] % 12);
+                assert(compact[i] % 12 == input[i] % 12);
+                assert(output[i] >= input[i] && compact[i] <= output[i]);
+                if(compact[i] < compact_min) compact_min = compact[i];
+                for(int j = 0; j < n; j++) if(input[i] % 12 == input[j] % 12) {
+                    assert(output[i] - output[j] == input[i] - input[j]);
+                    assert(compact[i] - compact[j] == input[i] - input[j]);
+                }
+            }
+            assert(compact_min == min);
+            for(int i = 0; i < n; i++) {
+                int representative = 1;
+                for(int j = 0; j < n; j++) if(input[i] % 12 == input[j] % 12 && input[j] < input[i]) representative = 0;
+                if(representative) assert(compact[i] - min < 12);
+            }
+        }
+    }
+    puts("voicing algorithm tests passed"); return 0;
+}
