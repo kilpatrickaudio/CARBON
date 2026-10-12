@@ -321,6 +321,10 @@ void step_edit_adjust_note(int change, int shift) {
                 event.data0 = MIDI_CTRL_CC_EUCLIDEAN_DENSITY;
                 event.data1 = STEP_EDIT_NEW_CC_VAL;
                 break;
+            case SONG_EVENT_HARMONY:
+                event.data0 = SONG_HARMONY_SCALE_KEEP;
+                event.data1 = SONG_HARMONY_ROOT_KEEP;
+                break;
             case SONG_EVENT_PROBABILITY:
                 event.data0 = 50;
                 break;
@@ -565,7 +569,12 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                         inhibit_preview = 1;
                     }
                     else if(event.type == SONG_EVENT_HARMONY) {
-                        event.data0 = seq_utils_clamp(event.data0 + change, 0, SCALE_NUM_TONALITIES - 1);
+                        // Present Keep, Off, then the original sixteen scales.
+                        int index = event.data0 == SONG_HARMONY_SCALE_KEEP ? 0 :
+                            event.data0 == SONG_HARMONY_SCALE_OFF ? 1 : event.data0 + 2;
+                        index = seq_utils_clamp(index + change, 0, SCALE_NUM_TONALITIES + 1);
+                        event.data0 = index == 0 ? SONG_HARMONY_SCALE_KEEP :
+                            index == 1 ? SONG_HARMONY_SCALE_OFF : index - 2;
                         inhibit_preview = 1;
                     }
                     // probability occupies the first numeric field only
@@ -782,7 +791,9 @@ static void step_edit_update_title(void) {
     if(sedits.event_pos >= 0 && song_get_step_event(sedits.scene, sedits.track,
             sedits.step_pos, sedits.event_pos, &event) != -1 && event.type == SONG_EVENT_HARMONY) {
         char scale[32];
-        scale_type_to_name(scale, seq_utils_clamp(event.data0, 0, SCALE_NUM_TONALITIES - 1));
+        if(event.data0 == SONG_HARMONY_SCALE_KEEP) snprintf(scale, sizeof(scale), "Keep");
+        else if(event.data0 == SONG_HARMONY_SCALE_OFF) snprintf(scale, sizeof(scale), "Off");
+        else scale_type_to_name(scale, seq_utils_clamp(event.data0, 0, SCALE_NUM_TONALITIES - 1));
         snprintf(title, sizeof(title), "Hrm: %s / %s", scale,
             event.data1 == SONG_HARMONY_ROOT_KEEP ? "Keep" :
             scale_root_name((int)event.data1 - SONG_HARMONY_ROOT_C));
@@ -907,7 +918,9 @@ void step_edit_update_display(void) {
                 break;
             case SONG_EVENT_HARMONY:
                 gui_set_status_text_part(1, xpos, 4, "Hrm");
-                sprintf(tempstr, "%d", event.data0 + 1);
+                if(event.data0 == SONG_HARMONY_SCALE_KEEP) sprintf(tempstr, "Keep");
+                else if(event.data0 == SONG_HARMONY_SCALE_OFF) sprintf(tempstr, "Off");
+                else sprintf(tempstr, "%d", event.data0 + 1);
                 gui_set_status_text_part(2, xpos, 4, tempstr);
                 gui_set_status_text_part(3, xpos, 4, event.data1 == SONG_HARMONY_ROOT_KEEP
                     ? "Keep" : (char *)scale_root_name((int)event.data1 - SONG_HARMONY_ROOT_C));

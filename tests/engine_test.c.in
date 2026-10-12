@@ -533,6 +533,20 @@ static void test_harmony(void) {
     put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR, 0);
     fixture[0][0].data0 = 255; fixture[0][0].data1 = 255;
     seq_engine_prepare_visits(visits); assert(seq_engine_get_effective_root(0) == 9);
+    memset(visits, 0, sizeof(visits));
+    visits[0].slots = 1; visits[0].events[0] = (struct track_event){
+        .type = SONG_EVENT_HARMONY, .data0 = SONG_HARMONY_SCALE_KEEP,
+        .data1 = SONG_HARMONY_ROOT_C + 4};
+    int old_scale = seq_engine_get_effective_tonality(0, 2);
+    seq_engine_resolve_harmony(visits);
+    assert(seq_engine_get_effective_root(0) == 4);
+    assert(seq_engine_get_effective_tonality(0, 2) == old_scale);
+    visits[0].events[0].data0 = SONG_HARMONY_SCALE_OFF;
+    visits[0].events[0].data1 = SONG_HARMONY_ROOT_KEEP;
+    seq_engine_resolve_harmony(visits);
+    assert(seq_engine_get_effective_root(0) == 4);
+    assert(seq_engine_get_effective_tonality(0, 0) == SCALE_CHROMATIC);
+    assert(seq_engine_get_effective_tonality(0, 2) == SCALE_CHROMATIC);
     seq_engine_clear_internal_cc(); assert(seq_engine_get_effective_root(0) == SONG_ROOT_OFF);
     assert(!sestate.harmony_active);
 }

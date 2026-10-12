@@ -1069,7 +1069,7 @@ static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visit
             const struct track_event *event = &visits[source].events[slot];
             if(!(visits[source].slots & (1u << slot)) ||
                     event->type != SONG_EVENT_HARMONY ||
-                    event->data0 >= SCALE_NUM_TONALITIES ||
+                    event->data0 > SONG_HARMONY_SCALE_MAX ||
                     event->data1 > SONG_HARMONY_ROOT_MAX) continue;
             if(!sestate.harmony_active) {
                 for(target = 0; target < SEQ_NUM_TRACKS; target++)
@@ -1078,9 +1078,12 @@ static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visit
                 sestate.harmony_active = 1;
             }
             for(target = 0; target < SEQ_NUM_TRACKS; target++) {
-                if((target == source || sestate.bias_track_map[target] == source) &&
-                        sestate.harmony_scale[target] != event->data0) {
-                    sestate.harmony_scale[target] = event->data0;
+                int scale = event->data0 == SONG_HARMONY_SCALE_OFF
+                    ? SCALE_CHROMATIC : event->data0;
+                if(event->data0 != SONG_HARMONY_SCALE_KEEP &&
+                        (target == source || sestate.bias_track_map[target] == source) &&
+                        sestate.harmony_scale[target] != scale) {
+                    sestate.harmony_scale[target] = scale;
                     changed = 1;
                 }
             }

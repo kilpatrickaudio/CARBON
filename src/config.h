@@ -25,7 +25,7 @@
 
 // global
 #define CARBON_VERSION_MAJOR 1
-#define CARBON_VERSION_MINOR 32
+#define CARBON_VERSION_MINOR 33
 #define CARBON_VERSION_MAJMIN ((CARBON_VERSION_MAJOR << 16) | CARBON_VERSION_MINOR)
 // Display-only community identity; numeric versions remain authoritative for storage.
 #define CARBON_VERSION_VARIANT "johanwk-ch10-dev"

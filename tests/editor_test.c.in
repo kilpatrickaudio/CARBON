@@ -246,9 +246,13 @@ int main(void) {
     assert(events[0].data1 == SONG_HARMONY_ROOT_C && !strcmp(rows[0], "Hrm: Major / C"));
     step_edit_adjust_velocity(100, 0); assert(events[0].data1 == SONG_HARMONY_ROOT_MAX);
     step_edit_adjust_note(100, 0); assert(events[0].data0 == 15);
-    step_edit_adjust_note(-100, 0); assert(events[0].data0 == 0);
+    step_edit_adjust_note(-100, 0); assert(events[0].data0 == SONG_HARMONY_SCALE_KEEP);
+    assert(!strcmp(rows[0], "Hrm: Keep / B"));
+    step_edit_adjust_note(1, 0); assert(events[0].data0 == SONG_HARMONY_SCALE_OFF);
+    assert(!strcmp(rows[0], "Hrm: Off / B"));
+    step_edit_adjust_note(1, 0); assert(events[0].data0 == SCALE_CHROMATIC);
     step_edit_play_step(); assert(!count); // Hrm preview is inert
-    for(int scale = 0; scale < 16; scale++)
+    for(int scale = 0; scale <= SONG_HARMONY_SCALE_MAX; scale++)
         for(int root = 0; root <= SONG_HARMONY_ROOT_MAX; root++) {
             events[0].data0 = scale; events[0].data1 = root;
             step_edit_update_display(); assert(strlen(rows[0]) <= 28);
