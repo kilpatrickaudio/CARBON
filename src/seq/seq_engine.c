@@ -1078,8 +1078,7 @@ static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visit
                 sestate.harmony_active = 1;
             }
             for(target = 0; target < SEQ_NUM_TRACKS; target++) {
-                int scale = event->data0 == SONG_HARMONY_SCALE_OFF
-                    ? SCALE_CHROMATIC : event->data0;
+                int scale = (int)event->data0 - 1;
                 if(event->data0 != SONG_HARMONY_SCALE_KEEP &&
                         (target == source || sestate.bias_track_map[target] == source) &&
                         sestate.harmony_scale[target] != scale) {

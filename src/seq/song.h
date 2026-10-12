@@ -103,11 +103,9 @@ struct track_event {
 #define SONG_EVENT_EUCLIDEAN 3  // data0: pair index 0-27; data1: rotation
 #define SONG_EVENT_PRE 4  // previous contributing visit's OR history
 #define SONG_EVENT_NON_PRE 5  // inverse history; never contributes
-#define SONG_EVENT_HARMONY 6  // data0: Scale 0--15/Keep/Off; data1: Keep/Off/C--B
-// Append special values: preserve scales saved by local firmware 1.32.
-#define SONG_HARMONY_SCALE_KEEP 16
-#define SONG_HARMONY_SCALE_OFF 17
-#define SONG_HARMONY_SCALE_MAX 17
+#define SONG_EVENT_HARMONY 6  // data0: Keep=0, scales=1--16; data1: Keep/Off/C--B
+#define SONG_HARMONY_SCALE_KEEP 0
+#define SONG_HARMONY_SCALE_MAX 16
 #define SONG_HARMONY_ROOT_KEEP 0
 #define SONG_HARMONY_ROOT_OFF 1
 #define SONG_HARMONY_ROOT_C 2

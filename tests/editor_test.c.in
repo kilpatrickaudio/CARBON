@@ -237,7 +237,7 @@ int main(void) {
       assert(!strcmp(rows[0], "CCi 28: T2 50% 16/32"));
     }
     setup(); sedits.event_pos = 0;
-    events[0] = (struct track_event){.type = SONG_EVENT_HARMONY, .data0 = SCALE_MAJOR, .data1 = SONG_HARMONY_ROOT_KEEP};
+    events[0] = (struct track_event){.type = SONG_EVENT_HARMONY, .data0 = SCALE_MAJOR + 1, .data1 = SONG_HARMONY_ROOT_KEEP};
     step_edit_update_display(); assert(!strcmp(rows[0], "Hrm: Major / Keep"));
     assert(!memcmp(rows[1] + 3, "Hrm", 3));
     step_edit_adjust_velocity(1, 0);
@@ -245,12 +245,11 @@ int main(void) {
     step_edit_adjust_velocity(1, 0);
     assert(events[0].data1 == SONG_HARMONY_ROOT_C && !strcmp(rows[0], "Hrm: Major / C"));
     step_edit_adjust_velocity(100, 0); assert(events[0].data1 == SONG_HARMONY_ROOT_MAX);
-    step_edit_adjust_note(100, 0); assert(events[0].data0 == 15);
+    step_edit_adjust_note(100, 0); assert(events[0].data0 == SONG_HARMONY_SCALE_MAX);
     step_edit_adjust_note(-100, 0); assert(events[0].data0 == SONG_HARMONY_SCALE_KEEP);
     assert(!strcmp(rows[0], "Hrm: Keep / B"));
-    step_edit_adjust_note(1, 0); assert(events[0].data0 == SONG_HARMONY_SCALE_OFF);
-    assert(!strcmp(rows[0], "Hrm: Off / B"));
-    step_edit_adjust_note(1, 0); assert(events[0].data0 == SCALE_CHROMATIC);
+    step_edit_adjust_note(1, 0); assert(events[0].data0 == 1);
+    assert(!strcmp(rows[0], "Hrm: Chromatic / B"));
     step_edit_play_step(); assert(!count); // Hrm preview is inert
     for(int scale = 0; scale <= SONG_HARMONY_SCALE_MAX; scale++)
         for(int root = 0; root <= SONG_HARMONY_ROOT_MAX; root++) {

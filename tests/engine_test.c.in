@@ -499,9 +499,9 @@ static void test_harmony(void) {
             setup();
             pair[high].slots = pair[low].slots = 1;
             pair[high].events[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
-                .data0 = SCALE_MAJOR, .data1 = SONG_HARMONY_ROOT_C + 7};
+                .data0 = SCALE_MAJOR + 1, .data1 = SONG_HARMONY_ROOT_C + 7};
             pair[low].events[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
-                .data0 = SCALE_NAT_MINOR, .data1 = SONG_HARMONY_ROOT_C + 2};
+                .data0 = SCALE_NAT_MINOR + 1, .data1 = SONG_HARMONY_ROOT_C + 2};
             seq_engine_resolve_harmony(pair);
             assert(seq_engine_get_effective_root(0) == 2);
             pair[low].events[0].data1 = SONG_HARMONY_ROOT_KEEP;
@@ -513,10 +513,10 @@ static void test_harmony(void) {
     sestate.clock_div_count[0] = 3; sestate.clock_div_count[5] = 0;
     sestate.bias_track_map[0] = 5; sestate.bias_track_map[2] = 0;
     put(5, 0, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_STEP_LENGTH, 127);
-    put(5, 1, SONG_EVENT_HARMONY, SCALE_MAJOR, SONG_HARMONY_ROOT_C + 7);
-    put(0, 0, SONG_EVENT_HARMONY, SCALE_NAT_MINOR, SONG_HARMONY_ROOT_C + 2);
-    put(0, 1, SONG_EVENT_HARMONY, SCALE_DORIAN, SONG_HARMONY_ROOT_OFF);
-    put(0, 2, SONG_EVENT_HARMONY, SCALE_BLUES, SONG_HARMONY_ROOT_KEEP);
+    put(5, 1, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C + 7);
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_NAT_MINOR + 1, SONG_HARMONY_ROOT_C + 2);
+    put(0, 1, SONG_EVENT_HARMONY, SCALE_DORIAN + 1, SONG_HARMONY_ROOT_OFF);
+    put(0, 2, SONG_EVENT_HARMONY, SCALE_BLUES + 1, SONG_HARMONY_ROOT_KEEP);
     seq_engine_prepare_visits(visits);
     assert(visits[0].prepared && visits[5].prepared);
     assert(seq_engine_get_effective_root(0) == SONG_ROOT_OFF); // last explicit Track1 request
@@ -525,12 +525,12 @@ static void test_harmony(void) {
     assert(seq_engine_get_effective_tonality(0, 0) == SCALE_MAJOR); // later source targets T1
     memset(visits, 0, sizeof(visits)); memset(fixture, 0, sizeof(fixture));
     put(0, 0, SONG_EVENT_PROBABILITY, 0, 0);
-    put(0, 1, SONG_EVENT_HARMONY, SCALE_MAJOR, SONG_HARMONY_ROOT_C);
-    put(5, 0, SONG_EVENT_HARMONY, SCALE_MAJOR, SONG_HARMONY_ROOT_C + 9);
+    put(0, 1, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C);
+    put(5, 0, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C + 9);
     seq_engine_prepare_visits(visits);
     assert(seq_engine_get_effective_root(0) == 9); // blocked lower track cannot win
     memset(visits, 0, sizeof(visits)); memset(fixture, 0, sizeof(fixture));
-    put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR, 0);
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, 0);
     fixture[0][0].data0 = 255; fixture[0][0].data1 = 255;
     seq_engine_prepare_visits(visits); assert(seq_engine_get_effective_root(0) == 9);
     memset(visits, 0, sizeof(visits));
@@ -541,7 +541,7 @@ static void test_harmony(void) {
     seq_engine_resolve_harmony(visits);
     assert(seq_engine_get_effective_root(0) == 4);
     assert(seq_engine_get_effective_tonality(0, 2) == old_scale);
-    visits[0].events[0].data0 = SONG_HARMONY_SCALE_OFF;
+    visits[0].events[0].data0 = SCALE_CHROMATIC + 1;
     visits[0].events[0].data1 = SONG_HARMONY_ROOT_KEEP;
     seq_engine_resolve_harmony(visits);
     assert(seq_engine_get_effective_root(0) == 4);
