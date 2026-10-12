@@ -106,7 +106,8 @@ void step_edit_timer_task(void) {
     if(sedits.enable && sedits.cci_hint_timeout > 0) {
         if(--sedits.cci_hint_timeout == 0 ||
                 (sedits.cci_hint_show_value &&
-                 sedits.cci_hint_controller == MIDI_CTRL_CC_EUCLIDEAN_ROTATION &&
+                 (sedits.cci_hint_controller == MIDI_CTRL_CC_EUCLIDEAN_ROTATION ||
+                  sedits.cci_hint_controller == MIDI_CTRL_CC_EUCLIDEAN_DENSITY) &&
                  sedits.cci_hint_timeout % 100 == 0))
             step_edit_update_title();
     }
@@ -673,6 +674,21 @@ static void step_edit_show_cci_hint(void) {
     sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
 }
 
+// Both Euclidean hints use the first receiving track, not the source length.
+static int step_edit_first_bias_target(int *length) {
+    int target;
+    for(target = 0; target < SEQ_NUM_TRACKS; target++) {
+        if(target == sedits.track ||
+                song_get_bias_track(sedits.scene, target) != sedits.track) continue;
+        *length = sedits.scene == seq_engine_get_current_scene()
+            ? seq_engine_get_effective_motion_length(target)
+            : song_get_motion_length(sedits.scene, target);
+        *length = seq_utils_clamp(*length, 1, SEQ_NUM_STEPS);
+        return target;
+    }
+    return -1;
+}
+
 // Decode through the same conversion as playback; never alter stored MIDI values.
 static void step_edit_cci_value_title(char *title, int controller, int raw) {
     char value[32];
@@ -719,20 +735,21 @@ static void step_edit_cci_value_title(char *title, int controller, int raw) {
             label = "Arp gate";
             snprintf(value, sizeof(value), "%d ticks", decoded);
             break;
-        case MIDI_CTRL_CC_EUCLIDEAN_DENSITY:
-            label = "Euc density";
-            snprintf(value, sizeof(value), "%d%%", decoded);
-            break;
+        case MIDI_CTRL_CC_EUCLIDEAN_DENSITY: {
+            int length, target = step_edit_first_bias_target(&length);
+            if(target < 0)
+                snprintf(title, GFX_LABEL_LEN, "CCi 28: %d%% No Bias target", decoded);
+            else if(decoded == 100)
+                // 100% restores the selected pattern, not an all-hits mask.
+                snprintf(title, GFX_LABEL_LEN, "CCi 28: T%d 100%% Pattern", target + 1);
+            else
+                snprintf(title, GFX_LABEL_LEN, "CCi 28: T%d %d%% %d/%d",
+                    target + 1, decoded, (decoded * length + 50) / 100, length);
+            return;
+        }
         case MIDI_CTRL_CC_EUCLIDEAN_ROTATION: {
-            int target, length;
-            for(target = 0; target < SEQ_NUM_TRACKS; target++) {
-                if(target == sedits.track ||
-                        song_get_bias_track(sedits.scene, target) != sedits.track) continue;
-                // Only the active scene has live CCi overrides.
-                length = sedits.scene == seq_engine_get_current_scene()
-                    ? seq_engine_get_effective_motion_length(target)
-                    : song_get_motion_length(sedits.scene, target);
-                length = seq_utils_clamp(length, 1, SEQ_NUM_STEPS);
+            int length, target = step_edit_first_bias_target(&length);
+            if(target >= 0) {
                 decoded = midi_ctrl_internal_cc_to_value(controller, raw, length);
                 snprintf(title, GFX_LABEL_LEN, "CCi 29: T%d Rot %d/%d",
                     target + 1, decoded, length);
