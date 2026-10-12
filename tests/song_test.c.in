@@ -85,5 +85,15 @@ int main(void) {
     song_set_root(6); song_set_scene_root(0, 2); song_clear();
     assert(song_get_root() == SONG_ROOT_OFF);
     for(i = 0; i < 6; i++) assert(song_get_scene_root(i) == SONG_ROOT_INHERIT);
+    expected[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
+        .data0 = 15, .data1 = SONG_HARMONY_ROOT_MAX};
+    song_set_step_event(0, 0, 0, 0, &expected[0]);
+    assert(!song_save(0)); song_timer_task();
+    memset(&song, 0, sizeof(song));
+    assert(!song_load(0)); song_timer_task();
+    assert(!song_get_step_event(0, 0, 0, 0, &actual));
+    assert(actual.type == SONG_EVENT_HARMONY && actual.data0 == 15 && actual.data1 == 13);
+    song_copy_scene(1, 0);
+    assert(!song_get_step_event(1, 0, 0, 0, &actual) && actual.type == SONG_EVENT_HARMONY);
     puts("song tests passed"); return 0;
 }

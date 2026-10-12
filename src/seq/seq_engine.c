@@ -28,6 +28,7 @@
 #include "metronome.h"
 #include "midi_ctrl.h"
 #include "song.h"
+#include "scale.h"
 #include "pattern.h"
 #include "outproc.h"
 #include "sysex.h"
@@ -95,6 +96,9 @@ struct seq_engine_state {
     int bias_track_output[SEQ_NUM_TRACKS];  // bias track output
     struct conditional_state conditions[SEQ_NUM_TRACKS];
     int16_t internal_cc[SEQ_NUM_TRACKS][14];  // CC 16-29; -1 = inactive
+    int harmony_active;
+    int harmony_root;  // -2: stored scene/song root; -1: Off; 0--11: C--B
+    int8_t harmony_scale[SEQ_NUM_TRACKS];  // -1: stored scale
     int kbtrans;  // keyboard transpose state for tracks (no effect during song mode)
     int autolive;  // the autolive state
     // song mode
@@ -133,6 +137,7 @@ static void seq_engine_prepare_step(int track, struct seq_engine_step_visit *vis
 void seq_engine_track_play_step(int track, int step,
     const struct seq_engine_step_visit *visit);
 static void seq_engine_prepare_visits(struct seq_engine_step_visit *visits);
+static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visits);
 static void seq_engine_set_direction(int track, int reverse);
 void seq_engine_track_start_note(int track, int step, int length, struct midi_msg *on_msg);
 void seq_engine_track_manage_notes(int track);
@@ -589,6 +594,18 @@ int seq_engine_get_effective_euclidean_rotation(int track) {
         song_get_euclidean_rotation(sestate.scene_current, track));
 }
 
+int seq_engine_get_effective_root(int scene) {
+    if(scene == sestate.scene_current && sestate.harmony_active &&
+            sestate.harmony_root != SONG_ROOT_INHERIT) return sestate.harmony_root;
+    return song_get_effective_root(scene);
+}
+int seq_engine_get_effective_tonality(int scene, int track) {
+    if(track < 0 || track >= SEQ_NUM_TRACKS) return SCALE_CHROMATIC;
+    if(scene == sestate.scene_current && sestate.harmony_active &&
+            sestate.harmony_scale[track] >= 0) return sestate.harmony_scale[track];
+    return song_get_tonality(scene, track);
+}
+
 // change the scene
 void seq_engine_change_scene(int scene) {
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
@@ -1015,6 +1032,7 @@ static void seq_engine_prepare_visits(struct seq_engine_step_visit *visits) {
             if(!prepared) break;
         }
     }
+    seq_engine_resolve_harmony(visits);
 
 }
 
@@ -1039,6 +1057,45 @@ static void seq_engine_prepare_step(int track, struct seq_engine_step_visit *vis
         }
     }
     conditional_commit(&sestate.conditions[track], &gates);
+}
+
+// Resolve only frozen eligible slots, after all CCi eligibility rescans.
+// Root priority is independent of preparation order. Scales are applied in
+// ascending source/slot order; the last eligible assignment to a target wins.
+static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visits) {
+    int source, slot, target, changed = 0, root_source = -1, root = SONG_ROOT_INHERIT;
+    for(source = 0; source < SEQ_NUM_TRACKS; source++) {
+        for(slot = 0; slot < SEQ_TRACK_POLY; slot++) {
+            const struct track_event *event = &visits[source].events[slot];
+            if(!(visits[source].slots & (1u << slot)) ||
+                    event->type != SONG_EVENT_HARMONY ||
+                    event->data0 >= SCALE_NUM_TONALITIES ||
+                    event->data1 > SONG_HARMONY_ROOT_MAX) continue;
+            if(!sestate.harmony_active) {
+                for(target = 0; target < SEQ_NUM_TRACKS; target++)
+                    sestate.harmony_scale[target] = -1;
+                sestate.harmony_root = SONG_ROOT_INHERIT;
+                sestate.harmony_active = 1;
+            }
+            for(target = 0; target < SEQ_NUM_TRACKS; target++) {
+                if((target == source || sestate.bias_track_map[target] == source) &&
+                        sestate.harmony_scale[target] != event->data0) {
+                    sestate.harmony_scale[target] = event->data0;
+                    changed = 1;
+                }
+            }
+            if(event->data1 != SONG_HARMONY_ROOT_KEEP &&
+                    (root_source < 0 || root_source == source)) {
+                root_source = source;
+                root = (int)event->data1 - SONG_HARMONY_ROOT_C;
+            }
+        }
+    }
+    if(root_source >= 0 && sestate.harmony_root != root) {
+        sestate.harmony_root = root;
+        changed = 1;
+    }
+    if(changed) state_change_fire0(SCE_ENG_HARMONY);
 }
 
 void seq_engine_track_play_step(int track, int step,
@@ -1081,7 +1138,7 @@ void seq_engine_track_play_step(int track, int step,
                                 MIDI_CTRL_CC_TRACK_TRANSPOSE,
                                 song_get_transpose(sestate.scene_current, track)) -
                             song_get_transpose(sestate.scene_current, track);
-                        if(song_get_effective_root(sestate.scene_current) >= 0) {
+                        if(seq_engine_get_effective_root(sestate.scene_current) >= 0) {
                             // Named roots process the effective transpose at output, once.
                             temp = event.data0 + sestate.kbtrans + bias;
                         }
@@ -1103,6 +1160,9 @@ void seq_engine_track_play_step(int track, int step,
                     midi_utils_enc_program_change(&msg, 0, 0, event.data0);
                     outproc_deliver_msg(sestate.scene_current, track, &msg,
                         OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);
+                    break;
+                case SONG_EVENT_HARMONY:
+                    // Resolved atomically across all visits before any attacks.
                     break;
                 case SONG_EVENT_INTERNAL_CC:
                     // Applied in the bias-resolution pass before track playback.
@@ -1411,6 +1471,10 @@ void seq_engine_refresh_internal_cc_target(int track, int controller) {
 // discard all transient automation; stored song values remain untouched
 void seq_engine_clear_internal_cc(void) {
     int track, index;
+    int had_harmony = sestate.harmony_active;
+    sestate.harmony_active = 0;
+    sestate.harmony_root = SONG_ROOT_INHERIT;
+    if(had_harmony) state_change_fire0(SCE_ENG_HARMONY);
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         for(index = 0; index < 14; index ++) {
             sestate.internal_cc[track][index] =

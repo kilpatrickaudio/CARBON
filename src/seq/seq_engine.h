@@ -72,6 +72,10 @@ int seq_engine_get_effective_pattern_type(int track);
 int seq_engine_get_effective_euclidean_density(int track);
 int seq_engine_get_effective_euclidean_rotation(int track);
 
+// Transient Hrm values for the active scene; saved defaults otherwise.
+int seq_engine_get_effective_root(int scene);
+int seq_engine_get_effective_tonality(int scene, int track);
+
 // change the scene
 void seq_engine_change_scene(int scene);
 

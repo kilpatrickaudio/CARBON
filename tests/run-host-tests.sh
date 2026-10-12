@@ -28,7 +28,7 @@ trap 'rm -rf "$TMP"' EXIT HUP INT TERM
     -ffunction-sections -fdata-sections -fsanitize=address,undefined \
     -Wno-deprecated-declarations \
     tests/editor_test.c.in src/midi/midi_utils.c src/util/seq_utils.c \
-    src/util/panel_utils.c src/seq/midi_ctrl.c src/seq/arp_progs.c "$LINK_GC" -o "$TMP/editor"
+    src/util/panel_utils.c src/seq/midi_ctrl.c src/seq/arp_progs.c src/seq/scale.c "$LINK_GC" -o "$TMP/editor"
 "$TMP/editor"
 
 "$CC" -x c -std=c11 -Wall -Wextra -Werror -Wno-cpp \
@@ -78,5 +78,5 @@ trap 'rm -rf "$TMP"' EXIT HUP INT TERM
     -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations \
     -ffunction-sections -fdata-sections -fsanitize=address,undefined \
     -Wno-tautological-constant-out-of-range-compare \
-    tests/gui_status_test.c.in src/util/seq_utils.c "$LINK_GC" -o "$TMP/gui-status"
+    tests/gui_status_test.c.in src/util/seq_utils.c src/seq/scale.c "$LINK_GC" -o "$TMP/gui-status"
 "$TMP/gui-status"

@@ -804,7 +804,7 @@ void arp_start_note(int track, int note) {
     struct midi_msg msg;
     int i;
     // Preserve legacy arp octave wrapping; named roots retain signed pitch.
-    if(song_get_effective_root(seq_engine_get_current_scene()) < 0 ||
+    if(seq_engine_get_effective_root(seq_engine_get_current_scene()) < 0 ||
             song_get_track_type(track) == SONG_TRACK_TYPE_DRUM) note &= 0x7f;
     for(i = 0; i < ARP_MAX_PLAYING_NOTES; i ++) {
         if(astate[track].playing_notes[i] == ARP_NOTE_SLOT_FREE) {

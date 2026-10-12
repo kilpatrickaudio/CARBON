@@ -25,6 +25,7 @@
 #include "../seq/arp.h"
 #include "../seq/scale.h"
 #include "../seq/seq_ctrl.h"
+#include "../seq/seq_engine.h"
 #include "../seq/song.h"
 #include "../util/log.h"
 #include "../util/panel_utils.h"
@@ -274,6 +275,7 @@ void panel_menu_handle_state_change(int event_type, int *data, int data_len) {
                 pmstate.menu_timeout_count = pmstate.menu_timeout;
             }
             break;
+        case SCE_ENG_HARMONY:
         case SCE_SONG_ROOT:
             if(pmstate.menu_mode == PANEL_MENU_TONALITY || pmstate.menu_mode == PANEL_MENU_SWING)
                 panel_menu_update_display();
@@ -652,8 +654,8 @@ void panel_menu_display_tonality(void) {
                 (seq_ctrl_get_first_track() + 1));
             gui_set_menu_subtitle(tempstr);
             scale_name_with_root(tempstr,
-                song_get_tonality(seq_ctrl_get_scene(), seq_ctrl_get_first_track()),
-                song_get_effective_root(seq_ctrl_get_scene()));
+                seq_engine_get_effective_tonality(seq_ctrl_get_scene(), seq_ctrl_get_first_track()),
+                seq_engine_get_effective_root(seq_ctrl_get_scene()));
             // Scale/root names exceed the generic 13-character value field.
             gui_set_status_text_part(3, 0, 27, tempstr);
             break;

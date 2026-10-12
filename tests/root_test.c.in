@@ -16,6 +16,8 @@ static struct midi_msg sent[4096];
 static int count, routing;
 static int copy_busy;
 int song_scene_copy_in_progress(void) { return copy_busy; }
+int seq_engine_get_effective_root(int s) { return root; }
+int seq_engine_get_effective_tonality(int s, int t) { return tonality; }
 int song_get_effective_root(int s) { return root; }
 int song_get_track_type(int t) { return drum; }
 int song_get_transpose(int s, int t) { return transpose; }

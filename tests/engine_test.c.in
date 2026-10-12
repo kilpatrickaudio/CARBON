@@ -74,6 +74,7 @@ int song_get_tonality(int scene, int track) { return test_scale; }
 int song_get_midi_channel_map(int track, int map) { return track; }
 int song_get_midi_port_map(int track, int map) { return map; }
 #else
+int song_get_tonality(int scene, int track) { return 0; }
 int song_get_midi_port_map(int track, int map) { return SONG_PORT_DISABLE; }
 #endif
 int song_get_scene_midi_program(int scene, int track, int map) { return SONG_MIDI_PROG_NULL; }
@@ -490,7 +491,54 @@ static void test_root_offsets(void) {
     assert(output_count == 1 && output[0].data0 == 64); // no offset twice
 }
 
+static void test_harmony(void) {
+    // Root priority for every pair of tracks, regardless of resolution order.
+    for(int low = 0; low < SEQ_NUM_TRACKS; low++)
+        for(int high = low + 1; high < SEQ_NUM_TRACKS; high++) {
+            struct seq_engine_step_visit pair[SEQ_NUM_TRACKS] = {0};
+            setup();
+            pair[high].slots = pair[low].slots = 1;
+            pair[high].events[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
+                .data0 = SCALE_MAJOR, .data1 = SONG_HARMONY_ROOT_C + 7};
+            pair[low].events[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
+                .data0 = SCALE_NAT_MINOR, .data1 = SONG_HARMONY_ROOT_C + 2};
+            seq_engine_resolve_harmony(pair);
+            assert(seq_engine_get_effective_root(0) == 2);
+            pair[low].events[0].data1 = SONG_HARMONY_ROOT_KEEP;
+            seq_engine_resolve_harmony(pair);
+            assert(seq_engine_get_effective_root(0) == 7);
+        }
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    setup(); enabled[0] = enabled[5] = 1;
+    sestate.clock_div_count[0] = 3; sestate.clock_div_count[5] = 0;
+    sestate.bias_track_map[0] = 5; sestate.bias_track_map[2] = 0;
+    put(5, 0, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_STEP_LENGTH, 127);
+    put(5, 1, SONG_EVENT_HARMONY, SCALE_MAJOR, SONG_HARMONY_ROOT_C + 7);
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_NAT_MINOR, SONG_HARMONY_ROOT_C + 2);
+    put(0, 1, SONG_EVENT_HARMONY, SCALE_DORIAN, SONG_HARMONY_ROOT_OFF);
+    put(0, 2, SONG_EVENT_HARMONY, SCALE_BLUES, SONG_HARMONY_ROOT_KEEP);
+    seq_engine_prepare_visits(visits);
+    assert(visits[0].prepared && visits[5].prepared);
+    assert(seq_engine_get_effective_root(0) == SONG_ROOT_OFF); // last explicit Track1 request
+    assert(seq_engine_get_effective_tonality(0, 2) == SCALE_BLUES); // Keep still sets scale
+    assert(seq_engine_get_effective_tonality(0, 5) == SCALE_MAJOR); // losing root still sets scale
+    assert(seq_engine_get_effective_tonality(0, 0) == SCALE_MAJOR); // later source targets T1
+    memset(visits, 0, sizeof(visits)); memset(fixture, 0, sizeof(fixture));
+    put(0, 0, SONG_EVENT_PROBABILITY, 0, 0);
+    put(0, 1, SONG_EVENT_HARMONY, SCALE_MAJOR, SONG_HARMONY_ROOT_C);
+    put(5, 0, SONG_EVENT_HARMONY, SCALE_MAJOR, SONG_HARMONY_ROOT_C + 9);
+    seq_engine_prepare_visits(visits);
+    assert(seq_engine_get_effective_root(0) == 9); // blocked lower track cannot win
+    memset(visits, 0, sizeof(visits)); memset(fixture, 0, sizeof(fixture));
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR, 0);
+    fixture[0][0].data0 = 255; fixture[0][0].data1 = 255;
+    seq_engine_prepare_visits(visits); assert(seq_engine_get_effective_root(0) == 9);
+    seq_engine_clear_internal_cc(); assert(seq_engine_get_effective_root(0) == SONG_ROOT_OFF);
+    assert(!sestate.harmony_active);
+}
+
 int main(void) {
+    test_harmony();
     test_root_offsets();
     test_mixed_and_cleanup();
     test_cycles_and_history();

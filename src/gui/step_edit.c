@@ -26,6 +26,7 @@
 #include "../gfx.h"
 #include "../seq/outproc.h"
 #include "../seq/arp.h"
+#include "../seq/scale.h"
 #include "../seq/midi_ctrl.h"
 #include "../seq/seq_ctrl.h"
 #include "../seq/seq_engine.h"
@@ -295,12 +296,12 @@ void step_edit_adjust_note(int change, int shift) {
             sedits.event_pos, &event) != -1) {
         static const uint8_t types[] = {SONG_EVENT_NOTE, SONG_EVENT_CC,
             SONG_EVENT_INTERNAL_CC, SONG_EVENT_PROGCHG, SONG_EVENT_PROBABILITY,
-            SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE};
+            SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE, SONG_EVENT_HARMONY};
         int index;
-        for(index = 0; index < 8; index ++) {
+        for(index = 0; index < 9; index ++) {
             if(types[index] == event.type) break;
         }
-        index = (index + (change > 0 ? 1 : 7)) % 8;
+        index = (index + (change > 0 ? 1 : 8)) % 9;
         event.type = types[index];
         event.data0 = 0;
         event.data1 = 0;
@@ -563,6 +564,10 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                         }
                         inhibit_preview = 1;
                     }
+                    else if(event.type == SONG_EVENT_HARMONY) {
+                        event.data0 = seq_utils_clamp(event.data0 + change, 0, SCALE_NUM_TONALITIES - 1);
+                        inhibit_preview = 1;
+                    }
                     // probability occupies the first numeric field only
                     else if(event.type == SONG_EVENT_PROBABILITY) {
                         event.data0 = seq_utils_clamp(event.data0 + change, 0, 100);
@@ -602,6 +607,11 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                             sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
                         }
                         inhibit_preview = 1;  // user must retrigger edit to hear
+                    }
+                    else if(event.type == SONG_EVENT_HARMONY) {
+                        event.data1 = seq_utils_clamp(event.data1 + change,
+                            SONG_HARMONY_ROOT_KEEP, SONG_HARMONY_ROOT_MAX);
+                        inhibit_preview = 1;
                     }
                     else if(event.type == SONG_EVENT_EUCLIDEAN) {
                         unsigned a, b;
@@ -768,6 +778,17 @@ static void step_edit_cci_value_title(char *title, int controller, int raw) {
 static void step_edit_update_title(void) {
     char title[GFX_LABEL_LEN];
     const char *name = step_edit_cci_name(sedits.cci_hint_controller);
+    struct track_event event;
+    if(sedits.event_pos >= 0 && song_get_step_event(sedits.scene, sedits.track,
+            sedits.step_pos, sedits.event_pos, &event) != -1 && event.type == SONG_EVENT_HARMONY) {
+        char scale[32];
+        scale_type_to_name(scale, seq_utils_clamp(event.data0, 0, SCALE_NUM_TONALITIES - 1));
+        snprintf(title, sizeof(title), "Hrm: %s / %s", scale,
+            event.data1 == SONG_HARMONY_ROOT_KEEP ? "Keep" :
+            scale_root_name((int)event.data1 - SONG_HARMONY_ROOT_C));
+        gui_set_status_text(0, title);
+        return;
+    }
     if(sedits.cci_hint_timeout > 0 && name && sedits.cci_hint_show_value)
         step_edit_cci_value_title(title, sedits.cci_hint_controller, sedits.cci_hint_value);
     else if(sedits.cci_hint_timeout > 0 && name)
@@ -883,6 +904,13 @@ void step_edit_update_display(void) {
                 gui_set_status_text_part(2, xpos, 4, tempstr);
                 sprintf(tempstr, "%-3d", event.data1);
                 gui_set_status_text_part(3, xpos, 4, tempstr);
+                break;
+            case SONG_EVENT_HARMONY:
+                gui_set_status_text_part(1, xpos, 4, "Hrm");
+                sprintf(tempstr, "%d", event.data0 + 1);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                gui_set_status_text_part(3, xpos, 4, event.data1 == SONG_HARMONY_ROOT_KEEP
+                    ? "Keep" : (char *)scale_root_name((int)event.data1 - SONG_HARMONY_ROOT_C));
                 break;
             case SONG_EVENT_PROBABILITY:
                 gui_set_status_text_part(1, xpos, 4, "Prb");

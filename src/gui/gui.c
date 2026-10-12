@@ -953,6 +953,7 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_ARP_ENABLE:
             gui_update_arp_enable(data[0], data[1], data[2]);
             break;
+        case SCE_ENG_HARMONY:
         case SCE_SONG_ROOT:
             gui_update_tonality(gstate.current_scene, gstate.first_track,
                 song_get_tonality(gstate.current_scene, gstate.first_track));
@@ -1575,12 +1576,12 @@ void gui_update_tonality(int scene, int track, int tonality) {
     // update info display
     if(!gstate.status_override) {
         scale_name_with_root(tempstr,
-            song_get_tonality(seq_ctrl_get_scene(), gstate.first_track),
-            song_get_effective_root(seq_ctrl_get_scene()));
+            seq_engine_get_effective_tonality(seq_ctrl_get_scene(), gstate.first_track),
+            seq_engine_get_effective_root(seq_ctrl_get_scene()));
         // Leave columns 19 onward for VOICE/DRUM on both LCD layouts.
-        if(song_get_effective_root(seq_ctrl_get_scene()) < 0) {
+        if(seq_engine_get_effective_root(seq_ctrl_get_scene()) < 0) {
             char name[32];
-            scale_type_to_name(name, song_get_tonality(seq_ctrl_get_scene(), gstate.first_track));
+            scale_type_to_name(name, seq_engine_get_effective_tonality(seq_ctrl_get_scene(), gstate.first_track));
             sprintf(tempstr, "%s (Off)", name);
         }
         gui_set_status_text_part(3, 0, 18, tempstr);
@@ -1784,6 +1785,8 @@ void gui_update_active_step(int track, int step) {
 
 // update the song mode status display
 void gui_update_song_mode(void) {
+    gui_update_tonality(gstate.current_scene, gstate.first_track,
+        seq_engine_get_effective_tonality(gstate.current_scene, gstate.first_track));
     struct song_mode_state *sngmode;
     sngmode = seq_engine_get_song_mode_state();
 

@@ -106,6 +106,7 @@ enum STATE_CHANGE_EVENT {
     SCE_ENG_ACTIVE_STEP,  // arg0 = track, arg1 = step
     SCE_ENG_SONG_MODE_STATUS,  // arg0 = none
     SCE_ENG_KBTRANS,  // arg0 = trans
+    SCE_ENG_HARMONY,  // transient effective scale/shared root changed
     // config events
     SCE_CONFIG_LOADED = SCEC_CONFIG,  // no args
     SCE_CONFIG_CLEARED,  // no args

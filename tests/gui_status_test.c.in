@@ -9,6 +9,9 @@ int seq_ctrl_get_song_mode(void) { return songmode; }
 int seq_engine_get_effective_motion_length(int track) { return length; }
 int seq_engine_get_effective_euclidean_density(int track) { return density; }
 int seq_engine_get_effective_euclidean_rotation(int track) { return rotation; }
+int seq_ctrl_get_scene(void) { return 0; }
+int seq_engine_get_effective_root(int scene) { return -1; }
+int seq_engine_get_effective_tonality(int scene, int track) { return 0; }
 void log_error(char *fmt, ...) { assert(!"unexpected error"); }
 int main(void) {
     char *label = gstate.glabels[GUI_LABEL_SONG_MODE].text;

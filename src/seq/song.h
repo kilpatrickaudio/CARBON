@@ -103,6 +103,11 @@ struct track_event {
 #define SONG_EVENT_EUCLIDEAN 3  // data0: pair index 0-27; data1: rotation
 #define SONG_EVENT_PRE 4  // previous contributing visit's OR history
 #define SONG_EVENT_NON_PRE 5  // inverse history; never contributes
+#define SONG_EVENT_HARMONY 6  // data0: Scale 0--15; data1: Keep/Off/C--B
+#define SONG_HARMONY_ROOT_KEEP 0
+#define SONG_HARMONY_ROOT_OFF 1
+#define SONG_HARMONY_ROOT_C 2
+#define SONG_HARMONY_ROOT_MAX 13
 
 _Static_assert(sizeof(struct track_event) == 6, "event storage size changed");
 _Static_assert(offsetof(struct track_event, type) == 0 &&

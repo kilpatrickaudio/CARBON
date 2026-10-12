@@ -7,6 +7,8 @@ static int ui_scene, ui_scale, ui_songroot = -1, roots[6] = {-2,-2,-2,-2,-2,-2};
 int seq_ctrl_get_scene(void) { return ui_scene; }
 int seq_ctrl_get_first_track(void) { return 0; }
 int song_get_tonality(int scene, int track) { return ui_scale; }
+int seq_engine_get_effective_root(int scene) { return roots[scene] == -2 ? ui_songroot : roots[scene]; }
+int seq_engine_get_effective_tonality(int scene, int track) { return ui_scale; }
 int song_get_effective_root(int scene) { return roots[scene] == -2 ? ui_songroot : roots[scene]; }
 int song_get_root(void) { return ui_songroot; }
 int song_get_scene_root(int scene) { return roots[scene]; }

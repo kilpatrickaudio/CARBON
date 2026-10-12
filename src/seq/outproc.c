@@ -46,14 +46,17 @@ struct outproc_state {
 struct outproc_state opstate;
 
 static int outproc_pitch(int track, int note) {
-    if(opstate.current_root[track] >= 0 &&
+    int scene = seq_engine_get_current_scene();
+    int root = seq_engine_get_effective_root(scene);
+    int scale = song_get_track_type(track) == SONG_TRACK_TYPE_DRUM
+        ? opstate.current_tonality[track] : seq_engine_get_effective_tonality(scene, track);
+    if(root >= 0 &&
             song_get_track_type(track) != SONG_TRACK_TYPE_DRUM) {
         return scale_quantize_root(note + seq_engine_get_internal_cc(track, 17,
-            opstate.current_transpose[track]), opstate.current_tonality[track],
-            opstate.current_root[track]);
+            opstate.current_transpose[track]), scale, root);
     }
     if(!seq_utils_check_note_range(note)) return -1;
-    return scale_quantize(note, opstate.current_tonality[track]) +
+    return scale_quantize(note, scale) +
         opstate.current_transpose[track];
 }
 
@@ -99,8 +102,9 @@ void outproc_pitch_changed(int scene, int track) {
     if(song_scene_copy_in_progress()) return;
     if(scene != seq_engine_get_current_scene() || track < 0 || track >= SEQ_NUM_TRACKS) return;
     transpose = song_get_transpose(scene, track);
-    tonality = song_get_tonality(scene, track);
-    root = song_get_effective_root(scene);
+    tonality = song_get_track_type(track) == SONG_TRACK_TYPE_DRUM
+        ? song_get_tonality(scene, track) : seq_engine_get_effective_tonality(scene, track);
+    root = seq_engine_get_effective_root(scene);
     // Legacy transpose editing revoices held notes, as before, but uses
     // saved output destinations/pitches rather than recomputing note-offs.
     if(root < 0 && opstate.current_root[track] < 0 &&

@@ -95,3 +95,11 @@ for both LCD types; they do not replace a physical LCD audition.
 
 Harmony changes apply to subsequent note attacks; already sounding voices keep
 their pitch until release. Legacy Root Off transpose-only revoicing is retained.
+
+Hrm (local 1.32) appends a ninth editor type: Scale plus Keep/Off/C--B shared
+Root. Frozen eligible slots resolve after CCi rescans and before attacks; the
+lowest source track wins Root, last explicit slot wins within that source.
+Scales apply to source and Bias targets in source/slot order (last wins).
+Integration tests cover gated/clashing requests, rescan priority, transient
+reset/scene lifecycle, held/live/arp/drum output, editor preview and persistence.
+No per-track roots or CCi30. Older firmware cannot interpret Hrm songs.
