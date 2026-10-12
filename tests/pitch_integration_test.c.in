@@ -27,7 +27,11 @@ static void live(int status, int note, int value) {
     struct midi_msg msg = {.port = 7, .len = 3, .status = status, .data0 = note, .data1 = value};
     seq_engine_live_send_msg(0, &msg);
 }
+#ifdef CARBON_TEST_REMOTE
+int pitch_tests_main(void) {
+#else
 int main(void) {
+#endif
     init();
     live(MIDI_NOTE_ON, 64, 100); assert(wires == 2 && wire[0].data0 == 65);
     test_root = 2; test_scale = SCALE_NAT_MINOR; test_transpose = -3;

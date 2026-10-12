@@ -594,6 +594,37 @@ int seq_engine_get_effective_euclidean_rotation(int track) {
         song_get_euclidean_rotation(sestate.scene_current, track));
 }
 
+static void seq_engine_init_harmony_override(void) {
+    int track;
+    if(sestate.harmony_active) return;
+    for(track = 0; track < SEQ_NUM_TRACKS; track++) sestate.harmony_scale[track] = -1;
+    sestate.harmony_root = SONG_ROOT_INHERIT;
+    sestate.harmony_active = 1;
+}
+
+void seq_engine_remote_harmony_scale(int track, int value) {
+    int target, changed = 0;
+    if(value <= SONG_HARMONY_SCALE_KEEP || value > SONG_HARMONY_SCALE_MAX ||
+            (track != SEQ_CTRL_TRACK_OMNI && (track < 0 || track >= SEQ_NUM_TRACKS))) return;
+    for(target = 0; target < SEQ_NUM_TRACKS; target++) {
+        if(track == SEQ_CTRL_TRACK_OMNI ? !seq_ctrl_get_track_select(target) : target != track) continue;
+        seq_engine_init_harmony_override();
+        if(sestate.harmony_scale[target] != value - 1) {
+            sestate.harmony_scale[target] = value - 1;
+            changed = 1;
+        }
+    }
+    if(changed) state_change_fire0(SCE_ENG_HARMONY);
+}
+
+void seq_engine_remote_harmony_root(int value) {
+    if(value <= SONG_HARMONY_ROOT_KEEP || value > SONG_HARMONY_ROOT_MAX) return;
+    seq_engine_init_harmony_override();
+    if(sestate.harmony_root == value - SONG_HARMONY_ROOT_C) return;
+    sestate.harmony_root = value - SONG_HARMONY_ROOT_C;
+    state_change_fire0(SCE_ENG_HARMONY);
+}
+
 int seq_engine_get_effective_root(int scene) {
     if(scene == sestate.scene_current && sestate.harmony_active &&
             sestate.harmony_root != SONG_ROOT_INHERIT) return sestate.harmony_root;
@@ -1071,12 +1102,7 @@ static void seq_engine_resolve_harmony(const struct seq_engine_step_visit *visit
                     event->type != SONG_EVENT_HARMONY ||
                     event->data0 > SONG_HARMONY_SCALE_MAX ||
                     event->data1 > SONG_HARMONY_ROOT_MAX) continue;
-            if(!sestate.harmony_active) {
-                for(target = 0; target < SEQ_NUM_TRACKS; target++)
-                    sestate.harmony_scale[target] = -1;
-                sestate.harmony_root = SONG_ROOT_INHERIT;
-                sestate.harmony_active = 1;
-            }
+            seq_engine_init_harmony_override();
             for(target = 0; target < SEQ_NUM_TRACKS; target++) {
                 int scale = (int)event->data0 - 1;
                 if(event->data0 != SONG_HARMONY_SCALE_KEEP &&

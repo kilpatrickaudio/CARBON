@@ -76,6 +76,10 @@ int seq_engine_get_effective_euclidean_rotation(int track);
 int seq_engine_get_effective_root(int scene);
 int seq_engine_get_effective_tonality(int scene, int track);
 
+// External transient harmony values in Hrm's direct-choice encoding.
+void seq_engine_remote_harmony_scale(int track, int value);
+void seq_engine_remote_harmony_root(int value);
+
 // change the scene
 void seq_engine_change_scene(int scene);
 

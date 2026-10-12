@@ -17,7 +17,16 @@ int midi_clock_get_running(void) { return running; }
 #endif
 int seq_ctrl_get_run_state(void) { return midi_clock_get_running(); }
 int seq_ctrl_get_live_mode(void) { return live_mode; }
-int seq_ctrl_get_track_select(int track) { return track == selected; }
+#ifdef CARBON_TEST_REMOTE
+static unsigned remote_selection;
+#endif
+int seq_ctrl_get_track_select(int track) {
+#ifdef CARBON_TEST_REMOTE
+    return !!(remote_selection & (1u << track));
+#else
+    return track == selected;
+#endif
+}
 int seq_ctrl_get_first_track(void) { return 0; }
 int seq_ctrl_get_record_mode(void) { return SEQ_CTRL_RECORD_IDLE; }
 int seq_ctrl_get_num_tracks_selected(void) { return 1; }

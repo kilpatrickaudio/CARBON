@@ -63,12 +63,15 @@
  *  - arp gate time         - CC 27     - val: 0-127 = min to max
  *  - Euclidean density     - CC 28     - val: 0-127 = 0-100%
  *  - Euclidean rotation    - CC 29     - val: 0-127 = 0 to motion length - 1
+ *  - harmony scale         - CC 30     - 0 Keep, 1-16 scales (transient)
+ *  - shared harmony root   - CC 31     - 0 Keep, 1 Off, 2-13 C-B (transient)
  *  - run/stop              - CC 80     - val: 0-63 = stop, 64-127 = run
  *
  */
 #include "midi_ctrl.h"
 #include "arp_progs.h"
 #include "seq_ctrl.h"
+#include "seq_engine.h"
 #include "song.h"
 #include "../midi/midi_protocol.h"
 #include "../util/log.h"
@@ -280,6 +283,12 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
         }
 
         switch(msg->data0) {
+            case MIDI_CTRL_CC_HARMONY_SCALE:
+                seq_engine_remote_harmony_scale(track, msg->data1);
+                break;
+            case MIDI_CTRL_CC_HARMONY_ROOT:
+                seq_engine_remote_harmony_root(msg->data1);
+                break;
             case MIDI_CTRL_CC_STEP_LENGTH:
                 seq_ctrl_set_step_length(track,
                     seq_utils_clamp((msg->data1 * SEQ_UTILS_STEP_LENS) >> 7,

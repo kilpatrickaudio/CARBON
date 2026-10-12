@@ -38,6 +38,9 @@
 #define MIDI_CTRL_CC_ARP_GATE_TIME 27
 #define MIDI_CTRL_CC_EUCLIDEAN_DENSITY 28
 #define MIDI_CTRL_CC_EUCLIDEAN_ROTATION 29
+// External Remote only; deliberately not CCi destinations.
+#define MIDI_CTRL_CC_HARMONY_SCALE 30
+#define MIDI_CTRL_CC_HARMONY_ROOT 31
 #define MIDI_CTRL_CC_RUN_STOP 80
 
 // init the MIDI control module

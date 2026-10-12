@@ -49,6 +49,13 @@ trap 'rm -rf "$TMP"' EXIT HUP INT TERM
     -ffunction-sections -fdata-sections -fsanitize=address,undefined \
     tests/pitch_integration_test.c.in src/seq/scale.c src/midi/midi_utils.c \
     src/util/seq_utils.c src/seq/midi_ctrl.c "$LINK_GC" -o "$TMP/pitch-integration"
+
+"$CC" -x c -std=c11 -Wall -Wextra -Werror \
+    -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations \
+    -ffunction-sections -fdata-sections -fsanitize=address,undefined \
+    tests/remote_harmony_test.c.in src/seq/scale.c src/midi/midi_utils.c \
+    src/util/seq_utils.c src/seq/midi_ctrl.c "$LINK_GC" -o "$TMP/remote-harmony"
+"$TMP/remote-harmony"
 "$TMP/pitch-integration"
 
 "$CC" -x c -std=c11 -Wall -Wextra -Werror -Wno-cpp \
