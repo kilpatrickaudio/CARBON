@@ -1,25 +1,42 @@
-#+title: CARBON firmware additions — 1.30-johanwk-ch9-dev
+#+title: CARBON firmware additions — 1.34-johanwk-ch10-dev
 #+author: Johan W. Klüwer using gpt--sol in Emacs gptel
 #+date: 2026-09-30
 
-* Development status: Chapter 9
+* Development status: Chapters 9--10
 
-This local development branch identifies itself as =1.30-johanwk-ch9-dev=.
-It adds conditional gates to the submitted, hardware-tested 1.29 build.
-Chapter 9 has passed host tests and release builds but has NOT been flashed
-or verified on CARBON hardware. Hardware claims and historical measurements
-elsewhere in this document refer only to the earlier features/builds.
-The submitted PR #10 and its =1.29-johanwk= branch remain unchanged.
+The current local build identifies itself as =1.34-johanwk-ch10-dev=.
+It includes the submitted 1.29 features, the 1.30 conditional gates,
+1.31 song/scene roots and CCi editor help, Harmony (=Hrm=) with Scale Keep,
+external harmony CC30/31, and 1.34 inversion (=Inv=) with Compact and CC32/33.
+Chapter 10 remains local development, not an official release or published PR.
+Chapter 9 has passed host tests and release builds, with positive practical
+hardware feedback for gates, Bias Track interactions, Euclidean status and
+startup probability variation. This is not exhaustive hardware verification;
+16 PPQ physical output, realtime timing and stack high-water remain unmeasured.
+PR #11 contains the 1.30 additions and depends on PR #10; the submitted
+=1.29-johanwk= PR #10 branch remains unchanged.
 
-Do not install this development image without a separate testing decision.
-Back up songs first. Songs saved with gates must not be used in older
-firmware, which cannot interpret them and may suppress later events.
+Root-note playback has positive initial hardware feedback, including some
+scene changes; CCi parameter/value hints have also been tried on hardware.
+Initial Hrm tests within a track and through Bias Track work as intended,
+including Scale changes and Root Keep, Off and selected keys. Simultaneous
+conflicting root requests have host-test coverage but have not yet been
+verified on hardware. Inv chord rotation and Compact on a wide voicing have
+positive practical hardware feedback; see [[*Practical hardware feedback][Inv/Compact hardware feedback]].
+None of the later local harmony/voicing development is in PR #11.
+
+Install a specifically identified build only after a separate testing decision.
+Back up songs first. Do not load songs containing gates, Hrm or Inv events into
+firmware that does not implement those event types. Older firmware may ignore
+them or suppress later events; it also cannot reproduce named-root playback.
 
 * Introduction
 
 This is an unofficial set of additions to the CARBON firmware. It is based on the
 upstream =master= commit =bd5f5d4= and firmware 1.27.
-The System page identifies this unofficial variant as =1.29-johanwk=. The aim is
+The System page identifies this development variant as =1.34-johanwk-ch10-dev=.
+The preceding submitted builds are =1.29-johanwk= (PR #10) and
+=1.30-johanwk-ch9-dev= (PR #11). The aim is
 to extend CARBON's MIDI control and rhythmic sequencing while keeping its
 existing workflow intact.
 
@@ -30,7 +47,11 @@ The main additions are:
 - new step lengths that divide a 4/4 bar into 3, 5, 7, 9, 11 or 13 equal parts;
 - MIDI CC control of Euclidean density and rotation;
 - transient internal CC events, routed through Bias Track, for stepped internal
-  automation without a MIDI loopback cable.
+  automation without a MIDI loopback cable;
+- conditional gates for variation and branching;
+- song/scene roots with root-aware in-scale transposition;
+- Harmony events for stepped Scale and shared Root changes;
+- Bias-target inversion and optional Compact voicing, plus external Remote control.
 
 The firmware has been built, flashed and tested on CARBON hardware. Existing songs
 load, and no existing feature has intentionally been removed or replaced. The
@@ -39,12 +60,13 @@ record size is unchanged.
 
 The previously tested development build added about 5.9 kB of firmware text
 compared with the local 1.27 baseline. Measurements for that build are recorded
-below; they do not identify the forthcoming =1.29-johanwk= PR candidate.
+below; they do not identify the current 1.34 development candidate.
 
 This work was done independently. The open pull requests in the CARBON GitHub
 repository were not consulted or incorporated, so features proposed there are not
-part of this firmware. These additions are being prepared for submission as one
-combined pull request.
+part of this firmware. The earlier additions were submitted as combined PR #10; the 1.30
+conditional-gate, display and clock-output additions are submitted as the
+dependent PR #11.
 
 This firmware is not an official Kilpatrick Audio release and is not supported by
 Kilpatrick Audio. Installation and use are at the user's own risk.
@@ -75,6 +97,71 @@ operation before relying on it in a performance.
 
 
 * New features at a glance
+
+** Song/scene roots and in-scale transposition (1.31)
+
+- Song Root is Off or C--B; each scene inherits Song or selects Off/C--B.
+  There are no per-track roots. Shift+Tonality opens Swing followed by roots.
+- Off keeps legacy scale processing. With a named root, semitone offsets are
+  applied before downward quantization to the selected scale at that root.
+- Root/scale changes affect new attacks; sounding notes keep their pitches
+  until release. Drum pitch processing is unchanged.
+
+** Harmony events (=Hrm=, 1.32)
+
+- One step event sets Scale and optionally a shared Root (Keep, Off or C--B).
+- Scale applies to its source and Bias targets; Root applies to all melodic
+  tracks, not just those targets. No CCi 30 or per-track root is introduced.
+- Simultaneous explicit root requests use lowest source-track priority.
+- Changes are transient and conditional gates can suppress them. See
+  [[*Harmony events (Hrm): stepped Scale and Root][Harmony events]] for controls, examples and conflict rules.
+
+** Inversion and Compact (=Inv=, 1.34)
+
+- Inv on a Bias source controls sequenced melodic voicings on its targets:
+  0--5 structural rotations, with optional octave compression around the new bass.
+- Stored notes and per-note velocity/duration remain unchanged. Compact is not
+  voice leading and does not use previous-step history.
+- Live input, drums and arp-enabled tracks are excluded. Arp input-chord
+  inversion is a possible later extension, not part of this build.
+- External Remote CC32/33 address rotation/Compact directly. See
+  [[*Inv: structural inversion and Compact voicing (1.34 development)][Inv and Compact]] for the algorithm and practical hardware results.
+
+** CCi editor help and meaningful value steps
+
+- Selecting a CCi code briefly shows its parameter name; editing its value
+  shows the interpreted setting while retaining the raw value in the event row.
+- Each value detent skips redundant raw buckets for CCi16--28. CCi29 changes
+  by two raw units and displays rotation/length for the first Bias target.
+- Density shows percentage plus hits/length for that target, except 100%,
+  which restores the selected Pattern. Target lengths include live CCi changes.
+- Gate percentage matches the regular display; arp type shows its name.
+
+** Conditional gates (1.30)
+
+- =Prb= passes with a selected probability; =Euc= passes on A out of B track
+  loops, with rotation; =Pre= and =!Pr= branch on the previous contributing
+  gate history.
+- Gates use the six existing event slots in order. A failed gate skips later
+  slots on that step, not later sequencer steps; earlier events are unaffected.
+- Gates also govern Note-derived Bias Track and internal =CCi= controls.
+- Probability streams continue through resets and song loads; startup seeding
+  allows variation after power-cycling. Conditional history/cycle reset rules
+  are separate. See [[*Chapter 9: Conditional gates (1.30 development)][Conditional gates]] for the full rules.
+
+** Compact Euclidean status (1.30)
+
+- The SONG line shows the selected track's effective =length:hits:rotation=
+  whenever density is below 100%, including transient CCi overrides.
+- Hit count means active mask positions, not necessarily sounding notes.
+- Status updates and Euclidean editing avoid unnecessary full-screen redraws.
+
+** 16 PPQ clock output (1.30)
+
+- =16 PPQ= is appended after =24 PPQ= in the shared clock-output choices,
+  preserving older saved indices. It applies to CV/Gate and other clock outputs.
+- It produces one pulse per six internal 96-PPQ ticks. Physical pulse-rate
+  measurement remains pending.
 
 ** Program Change events
 
@@ -121,7 +208,7 @@ The existing remote-channel convention is unchanged:
 
 ** Internal stepped automation (=CCi=)
 
-A fourth step-event type, =CCi=, provides transient internal control:
+The =CCi= step-event type provides transient internal control:
 
 - =CCi= events are not sent to MIDI or CV outputs;
 - they use the existing Bias Track relationship for routing;
@@ -187,8 +274,8 @@ encountered during practical use.
 1. Enter Step Edit and select the step.
 2. Use Shift + Motion Start to select one event slot rather than all slots.
 3. Use Shift + Transpose to cycle the event type:
-   =Note → CC → CCi → PC → Prb → Euc → Pre → !Pr → Note=.
-   (The submitted 1.29 build ends the cycle after PC.)
+   =Note → CC → CCi → PC → Prb → Euc → Pre → !Pr → Hrm → Inv → Note=.
+   (The submitted 1.29 build ends after PC; 1.30 ends after !Pr.)
 4. Select =PC=.
 5. Use Transpose to choose program 1--128.
 
@@ -272,6 +359,153 @@ No MIDI loopback cable is needed. Physical MIDI loopback was tested and produced
 feedback symptoms, including doubled note onsets and display flicker. =CCi= is the
 intended internal solution.
 
+* Harmony events (Hrm): stepped Scale and Root
+
+Available in local 1.32 development. A Harmony event changes the effective
+Scale and optionally the shared Root without editing saved base settings.
+It uses one of the step's six event slots and sends no MIDI/CV message itself.
+
+** Add and edit Hrm
+
+1. Enter Step Edit and choose a step.
+2. Use Shift + Motion Start to select one event slot.
+3. Use Shift + Transpose to cycle to =Hrm= (after =!Pr=).
+4. Use Transpose to choose Keep or one of the 16 scales.
+5. Use Velocity to choose the Root action:
+
+| Root choice | Meaning                                              |
+|-------------+------------------------------------------------------|
+| Keep        | Leave the currently effective shared root unchanged. |
+| Off         | Select legacy root-off processing.                   |
+| C--B        | Select that root for all melodic tracks.             |
+
+In local 1.33, Hrm Scale choices are Keep, then the sixteen scales:
+Chromatic is value 1. Keep leaves each receiving track's effective scale
+unchanged. There is no separate Scale Off: choose Chromatic for no scale
+restriction. New events default to Keep / Keep. Hrm: Keep / D changes only
+the shared root. No migration of earlier experimental Hrm encodings is provided,
+as no songs were saved with them. Root Off remains available and distinct. The first numeric row shows the
+Keep or scale index 1--16; the second shows Keep, Off or the note name. The selected
+event's heading shows the full description, for example =Hrm: Major / D=.
+Gate length is unused. Stopped preview does not apply Hrm changes.
+
+** What changes, and on which tracks?
+
+- Scale changes on the track containing Hrm and every other track whose Bias
+  Track selects that source. Unlike CCi, Hrm also affects the source itself.
+- An explicit Root changes the shared root for ALL melodic tracks in the
+  active scene, whether or not they are Bias targets. Other tracks retain
+  their own scales unless a Hrm event targets them. There are no per-track roots.
+- Root selects the permitted pitch classes; it is not an extra transpose.
+  Existing keyboard/Bias/track semitone offsets still apply in their normal
+  contexts before named-root quantization. Drum pitch processing is unchanged.
+- Notes already sounding retain their output pitches until release, including
+  sustain-pedal notes. Subsequent sequencer, live and arp attacks use the new
+  effective harmony. Changing harmony does not retrigger held notes.
+
+** Examples
+
+Within Track 1: put =Hrm: Major / C= on an early step and =Hrm: Nat Minor / Keep=
+on a later step. Track 1 switches scale while the shared root remains C. A
+=Hrm: Major / D= event instead sets Track 1's scale to Major and the shared
+root to D. Notes on other melodic tracks now use D with their own scales.
+
+Using a Bias source: set Track 1's Bias Track to Track 3, then add
+=Hrm: Major / D= on Track 3. Tracks 3 and 1 receive Major; ALL melodic tracks
+receive root D. Track 3 may be muted to use it as a control source. Notes on
+Track 3 still provide ordinary pitch bias, so omit them if you want only
+harmony control. Hrm Bias routing has been practically verified on hardware
+with Scale changes and Root Keep, Off and selected keys.
+
+** Conditional gates and simultaneous events
+
+A failing gate blocks later Hrm slots on that step. Pattern-masked steps do
+not contribute Hrm. Pattern-enabled muted/Live sources still contribute
+harmony controls, matching existing Bias/CCi control-source behavior.
+
+For explicit Root requests on the same internal clock tick:
+
+1. The lowest-numbered SOURCE track with an eligible explicit request wins.
+2. Within that track, the last eligible explicit request in slot order wins.
+3. Keep does not enter arbitration or cancel an earlier explicit request.
+4. Losing root requests still apply their Scale changes.
+
+Example: Track 1 requests C and Track 3 requests D on the same tick: C wins.
+If Track 1 requests Keep, Track 3's D wins. If Track 1's request is blocked
+by a gate, it cannot win. With no explicit request, the current root is held.
+Priority is recalculated each tick; a later Track 3 request can change the root
+when Track 1 makes no explicit request on that tick.
+
+Scale assignments are applied in ascending source-track and slot order; the
+last eligible assignment to a receiving track wins. This is a separate rule
+from shared-root arbitration. All eligible Hrm changes resolve after CCi
+control preparation and before new note attacks; CCi follow-up scan order
+does not change root priority.
+
+** Lifetime, saved settings and compatibility
+
+Hrm overrides are held until another eligible event replaces them. They clear
+on song load, scene activation and transport-position Reset/MIDI Start, restoring
+the configured root/scales. Stop/Continue and an individual track-position reset
+do not clear the shared harmony. There is no explicit Restore event in this
+version: Keep holds the automated root; Off selects legacy mode, not restore.
+
+Saving preserves the programmed Hrm events and base settings, not the transient
+playback overrides. Normal parameter edits still change the saved bases and
+do not cancel an active Hrm override. The scale/root display shows the effective
+harmony; a reset or scene activation restores the configured bases.
+
+Hrm uses event code 6 in the existing six-byte record, so song size stays
+=0x5000=. The current Scale Keep encoding requires local 1.33 or later. Do not load
+Hrm-containing songs into older firmware; back up originals before testing.
+
+** External harmony control: CC 30 and CC 31
+
+Enable =MIDI Rmt Ctrl= to receive these transient harmony commands on MIDI
+channels 10--16. They use direct choice values, NOT proportional 0--127 scaling.
+
+| CC 30 value | Scale       | CC 31 value | Shared Root |
+|-------------+-------------+-------------+-------------|
+|           0 | Keep        |           0 | Keep        |
+|           1 | Chromatic   |           1 | Off         |
+|           2 | Major       |           2 | C           |
+|           3 | Nat Minor   |           3 | C-sharp     |
+|           4 | Har Minor   |           4 | D           |
+|           5 | Dorian      |           5 | D-sharp     |
+|           6 | Whole       |           6 | E           |
+|           7 | Pentatonic  |           7 | F           |
+|           8 | Diminished  |           8 | F-sharp     |
+|           9 | Phrygian    |           9 | G           |
+|          10 | Lydian      |          10 | G-sharp     |
+|          11 | Mixolydian  |          11 | A           |
+|          12 | Locrian     |          12 | A-sharp     |
+|          13 | Min Pent    |          13 | B           |
+|          14 | Blues       |             |             |
+|          15 | Half Dim    |             |             |
+|          16 | Seven Chord |             |             |
+
+- CC 30 on channel 10 changes selected tracks; channels 11--16 directly
+  address Tracks 1--6. Unlike Hrm events, it does NOT propagate to Bias targets.
+- CC 31 changes the shared Root on ANY accepted channel (10--16), regardless
+  of track selection. Other channels and out-of-range values are ignored.
+- Keep is a no-op, not restore-base. These commands share Hrm's transient
+  overrides and scene/song/transport-reset clearing; saved bases are unchanged.
+- Commands take effect in receive order. A later Hrm event can replace them;
+  a later received CC can replace Hrm. Lowest-track arbitration applies only
+  to same-tick sequencer Hrm requests, not received MIDI commands.
+- CC 30 and CC 31 are two separate MIDI messages, not an atomic pair. Send
+  both before the intended note attack, e.g. CC 30=2 then CC 31=4 for Major/D.
+- These are external Remote commands only, not additional CCi destinations.
+  Existing CC 16--29 remote edits still change saved scene settings.
+
+** Hardware verification
+
+Initial within-track and Bias-target Hrm use work as intended according to
+user feedback. Bias-source tests cover Scale changes and Root Keep, Off and
+selected keys. Competing-source root arbitration and all combined
+configurations are not yet hardware-verified. Host tests cover these paths,
+editing, preview, transient reset/scene behavior, held notes and persistence.
+
 * Additional 1.30 option: 16 PPQ clock output
 
 The shared clock-output rate list now includes =16 PPQ=, available for
@@ -291,7 +525,7 @@ including later gates. Earlier events are unaffected. Each step visit starts
 afresh: a failed gate does not disable subsequent sequencer steps.
 
 Gates control Note, CC, PC and internal CCi events, including Note-derived
-Bias Track output. A suppressed Note On does not suppress cleanup of notes
+Bias Track output. In 1.32, they also control Hrm events. A suppressed Note On does not suppress cleanup of notes
 that were already sounding. Gate events themselves send no MIDI/CV output.
 
 ** Add and edit a gate
@@ -313,7 +547,7 @@ Changing the pair normalizes rotation modulo the new B. Rotation moves one
 position per Velocity increment. Gate length is unused.
 
 Stopped editor preview ignores gates and auditions ordinary Note/CC/PC
-events, including events after a failing gate. CCi remains playback-only.
+events, including events after a failing gate. CCi and Hrm remain playback-only.
 Preview and display redraws do not draw probability or change gate history.
 
 ** Probability
@@ -396,18 +630,105 @@ is saved; transient history, cycle position and PRNG state are not.
 
 ** Verification status
 
-Five host suites exercise the production evaluator, engine, editor, song
-serialization with mocked flash, and MIDI clock callbacks. Sanitized
-integration tests pass, as does the forced release build. Physical MIDI/CV,
-flash, encoder/display behavior, interrupt-stack high-water and realtime
-CPU timing remain hardware verification tasks.
+Six host suites in the final 1.30 checkpoint exercise the production evaluator,
+engine, editor, song serialization with mocked flash, MIDI clock callbacks and
+GUI status. Sanitized integration tests and forced release builds pass. The user
+reports practical success with gates, Bias Track, stable Euclidean status and
+probability variation after reboot; this is not exhaustive hardware coverage.
+Physical 16 PPQ measurement, interrupt-stack high-water and realtime CPU timing
+remain open. Earlier hardware checklists are not evidence that every 1.30
+combination has been tested.
 
-Current development figures versus submitted =fc00313=:
-text/binary +1208 bytes, initialized data unchanged, BSS +48 bytes.
+Final =c7c4a02= figures versus submitted =fc00313=:
+text/binary +1928 bytes, initialized data unchanged, BSS +48 bytes.
 ARM -O2 static engine tick frame grows from 64 to 312 bytes; this is not a
 worst-case nested call/interrupt stack measurement.
 
+* Inv: structural inversion and Compact voicing (1.34 development)
+
+Inv rotates arbitrary note collections without chord recognition or knowledge
+of Scale/Root. Compact is a custom octave-compression algorithm, NOT voice
+leading: it does not consult the previous step or minimize inter-step motion.
+
+** Controls and routing
+- In Step Edit, Shift+Transpose cycles to Inv after Hrm. Transpose selects
+  0--5 rotations; Velocity selects Compact Off/On. Default is 0 / Off.
+- Place Inv on a Bias source: it affects only OTHER tracks selecting that
+  source as Bias Track, not the source itself. With no targets it does nothing.
+- Inv is transient and gate-controlled; later eligible source/slot assignments
+  win for a target. Scene activation, song load and transport reset clear it.
+- External Remote CC32 selects rotations with DIRECT values 0--5 (others
+  ignored); CC33 uses 0--63 Off, 64--127 On. MIDI Rmt Ctrl must be enabled.
+  Channel10 addresses selected tracks, channels11--16 directly Tracks1--6,
+  without Bias fan-out. Commands affect subsequent sequenced chords only.
+- Stopped preview does not apply Inv. Live input, arp-enabled tracks and drum
+  tracks do not undergo voicing transformation. No notes are created.
+
+** Algorithm and musical behavior
+Each target step starts from its original gate-eligible positive-velocity notes.
+The lowest occurrence of each pitch class represents its octave doubles.
+Each rotation raises the lowest representative by whole octaves to the first
+position strictly above the entire current voicing. Duplicate notes and octave
+doubles move with that representative, preserving their spacing and each slot's
+velocity/duration. Empty, single-note and single-pitch-class groups are unchanged.
+
+For C4/E4/G4, rotations 0/1/2/3 produce C4-E4-G4, E4-G4-C5, G4-C5-E5,
+and C5-E5-G5. More rotations retain octave displacement; they are not reduced
+modulo note count. Wide voicings/octave doubles may cause larger upward jumps.
+
+With Compact On, the inversion-selected bass stays fixed; upper representatives
+are lowered by octaves until each is within one octave above that bass. Octave
+doubles retain their spacing, so the entire result need not fit one octave.
+Compact can also compress a wide original voicing at rotation 0.
+
+Ordinary transpose/Bias/root/scale processing follows the structural operation.
+Final pitches outside MIDI range are omitted, not clamped; note releases track
+actual output pitches. Already sounding notes are not revoiced by control edits.
+Stored step data remain unchanged. Local version 1.34 introduces Inv code 7 in
+existing six-byte records; song size stays 0x5000. Older firmware cannot
+interpret Inv events: back up songs and do not downgrade Inv-containing songs.
+
+** Practical hardware feedback
+
+Inv has been tried on CARBON hardware and is reported to lift chord voicings
+in a natural-sounding, musically useful way. Compact has also been confirmed
+audibly with the wide voicing MIDI 60/76/91: its effect is obvious and pleasing.
+
+| Rotations | Compact Off (sorted MIDI pitches) | Compact On |
+|-----------+----------------------------------+------------|
+|         0 | 60, 76, 91                       | 60, 64, 67 |
+|         1 | 76, 91, 96                       | 76, 79, 84 |
+|         2 | 91, 96, 100                      | Unchanged  |
+|         3 | 96, 100, 103                     | Unchanged  |
+|         4 | 100, 103, 108                    | Unchanged  |
+|         5 | 103, 108, 112                    | Unchanged  |
+
+The unchanged results at rotations 2--5 are expected: the rotations already
+close this voicing within one octave of its bass. Compact does not lower that
+bass or undo the whole chord's register lift. Close-position chords may show
+no Compact difference at any rotation. This is positive practical hardware
+evidence, not exhaustive verification of all chords, routes or boundaries.
+
+** Arrangement idea: compact verse, open chorus
+
+Use a Bias control track to select Inv 0 / Compact On for a verse, then
+Compact Off to restore the original open voicing for a chorus. An additional
+rotation can supply a register lift for a transition. This keeps the same stored
+chord material while varying its spacing and register. It is a suggested
+arrangement technique, not a separately tested song example. Compact does not
+reduce velocity or guarantee a subdued sound: low close voicings can be dense,
+and register, synth patch and dynamics still matter.
+
 * Compatibility and storage
+
+Current local version 1.34 includes the 1.31 root fields, Hrm event code 6
+and Inv event code 7. Hrm Scale uses Keep=0 and scales=1--16.
+The seven root bytes occupy reserved song space; all older field offsets and
+the =0x5000=-byte slot size are unchanged. Songs written before 1.31 initialize
+Song Root to Off and scenes to Song inheritance. Version 1.32 adds no new
+persistent fields: Hrm and Inv use existing event data0/data1. Older firmware cannot
+interpret these events or reproduce named-root playback. Retain song backups
+for any downgrade; fixed record size does not imply playback compatibility.
 
 For Chapter 9, the local numeric firmware/song version is 1.30, with
 display-only =johanwk-ch9-dev=. Event codes 2--5 add the four gates in the
@@ -495,6 +816,11 @@ Previously tested development release build (not the final PR candidate):
   =panel_menu.c= format overflow warning.
 
 * Hardware use
+
+The following checklist records earlier 1.29 hardware use. Chapter 9 status
+is stated above; current Hrm hardware evidence includes initial within-track
+and Bias-target use, as described in [[*Hardware verification][Hrm hardware verification]]. This historical checklist must not be read as
+verification of competing Hrm sources or all 1.34 combinations.
 
 The firmware has been built, flashed and used on CARBON hardware over the past
 week, including the new features. No bugs were encountered during practical use.
