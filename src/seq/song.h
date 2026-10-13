@@ -26,6 +26,7 @@
 #include "../midi/midi_protocol.h"
 #include "../cvproc.h"
 #include <inttypes.h>
+#include <stddef.h>
 
 // note modes
 #define SONG_NOTE_MODE_PER_SONG 0
@@ -97,8 +98,38 @@ struct track_event {
 
 // song event types - map to real status messages where possible
 #define SONG_EVENT_NULL 0
+#define SONG_EVENT_INTERNAL_CC 1  // transient control routed through Bias Track
+#define SONG_EVENT_PROBABILITY 2  // data0: 0-100%; other fields unused
+#define SONG_EVENT_EUCLIDEAN 3  // data0: pair index 0-27; data1: rotation
+#define SONG_EVENT_PRE 4  // previous contributing visit's OR history
+#define SONG_EVENT_NON_PRE 5  // inverse history; never contributes
+#define SONG_EVENT_HARMONY 6  // data0: Keep=0, scales=1--16; data1: Keep/Off/C--B
+#define SONG_EVENT_INVERSION 7  // data0: rotations 0--5; data1: Compact 0/1
+#define SONG_INVERSION_MAX 5
+#define SONG_HARMONY_SCALE_KEEP 0
+#define SONG_HARMONY_SCALE_MAX 16
+#define SONG_HARMONY_ROOT_KEEP 0
+#define SONG_HARMONY_ROOT_OFF 1
+#define SONG_HARMONY_ROOT_C 2
+#define SONG_HARMONY_ROOT_MAX 13
+
+_Static_assert(sizeof(struct track_event) == 6, "event storage size changed");
+_Static_assert(offsetof(struct track_event, type) == 0 &&
+    offsetof(struct track_event, data0) == 1 &&
+    offsetof(struct track_event, data1) == 2 &&
+    offsetof(struct track_event, length) == 4, "event storage offsets changed");
 #define SONG_EVENT_NOTE MIDI_NOTE_ON
 #define SONG_EVENT_CC MIDI_CONTROL_CHANGE
+#define SONG_EVENT_PROGCHG MIDI_PROGRAM_CHANGE
+
+// Roots: pitch classes 0--11, Off=-1; scene Song=-2.
+#define SONG_ROOT_OFF -1
+#define SONG_ROOT_INHERIT -2
+int song_get_root(void);
+void song_set_root(int root);
+int song_get_scene_root(int scene);
+void song_set_scene_root(int scene, int root);
+int song_get_effective_root(int scene);
 
 // init the song
 void song_init(void);
@@ -120,6 +151,7 @@ int song_save(int song_num);
 
 // copy a scene to another scene replacing all data
 void song_copy_scene(int dest, int src);
+int song_scene_copy_in_progress(void);
 
 //
 // getters and setters
@@ -308,6 +340,12 @@ void song_set_track_type(int track, int mode);
 //
 // track params (per scene)
 //
+// get a scene MIDI program for a track output
+int song_get_scene_midi_program(int scene, int track, int mapnum);
+
+// set a scene MIDI program for a track output
+void song_set_scene_midi_program(int scene, int track, int mapnum, int program);
+
 // get the step length - returns -1 on error
 int song_get_step_length(int scene, int track);
 
@@ -343,6 +381,18 @@ int song_get_motion_length(int scene, int track);
 
 // set the motion length on a track
 void song_set_motion_length(int scene, int track, int length);
+
+// get the Euclidean density for a track - returns -1 on error
+int song_get_euclidean_density(int scene, int track);
+
+// set the Euclidean density for a track
+void song_set_euclidean_density(int scene, int track, int density);
+
+// get the Euclidean rotation for a track - returns -1 on error
+int song_get_euclidean_rotation(int scene, int track);
+
+// set the Euclidean rotation for a track
+void song_set_euclidean_rotation(int scene, int track, int rotation);
 
 // get the gate time on a track in ticks - returns -1 on error
 int song_get_gate_time(int scene, int track);

@@ -65,6 +65,25 @@ void seq_engine_reset_track(int track);
 // get the current scene
 int seq_engine_get_current_scene(void);
 
+// effective runtime parameters (including transient internal CC automation)
+int seq_engine_get_effective_motion_start(int track);
+int seq_engine_get_effective_motion_length(int track);
+int seq_engine_get_effective_pattern_type(int track);
+int seq_engine_get_effective_euclidean_density(int track);
+int seq_engine_get_effective_euclidean_rotation(int track);
+
+// Transient Hrm values for the active scene; saved defaults otherwise.
+int seq_engine_get_effective_root(int scene);
+int seq_engine_get_effective_tonality(int scene, int track);
+
+// External transient harmony values in Hrm's direct-choice encoding.
+void seq_engine_remote_harmony_scale(int track, int value);
+void seq_engine_remote_harmony_root(int value);
+
+// External transient voicing controls (direct track, no Bias fan-out).
+void seq_engine_remote_inversion(int track, int rotations);
+void seq_engine_remote_compact(int track, int compact);
+
 // change the scene
 void seq_engine_change_scene(int scene);
 
@@ -100,5 +119,8 @@ void seq_engine_arp_stop_note(int track, struct midi_msg *msg);
 //
 // handle MIDI input from a controller / keyboard
 void seq_engine_midi_rx_msg(struct midi_msg *msg);
+
+// Effective transient internal control (stored fallback when not overridden).
+int seq_engine_get_internal_cc(int track, int cc, int stored_value);
 
 #endif

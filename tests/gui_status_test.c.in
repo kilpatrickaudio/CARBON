@@ -1,0 +1,40 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#define GUI_STATE_SECTION
+#include "../src/gui/gui.c"
+static struct song_mode_state mode;
+static int density = 44, length = 16, rotation = 3, songmode;
+struct song_mode_state *seq_engine_get_song_mode_state(void) { return &mode; }
+int seq_ctrl_get_song_mode(void) { return songmode; }
+int seq_engine_get_effective_motion_length(int track) { return length; }
+int seq_engine_get_effective_euclidean_density(int track) { return density; }
+int seq_engine_get_effective_euclidean_rotation(int track) { return rotation; }
+int seq_ctrl_get_scene(void) { return 0; }
+int seq_engine_get_effective_root(int scene) { return -1; }
+int seq_engine_get_effective_tonality(int scene, int track) { return 0; }
+void log_error(char *fmt, ...) { assert(!"unexpected error"); }
+int main(void) {
+    char *label = gstate.glabels[GUI_LABEL_SONG_MODE].text;
+    mode.current_entry = -1;
+    gui_update_song_mode();
+    assert(strlen(label) == 28 && !strcmp(label + 22, "16:7:3"));
+    gstate.glabels[GUI_LABEL_SONG_MODE].dirty = 0;
+    gui_update_song_mode();
+    assert(!gstate.glabels[GUI_LABEL_SONG_MODE].dirty);
+    rotation = 4; gui_update_song_mode();
+    assert(gstate.glabels[GUI_LABEL_SONG_MODE].dirty);
+    gstate.glabels[GUI_LABEL_SONG_MODE].dirty = 0;
+    gui_update_song_mode();
+    assert(!gstate.glabels[GUI_LABEL_SONG_MODE].dirty);
+    songmode = 1; mode.current_entry = 63;
+    mode.beat_count = mode.total_beats = 256;
+    length = 64; density = 99; rotation = 63;
+    gui_update_song_mode();
+    assert(strlen(label) == 28 && !strcmp(label + 20, "64:63:63"));
+    assert(!strncmp(label, "SONG - 64: 256/256", 17));
+    density = 100; gui_update_song_mode();
+    assert(strlen(label) == 28 && !strstr(label, "64:63:63"));
+    density = 0; length = 1; rotation = 63; gui_update_song_mode();
+    assert(!strcmp(label + 23, "1:0:0"));
+    puts("GUI status tests passed"); return 0;
+}

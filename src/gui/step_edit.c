@@ -19,12 +19,17 @@
  *
  */
 #include "step_edit.h"
+#include "../seq/conditional.h"
 #include "gui.h"
 #include "panel_menu.h"
 #include "../config.h"
 #include "../gfx.h"
 #include "../seq/outproc.h"
+#include "../seq/arp.h"
+#include "../seq/scale.h"
+#include "../seq/midi_ctrl.h"
 #include "../seq/seq_ctrl.h"
+#include "../seq/seq_engine.h"
 #include "../seq/song.h"
 #include "../util/log.h"
 #include "../util/panel_utils.h"
@@ -43,6 +48,7 @@
 // constants
 #define STEP_EDIT_EVENT_POS_ALL -1
 #define STEP_EDIT_NOTE_SLOT_FREE -1
+#define STEP_EDIT_CCI_HINT_MS 2000
 
 struct step_edit_state {
     int enable;  // 0 = disabled, 1 = enabled
@@ -51,6 +57,10 @@ struct step_edit_state {
     int track;  // selected edit track
     int step_pos;  // current step pos for editing
     int event_pos;  // the event edit pos or STEP_EDIT_EVENT_POS_ALL for global
+    int cci_hint_timeout;  // milliseconds remaining for title help
+    int cci_hint_controller;
+    int cci_hint_value;
+    int cci_hint_show_value;
     int last_adjust_type;  // the last type of adjustment
     // preview events
     int8_t playing_notes[SEQ_TRACK_POLY];  // playing notes
@@ -63,11 +73,14 @@ struct step_edit_state sedits;
 // local functions
 void step_edit_adjust_step(int change, int mode, int single, int shift);
 void step_edit_update_display(void);
+static void step_edit_update_title(void);
+static void step_edit_show_cci_hint(void);
 void step_edit_play_step(void);
 void step_edit_stop_notes(void);
 void step_edit_send_note_on(int note, int velocity);
 void step_edit_send_note_off(int note);
 void step_edit_send_cc(int controller, int value);
+void step_edit_send_program_change(int program);
 void step_edit_clear_recording_notes(void);
 void step_edit_add_recording_note(int note);
 void step_edit_remove_recording_note(int note);
@@ -78,6 +91,7 @@ int step_edit_does_step_contain_event(int type, int data0);
 void step_edit_init(void) {
     sedits.enable = 0;
     sedits.edit_timeout = 0;
+    sedits.cci_hint_timeout = 0;
     sedits.scene = 0;
     sedits.track = 0;
     sedits.step_pos = 0;
@@ -90,6 +104,14 @@ void step_edit_init(void) {
 
 // run step edit timer task
 void step_edit_timer_task(void) {
+    if(sedits.enable && sedits.cci_hint_timeout > 0) {
+        if(--sedits.cci_hint_timeout == 0 ||
+                (sedits.cci_hint_show_value &&
+                 (sedits.cci_hint_controller == MIDI_CTRL_CC_EUCLIDEAN_ROTATION ||
+                  sedits.cci_hint_controller == MIDI_CTRL_CC_EUCLIDEAN_DENSITY) &&
+                 sedits.cci_hint_timeout % 100 == 0))
+            step_edit_update_title();
+    }
     // time out step edit mode
     if(sedits.edit_timeout) {
         sedits.edit_timeout --;
@@ -195,6 +217,7 @@ int step_edit_get_enable(void) {
 
 // start and stop step edit mode
 void step_edit_set_enable(int enable) {
+    sedits.cci_hint_timeout = 0;
     // start edit
     if(enable) {
         // we're already editing - just trigger the note
@@ -232,11 +255,13 @@ void step_edit_set_enable(int enable) {
 void step_edit_adjust_cursor(int change, int shift) {
     int val;
     sedits.edit_timeout = panel_menu_get_timeout();
+    sedits.cci_hint_timeout = 0;
 
     // select event pos
     if(shift) {
         sedits.event_pos = seq_utils_clamp(sedits.event_pos + change,
             STEP_EDIT_EVENT_POS_ALL, SEQ_TRACK_POLY - 1);
+        step_edit_show_cci_hint();
         step_edit_update_display();
     }
     // select step
@@ -262,7 +287,59 @@ void step_edit_adjust_cursor(int change, int shift) {
 
 // adjust the step note
 void step_edit_adjust_note(int change, int shift) {
+    struct track_event event;
     sedits.edit_timeout = panel_menu_get_timeout();
+
+    // shift + transpose cycles the selected event type
+    if(shift && sedits.event_pos != STEP_EDIT_EVENT_POS_ALL &&
+            song_get_step_event(sedits.scene, sedits.track, sedits.step_pos,
+            sedits.event_pos, &event) != -1) {
+        static const uint8_t types[] = {SONG_EVENT_NOTE, SONG_EVENT_CC,
+            SONG_EVENT_INTERNAL_CC, SONG_EVENT_PROGCHG, SONG_EVENT_PROBABILITY,
+            SONG_EVENT_EUCLIDEAN, SONG_EVENT_PRE, SONG_EVENT_NON_PRE, SONG_EVENT_HARMONY, SONG_EVENT_INVERSION};
+        int index;
+        for(index = 0; index < 10; index ++) {
+            if(types[index] == event.type) break;
+        }
+        index = (index + (change > 0 ? 1 : 9)) % 10;
+        event.type = types[index];
+        event.data0 = 0;
+        event.data1 = 0;
+        event.length = 0;
+        switch(event.type) {
+            case SONG_EVENT_NOTE:
+                event.data0 = STEP_EDIT_NEW_NOTE;
+                event.data1 = STEP_EDIT_NEW_NOTE_VELOCITY;
+                event.length = seq_utils_step_len_to_ticks(
+                    song_get_step_length(sedits.scene, sedits.track)) >> 1;
+                break;
+            case SONG_EVENT_CC:
+                event.data0 = STEP_EDIT_NEW_CC;
+                event.data1 = STEP_EDIT_NEW_CC_VAL;
+                break;
+            case SONG_EVENT_INTERNAL_CC:
+                event.data0 = MIDI_CTRL_CC_EUCLIDEAN_DENSITY;
+                event.data1 = STEP_EDIT_NEW_CC_VAL;
+                break;
+            case SONG_EVENT_HARMONY:
+                event.data0 = SONG_HARMONY_SCALE_KEEP;
+                event.data1 = SONG_HARMONY_ROOT_KEEP;
+                break;
+            case SONG_EVENT_PROBABILITY:
+                event.data0 = 50;
+                break;
+            default:
+                // PC=1, Euclidean=1:2 rotation 0, Pre/non-Pre unused.
+                break;
+        }
+        song_set_step_event(sedits.scene, sedits.track, sedits.step_pos,
+            sedits.event_pos, &event);
+        sedits.cci_hint_timeout = 0;
+        step_edit_show_cci_hint();
+        step_edit_update_display();
+        return;
+    }
+
     if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {
         step_edit_adjust_step(change, STEP_EDIT_ADJUST_NOTE, 0, shift);
     }
@@ -275,10 +352,10 @@ void step_edit_adjust_note(int change, int shift) {
 void step_edit_adjust_velocity(int change, int shift) {
     sedits.edit_timeout = panel_menu_get_timeout();
     if(sedits.event_pos == STEP_EDIT_EVENT_POS_ALL) {
-        step_edit_adjust_step(change << 1, STEP_EDIT_ADJUST_VELO, 0, shift);
+        step_edit_adjust_step(change, STEP_EDIT_ADJUST_VELO, 0, shift);
     }
     else {
-        step_edit_adjust_step(change << 1, STEP_EDIT_ADJUST_VELO, 1, shift);
+        step_edit_adjust_step(change, STEP_EDIT_ADJUST_VELO, 1, shift);
     }
 }
 
@@ -313,6 +390,7 @@ void step_edit_adjust_ratchet_mode(int change, int shift) {
 
 // clear the current step
 void step_edit_clear_step(void) {
+    sedits.cci_hint_timeout = 0;
     sedits.edit_timeout = panel_menu_get_timeout();
     step_edit_stop_notes();
     // clear specific event
@@ -331,6 +409,37 @@ void step_edit_clear_step(void) {
 //
 // local functions
 //
+// One detent per distinct playback setting, using a stable representative raw
+// value for each bucket. External CCs retain their ordinary raw-value editor.
+static int step_edit_adjust_cci_value(int controller, int raw, int change) {
+    int direction = change > 0 ? 1 : -1;
+    int steps = seq_utils_clamp(change > 0 ? change : -change, 0, 128);
+    int decoded, next, candidate;
+    if(!change) return raw;
+    if(controller == MIDI_CTRL_CC_EUCLIDEAN_ROTATION) {
+        // Usability compromise: retain intermediate fractions for all targets,
+        // rather than skipping buckets based on the first target's length.
+        return seq_utils_clamp(raw + change * 2, 0, 127);
+    }
+    if(!midi_ctrl_internal_cc_supported(controller))
+        return seq_utils_clamp(raw + change * 2, 0, 127);
+    while(steps-- > 0) {
+        decoded = midi_ctrl_internal_cc_to_value(controller, raw, SEQ_NUM_STEPS);
+        candidate = raw + direction;
+        while(candidate >= 0 && candidate <= 127 &&
+                midi_ctrl_internal_cc_to_value(controller, candidate, SEQ_NUM_STEPS) == decoded)
+            candidate += direction;
+        if(candidate < 0 || candidate > 127) break;
+        next = midi_ctrl_internal_cc_to_value(controller, candidate, SEQ_NUM_STEPS);
+        // Canonical first raw value makes forward/backward navigation stable.
+        while(candidate > 0 &&
+                midi_ctrl_internal_cc_to_value(controller, candidate - 1, SEQ_NUM_STEPS) == next)
+            candidate--;
+        raw = candidate;
+    }
+    return raw;
+}
+
 // adjust all events on a step
 void step_edit_adjust_step(int change, int mode, int single, int shift) {
     int inhibit_preview = 0;
@@ -429,11 +538,11 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                         }
                         sedits.last_adjust_type = STEP_EDIT_ADJUST_NOTE;
                     }
-                    // CC
+                    // external CC
                     else if(event.type == SONG_EVENT_CC) {
                         event.data0 += change;
                         // the new value would collide with another slot
-                        if(step_edit_does_step_contain_event(SONG_EVENT_CC, event.data0) != -1) {
+                        if(step_edit_does_step_contain_event(event.type, event.data0) != -1) {
                             if(change > 0) {
                                 event.data0 ++;
                             }
@@ -447,6 +556,44 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                             continue;
                         }
                     }
+                    // internal CC: only the per-track CC 16-29 destinations
+                    else if(event.type == SONG_EVENT_INTERNAL_CC) {
+                        event.data0 = seq_utils_clamp(event.data0 + change,
+                            MIDI_CTRL_CC_STEP_LENGTH,
+                            MIDI_CTRL_CC_EUCLIDEAN_ROTATION);
+                        if(single) {
+                            sedits.cci_hint_controller = event.data0;
+                            sedits.cci_hint_show_value = 0;
+                            sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
+                        }
+                        inhibit_preview = 1;
+                    }
+                    else if(event.type == SONG_EVENT_INVERSION) {
+                        event.data0 = seq_utils_clamp(event.data0 + change, 0, SONG_INVERSION_MAX);
+                        inhibit_preview = 1;
+                    }
+                    else if(event.type == SONG_EVENT_HARMONY) {
+                        event.data0 = seq_utils_clamp(event.data0 + change,
+                            SONG_HARMONY_SCALE_KEEP, SONG_HARMONY_SCALE_MAX);
+                        inhibit_preview = 1;
+                    }
+                    // probability occupies the first numeric field only
+                    else if(event.type == SONG_EVENT_PROBABILITY) {
+                        event.data0 = seq_utils_clamp(event.data0 + change, 0, 100);
+                        inhibit_preview = 1;
+                    }
+                    else if(event.type == SONG_EVENT_EUCLIDEAN) {
+                        unsigned a, b;
+                        event.data0 = seq_utils_clamp(event.data0 + change, 0, 27);
+                        conditional_pair(event.data0, &a, &b);
+                        event.data1 %= b;
+                        inhibit_preview = 1;
+                    }
+                    // program change
+                    else if(event.type == SONG_EVENT_PROGCHG) {
+                        event.data0 = seq_utils_clamp(event.data0 + change, 0, 127);
+                        inhibit_preview = 1;  // user must retrigger edit to hear
+                    }
                     // put back modified event
                     song_set_step_event(sedits.scene, sedits.track,
                         sedits.step_pos, i, &event);
@@ -454,12 +601,36 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
                 case STEP_EDIT_ADJUST_VELO:  // note velocity and CC value
                     // note or CC
                     if(event.type == SONG_EVENT_NOTE) {
-                        event.data1 = seq_utils_clamp(event.data1 + change, 0, 127);
+                        event.data1 = seq_utils_clamp(event.data1 + change * 2, 0, 127);
                     }
-                    // CC
-                    else if(event.type == SONG_EVENT_CC) {
-                        event.data1 = seq_utils_clamp(event.data1 + change, 0, 127);
+                    // external or internal CC
+                    else if(event.type == SONG_EVENT_CC ||
+                            event.type == SONG_EVENT_INTERNAL_CC) {
+                        event.data1 = event.type == SONG_EVENT_INTERNAL_CC
+                            ? step_edit_adjust_cci_value(event.data0, event.data1, change)
+                            : seq_utils_clamp(event.data1 + change * 2, 0, 127);
+                        if(single && event.type == SONG_EVENT_INTERNAL_CC) {
+                            sedits.cci_hint_controller = event.data0;
+                            sedits.cci_hint_value = event.data1;
+                            sedits.cci_hint_show_value = 1;
+                            sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
+                        }
                         inhibit_preview = 1;  // user must retrigger edit to hear
+                    }
+                    else if(event.type == SONG_EVENT_INVERSION) {
+                        event.data1 = seq_utils_clamp(event.data1 + change, 0, 1);
+                        inhibit_preview = 1;
+                    }
+                    else if(event.type == SONG_EVENT_HARMONY) {
+                        event.data1 = seq_utils_clamp(event.data1 + change,
+                            SONG_HARMONY_ROOT_KEEP, SONG_HARMONY_ROOT_MAX);
+                        inhibit_preview = 1;
+                    }
+                    else if(event.type == SONG_EVENT_EUCLIDEAN) {
+                        unsigned a, b;
+                        conditional_pair(event.data0, &a, &b);
+                        event.data1 = seq_utils_clamp(event.data1 + change, 0, b - 1);
+                        inhibit_preview = 1;
                     }
                     sedits.last_adjust_type = STEP_EDIT_ADJUST_VELO;
                     // put back modified event
@@ -501,15 +672,160 @@ void step_edit_adjust_step(int change, int mode, int single, int shift) {
     }
 }
 
+// CCi descriptions match the manual's internal stepped automation table.
+static const char *step_edit_cci_name(int controller) {
+    static const char *const names[] = {
+        "Step length", "Track transpose", "Track mute", "Motion start",
+        "Motion length", "Motion direction", "Gate time", "Pattern type",
+        "Arp enable", "Arp type", "Arp speed", "Arp gate time",
+        "Euclidean density", "Euclidean rotation"
+    };
+    if(controller < MIDI_CTRL_CC_STEP_LENGTH || controller > MIDI_CTRL_CC_EUCLIDEAN_ROTATION)
+        return NULL;
+    return names[controller - MIDI_CTRL_CC_STEP_LENGTH];
+}
+
+static void step_edit_show_cci_hint(void) {
+    struct track_event event;
+    if(sedits.event_pos < 0) return;
+    if(song_get_step_event(sedits.scene, sedits.track, sedits.step_pos,
+            sedits.event_pos, &event) == -1 || event.type != SONG_EVENT_INTERNAL_CC ||
+            !step_edit_cci_name(event.data0)) return;
+    sedits.cci_hint_controller = event.data0;
+    sedits.cci_hint_value = event.data1;
+    sedits.cci_hint_show_value = 0;
+    sedits.cci_hint_timeout = STEP_EDIT_CCI_HINT_MS;
+}
+
+// Both Euclidean hints use the first receiving track, not the source length.
+static int step_edit_first_bias_target(int *length) {
+    int target;
+    for(target = 0; target < SEQ_NUM_TRACKS; target++) {
+        if(target == sedits.track ||
+                song_get_bias_track(sedits.scene, target) != sedits.track) continue;
+        *length = sedits.scene == seq_engine_get_current_scene()
+            ? seq_engine_get_effective_motion_length(target)
+            : song_get_motion_length(sedits.scene, target);
+        *length = seq_utils_clamp(*length, 1, SEQ_NUM_STEPS);
+        return target;
+    }
+    return -1;
+}
+
+// Decode through the same conversion as playback; never alter stored MIDI values.
+static void step_edit_cci_value_title(char *title, int controller, int raw) {
+    char value[32];
+    int decoded = midi_ctrl_internal_cc_to_value(controller, raw, SEQ_NUM_STEPS);
+    const char *label = "Value";
+    switch(controller) {
+        case MIDI_CTRL_CC_STEP_LENGTH:
+        case MIDI_CTRL_CC_ARP_SPEED:
+            panel_utils_step_len_to_str(value, decoded);
+            label = controller == MIDI_CTRL_CC_STEP_LENGTH ? "Step length" : "Arp speed";
+            break;
+        case MIDI_CTRL_CC_TRACK_TRANSPOSE:
+            label = "Transpose";
+            snprintf(value, sizeof(value), "%+d semis", decoded);
+            break;
+        case MIDI_CTRL_CC_TRACK_MUTE:
+        case MIDI_CTRL_CC_ARP_ENABLE:
+            label = controller == MIDI_CTRL_CC_TRACK_MUTE ? "Mute" : "Arp enable";
+            snprintf(value, sizeof(value), "%s", decoded ? "On" : "Off");
+            break;
+        case MIDI_CTRL_CC_MOTION_DIR:
+            label = "Direction";
+            snprintf(value, sizeof(value), "%s", decoded ? "Reverse" : "Forward");
+            break;
+        case MIDI_CTRL_CC_MOTION_START:
+        case MIDI_CTRL_CC_MOTION_LENGTH:
+            label = controller == MIDI_CTRL_CC_MOTION_START ? "Start" : "Length";
+            snprintf(value, sizeof(value), "%d", decoded + (controller == MIDI_CTRL_CC_MOTION_START));
+            break;
+        case MIDI_CTRL_CC_GATE_TIME:
+            label = "Gate time";
+            // Match gui_update_gate_time_override, including max=200%.
+            snprintf(value, sizeof(value), "%d%%", (decoded + 1) * 200 / 256);
+            break;
+        case MIDI_CTRL_CC_PATTERN_TYPE:
+            label = "Pattern type";
+            snprintf(value, sizeof(value), "%d", decoded + 1);
+            break;
+        case MIDI_CTRL_CC_ARP_TYPE:
+            label = "Arp type";
+            arp_type_to_name(value, decoded);
+            break;
+        case MIDI_CTRL_CC_ARP_GATE_TIME:
+            label = "Arp gate";
+            snprintf(value, sizeof(value), "%d ticks", decoded);
+            break;
+        case MIDI_CTRL_CC_EUCLIDEAN_DENSITY: {
+            int length, target = step_edit_first_bias_target(&length);
+            if(target < 0)
+                snprintf(title, GFX_LABEL_LEN, "CCi 28: %d%% No Bias target", decoded);
+            else if(decoded == 100)
+                // 100% restores the selected pattern, not an all-hits mask.
+                snprintf(title, GFX_LABEL_LEN, "CCi 28: T%d 100%% Pattern", target + 1);
+            else
+                snprintf(title, GFX_LABEL_LEN, "CCi 28: T%d %d%% %d/%d",
+                    target + 1, decoded, (decoded * length + 50) / 100, length);
+            return;
+        }
+        case MIDI_CTRL_CC_EUCLIDEAN_ROTATION: {
+            int length, target = step_edit_first_bias_target(&length);
+            if(target >= 0) {
+                decoded = midi_ctrl_internal_cc_to_value(controller, raw, length);
+                snprintf(title, GFX_LABEL_LEN, "CCi 29: T%d Rot %d/%d",
+                    target + 1, decoded, length);
+                return;
+            }
+            snprintf(title, GFX_LABEL_LEN, "CCi 29: No Bias target");
+            return;
+        }
+        default:
+            snprintf(value, sizeof(value), "%d", raw);
+            break;
+    }
+    snprintf(title, GFX_LABEL_LEN, "CCi %d: %s %s", controller, label, value);
+}
+
+static void step_edit_update_title(void) {
+    char title[GFX_LABEL_LEN];
+    const char *name = step_edit_cci_name(sedits.cci_hint_controller);
+    struct track_event event;
+    if(sedits.event_pos >= 0 && song_get_step_event(sedits.scene, sedits.track,
+            sedits.step_pos, sedits.event_pos, &event) != -1 && event.type == SONG_EVENT_INVERSION) {
+        snprintf(title, sizeof(title), "Inv: %d Compact %s", event.data0, event.data1 ? "On" : "Off");
+        gui_set_status_text(0, title);
+        return;
+    }
+    if(sedits.event_pos >= 0 && song_get_step_event(sedits.scene, sedits.track,
+            sedits.step_pos, sedits.event_pos, &event) != -1 && event.type == SONG_EVENT_HARMONY) {
+        char scale[32];
+        if(event.data0 == SONG_HARMONY_SCALE_KEEP) snprintf(scale, sizeof(scale), "Keep");
+        else scale_type_to_name(scale, seq_utils_clamp((int)event.data0 - 1, 0, SCALE_NUM_TONALITIES - 1));
+        snprintf(title, sizeof(title), "Hrm: %s / %s", scale,
+            event.data1 == SONG_HARMONY_ROOT_KEEP ? "Keep" :
+            scale_root_name((int)event.data1 - SONG_HARMONY_ROOT_C));
+        gui_set_status_text(0, title);
+        return;
+    }
+    if(sedits.cci_hint_timeout > 0 && name && sedits.cci_hint_show_value)
+        step_edit_cci_value_title(title, sedits.cci_hint_controller, sedits.cci_hint_value);
+    else if(sedits.cci_hint_timeout > 0 && name)
+        snprintf(title, sizeof(title), "CCi %d: %s", sedits.cci_hint_controller, name);
+    else
+        snprintf(title, sizeof(title), "Edit - Track: %2d Step: %2d",
+            sedits.track + 1, sedits.step_pos + 1);
+    gui_set_status_text(0, title);
+}
+
 // update the display
 void step_edit_update_display(void) {
     int i, xpos, temp;
     char tempstr[GFX_LABEL_LEN];
     struct track_event event;
     gui_clear_status_text_all();
-    sprintf(tempstr, "Edit - Track: %2d Step: %2d",
-        (sedits.track + 1), (sedits.step_pos + 1));
-    gui_set_status_text(0, tempstr);
+    step_edit_update_title();
 
     // left title
     gui_set_status_text_part(1, 0, 3, "R  ");  // ratchet title
@@ -602,6 +918,56 @@ void step_edit_update_display(void) {
                 sprintf(tempstr, "%-3d", event.data1);
                 gui_set_status_text_part(3, xpos, 4, tempstr);
                 break;
+            case SONG_EVENT_INTERNAL_CC:
+                gui_set_status_text_part(1, xpos, 4, "CCi");
+                sprintf(tempstr, "%-3d", event.data0);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                sprintf(tempstr, "%-3d", event.data1);
+                gui_set_status_text_part(3, xpos, 4, tempstr);
+                break;
+            case SONG_EVENT_INVERSION:
+                gui_set_status_text_part(1, xpos, 4, "Inv");
+                sprintf(tempstr, "%d", event.data0);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                gui_set_status_text_part(3, xpos, 4, event.data1 ? "On" : "Off");
+                break;
+            case SONG_EVENT_HARMONY:
+                gui_set_status_text_part(1, xpos, 4, "Hrm");
+                if(event.data0 == SONG_HARMONY_SCALE_KEEP) sprintf(tempstr, "Keep");
+                else sprintf(tempstr, "%d", event.data0);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                gui_set_status_text_part(3, xpos, 4, event.data1 == SONG_HARMONY_ROOT_KEEP
+                    ? "Keep" : (char *)scale_root_name((int)event.data1 - SONG_HARMONY_ROOT_C));
+                break;
+            case SONG_EVENT_PROBABILITY:
+                gui_set_status_text_part(1, xpos, 4, "Prb");
+                sprintf(tempstr, "%d%%", event.data0);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                gui_set_status_text_part(3, xpos, 4, "---");
+                break;
+            case SONG_EVENT_EUCLIDEAN: {
+                unsigned a, b;
+                conditional_pair(event.data0, &a, &b);
+                gui_set_status_text_part(1, xpos, 4, "Euc");
+                sprintf(tempstr, "%u:%u", a, b);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                sprintf(tempstr, "%u", event.data1 % b);
+                gui_set_status_text_part(3, xpos, 4, tempstr);
+                break;
+            }
+            case SONG_EVENT_PRE:
+            case SONG_EVENT_NON_PRE:
+                gui_set_status_text_part(1, xpos, 4,
+                    event.type == SONG_EVENT_PRE ? "Pre" : "!Pr");
+                gui_set_status_text_part(2, xpos, 4, "---");
+                gui_set_status_text_part(3, xpos, 4, "---");
+                break;
+            case SONG_EVENT_PROGCHG:
+                gui_set_status_text_part(1, xpos, 4, "PC");
+                sprintf(tempstr, "%-3d", event.data0 + 1);
+                gui_set_status_text_part(2, xpos, 4, tempstr);
+                gui_set_status_text_part(3, xpos, 4, "---");
+                break;
             default:  // blank slot
                 gui_set_status_text_part(1, xpos, 4, "   ");
                 gui_set_status_text_part(2, xpos, 4, "---");
@@ -647,6 +1013,12 @@ void step_edit_play_step(void) {
             case SONG_EVENT_CC:
                 step_edit_send_cc(event.data0, event.data1);
                 break;
+            case SONG_EVENT_INTERNAL_CC:
+                // Internal automation is only applied during running playback.
+                break;
+            case SONG_EVENT_PROGCHG:
+                step_edit_send_program_change(event.data0);
+                break;
             default:
                 continue;
         }
@@ -687,7 +1059,15 @@ void step_edit_send_cc(int controller, int value) {
     struct midi_msg msg;
     midi_utils_enc_control_change(&msg, 0, 0, controller, value);
     outproc_deliver_msg(sedits.scene, sedits.track, &msg,
-        OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);  // send note
+        OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);  // send CC
+}
+
+// send a program change
+void step_edit_send_program_change(int program) {
+    struct midi_msg msg;
+    midi_utils_enc_program_change(&msg, 0, 0, program);
+    outproc_deliver_msg(sedits.scene, sedits.track, &msg,
+        OUTPROC_DELIVER_BOTH, OUTPROC_OUTPUT_RAW);  // send program change
 }
 
 // clear the recording notes

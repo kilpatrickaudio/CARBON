@@ -50,4 +50,9 @@ void scale_type_to_name(char *str, unsigned char scale);
 // quantize a note to the selectec scale
 unsigned char scale_quantize(unsigned char note, unsigned char scale);
 
+// Signed, downward root quantization; returns -1 for out-of-MIDI results.
+int scale_quantize_root(int note, int scale, int root);
+const char *scale_root_name(int root);
+void scale_name_with_root(char *str, int scale, int root);
+
 #endif

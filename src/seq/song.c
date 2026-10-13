@@ -30,6 +30,11 @@
 #include "../util/state_change.h"
 #include "../util/state_change_events.h"
 
+// versions in which data stored in the reserved extension area was introduced
+#define SONG_VERSION_SCENE_MIDI_PROGRAM 0x0001001c
+#define SONG_VERSION_EUCLIDEAN 0x0001001d
+#define SONG_VERSION_ROOT 0x0001001f
+
 // list of notes to reset steps to on init
 uint8_t song_reset_scale[] = {
     60, 62, 64, 65, 67, 69, 71, 72
@@ -127,23 +132,34 @@ struct song_data {
     uint8_t scene_sync;  // scene sync type - 0 = beat, 1 = track 1 end
     uint8_t magic_range;  // magic seed range in semitones
     uint8_t magic_chance;  // magic change amount in percent
+    // CARBON version 1.28
+    int8_t scene_midi_program[SEQ_NUM_SCENES][SEQ_NUM_TRACKS][SEQ_NUM_TRACK_OUTPUTS];
+    // CARBON version 1.29
+    uint8_t euclidean_density[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];
+    uint8_t euclidean_rotation[SEQ_NUM_SCENES][SEQ_NUM_TRACKS];
+
+    // CARBON version 1.31: seven reserved bytes, no older offsets move.
+    int8_t root;
+    int8_t scene_root[SEQ_NUM_SCENES];
 
     // dummy padding - to make it an even number of 4096 byte sectors in the flash
     // - be VERY careful that this is correct or other RAM could be overwritten
 #ifdef SONG_NOTES_PER_SCENE
     uint8_t dummy0[1024];
-    uint8_t dummy1[473];
+    uint8_t dummy1[329 - 7];
 #else
     uint8_t dummy0[1024];
     uint8_t dummy1[1024];
     uint8_t dummy2[1024];
     uint8_t dummy3[1024];
-    uint8_t dummy4[700];
+    uint8_t dummy4[628 - (SEQ_NUM_SCENES * SEQ_NUM_TRACKS * 2) - 7];
     uint8_t dummy5[13];
 #endif
     // token to identify correct loading of file
     uint32_t magic_num;
 };
+_Static_assert(sizeof(struct song_data) == EXT_FLASH_SONG_SIZE,
+    "song_data must match the external flash song slot");
 struct song_data song;
 
 // state for stuff that isn't saved in the song
@@ -155,6 +171,16 @@ struct song_state {
     int loadsave_song;  // which song number is loading or saving
 };
 struct song_state songs;
+// Scene copies dispatch many setters synchronously. Defer pitch refresh until
+// the complete scene has been written, avoiding partial legacy revoicing.
+static int song_scene_copying;
+int song_scene_copy_in_progress(void) { return song_scene_copying; }
+
+
+// local functions
+static void song_init_scene_midi_programs(void);
+static void song_init_euclidean(void);
+static void song_init_roots(void);
 
 // init the song
 void song_init(void) {
@@ -186,6 +212,19 @@ void song_timer_task(void) {
                 state_change_fire1(SCE_SONG_LOAD_ERROR, songs.loadsave_song);
             }
             else {
+                // Scene programs were added in 1.28 using formerly reserved bytes.
+                // Old songs must not interpret arbitrary padding as programs.
+                if(song.song_version < SONG_VERSION_SCENE_MIDI_PROGRAM) {
+                    song_init_scene_midi_programs();
+                }
+                // Euclidean parameters were added in 1.29 using reserved bytes.
+                if(song.song_version < SONG_VERSION_EUCLIDEAN) {
+                    song_init_euclidean();
+                }
+                if(song.song_version < SONG_VERSION_ROOT) song_init_roots();
+                if(song.song_version < CARBON_VERSION_MAJMIN) {
+                    song_set_version_to_current();
+                }
                 state_change_fire1(SCE_SONG_LOADED, songs.loadsave_song);
             }
             break;
@@ -218,6 +257,7 @@ void song_clear(void) {
     // global params (per song)
     song_set_tempo(120.0);
     song_set_swing(50);
+    song_init_roots();
     song_set_metronome_mode(SONG_METRONOME_INTERNAL);
     song_set_metronome_sound_len(METRONOME_SOUND_LENGTH_DEFAULT);
     song_set_key_velocity_scale(0);
@@ -279,6 +319,10 @@ void song_clear(void) {
             song_set_bias_track(scene, track, SONG_TRACK_BIAS_NULL);  // no bias
             song_set_motion_start(scene, track, 0);  // step 1
             song_set_motion_length(scene, track, SEQ_NUM_STEPS);  // total setsp
+            song_set_euclidean_density(scene, track,
+                SEQ_EUCLIDEAN_DENSITY_DEFAULT);
+            song_set_euclidean_rotation(scene, track,
+                SEQ_EUCLIDEAN_ROTATION_DEFAULT);
             song_set_gate_time(scene, track, 0x80);  // 0x80 = 100%
             song_set_pattern_type(scene, track, 31);  // as recorded
             song_set_motion_dir(scene, track, 0);  // normal
@@ -289,6 +333,10 @@ void song_clear(void) {
                 seq_utils_step_len_to_ticks(song_get_arp_speed(scene,
                 track)) >> 1);  // step length / 2
             song_set_arp_enable(scene, track, 0);  // disable arp
+            for(mapnum = 0; mapnum < SEQ_NUM_TRACK_OUTPUTS; mapnum ++) {
+                song_set_scene_midi_program(scene, track, mapnum,
+                    SONG_MIDI_PROG_NULL);
+            }
         }
     }
 
@@ -356,8 +404,8 @@ int song_save(int song_num) {
 
 // copy a scene to another scene replacing all data
 void song_copy_scene(int dest, int src) {
-    int track;
-    if(dest < 0 || src >= SEQ_NUM_SCENES) {
+    int track, mapnum;
+    if(dest < 0 || dest >= SEQ_NUM_SCENES) {
         log_error("scs - dest invalid: %d", dest);
         return;
     }
@@ -365,6 +413,8 @@ void song_copy_scene(int dest, int src) {
         log_error("scs - src invalid: %d", src);
         return;
     }
+    song_scene_copying = 1;
+    song_set_scene_root(dest, song_get_scene_root(src));
     // copy all trkscene items
     for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
         song_set_step_length(dest, track, song_get_step_length(src, track));
@@ -373,6 +423,10 @@ void song_copy_scene(int dest, int src) {
         song_set_bias_track(dest, track, song_get_bias_track(src, track));
         song_set_motion_start(dest, track, song_get_motion_start(src, track));
         song_set_motion_length(dest, track, song_get_motion_length(src, track));
+        song_set_euclidean_density(dest, track,
+            song_get_euclidean_density(src, track));
+        song_set_euclidean_rotation(dest, track,
+            song_get_euclidean_rotation(src, track));
         song_set_gate_time(dest, track, song_get_gate_time(src, track));
         song_set_pattern_type(dest, track, song_get_pattern_type(src, track));
         song_set_motion_dir(dest, track, song_get_motion_dir(src, track));
@@ -381,7 +435,13 @@ void song_copy_scene(int dest, int src) {
         song_set_arp_type(dest, track, song_get_arp_type(src, track));
         song_set_arp_gate_time(dest, track, song_get_arp_gate_time(src, track));
         song_set_arp_enable(dest, track, song_get_arp_enable(src, track));
+        for(mapnum = 0; mapnum < SEQ_NUM_TRACK_OUTPUTS; mapnum ++) {
+            song_set_scene_midi_program(dest, track, mapnum,
+                song_get_scene_midi_program(src, track, mapnum));
+        }
     }
+    song_scene_copying = 0;
+    state_change_fire0(SCE_SONG_ROOT);
 }
 
 //
@@ -1052,6 +1112,58 @@ void song_set_track_type(int track, int mode) {
 //
 // track params (per scene)
 //
+// get a scene MIDI program for a track output
+int song_get_scene_midi_program(int scene, int track, int mapnum) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+        log_error("sgsmp - scene invalid: %d", scene);
+        return SONG_MIDI_PROG_NULL;
+    }
+    if(track < 0 || track >= SEQ_NUM_TRACKS) {
+        log_error("sgsmp - track invalid: %d", track);
+        return SONG_MIDI_PROG_NULL;
+    }
+    if(mapnum < 0 || mapnum >= SEQ_NUM_TRACK_OUTPUTS) {
+        log_error("sgsmp - mapnum invalid: %d", mapnum);
+        return SONG_MIDI_PROG_NULL;
+    }
+    return song.scene_midi_program[scene][track][mapnum];
+}
+
+// set a scene MIDI program for a track output
+void song_set_scene_midi_program(int scene, int track, int mapnum, int program) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+        log_error("sssmp - scene invalid: %d", scene);
+        return;
+    }
+    if(track < 0 || track >= SEQ_NUM_TRACKS) {
+        log_error("sssmp - track invalid: %d", track);
+        return;
+    }
+    if(mapnum < 0 || mapnum >= SEQ_NUM_TRACK_OUTPUTS) {
+        log_error("sssmp - mapnum invalid: %d", mapnum);
+        return;
+    }
+    if(program < SONG_MIDI_PROG_NULL || program > 127) {
+        log_error("sssmp - program invalid: %d", program);
+        return;
+    }
+    song.scene_midi_program[scene][track][mapnum] = program;
+    state_change_fire3(SCE_SONG_SCENE_MIDI_PROGRAM, scene, track, mapnum);
+}
+
+// initialize scene programs without relying on reserved flash contents
+static void song_init_scene_midi_programs(void) {
+    int scene, track, mapnum;
+    for(scene = 0; scene < SEQ_NUM_SCENES; scene ++) {
+        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+            for(mapnum = 0; mapnum < SEQ_NUM_TRACK_OUTPUTS; mapnum ++) {
+                song.scene_midi_program[scene][track][mapnum] =
+                    SONG_MIDI_PROG_NULL;
+            }
+        }
+    }
+}
+
 // get the step length - returns -1 on error
 int song_get_step_length(int scene, int track) {
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
@@ -1244,6 +1356,83 @@ void song_set_motion_length(int scene, int track, int length) {
     state_change_fire3(SCE_SONG_MOTION_LENGTH, scene, track, length);
 }
 
+// get the Euclidean density for a track - returns -1 on error
+int song_get_euclidean_density(int scene, int track) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+        log_error("sged - scene invalid: %d", scene);
+        return -1;
+    }
+    if(track < 0 || track >= SEQ_NUM_TRACKS) {
+        log_error("sged - track invalid: %d", track);
+        return -1;
+    }
+    return song.euclidean_density[scene][track];
+}
+
+// set the Euclidean density for a track
+void song_set_euclidean_density(int scene, int track, int density) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+        log_error("ssed - scene invalid: %d", scene);
+        return;
+    }
+    if(track < 0 || track >= SEQ_NUM_TRACKS) {
+        log_error("ssed - track invalid: %d", track);
+        return;
+    }
+    if(density < SEQ_EUCLIDEAN_DENSITY_MIN ||
+            density > SEQ_EUCLIDEAN_DENSITY_MAX) {
+        log_error("ssed - density invalid: %d", density);
+        return;
+    }
+    song.euclidean_density[scene][track] = density;
+    state_change_fire3(SCE_SONG_EUCLIDEAN_DENSITY, scene, track, density);
+}
+
+// get the Euclidean rotation for a track - returns -1 on error
+int song_get_euclidean_rotation(int scene, int track) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+        log_error("sger - scene invalid: %d", scene);
+        return -1;
+    }
+    if(track < 0 || track >= SEQ_NUM_TRACKS) {
+        log_error("sger - track invalid: %d", track);
+        return -1;
+    }
+    return song.euclidean_rotation[scene][track];
+}
+
+// set the Euclidean rotation for a track
+void song_set_euclidean_rotation(int scene, int track, int rotation) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) {
+        log_error("sser - scene invalid: %d", scene);
+        return;
+    }
+    if(track < 0 || track >= SEQ_NUM_TRACKS) {
+        log_error("sser - track invalid: %d", track);
+        return;
+    }
+    if(rotation < SEQ_EUCLIDEAN_ROTATION_MIN ||
+            rotation > SEQ_EUCLIDEAN_ROTATION_MAX) {
+        log_error("sser - rotation invalid: %d", rotation);
+        return;
+    }
+    song.euclidean_rotation[scene][track] = rotation;
+    state_change_fire3(SCE_SONG_EUCLIDEAN_ROTATION, scene, track, rotation);
+}
+
+// initialize Euclidean parameters without relying on reserved flash contents
+static void song_init_euclidean(void) {
+    int scene, track;
+    for(scene = 0; scene < SEQ_NUM_SCENES; scene ++) {
+        for(track = 0; track < SEQ_NUM_TRACKS; track ++) {
+            song.euclidean_density[scene][track] =
+                SEQ_EUCLIDEAN_DENSITY_DEFAULT;
+            song.euclidean_rotation[scene][track] =
+                SEQ_EUCLIDEAN_ROTATION_DEFAULT;
+        }
+    }
+}
+
 // get the gate time on a track in ticks - returns -1 on error
 int song_get_gate_time(int scene, int track) {
     if(scene < 0 || scene >= SEQ_NUM_SCENES) {
@@ -1431,7 +1620,7 @@ void song_set_arp_speed(int scene, int track, int speed) {
         log_error("ssas - track invalid: %d", track);
         return;
     }
-    if(speed < 0 || speed >= SEQ_UTILS_STEP_LENS) {
+    if(speed < 0 || speed >= SEQ_UTILS_ARP_SPEEDS) {
         log_error("ssas - speed invalid: %d", speed);
         return;
     }
@@ -1832,4 +2021,34 @@ void song_set_ratchet_mode(int scene, int track, int step, int ratchet) {
 #endif
     // fire event
     state_change_fire3(SCE_SONG_RATCHET_MODE, scene, track, step);
+}
+
+static void song_init_roots(void) {
+    int scene;
+    song.root = SONG_ROOT_OFF;
+    for(scene = 0; scene < SEQ_NUM_SCENES; scene ++)
+        song.scene_root[scene] = SONG_ROOT_INHERIT;
+}
+int song_get_root(void) {
+    return song.root >= SONG_ROOT_OFF && song.root <= 11 ? song.root : SONG_ROOT_OFF;
+}
+void song_set_root(int root) {
+    if(root < SONG_ROOT_OFF || root > 11 || song.root == root) return;
+    song.root = root;
+    state_change_fire0(SCE_SONG_ROOT);
+}
+int song_get_scene_root(int scene) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES) return SONG_ROOT_INHERIT;
+    return song.scene_root[scene] >= SONG_ROOT_INHERIT && song.scene_root[scene] <= 11
+        ? song.scene_root[scene] : SONG_ROOT_INHERIT;
+}
+void song_set_scene_root(int scene, int root) {
+    if(scene < 0 || scene >= SEQ_NUM_SCENES || root < SONG_ROOT_INHERIT || root > 11) return;
+    if(song.scene_root[scene] == root) return;
+    song.scene_root[scene] = root;
+    state_change_fire0(SCE_SONG_ROOT);
+}
+int song_get_effective_root(int scene) {
+    int root = song_get_scene_root(scene);
+    return root == SONG_ROOT_INHERIT ? song_get_root() : root;
 }

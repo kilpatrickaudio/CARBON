@@ -1,0 +1,104 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include "../src/seq/song.c"
+static uint8_t flash[EXT_FLASH_SONG_SIZE];
+static int flash_state, loaded;
+int ext_flash_get_state(void) { return flash_state; }
+int ext_flash_save(int32_t address, int length, uint8_t *data) {
+    assert(length == sizeof(flash)); memcpy(flash, data, length);
+    flash_state = EXT_FLASH_STATE_SAVE_DONE; return 0;
+}
+int ext_flash_load(int32_t address, int length, uint8_t *data) {
+    assert(length == sizeof(flash)); memcpy(data, flash, length);
+    flash_state = EXT_FLASH_STATE_LOAD_DONE; return 0;
+}
+void state_change_fire0(int event) {}
+void state_change_fire1(int event, int value) { if(event == SCE_SONG_LOADED) loaded ++; }
+void state_change_fire2(int event, int a, int b) {}
+void state_change_fire3(int event, int a, int b, int c) {}
+void log_error(char *fmt, ...) { fprintf(stderr, "%s\n", fmt); assert(!"unexpected error"); }
+int main(void) {
+    struct track_event expected[6], actual;
+    int i;
+    memset(&song, 0, sizeof(song));
+    song.magic_num = SONG_MAGIC_NUM;
+    song_set_version_to_current();
+    for(i = 0; i < SEQ_NUM_TRACKS; i ++) {
+        song.trkscene[0][i].motion_len = 64;
+        song.trkscene[0][i].gate_time = 128;
+        song.trkscene[0][i].bias_track = SONG_TRACK_BIAS_NULL;
+        song.trkscene[0][i].arp_gate_time = 24;
+    }
+    for(i = 0; i < 6; i ++) {
+        expected[i] = (struct track_event){.type = i < 4 ? 2 + i : SONG_EVENT_NOTE,
+            .data0 = i == 0 ? 100 : i == 1 ? 27 : i == 4 ? 60 : 70,
+            .data1 = i == 1 ? 7 : 100, .length = i < 4 ? 0 : 24};
+        assert(!song_set_step_event(0, 0, 0, i, &expected[i]));
+    }
+    song_init_roots();
+    assert(song_get_effective_root(0) == SONG_ROOT_OFF);
+    song_set_root(2);
+    assert(song_get_effective_root(0) == 2);
+    song_set_scene_root(0, 6);
+    song_set_scene_root(2, SONG_ROOT_OFF);
+    assert(song_get_effective_root(0) == 6 && song_get_effective_root(2) == SONG_ROOT_OFF);
+    song_copy_scene(3, 0);
+    assert(song_get_scene_root(3) == 6);
+    assert(!song_save(0)); song_timer_task();
+    memset(&song, 0, sizeof(song));
+    assert(!song_load(0)); song_timer_task(); assert(loaded == 1);
+    assert(song_get_root() == 2 && song_get_scene_root(0) == 6);
+    for(i = 0; i < 6; i ++) {
+        assert(!song_get_step_event(0, 0, 0, i, &actual));
+        assert(actual.type == expected[i].type && actual.data0 == expected[i].data0);
+        assert(actual.data1 == expected[i].data1 && actual.length == expected[i].length);
+        // Production get/set is the slot-copy primitive.
+        assert(!song_set_step_event(0, 1, 5, i, &actual));
+        assert(!song_get_step_event(0, 1, 5, i, &actual));
+        assert(actual.type == expected[i].type && actual.data0 == expected[i].data0);
+    }
+    song_copy_scene(1, 0);
+    assert(!song_get_step_event(1, 0, 0, 0, &actual));
+    assert(actual.type == SONG_EVENT_PROBABILITY); // notes shared per song
+    // Old songs migrate added parameters, without altering existing event codes.
+    song.song_version = 0x0001001e;
+    song.root = 11; memset(song.scene_root, 11, sizeof(song.scene_root));
+    song_init_scene_midi_programs(); song_init_euclidean();
+    assert(!song_save(0)); song_timer_task();
+    memset(&song, 0, sizeof(song));
+    assert(!song_load(0)); song_timer_task();
+    assert(song.song_version == CARBON_VERSION_MAJMIN && loaded == 2);
+    assert(song_get_root() == SONG_ROOT_OFF);
+    for(i = 0; i < SEQ_NUM_SCENES; i ++) assert(song_get_scene_root(i) == SONG_ROOT_INHERIT);
+    assert(!song_get_step_event(0, 0, 0, 4, &actual));
+    assert(actual.type == SONG_EVENT_NOTE && actual.data0 == 60);
+    for(int version = 27; version <= 30; version++) {
+        song.song_version = (1u << 16) | version;
+        song.root = 11; memset(song.scene_root, 11, sizeof(song.scene_root));
+        assert(!song_save(0)); song_timer_task();
+        assert(!song_load(0)); song_timer_task();
+        assert(song_get_root() == SONG_ROOT_OFF);
+        for(i = 0; i < 6; i++) assert(song_get_scene_root(i) == SONG_ROOT_INHERIT);
+    }
+    song_set_root(6); song_set_scene_root(0, 2); song_clear();
+    assert(song_get_root() == SONG_ROOT_OFF);
+    for(i = 0; i < 6; i++) assert(song_get_scene_root(i) == SONG_ROOT_INHERIT);
+    expected[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
+        .data0 = 15, .data1 = SONG_HARMONY_ROOT_MAX};
+    song_set_step_event(0, 0, 0, 0, &expected[0]);
+    assert(!song_save(0)); song_timer_task();
+    memset(&song, 0, sizeof(song));
+    assert(!song_load(0)); song_timer_task();
+    assert(!song_get_step_event(0, 0, 0, 0, &actual));
+    assert(actual.type == SONG_EVENT_HARMONY && actual.data0 == 15 && actual.data1 == 13);
+    song_copy_scene(1, 0);
+    assert(!song_get_step_event(1, 0, 0, 0, &actual) && actual.type == SONG_EVENT_HARMONY);
+    actual = (struct track_event){.type = SONG_EVENT_INVERSION, .data0 = 5, .data1 = 1};
+    song_set_step_event(0, 0, 0, 0, &actual);
+    song_save(0); song_timer_task(); memset(&song, 0, sizeof(song));
+    song_load(0); song_timer_task(); song_get_step_event(0, 0, 0, 0, &actual);
+    assert(actual.type == SONG_EVENT_INVERSION && actual.data0 == 5 && actual.data1 == 1);
+    puts("song tests passed"); return 0;
+}

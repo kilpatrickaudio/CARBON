@@ -1,0 +1,854 @@
+#+title: CARBON firmware additions — 1.34-johanwk-ch10-dev
+#+author: Johan W. Klüwer using gpt--sol in Emacs gptel
+#+date: 2026-09-30
+
+* Introduction
+
+This is an unofficial set of additions to the CARBON firmware. It is based on the
+upstream =master= commit =bd5f5d4= and firmware 1.27.
+The System page identifies this development variant as =1.34-johanwk-ch10-dev=.
+The preceding submitted builds are =1.29-johanwk= (PR #10) and
+=1.30-johanwk-ch9-dev= (PR #11). These suffixes identify unofficial
+development builds, not official Kilpatrick Audio releases. This guide covers
+the current 1.34 feature set: roots, CCi editor help, Harmony and inversion,
+including external Remote CC30--33. The aim is
+to extend CARBON's MIDI control and rhythmic sequencing while keeping its
+existing workflow intact.
+
+The main additions are:
+
+- Program Change events on steps and optional Program Changes on scene changes;
+- Euclidean density and rotation for each track and scene;
+- new step lengths that divide a 4/4 bar into 3, 5, 7, 9, 11 or 13 equal parts;
+- MIDI CC control of Euclidean density and rotation;
+- transient internal CC events, routed through Bias Track, for stepped internal
+  automation without a MIDI loopback cable;
+- conditional gates for variation and branching;
+- song/scene roots with root-aware in-scale transposition;
+- Harmony events for stepped Scale and shared Root changes;
+- Bias-target inversion and optional Compact voicing, plus external Remote control.
+
+The firmware has been built, flashed and tested on CARBON hardware. Existing songs
+load, and no existing feature has intentionally been removed or replaced. The
+original Step Length and Arp Speed choices remain available, and the fixed song
+record size is unchanged.
+
+The previously tested development build added about 5.9 kB of firmware text
+compared with the local 1.27 baseline. Measurements for that build are recorded
+below; they do not identify the current 1.34 development candidate.
+
+This work was done independently. The open pull requests in the CARBON GitHub
+repository were not consulted or incorporated, so features proposed there are not
+part of this firmware. The earlier additions were submitted as combined PR #10; the 1.30
+conditional-gate, display and clock-output additions are submitted as the
+dependent PR #11. The harmony/voicing additions extend #11 and therefore
+#10; their separate dependent PR is being prepared. Both earlier submitted
+branches remain unchanged. Roots, Hrm, Inv and the new Remote controls are
+not included in PR #11.
+
+This firmware is not an official Kilpatrick Audio release and is not supported by
+Kilpatrick Audio. Installation and use are at the user's own risk.
+
+* Building from source
+
+See [[file:BUILDING.md][BUILDING.md]] for the tested toolchain, required makegen stderr fix,
+release-build command and output files. Building does not flash CARBON.
+
+* Installation
+
+Install a specifically identified build after reviewing its verification status.
+Back up important songs first. Do not load songs containing gates, Hrm or Inv
+into firmware that does not implement those event types: it may ignore them
+or suppress later events, and cannot reproduce named-root playback. See
+[[*Compatibility and storage][Compatibility and storage]] before considering a downgrade.
+
+Put CARBON into DFU mode, confirm that
+=dfu-util= can see device =0483:df11= and alt setting 0, then run this command from
+the directory containing =main.bin=:
+
+#+begin_example
+dfu-util -d 0483:df11 -a 0 \
+  --dfuse-address 0x08020000:leave \
+  -D main.bin
+#+end_example
+
+The address =0x08020000= is required for this release build and preserves CARBON's
+MIDI bootloader. Do not use the repository's stock =dfu.sh= for this image: that
+script writes at =0x08000000= and can overwrite the bootloader.
+
+After flashing, allow CARBON to restart and check normal playback, MIDI and CV/gate
+operation before relying on it in a performance.
+
+
+* New features at a glance
+
+** Song/scene roots and in-scale transposition (1.31)
+
+- Song Root is Off or C--B; each scene inherits Song or selects Off/C--B.
+  There are no per-track roots. Shift+Tonality opens Swing followed by roots.
+- Off keeps legacy scale processing. With a named root, semitone offsets are
+  applied before downward quantization to the selected scale at that root.
+- Root/scale changes affect new attacks; sounding notes keep their pitches
+  until release. Drum pitch processing is unchanged.
+
+** Harmony events (=Hrm=, 1.32)
+
+- One step event sets Scale and optionally a shared Root (Keep, Off or C--B).
+- Scale applies to its source and Bias targets; Root applies to all melodic
+  tracks, not just those targets. No CCi 30 or per-track root is introduced.
+- Simultaneous explicit root requests use lowest source-track priority.
+- Changes are transient and conditional gates can suppress them. See
+  [[*Harmony events (Hrm): stepped Scale and Root][Harmony events]] for controls, examples and conflict rules.
+
+** Inversion and Compact (=Inv=, 1.34)
+
+- Inv on a Bias source controls sequenced melodic voicings on its targets:
+  0--5 structural rotations, with optional octave compression around the new bass.
+- Stored notes and per-note velocity/duration remain unchanged. Compact is not
+  voice leading and does not use previous-step history.
+- Live input, drums and arp-enabled tracks are excluded. Arp input-chord
+  inversion is a possible later extension, not part of this build.
+- External Remote CC32/33 address rotation/Compact directly. See
+  [[*Inv: structural inversion and Compact voicing (1.34 development)][Inv and Compact]] for the algorithm and practical hardware results.
+
+** CCi editor help and meaningful value steps
+
+- Selecting a CCi code briefly shows its parameter name; editing its value
+  shows the interpreted setting while retaining the raw value in the event row.
+- Each value detent skips redundant raw buckets for CCi16--28. CCi29 changes
+  by two raw units and displays rotation/length for the first Bias target.
+- Density shows percentage plus hits/length for that target, except 100%,
+  which restores the selected Pattern. Target lengths include live CCi changes.
+- Gate percentage matches the regular display; arp type shows its name.
+
+** Conditional gates (1.30)
+
+- =Prb= passes with a selected probability; =Euc= passes on A out of B track
+  loops, with rotation; =Pre= and =!Pr= branch on the previous contributing
+  gate history.
+- Gates use the six existing event slots in order. A failed gate skips later
+  slots on that step, not later sequencer steps; earlier events are unaffected.
+- Gates also govern Note-derived Bias Track and internal =CCi= controls.
+- Probability streams continue through resets and song loads; startup seeding
+  allows variation after power-cycling. Conditional history/cycle reset rules
+  are separate. See [[*Conditional gates (introduced in 1.30)][Conditional gates]] for the full rules.
+
+** Compact Euclidean status (1.30)
+
+- The SONG line shows the selected track's effective =length:hits:rotation=
+  whenever density is below 100%, including transient CCi overrides.
+- Hit count means active mask positions, not necessarily sounding notes.
+- Status updates and Euclidean editing avoid unnecessary full-screen redraws.
+
+** 16 PPQ clock output (1.30)
+
+- =16 PPQ= is appended after =24 PPQ= in the shared clock-output choices,
+  preserving older saved indices. It applies to CV/Gate and other clock outputs.
+- It produces one pulse per six internal 96-PPQ ticks. Physical pulse-rate
+  measurement remains pending.
+
+** Program Change events
+
+- A sequencer step can contain a MIDI Program Change (=PC=) event.
+- Each scene can optionally send a Program Change on output A and/or B for each
+  track when that scene becomes active.
+- Program numbers are shown to the user as 1--128 and stored as MIDI values
+  0--127.
+- An assignment can be =Off=, in which case no Program Change is sent.
+
+** Euclidean patterns
+
+- Every track in every scene has a Euclidean Density and Rotation setting.
+- Density controls the number of active positions in the track's motion window.
+- Rotation moves those positions around the window.
+- The calculation is non-destructive: recorded notes and CC events are not
+  deleted or moved.
+- At 100% density, CARBON follows the original selected pattern exactly.
+- Below 100%, the Euclidean pattern replaces the selected playback mask and gates
+  the events already stored on the track. It does not create notes on empty steps.
+
+** Bar-locked polyrhythmic step lengths
+
+The original step-length list is extended with:
+
+- =1/3=, =1/5=, =1/7=, =1/9=, =1/11= and =1/13=.
+
+Here these labels mean equal divisions of one 4/4 bar. For example, =1/5= makes
+five track steps fill exactly one 4/4 bar. Where the division is not an exact
+number of clock ticks, CARBON distributes the remainder between steps. A complete
+cycle still totals exactly one bar and does not accumulate timing drift.
+
+** External MIDI control
+
+When =MIDI Rmt Ctrl= is enabled:
+
+- CC 28 controls Euclidean Density: 0--127 maps to 0--100%;
+- CC 29 controls Euclidean Rotation: 0--127 maps across the current motion length.
+
+The existing remote-channel convention is unchanged:
+
+- MIDI channel 10 controls the currently selected track or tracks;
+- channels 11--16 control Tracks 1--6 respectively.
+
+** Internal stepped automation (=CCi=)
+
+The =CCi= step-event type provides transient internal control:
+
+- =CCi= events are not sent to MIDI or CV outputs;
+- they use the existing Bias Track relationship for routing;
+- a source track can contain both Note and =CCi= events;
+- Note events continue to supply the normal pitch bias;
+- =CCi= events control other tracks that select the source as their Bias Track,
+  not the source track itself;
+- values are held until a later =CCi= event changes them;
+- values are transient: they do not overwrite or save the target track's base
+  settings;
+- transient values clear on song load, scene activation and transport-position
+  reset.
+
+Implemented =CCi= controller numbers are:
+
+| CCi | Parameter          |
+|-----+--------------------|
+|  16 | Step length        |
+|  17 | Track transpose    |
+|  18 | Track mute         |
+|  19 | Motion start       |
+|  20 | Motion length      |
+|  21 | Motion direction   |
+|  22 | Gate time          |
+|  23 | Pattern type       |
+|  24 | Arp enable         |
+|  25 | Arp type           |
+|  26 | Arp speed          |
+|  27 | Arp gate time      |
+|  28 | Euclidean density  |
+|  29 | Euclidean rotation |
+
+CC 80 (Run/Stop) is deliberately excluded. A track cannot reliably restart the
+transport after its own automation has stopped playback, and Run/Stop is global
+rather than a per-track parameter.
+
+* Existing features have not been removed
+
+No existing CARBON feature has intentionally been removed or replaced.
+
+In particular:
+
+- the original step-length entries keep their original indices and behavior;
+- Arp Speed keeps its original set of choices;
+- a Euclidean density of 100% uses the original pattern path;
+- normal Note and CC step events retain their existing behavior;
+- Bias Track note offsets continue to work, including while =CCi= events control
+  Euclidean parameters;
+- ordinary track Program A/B settings remain available;
+- a scene Program Change set to =Off= sends nothing and leaves the ordinary
+  Program A/B behavior unchanged;
+- the external-flash song record remains exactly =0x5000= bytes;
+- the release build remains linked at =0x08020000= so the MIDI bootloader is
+  preserved.
+
+The additions have been used on CARBON hardware over the past week, with no bugs
+encountered during practical use.
+
+* How to use the new features
+
+** Add a Program Change to a step
+
+1. Enter Step Edit and select the step.
+2. Use Shift + Motion Start to select one event slot rather than all slots.
+3. Use Shift + Transpose to cycle the event type:
+   =Note → CC → CCi → PC → Prb → Euc → Pre → !Pr → Hrm → Inv → Note=.
+   (The submitted 1.29 build ends after PC; 1.30 ends after !Pr.)
+4. Select =PC=.
+5. Use Transpose to choose program 1--128.
+
+A Program Change is sent on the step through both configured track outputs. It is
+sent as a raw MIDI message and is not affected by scale or transpose processing.
+
+** Assign a Program Change to a scene
+
+1. Select the track whose MIDI output should send the Program Change.
+2. Open the MIDI menu.
+3. Use Motion Start to move to the end of the menu, after =MIDI Autolive ON=.
+4. The remaining entries are =Program A= and =Program B= for Scenes 1--6 of
+   the selected track. Select the required output and scene.
+5. Set the value to =Off= or 1--128.
+
+When the scene becomes active, CARBON sends the assigned program through that
+track's corresponding A or B output before the scene's first notes. Disabled and
+CV/gate outputs do not send Program Change.
+
+** Set Euclidean density and rotation
+
+The SONG status line shows the selected track's effective =length:hits:rotation=
+flush-right whenever density is below 100%. For example, =16:7:3= means
+seven active mask positions in a 16-step motion window, rotated by three.
+The hit count uses playback rounding and includes CCi overrides; it is not
+a count of sounding notes. At 100% density this status is hidden. The word
+Slot is omitted from the song-mode readout to make room. This does not
+open the Euclidean edit overlay or replace normal Track/Start/Step status.
+
+
+In normal sequencer mode:
+
+- Shift + Pattern changes Density;
+- Shift + Transpose changes Rotation.
+
+A temporary status display shows the track, density and rotation. The settings
+are stored separately for every scene and track.
+
+Density is stored as a percentage. The actual hit count is rounded for the current
+motion length. Several nearby percentages can therefore produce the same pattern
+on a short motion window.
+
+** Select a bar-locked step length
+
+Use the normal Step Length control and choose one of the appended values =1/3=,
+=1/5=, =1/7=, =1/9=, =1/11= or =1/13=. Each value is available independently on
+every track. These choices do not appear in the Arp Speed list.
+
+** Control Euclidean settings from a DAW or controller
+
+1. Enable =MIDI Rmt Ctrl= on CARBON.
+2. Send CC 28 for Density or CC 29 for Rotation.
+3. Use channel 11 for Track 1, channel 12 for Track 2, and so on through channel
+   16 for Track 6. Channel 10 addresses the selected tracks.
+
+These external MIDI Remote edits change the stored scene settings; saving the
+song captures the last received values. Internal =CCi= overrides, by contrast,
+leave those stored settings unchanged.
+
+Sparse or stepped automation is recommended. Dense streams of small continuous
+changes work, but repeatedly refresh the lower part of the display and cause
+visible flicker. Density and rotation are discrete rhythmic controls, so continuous
+LFO-style movement is usually not useful.
+
+** Add internal stepped automation
+
+Example: use Track 3 to control Track 1.
+
+1. On Track 1, set =Bias Track= to Track 3.
+2. In Step Edit on Track 3, select an event slot with Shift + Motion Start.
+3. Use Shift + Transpose until the event type is =CCi=.
+4. Use Transpose to select the controller number, for example 28 or 29.
+5. Use Velocity to set its value from 0--127.
+6. Add later =CCi= events where the value should change.
+
+Track 3 may also contain Note events. Those notes continue to transpose Track 1
+through the normal Bias Track function while =CCi= events independently change
+the selected internal parameters.
+
+No MIDI loopback cable is needed. Physical MIDI loopback was tested and produced
+feedback symptoms, including doubled note onsets and display flicker. =CCi= is the
+intended internal solution.
+
+* Harmony events (Hrm): stepped Scale and Root
+
+Available in local 1.32 development. A Harmony event changes the effective
+Scale and optionally the shared Root without editing saved base settings.
+It uses one of the step's six event slots and sends no MIDI/CV message itself.
+
+** Add and edit Hrm
+
+1. Enter Step Edit and choose a step.
+2. Use Shift + Motion Start to select one event slot.
+3. Use Shift + Transpose to cycle to =Hrm= (after =!Pr=).
+4. Use Transpose to choose Keep or one of the 16 scales.
+5. Use Velocity to choose the Root action:
+
+| Root choice | Meaning                                              |
+|-------------+------------------------------------------------------|
+| Keep        | Leave the currently effective shared root unchanged. |
+| Off         | Select legacy root-off processing.                   |
+| C--B        | Select that root for all melodic tracks.             |
+
+In local 1.33, Hrm Scale choices are Keep, then the sixteen scales:
+Chromatic is value 1. Keep leaves each receiving track's effective scale
+unchanged. There is no separate Scale Off: choose Chromatic for no scale
+restriction. New events default to Keep / Keep. Hrm: Keep / D changes only
+the shared root. No migration of earlier experimental Hrm encodings is provided,
+as no songs were saved with them. Root Off remains available and distinct. The first numeric row shows the
+Keep or scale index 1--16; the second shows Keep, Off or the note name. The selected
+event's heading shows the full description, for example =Hrm: Major / D=.
+Gate length is unused. Stopped preview does not apply Hrm changes.
+
+** What changes, and on which tracks?
+
+- Scale changes on the track containing Hrm and every other track whose Bias
+  Track selects that source. Unlike CCi, Hrm also affects the source itself.
+- An explicit Root changes the shared root for ALL melodic tracks in the
+  active scene, whether or not they are Bias targets. Other tracks retain
+  their own scales unless a Hrm event targets them. There are no per-track roots.
+- Root selects the permitted pitch classes; it is not an extra transpose.
+  Existing keyboard/Bias/track semitone offsets still apply in their normal
+  contexts before named-root quantization. Drum pitch processing is unchanged.
+- Notes already sounding retain their output pitches until release, including
+  sustain-pedal notes. Subsequent sequencer, live and arp attacks use the new
+  effective harmony. Changing harmony does not retrigger held notes.
+
+** Examples
+
+Within Track 1: put =Hrm: Major / C= on an early step and =Hrm: Nat Minor / Keep=
+on a later step. Track 1 switches scale while the shared root remains C. A
+=Hrm: Major / D= event instead sets Track 1's scale to Major and the shared
+root to D. Notes on other melodic tracks now use D with their own scales.
+
+Using a Bias source: set Track 1's Bias Track to Track 3, then add
+=Hrm: Major / D= on Track 3. Tracks 3 and 1 receive Major; ALL melodic tracks
+receive root D. Track 3 may be muted to use it as a control source. Notes on
+Track 3 still provide ordinary pitch bias, so omit them if you want only
+harmony control. Hrm Bias routing has been practically verified on hardware
+with Scale changes and Root Keep, Off and selected keys.
+
+** Conditional gates and simultaneous events
+
+A failing gate blocks later Hrm slots on that step. Pattern-masked steps do
+not contribute Hrm. Pattern-enabled muted/Live sources still contribute
+harmony controls, matching existing Bias/CCi control-source behavior.
+
+For explicit Root requests on the same internal clock tick:
+
+1. The lowest-numbered SOURCE track with an eligible explicit request wins.
+2. Within that track, the last eligible explicit request in slot order wins.
+3. Keep does not enter arbitration or cancel an earlier explicit request.
+4. Losing root requests still apply their Scale changes.
+
+Example: Track 1 requests C and Track 3 requests D on the same tick: C wins.
+If Track 1 requests Keep, Track 3's D wins. If Track 1's request is blocked
+by a gate, it cannot win. With no explicit request, the current root is held.
+Priority is recalculated each tick; a later Track 3 request can change the root
+when Track 1 makes no explicit request on that tick.
+
+Scale assignments are applied in ascending source-track and slot order; the
+last eligible assignment to a receiving track wins. This is a separate rule
+from shared-root arbitration. All eligible Hrm changes resolve after CCi
+control preparation and before new note attacks; CCi follow-up scan order
+does not change root priority.
+
+** Lifetime, saved settings and compatibility
+
+Hrm overrides are held until another eligible event replaces them. They clear
+on song load, scene activation and transport-position Reset/MIDI Start, restoring
+the configured root/scales. Stop/Continue and an individual track-position reset
+do not clear the shared harmony. There is no explicit Restore event in this
+version: Keep holds the automated root; Off selects legacy mode, not restore.
+
+Saving preserves the programmed Hrm events and base settings, not the transient
+playback overrides. Normal parameter edits still change the saved bases and
+do not cancel an active Hrm override. The scale/root display shows the effective
+harmony; a reset or scene activation restores the configured bases.
+
+Hrm uses event code 6 in the existing six-byte record, so song size stays
+=0x5000=. The current Scale Keep encoding requires local 1.33 or later. Do not load
+Hrm-containing songs into older firmware; back up originals before testing.
+
+** External harmony control: CC 30 and CC 31
+
+Enable =MIDI Rmt Ctrl= to receive these transient harmony commands on MIDI
+channels 10--16. They use direct choice values, NOT proportional 0--127 scaling.
+
+| CC 30 value | Scale       | CC 31 value | Shared Root |
+|-------------+-------------+-------------+-------------|
+|           0 | Keep        |           0 | Keep        |
+|           1 | Chromatic   |           1 | Off         |
+|           2 | Major       |           2 | C           |
+|           3 | Nat Minor   |           3 | C-sharp     |
+|           4 | Har Minor   |           4 | D           |
+|           5 | Dorian      |           5 | D-sharp     |
+|           6 | Whole       |           6 | E           |
+|           7 | Pentatonic  |           7 | F           |
+|           8 | Diminished  |           8 | F-sharp     |
+|           9 | Phrygian    |           9 | G           |
+|          10 | Lydian      |          10 | G-sharp     |
+|          11 | Mixolydian  |          11 | A           |
+|          12 | Locrian     |          12 | A-sharp     |
+|          13 | Min Pent    |          13 | B           |
+|          14 | Blues       |             |             |
+|          15 | Half Dim    |             |             |
+|          16 | Seven Chord |             |             |
+
+- CC 30 on channel 10 changes selected tracks; channels 11--16 directly
+  address Tracks 1--6. Unlike Hrm events, it does NOT propagate to Bias targets.
+- CC 31 changes the shared Root on ANY accepted channel (10--16), regardless
+  of track selection. Other channels and out-of-range values are ignored.
+- Keep is a no-op, not restore-base. These commands share Hrm's transient
+  overrides and scene/song/transport-reset clearing; saved bases are unchanged.
+- Commands take effect in receive order. A later Hrm event can replace them;
+  a later received CC can replace Hrm. Lowest-track arbitration applies only
+  to same-tick sequencer Hrm requests, not received MIDI commands.
+- CC 30 and CC 31 are two separate MIDI messages, not an atomic pair. Send
+  both before the intended note attack, e.g. CC 30=2 then CC 31=4 for Major/D.
+- These are external Remote commands only, not additional CCi destinations.
+  Existing CC 16--29 remote edits still change saved scene settings.
+
+** Hardware verification
+
+Initial within-track and Bias-target Hrm use work as intended according to
+user feedback. Bias-source tests cover Scale changes and Root Keep, Off and
+selected keys. Competing-source root arbitration and all combined
+configurations are not yet hardware-verified. Host tests cover these paths,
+editing, preview, transient reset/scene behavior, held notes and persistence.
+
+* Additional 1.30 option: 16 PPQ clock output
+
+The shared clock-output rate list now includes =16 PPQ=, available for
+CV/Gate and the other clock outputs. It is appended after =24 PPQ= to
+preserve existing saved rate indices. Select it with the normal clock-rate
+menu control. It outputs one pulse every six ticks of the 96-PPQ master
+clock; no fractional scheduling is needed. Older firmware does not
+understand this new rate index. Physical output remains to be verified.
+
+* Conditional gates (introduced in 1.30)
+
+** Ordered slots
+
+Each step has six event slots. Events are evaluated in slot order. A gate
+occupies one slot; if it fails, every later slot on that step is skipped,
+including later gates. Earlier events are unaffected. Each step visit starts
+afresh: a failed gate does not disable subsequent sequencer steps.
+
+Gates control Note, CC, PC and internal CCi events, including Note-derived
+Bias Track output. In 1.32, they also control Hrm events. A suppressed Note On does not suppress cleanup of notes
+that were already sounding. Gate events themselves send no MIDI/CV output.
+
+** Add and edit a gate
+
+1. Enter Step Edit and select a slot with Shift + Motion Start.
+
+2. Use Shift + Transpose to cycle to =Prb=, =Euc=, =Pre= or =!Pr=.
+3. Use Transpose for the first value and Velocity for the second value.
+
+| Label | First value               | Second value      | Default         |
+|-------+---------------------------+-------------------+-----------------|
+| Prb   | Probability 0--100%       | Unused            | 50%             |
+| Euc   | A:B pair, 1:2 through 7:8 | Rotation 0--(B-1) | 1:2, rotation 0 |
+| Pre   | Unused                    | Unused            | Prior history   |
+| !Pr   | Unused                    | Unused            | Inverse history |
+
+There are 28 Euclidean pairs, ordered by increasing B, then increasing A.
+Changing the pair normalizes rotation modulo the new B. Rotation moves one
+position per Velocity increment. Gate length is unused.
+
+Stopped editor preview ignores gates and auditions ordinary Note/CC/PC
+events, including events after a failing gate. CCi and Hrm remain playback-only.
+Preview and display redraws do not draw probability or change gate history.
+
+** Probability
+
+0% always fails; 100% always passes. Each evaluated probability gate draws
+once, and its result is shared across Bias Track/CCi and audible playback.
+Skipped gates do not draw. Each track has its own probability sequence.
+It continues across Reset/Start, track resets and song loads. At startup,
+the hardware random generator supplies a changing seed, so power-cycling
+can produce different sequences. A bounded timing-based fallback is used
+if hardware randomness is unavailable; different startup results are not
+guaranteed in that fallback case. Magic/editing do not change these streams.
+
+Example: put an unconditional Note in slot 1, a 25% gate in slot 2, then an
+accent Note and CC in slots 3--4. The first Note always plays; the accent
+and CC play together only when the gate passes.
+
+** Euclidean loops and rotation
+
+A:B passes on A evenly distributed positions out of B track loops. This is
+loop-based variation, not the step-based Euclidean Density playback mask.
+At rotation 0, cycle position zero passes. Positive rotation shifts the
+pattern forward. The integer rule is:
+
+#+begin_example
+r = (position + B - rotation) % B
+pass if ((r * A) % B) < A
+#+end_example
+
+Cycle starts at zero. A visit uses the current position; leaving the motion
+window's final step advances it for the next loop. Reverse motion counts
+its outgoing boundary too. A one-step window advances after every visit.
+Masked/muted visits still advance motion and loop position.
+
+An actual effective forward/backward reversal advances cycle once; assigning
+the same direction does nothing. Motion-window edits do not themselves
+advance it; correcting an out-of-window position is not a completed loop.
+Scene activation preserves cycle position, although a changed scene direction
+counts as a reversal. Scene-driven repositioning alone is not a loop.
+
+** Pre and Non-Pre history
+
+Each track retains the result of its last visit with evaluated contributing
+gates: true if ANY evaluated Probability, Euclidean or Pre gate passed.
+All Pre and !Pr gates on a visit read the prior history, not results from
+earlier slots on that same visit. The new OR aggregate commits once after
+evaluation. Skipped gates contribute nothing.
+
+=!Pr= negates prior history and NEVER contributes, whether it passes or
+fails. No-gate and !Pr-only visits preserve history. A true gate followed
+by a false gate records true history despite blocking later slots. A true
+Pre can sustain subsequent Pre visits. Reset history is false.
+
+Example: use a Probability-gated phrase, then Pre before an answering phrase
+on a later step and !Pr before an alternative. The alternative does not
+change history, allowing several alternative steps.
+
+** Masks, muted control sources and timing
+
+Pattern-masked visits do not evaluate gates or update history. Pattern-enabled
+muted/Live control sources still evaluate gates for Bias Track and CCi, as
+in the previous firmware; their ordinary audible playback remains suppressed.
+
+Control resolution runs in track order before audible playback. CCi can make
+an earlier track newly due or unmask it; bounded follow-up scans prepare
+such tracks. Each prepared visit stays frozen for that tick. Later CCi
+changes do not redraw its gates; a later reversal advances cycle state for
+the next visit. This is ordered control processing, not simultaneous
+resolution of cyclic automation relationships.
+
+** Reset and scene boundaries
+
+Initialization, song load, transport Reset/MIDI Start and explicit track
+reset clear history and restore cycle zero, but preserve the probability
+generator's current state.
+Stop/Continue preserve conditions. Panel Run requests Continue; use Reset
+when you want to restart variation. Scenes preserve conditional state,
+unlike CCi overrides, which clear on scene activation. Only configuration
+is saved; transient history, cycle position and PRNG state are not.
+
+** Verification status
+
+Six host suites in the final 1.30 checkpoint exercise the production evaluator,
+engine, editor, song serialization with mocked flash, MIDI clock callbacks and
+GUI status. Sanitized integration tests and forced release builds pass. The user
+reports practical success with gates, Bias Track, stable Euclidean status and
+probability variation after reboot; this is not exhaustive hardware coverage.
+Physical 16 PPQ measurement, interrupt-stack high-water and realtime CPU timing
+remain open. Earlier hardware checklists are not evidence that every 1.30
+combination has been tested.
+
+Final =c7c4a02= figures versus submitted =fc00313=:
+text/binary +1928 bytes, initialized data unchanged, BSS +48 bytes.
+ARM -O2 static engine tick frame grows from 64 to 312 bytes; this is not a
+worst-case nested call/interrupt stack measurement.
+
+* Inv: structural inversion and Compact voicing (1.34 development)
+
+Inv rotates arbitrary note collections without chord recognition or knowledge
+of Scale/Root. Compact is a custom octave-compression algorithm, NOT voice
+leading: it does not consult the previous step or minimize inter-step motion.
+
+** Controls and routing
+- In Step Edit, Shift+Transpose cycles to Inv after Hrm. Transpose selects
+  0--5 rotations; Velocity selects Compact Off/On. Default is 0 / Off.
+- Place Inv on a Bias source: it affects only OTHER tracks selecting that
+  source as Bias Track, not the source itself. With no targets it does nothing.
+- Inv is transient and gate-controlled; later eligible source/slot assignments
+  win for a target. Scene activation, song load and transport reset clear it.
+- External Remote CC32 selects rotations with DIRECT values 0--5 (others
+  ignored); CC33 uses 0--63 Off, 64--127 On. MIDI Rmt Ctrl must be enabled.
+  Channel10 addresses selected tracks, channels11--16 directly Tracks1--6,
+  without Bias fan-out. Commands affect subsequent sequenced chords only.
+- Stopped preview does not apply Inv. Live input, arp-enabled tracks and drum
+  tracks do not undergo voicing transformation. No notes are created.
+
+** Algorithm and musical behavior
+Each target step starts from its original gate-eligible positive-velocity notes.
+The lowest occurrence of each pitch class represents its octave doubles.
+Each rotation raises the lowest representative by whole octaves to the first
+position strictly above the entire current voicing. Duplicate notes and octave
+doubles move with that representative, preserving their spacing and each slot's
+velocity/duration. Empty, single-note and single-pitch-class groups are unchanged.
+
+For C4/E4/G4, rotations 0/1/2/3 produce C4-E4-G4, E4-G4-C5, G4-C5-E5,
+and C5-E5-G5. More rotations retain octave displacement; they are not reduced
+modulo note count. Wide voicings/octave doubles may cause larger upward jumps.
+
+With Compact On, the inversion-selected bass stays fixed; upper representatives
+are lowered by octaves until each is within one octave above that bass. Octave
+doubles retain their spacing, so the entire result need not fit one octave.
+Compact can also compress a wide original voicing at rotation 0.
+
+Ordinary transpose/Bias/root/scale processing follows the structural operation.
+Final pitches outside MIDI range are omitted, not clamped; note releases track
+actual output pitches. Already sounding notes are not revoiced by control edits.
+Stored step data remain unchanged. Local version 1.34 introduces Inv code 7 in
+existing six-byte records; song size stays 0x5000. Older firmware cannot
+interpret Inv events: back up songs and do not downgrade Inv-containing songs.
+
+** Practical hardware feedback
+
+Inv has been tried on CARBON hardware and is reported to lift chord voicings
+in a natural-sounding, musically useful way. Compact has also been confirmed
+audibly with the wide voicing MIDI 60/76/91: its effect is obvious and pleasing.
+
+| Rotations | Compact Off (sorted MIDI pitches) | Compact On |
+|-----------+----------------------------------+------------|
+|         0 | 60, 76, 91                       | 60, 64, 67 |
+|         1 | 76, 91, 96                       | 76, 79, 84 |
+|         2 | 91, 96, 100                      | Unchanged  |
+|         3 | 96, 100, 103                     | Unchanged  |
+|         4 | 100, 103, 108                    | Unchanged  |
+|         5 | 103, 108, 112                    | Unchanged  |
+
+The unchanged results at rotations 2--5 are expected: the rotations already
+close this voicing within one octave of its bass. Compact does not lower that
+bass or undo the whole chord's register lift. Close-position chords may show
+no Compact difference at any rotation. This is positive practical hardware
+evidence, not exhaustive verification of all chords, routes or boundaries.
+
+** Arrangement idea: compact verse, open chorus
+
+Use a Bias control track to select Inv 0 / Compact On for a verse, then
+Compact Off to restore the original open voicing for a chorus. An additional
+rotation can supply a register lift for a transition. This keeps the same stored
+chord material while varying its spacing and register. It is a suggested
+arrangement technique, not a separately tested song example. Compact does not
+reduce velocity or guarantee a subdued sound: low close voicings can be dense,
+and register, synth patch and dynamics still matter.
+
+* Compatibility and storage
+
+Current local version 1.34 includes the 1.31 root fields, Hrm event code 6
+and Inv event code 7. Hrm Scale uses Keep=0 and scales=1--16.
+The seven root bytes occupy reserved song space; all older field offsets and
+the =0x5000=-byte slot size are unchanged. Songs written before 1.31 initialize
+Song Root to Off and scenes to Song inheritance. Version 1.32 adds no new
+persistent fields: Hrm and Inv use existing event data0/data1. Older firmware cannot
+interpret these events or reproduce named-root playback. Retain song backups
+for any downgrade; fixed record size does not imply playback compatibility.
+
+The conditional-gate build uses numeric firmware/song version 1.30, with
+display-only =johanwk-ch9-dev=. Event codes 2--5 add the four gates in the
+existing six-byte event records, preserving all field offsets and the
+=0x5000=-byte song size. No new persistent extension fields are needed.
+Older songs migrate through the existing loader; gate-containing songs
+are not backward compatible with firmware that does not implement gates.
+The 1.29 details below describe the preceding submitted feature set.
+
+
+- The work is based on upstream =master= commit =bd5f5d4=, which identifies itself
+  as firmware 1.27.
+- The numeric firmware/song version is 1.29. The display-only =johanwk= suffix
+  identifies this unofficial variant and does not change storage migration logic.
+- Version 1.28 adds 72 bytes for scene Program Change assignments.
+- Version 1.29 adds 72 bytes for Euclidean density and rotation.
+- Both additions use bytes from the existing reserved extension area. Reserved
+  padding is reduced by the same amount, so the song record size and all older
+  field offsets remain unchanged.
+- A compile-time assertion checks that the complete song structure still equals
+  the external-flash slot size.
+- Songs written by older firmware initialize the new fields to safe defaults when
+  loaded: scene programs =Off=, density 100%, rotation 0.
+- =PC= and =CCi= use previously unused event-type values in the existing step-event
+  structure, so they do not enlarge the song record.
+
+Old songs have loaded and played during hardware testing. Compatibility with older
+firmware after saving songs using the new features is not guaranteed. In
+particular, firmware 1.27 does not understand the new bar-relative step-length
+indices or the new step-event types. Back up songs before installing, and retain
+those backups if you may want to return to older firmware.
+
+MIDI Remote CC 16 now spans all 23 track step lengths. CC 26 still selects only
+the original 17 Arp Speed choices, but its 0--127 scaling also changes from the
+old integer-division mapping to proportional scaling. Existing automation using
+specific CC 16/26 values may need adjustment.
+
+* Code changes and size
+
+** Main code areas
+
+| Area                                     | Main responsibility in these changes                      |
+|------------------------------------------+-----------------------------------------------------------|
+| =src/seq/song.c=, =song.h=                   | New stored fields, migration, PC/CCi event types          |
+| =src/seq/seq_engine.c=                     | PC playback, scene PC, bar divisions, transient CCi state |
+| =src/seq/pattern.c=                        | Euclidean playback mask and transient effective values    |
+| =src/seq/midi_ctrl.c=                      | External CC 28/29 and shared CC value scaling             |
+| =src/gui/step_edit.c=                      | Editing and display of =PC= and =CCi= events                  |
+| =src/gui/panel.c=, =gui.c=                   | Euclidean controls, status and pattern display            |
+| =src/gui/panel_menu.c=                     | Scene Program Change menu entries                         |
+| =src/util/seq_utils.c=                     | New bar-relative step-length definitions                  |
+| =src/seq/arp.c=                            | Keeps new track-only lengths out of Arp Speed             |
+| =build-release.sh=, =makegen-run-release.sh= | Repeatable modern release build                           |
+
+The firmware changes span 20 files under =src/=. Much of the added code handles
+validation, UI behavior and compatibility rather than large tables or buffers.
+
+** Build size
+
+Historical comparison: accepted local 1.27 baseline versus development commit
+=d561f3e=, before the unofficial display identity was added:
+
+|                  | 1.27 baseline | Development build | Change |
+|------------------+---------------+-------------------+--------|
+| text             |        203000 |            208856 |  +5856 |
+| initialized data |         40952 |             40952 |      0 |
+| BSS              |         57560 |             57784 |   +224 |
+| =main.bin=         |        259944 |            265800 |  +5856 |
+
+The binary increase is about 5.9 kB, or about 2.3% of the baseline binary. The
+link succeeds with substantial flash space remaining. The fixed song record does
+not grow.
+
+The display-identity change will produce a different binary. Final-candidate
+build measurements and verification belong to the PR's build record, not the
+historical figures above.
+
+Previously tested development release build (not the final PR candidate):
+
+- commit: =d561f3e=;
+- =main.bin=: 265800 bytes;
+- SHA-256: =4286c9f270eaf9b0a87652f519dec56d2e7629c12ecf6e44e012be38472365e5=;
+- build result: successful;
+- build warnings: the existing notes-per-song =#warning= and the existing possible
+  =panel_menu.c= format overflow warning.
+
+* Hardware use
+
+** Current verification and limitations
+
+Host tests and release builds pass. Practical CARBON hardware feedback covers
+conditional gates, Bias Track interactions, stable Euclidean status and
+probability variation after reboot. Root-note playback has positive feedback,
+including some scene changes, and CCi parameter/value hints have been used
+on hardware. Hrm works within tracks and through Bias Track with Scale changes
+and Root Keep, Off and selected keys; see [[*Hardware verification][Hrm hardware verification]].
+Inv provides natural-sounding chord lifts, and Compact has an obvious, pleasing
+effect on a wide voicing; see [[*Practical hardware feedback][Inv/Compact hardware feedback]].
+
+Testing is not exhaustive. Simultaneous conflicting Hrm root requests have
+host-test coverage but are not yet verified on hardware. External Remote
+CC30--33 and broad route/boundary combinations also lack recorded hardware
+verification. Physical 16 PPQ output, realtime timing and interrupt-stack
+high-water remain unmeasured.
+
+** Earlier feature verification
+
+The following checklist records earlier 1.29 hardware use, not verification
+of every combination in the current 1.34 build.
+
+The firmware has been built, flashed and used on CARBON hardware over the past
+week, including the new features. No bugs were encountered during practical use.
+
+Confirmed in hardware testing:
+
+- old songs load and play;
+- song save/load works;
+- per-step and scene Program Change work with a Moog Mother-32;
+- Euclidean density and rotation work on multiple tracks and scenes;
+- density 100% restores original pattern behavior;
+- bar-relative divisions align to a 4/4 reference track;
+- swing, gate time, ratchets, start delay and scene changes work with the new
+  divisions;
+- bar-relative divisions work with external MIDI clock;
+- external CC 28/29 work from Bitwig on channels 11 and 12;
+- =CCi= 28/29 control Euclidean density and rotation;
+- normal note-derived Bias Track transposition works at the same time as =CCi=;
+- =CCi= 16 changes Step Length;
+- =CCi= 20 changes Motion Length.
+
+* Existing GitHub pull requests
+
+The current pull requests in the Kilpatrick Audio CARBON GitHub repository were
+not consulted while this work was designed or implemented. Their proposed features
+have not been incorporated into this firmware. There may therefore be overlap,
+different design choices or merge conflicts that would need review before any
+upstream submission.
+
+This was intentional independent work, not a rejection of those contributions.

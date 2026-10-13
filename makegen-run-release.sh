@@ -20,9 +20,25 @@
 # You should have received a copy of the GNU General Public License
 # along with CARBON.  If not, see <http://www.gnu.org/licenses/>.
 #
-# K66 target board - -O2 optimisation
+# STM32F407 target - -O2 optimisation
 # - generates an ARM ELF file first
 # - converts ELF into bin (JLink and DFU use the .bin)
-makegen -b build -c ~/bin/gcc-arm/bin/arm-none-eabi-gcc -d ~/bin/gcc-arm/bin/arm-none-eabi-gcc -a ~/bin/gcc-arm/bin/arm-none-eabi-as -i "-Isrc -Isrc/usbd_midi -Isrc/usbh_midi -IDrivers/CMSIS/Device/ST/STM32F4xx/Include -IDrivers/CMSIS/Include -IDrivers/STM32F4xx_HAL_Driver/Inc -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc -IMiddlewares/ST/STM32_USB_Host_Library/Core/Inc" -f "-O2 -g -Wall -mlittle-endian -mthumb -mthumb-interwork -mcpu=cortex-m4 -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4 -DUSBD_USE_FS -DUSBH_USE_HS -DUSE_USB_HS_IN_FS -DVTOR_BL" -e makegen.exclude -r "./carbon -i 0" -l "--specs=nosys.specs -mthumb -mthumb-interwork -mcpu=cortex-m4 -Wl,-Map=main.map,--gc-sections,--no-warn-rwx-segments -Tsrc/STM32F407VE_FLASH-release.ld" -p "~/bin/gcc-arm/bin/arm-none-eabi-objcopy -Obinary main main.bin" main > Makefile
+# Resolve the locally installed tools through PATH rather than assuming the
+# obsolete ~/bin/gcc-arm layout.
+MAKEGEN=$(command -v makegen) || { echo "makegen not found in PATH" >&2; exit 1; }
+CC=$(command -v arm-none-eabi-gcc) || { echo "arm-none-eabi-gcc not found in PATH" >&2; exit 1; }
+AS=$(command -v arm-none-eabi-as) || { echo "arm-none-eabi-as not found in PATH" >&2; exit 1; }
+OBJCOPY=$(command -v arm-none-eabi-objcopy) || { echo "arm-none-eabi-objcopy not found in PATH" >&2; exit 1; }
 
-cat Makefile | grep error
+# makegen references this directory but does not create it.
+mkdir -p build
+
+"$MAKEGEN" -b build -c "$CC" -d "$CC" -a "$AS" -i "-Isrc -Isrc/usbd_midi -Isrc/usbh_midi -IDrivers/CMSIS/Device/ST/STM32F4xx/Include -IDrivers/CMSIS/Include -IDrivers/STM32F4xx_HAL_Driver/Inc -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc -IMiddlewares/ST/STM32_USB_Host_Library/Core/Inc" -f "-O2 -g -Wall -mlittle-endian -mthumb -mthumb-interwork -mcpu=cortex-m4 -DUSE_HAL_DRIVER -DSTM32F407xx -DARM_MATH_CM4 -DUSBD_USE_FS -DUSBH_USE_HS -DUSE_USB_HS_IN_FS -DVTOR_BL" -e makegen.exclude -r "./carbon -i 0" -l "--specs=nosys.specs -mthumb -mthumb-interwork -mcpu=cortex-m4 -Wl,-Map=main.map,--gc-sections,--no-warn-rwx-segments -Tsrc/STM32F407VE_FLASH-release.ld" -p "$OBJCOPY -Obinary main main.bin" main > Makefile || {
+    status=$?
+    echo "makegen failed (exit $status); release Makefile generation aborted" >&2
+    exit "$status"
+}
+
+if grep -n error Makefile; then
+    echo "warning: generated Makefile contains the text 'error'" >&2
+fi

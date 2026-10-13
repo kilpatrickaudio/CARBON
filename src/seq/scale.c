@@ -212,3 +212,21 @@ unsigned char scale_quantize(unsigned char note, unsigned char scale) {
 	return nt + shift;
 }
 
+
+int scale_quantize_root(int note, int scale, int root) {
+    int relative = note - root;
+    int pc = ((relative % 12) + 12) % 12;
+    int result = note - pc + scale_quantize(pc, scale);
+    return result >= 0 && result <= 127 ? result : -1;
+}
+const char *scale_root_name(int root) {
+    static const char *names[] = {"C", "C#", "D", "D#", "E", "F",
+        "F#", "G", "G#", "A", "A#", "B"};
+    return root == -2 ? "Song" : root < 0 || root > 11 ? "Off" : names[root];
+}
+void scale_name_with_root(char *str, int scale, int root) {
+    char name[32];
+    scale_type_to_name(name, scale);
+    if(root < 0) sprintf(str, "%s (Root Off)", name);
+    else sprintf(str, "%s %s", scale_root_name(root), name);
+}

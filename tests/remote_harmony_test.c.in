@@ -1,0 +1,80 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#define CARBON_TEST_REMOTE
+#include "pitch_integration_test.c.in"
+#undef main
+static int remote = 1;
+int song_get_midi_remote_ctrl(void) { return remote; }
+int seq_ctrl_load_song(int n) { return 0; }
+void seq_ctrl_set_scene(int n) {}
+void seq_ctrl_reset_track(int n) {}
+void seq_ctrl_record_pressed(void) {}
+void seq_ctrl_set_kbtrans(int n) {}
+#define SETTER(name) void name(int track, int value) {}
+SETTER(seq_ctrl_set_step_length)
+SETTER(seq_ctrl_set_transpose)
+SETTER(seq_ctrl_set_mute_select)
+SETTER(seq_ctrl_set_motion_start)
+SETTER(seq_ctrl_set_motion_length)
+SETTER(seq_ctrl_set_motion_dir)
+SETTER(seq_ctrl_set_gate_time)
+SETTER(seq_ctrl_set_arp_enable)
+SETTER(seq_ctrl_set_arp_type)
+SETTER(seq_ctrl_set_arp_speed)
+SETTER(seq_ctrl_set_arp_gate_time)
+SETTER(seq_ctrl_set_euclidean_density)
+SETTER(seq_ctrl_set_euclidean_rotation_scaled)
+static void cc(int channel, int code, int value) {
+    struct midi_msg msg; midi_utils_enc_control_change(&msg, 7, channel - 1, code, value);
+    midi_ctrl_handle_midi_msg(&msg);
+}
+int main(void) {
+    init(); remote = 0; cc(11, 30, 2); cc(11, 31, 4); assert(!sestate.harmony_active);
+    remote = 1; cc(9, 30, 2); cc(9, 31, 4); assert(!sestate.harmony_active);
+    for(int channel = 11; channel <= 16; channel++) {
+        for(int value = 0; value < 128; value++) {
+            init(); sestate.bias_track_map[(channel - 10) % 6] = channel - 11;
+            cc(channel, 30, value);
+            if(value >= 1 && value <= 16) {
+                assert(seq_engine_get_effective_tonality(0, channel - 11) == value - 1);
+                for(int t = 0; t < 6; t++) if(t != channel - 11)
+                    assert(seq_engine_get_effective_tonality(0, t) == test_scale);
+            } else assert(!sestate.harmony_active);
+        }
+    }
+    for(int channel = 10; channel <= 16; channel++)
+        for(int value = 0; value < 128; value++) {
+            init(); cc(channel, 31, value);
+            if(value >= 1 && value <= 13) assert(seq_engine_get_effective_root(0) == value - 2);
+            else assert(!sestate.harmony_active);
+        }
+    init(); remote_selection = (1u << 2) | (1u << 4); cc(10, 30, 3);
+    assert(seq_engine_get_effective_tonality(0, 2) == SCALE_NAT_MINOR);
+    assert(seq_engine_get_effective_tonality(0, 1) == test_scale);
+    assert(seq_engine_get_effective_tonality(0, 4) == SCALE_NAT_MINOR);
+    cc(11, 31, 4); cc(11, 31, 0); cc(10, 30, 0);
+    assert(seq_engine_get_effective_root(0) == 2);
+    assert(seq_engine_get_effective_tonality(0, 2) == SCALE_NAT_MINOR);
+    seq_engine_clear_internal_cc(); assert(!sestate.harmony_active);
+    init(); live(MIDI_NOTE_ON, 64, 100);
+    cc(11, 30, 2); cc(16, 31, 4);
+    assert(wires == 2); live(MIDI_NOTE_ON, 64, 100); assert(wire[2].data0 == 66);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[4].data0 == 65);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[6].data0 == 66);
+    init(); remote_selection = 0; cc(10, 30, 2); assert(!sestate.harmony_active);
+    cc(10, 31, 4); assert(seq_engine_get_effective_root(0) == 2);
+    sestate.scene_next = 1; seq_engine_change_scene_synced(); assert(!sestate.harmony_active);
+    cc(11, 30, 3); cc(11, 31, 4); running = 0; seq_engine_run(0);
+    assert(!sestate.harmony_active);
+    assert(test_scale == SCALE_MAJOR && test_root == 0); // bases untouched
+    assert(!midi_ctrl_internal_cc_supported(30) && !midi_ctrl_internal_cc_supported(31));
+    for(int channel = 11; channel <= 16; channel++) for(int value = 0; value < 128; value++) {
+        init(); cc(channel, 32, value); cc(channel, 33, value);
+        assert(sestate.inversion[channel - 11] == (value <= 5 ? value : 0));
+        assert(sestate.compact[channel - 11] == (value >= 64));
+    }
+    init(); remote = 0; cc(11, 32, 5); cc(11, 33, 127);
+    assert(sestate.inversion[0] == 0 && sestate.compact[0] == 0); remote = 1;
+    init(); remote_selection = (1u << 1) | (1u << 3); cc(10, 32, 2); cc(10, 33, 64);
+    assert(sestate.inversion[1] == 2 && sestate.inversion[3] == 2 && sestate.inversion[0] == 0);
+    puts("remote harmony tests passed"); return 0;
+}

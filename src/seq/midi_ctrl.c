@@ -49,7 +49,7 @@
  *  - KB transpose          - NOTE 48-72 = transpose -12 to +12
  *
  * MIDI CC Control:
- *  - step length           - CC 16     - val: 0-127 = 32nd to whole
+ *  - step length           - CC 16     - val: 0-127 = all track step lengths
  *  - track transpose       - CC 17     - val: 0-127 = -24 to +24 (0 at val 64)
  *  - track mute            - CC 18     - val: 0-63 = off, 64-127 = on
  *  - motion start          - CC 19     - val: 0-127 = position 1-64
@@ -61,12 +61,17 @@
  *  - arp type              - CC 25     - val: 0-127 = type 1-16
  *  - arp speed             - CC 26     - val: 0-127 = 32nd to whole
  *  - arp gate time         - CC 27     - val: 0-127 = min to max
+ *  - Euclidean density     - CC 28     - val: 0-127 = 0-100%
+ *  - Euclidean rotation    - CC 29     - val: 0-127 = 0 to motion length - 1
+ *  - harmony scale         - CC 30     - 0 Keep, 1-16 scales (transient)
+ *  - shared harmony root   - CC 31     - 0 Keep, 1 Off, 2-13 C-B (transient)
  *  - run/stop              - CC 80     - val: 0-63 = stop, 64-127 = run
  *
  */
 #include "midi_ctrl.h"
 #include "arp_progs.h"
 #include "seq_ctrl.h"
+#include "seq_engine.h"
 #include "song.h"
 #include "../midi/midi_protocol.h"
 #include "../util/log.h"
@@ -100,24 +105,74 @@
 #define MIDI_CTRL_NOTE_KBTRANS_MIN 48
 #define MIDI_CTRL_NOTE_KBTRANS_MAX 72
 #define MIDI_CTRL_NOTE_KBTRANS_OFFSET 60
-// CC defines
-#define MIDI_CTRL_CC_STEP_LENGTH 16
-#define MIDI_CTRL_CC_TRACK_TRANSPOSE 17
-#define MIDI_CTRL_CC_TRACK_MUTE 18
-#define MIDI_CTRL_CC_MOTION_START 19
-#define MIDI_CTRL_CC_MOTION_LENGTH 20
-#define MIDI_CTRL_CC_MOTION_DIR 21
-#define MIDI_CTRL_CC_GATE_TIME 22
-#define MIDI_CTRL_CC_PATTERN_TYPE 23
-#define MIDI_CTRL_CC_ARP_ENABLE 24
-#define MIDI_CTRL_CC_ARP_TYPE 25
-#define MIDI_CTRL_CC_ARP_SPEED 26
-#define MIDI_CTRL_CC_ARP_GATE_TIME 27
-#define MIDI_CTRL_CC_RUN_STOP 80
-
 // init the MIDI control module
 void midi_ctrl_init(void) {
 
+}
+
+// return whether a controller is safe for transient internal automation
+int midi_ctrl_internal_cc_supported(int controller) {
+    switch(controller) {
+        case MIDI_CTRL_CC_STEP_LENGTH:
+        case MIDI_CTRL_CC_TRACK_TRANSPOSE:
+        case MIDI_CTRL_CC_TRACK_MUTE:
+        case MIDI_CTRL_CC_MOTION_START:
+        case MIDI_CTRL_CC_MOTION_LENGTH:
+        case MIDI_CTRL_CC_MOTION_DIR:
+        case MIDI_CTRL_CC_GATE_TIME:
+        case MIDI_CTRL_CC_PATTERN_TYPE:
+        case MIDI_CTRL_CC_ARP_ENABLE:
+        case MIDI_CTRL_CC_ARP_TYPE:
+        case MIDI_CTRL_CC_ARP_SPEED:
+        case MIDI_CTRL_CC_ARP_GATE_TIME:
+        case MIDI_CTRL_CC_EUCLIDEAN_DENSITY:
+        case MIDI_CTRL_CC_EUCLIDEAN_ROTATION:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+// scale a MIDI-style 0-127 value to an internal parameter value
+int midi_ctrl_internal_cc_to_value(int controller, int value, int motion_length) {
+    value = seq_utils_clamp(value, 0, 127);
+    motion_length = seq_utils_clamp(motion_length, 1, SEQ_NUM_STEPS);
+    switch(controller) {
+        case MIDI_CTRL_CC_STEP_LENGTH:
+            return seq_utils_clamp((value * SEQ_UTILS_STEP_LENS) >> 7,
+                0, SEQ_UTILS_STEP_LENS - 1);
+        case MIDI_CTRL_CC_TRACK_TRANSPOSE:
+            return seq_utils_clamp((value >> 1) - 32,
+                SEQ_TRANSPOSE_MIN, SEQ_TRANSPOSE_MAX);
+        case MIDI_CTRL_CC_TRACK_MUTE:
+        case MIDI_CTRL_CC_MOTION_DIR:
+        case MIDI_CTRL_CC_ARP_ENABLE:
+            return value >> 6;
+        case MIDI_CTRL_CC_MOTION_START:
+            return seq_utils_clamp(value >> 1, 0, SEQ_NUM_STEPS - 1);
+        case MIDI_CTRL_CC_MOTION_LENGTH:
+            return seq_utils_clamp((value >> 1) + 1, 1, SEQ_NUM_STEPS);
+        case MIDI_CTRL_CC_GATE_TIME:
+            return seq_utils_clamp((value << 1) + 1,
+                SEQ_GATE_TIME_MIN, SEQ_GATE_TIME_MAX);
+        case MIDI_CTRL_CC_PATTERN_TYPE:
+            return seq_utils_clamp(value >> 2, 0, SEQ_NUM_PATTERNS - 1);
+        case MIDI_CTRL_CC_ARP_TYPE:
+            return seq_utils_clamp(value >> 3, 0, ARP_NUM_TYPES - 1);
+        case MIDI_CTRL_CC_ARP_SPEED:
+            return seq_utils_clamp((value * SEQ_UTILS_ARP_SPEEDS) >> 7,
+                0, SEQ_UTILS_ARP_SPEEDS - 1);
+        case MIDI_CTRL_CC_ARP_GATE_TIME:
+            return seq_utils_clamp((value << 2) + 1,
+                ARP_GATE_TIME_MIN, ARP_GATE_TIME_MAX);
+        case MIDI_CTRL_CC_EUCLIDEAN_DENSITY:
+            return (value * (SEQ_EUCLIDEAN_DENSITY_MAX + 1)) >> 7;
+        case MIDI_CTRL_CC_EUCLIDEAN_ROTATION:
+            return seq_utils_clamp((value * motion_length) >> 7,
+                SEQ_EUCLIDEAN_ROTATION_MIN, motion_length - 1);
+        default:
+            return -1;
+    }
 }
 
 // handle a MIDI message from the keyboard / MIDI input
@@ -228,9 +283,21 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
         }
 
         switch(msg->data0) {
+            case MIDI_CTRL_CC_INVERSION:
+                seq_engine_remote_inversion(track, msg->data1);
+                break;
+            case MIDI_CTRL_CC_COMPACT:
+                seq_engine_remote_compact(track, msg->data1 >= 64);
+                break;
+            case MIDI_CTRL_CC_HARMONY_SCALE:
+                seq_engine_remote_harmony_scale(track, msg->data1);
+                break;
+            case MIDI_CTRL_CC_HARMONY_ROOT:
+                seq_engine_remote_harmony_root(msg->data1);
+                break;
             case MIDI_CTRL_CC_STEP_LENGTH:
-                seq_ctrl_set_step_length(track, 
-                    seq_utils_clamp(msg->data1 / 7, 
+                seq_ctrl_set_step_length(track,
+                    seq_utils_clamp((msg->data1 * SEQ_UTILS_STEP_LENS) >> 7,
                     0, SEQ_UTILS_STEP_LENS - 1));
                 break;
             case MIDI_CTRL_CC_TRACK_TRANSPOSE:
@@ -269,14 +336,21 @@ void midi_ctrl_handle_midi_msg(struct midi_msg *msg) {
                     0, ARP_NUM_TYPES - 1));
                 break;
             case MIDI_CTRL_CC_ARP_SPEED:
-                seq_ctrl_set_arp_speed(track, 
-                    seq_utils_clamp(msg->data1 / 7, 
-                    0, SEQ_UTILS_STEP_LENS - 1));
+                seq_ctrl_set_arp_speed(track,
+                    seq_utils_clamp((msg->data1 * SEQ_UTILS_ARP_SPEEDS) >> 7,
+                    0, SEQ_UTILS_ARP_SPEEDS - 1));
                 break;
             case MIDI_CTRL_CC_ARP_GATE_TIME:
                 seq_ctrl_set_arp_gate_time(track,
                     seq_utils_clamp((msg->data1 << 2) + 1, 
                     ARP_GATE_TIME_MIN, ARP_GATE_TIME_MAX));
+                break;
+            case MIDI_CTRL_CC_EUCLIDEAN_DENSITY:
+                seq_ctrl_set_euclidean_density(track,
+                    (msg->data1 * (SEQ_EUCLIDEAN_DENSITY_MAX + 1)) >> 7);
+                break;
+            case MIDI_CTRL_CC_EUCLIDEAN_ROTATION:
+                seq_ctrl_set_euclidean_rotation_scaled(track, msg->data1);
                 break;
             case MIDI_CTRL_CC_RUN_STOP:
                 seq_ctrl_set_run_state(msg->data1 >> 6);

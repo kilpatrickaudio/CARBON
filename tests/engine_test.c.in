@@ -1,0 +1,580 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later
+ * Production engine with hardware/song fixtures; no firmware test hooks.
+ */
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include "../src/seq/seq_engine.c"
+
+static struct track_event fixture[SEQ_NUM_TRACKS][SEQ_TRACK_POLY];
+static int reads[SEQ_NUM_TRACKS], enabled[SEQ_NUM_TRACKS];
+static struct midi_msg output[64];
+static int output_count;
+static int running = 1, live_mode, selected;
+
+#ifndef CARBON_TEST_CLOCK
+int midi_clock_get_running(void) { return running; }
+#endif
+int seq_ctrl_get_run_state(void) { return midi_clock_get_running(); }
+int seq_ctrl_get_live_mode(void) { return live_mode; }
+#ifdef CARBON_TEST_REMOTE
+static unsigned remote_selection;
+#endif
+int seq_ctrl_get_track_select(int track) {
+#ifdef CARBON_TEST_REMOTE
+    return !!(remote_selection & (1u << track));
+#else
+    return track == selected;
+#endif
+}
+int seq_ctrl_get_first_track(void) { return 0; }
+int seq_ctrl_get_record_mode(void) { return SEQ_CTRL_RECORD_IDLE; }
+int seq_ctrl_get_num_tracks_selected(void) { return 1; }
+void seq_ctrl_set_record_mode(int value) {}
+void seq_ctrl_set_live_mode(int value) { live_mode = value; }
+void seq_ctrl_set_run_state(int value) { running = value; }
+void seq_ctrl_set_song_mode(int value) {}
+void seq_ctrl_set_pattern_type(int track, int value) {}
+void seq_ctrl_reset_pos(void) {}
+void metronome_run(int tick) {}
+#ifndef CARBON_TEST_PITCH
+void arp_run(int tick) {}
+#endif
+void step_edit_run(uint32_t tick) {}
+#ifndef CARBON_TEST_PITCH
+void outproc_pitch_changed(int scene, int track) {}
+void outproc_root_changed(void) {}
+void outproc_tonality_changed(int scene, int track) {}
+void outproc_transpose_changed(int scene, int track) {}
+#endif
+static int test_root = SONG_ROOT_OFF;
+int song_get_effective_root(int scene) { return test_root; }
+void state_change_fire0(int event) {}
+void state_change_fire1(int event, int value) {}
+
+#define SONG_GET2(name, value) int name(int scene, int track) { return (value); }
+SONG_GET2(song_get_arp_enable, 0)
+SONG_GET2(song_get_arp_type, 0)
+SONG_GET2(song_get_arp_speed, 0)
+SONG_GET2(song_get_arp_gate_time, 128)
+SONG_GET2(song_get_bias_track, sestate.bias_track_map[track])
+SONG_GET2(song_get_gate_time, 128)
+SONG_GET2(song_get_motion_start, 0)
+static int scene_reverse;
+SONG_GET2(song_get_motion_dir, scene == 1 ? scene_reverse : 0)
+SONG_GET2(song_get_mute, sestate.track_mute[track])
+SONG_GET2(song_get_step_length, 0)
+#ifdef CARBON_TEST_PITCH
+static int test_scale = 1, test_transpose, test_drum;
+#endif
+int song_get_track_type(int track) {
+#ifdef CARBON_TEST_PITCH
+    return test_drum;
+#else
+    return SONG_TRACK_TYPE_VOICE;
+#endif
+}
+int song_get_key_split(int track) { return 0; }
+int song_get_key_velocity_scale(void) { return 0; }
+int song_get_midi_clock_source(void) { return -1; }
+int song_get_scene_sync(void) { return SONG_SCENE_SYNC_BEAT; }
+#ifdef CARBON_TEST_PITCH
+int song_get_tonality(int scene, int track) { return test_scale; }
+int song_get_midi_channel_map(int track, int map) { return track; }
+int song_get_midi_port_map(int track, int map) { return map; }
+#else
+int song_get_tonality(int scene, int track) { return 0; }
+int song_get_midi_port_map(int track, int map) { return SONG_PORT_DISABLE; }
+#endif
+int song_get_scene_midi_program(int scene, int track, int map) { return SONG_MIDI_PROG_NULL; }
+int song_get_song_list_scene(int entry) { return SONG_LIST_SCENE_NULL; }
+int song_get_song_list_length(int entry) { return 0; }
+int song_get_song_list_kbtrans(int entry) { return 0; }
+int song_add_step_event(int scene, int track, int step, struct track_event *e) { return 0; }
+void song_clear_step_event(int scene, int track, int step, int slot) {}
+int song_set_step_event(int scene, int track, int step, int slot, struct track_event *e) { return 0; }
+
+
+int song_get_step_event(int scene, int track, int step, int slot,
+        struct track_event *event) {
+    (void)scene; (void)step;
+    reads[track] ++;
+    *event = fixture[track][slot];
+    return event->type == SONG_EVENT_NULL ? -1 : 0;
+}
+int song_get_motion_length(int scene, int track) { return 8; }
+int song_get_pattern_type(int scene, int track) { return enabled[track]; }
+int song_get_transpose(int scene, int track) {
+#ifdef CARBON_TEST_PITCH
+    return test_transpose;
+#else
+    return 0;
+#endif
+}
+#ifdef CARBON_TEST_PITCH
+static int test_delay, test_ratchet = 1;
+#endif
+int song_get_start_delay(int scene, int track, int step) {
+#ifdef CARBON_TEST_PITCH
+    return test_delay;
+#else
+    return 0;
+#endif
+}
+int song_get_ratchet_mode(int scene, int track, int step) {
+#ifdef CARBON_TEST_PITCH
+    return test_ratchet;
+#else
+    return 1;
+#endif
+}
+int pattern_get_step_enable(int scene, int track, int pattern, int step) {
+    return pattern != 0;
+}
+void log_error(char *fmt, ...) { assert(!"unexpected log_error"); }
+void log_warn(char *fmt, ...) { assert(!"unexpected log_warn"); }
+#ifndef CARBON_TEST_PITCH
+void outproc_deliver_msg(int scene, int track, struct midi_msg *msg,
+        int deliver, int mode) {
+    assert(output_count < 64);
+    output[output_count ++] = *msg;
+}
+void outproc_stop_all_notes(int track) {}
+void arp_handle_input(int track, struct midi_msg *msg) {}
+void arp_clear_input(int track) {}
+void arp_set_arp_enable(int track, int value) {}
+void arp_set_type(int track, int value) {}
+void arp_set_speed(int track, int value) {}
+void arp_set_gate_time(int track, int value) {}
+#endif
+void state_change_fire2(int event, int a, int b) {}
+
+/* Use the production MIDI CC conversion helpers and MIDI message utilities
+ * via separate compilation; only external song/hardware services are fixtures.
+ */
+static void setup(void) {
+    int t;
+    memset(&sestate, 0, sizeof(sestate));
+    memset(fixture, 0, sizeof(fixture));
+    memset(reads, 0, sizeof(reads));
+    memset(enabled, 0, sizeof(enabled));
+    output_count = 0;
+    running = 1;
+    test_root = SONG_ROOT_OFF;
+    live_mode = SEQ_CTRL_LIVE_OFF;
+    selected = -1;
+    seq_engine_clear_internal_cc();
+    for(t = 0; t < SEQ_NUM_TRACKS; t ++) {
+        conditional_init(&sestate.conditions[t], t);
+        sestate.bias_track_map[t] = SONG_TRACK_BIAS_NULL;
+        sestate.motion_len[t] = 8;
+        sestate.step_size[t] = 24;
+        sestate.gate_time[t] = 128;
+        sestate.clock_div_count[t] = 1;
+    }
+}
+static void put(int track, int slot, int type, int a, int b) {
+    fixture[track][slot] = (struct track_event){
+        .type = type, .data0 = a, .data1 = b, .length = 1};
+}
+static void test_mixed_and_cleanup(void) {
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    uint32_t expected;
+    struct conditional_state reference;
+    setup();
+    enabled[0] = 1;
+    sestate.clock_div_count[0] = 0;
+    sestate.bias_track_map[1] = 0;
+    put(0, 0, SONG_EVENT_NOTE, 60, 100);
+    put(0, 1, SONG_EVENT_CC, 7, 90);
+    put(0, 2, SONG_EVENT_PROGCHG, 12, 0);
+    put(0, 3, SONG_EVENT_PROBABILITY, 0, 0);
+    put(0, 4, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_TRACK_MUTE, 127);
+    put(0, 5, SONG_EVENT_NOTE, 72, 100);
+    reference = sestate.conditions[0];
+    conditional_probability(&reference, 0);
+    expected = reference.random;
+    seq_engine_prepare_visits(visits);
+    assert(visits[0].slots == 7 && reads[0] == SEQ_TRACK_POLY);
+    assert(sestate.bias_track_output[0] == 0); // first eligible Note
+    assert(sestate.internal_cc[1][2] == -1); // blocked CCi
+    assert(sestate.conditions[0].random == expected);
+    seq_engine_track_play_step(0, 0, &visits[0]);
+    assert(output_count == 3);
+    assert(output[0].status == MIDI_NOTE_ON && output[0].data0 == 60);
+    assert(output[1].status == MIDI_CONTROL_CHANGE && output[1].data0 == 7);
+    assert(output[2].status == MIDI_PROGRAM_CHANGE && output[2].data0 == 12);
+    assert(sestate.conditions[0].random == expected);
+    seq_engine_track_manage_notes(0);
+    assert(output_count == 4 && output[3].status == MIDI_NOTE_OFF);
+    assert(!sestate.track_active_notes[0][15].note.msg.status);
+}
+static void test_gated_bias_and_control(void) {
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    uint32_t saved;
+    setup();
+    enabled[0] = 1;
+    sestate.clock_div_count[0] = 0;
+    sestate.bias_track_map[1] = 0;
+    sestate.bias_track_output[0] = -5;
+    put(0, 0, SONG_EVENT_PROBABILITY, 0, 0);
+    put(0, 1, SONG_EVENT_NOTE, 70, 100);
+    put(0, 2, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_TRACK_MUTE, 127);
+    put(0, 3, SONG_EVENT_PROBABILITY, 100, 0);
+    seq_engine_prepare_visits(visits);
+    saved = sestate.conditions[0].random;
+    assert(!visits[0].slots && sestate.bias_track_output[0] == -5);
+    assert(sestate.internal_cc[1][2] == -1);
+    seq_engine_prepare_visits(visits);
+    seq_engine_track_play_step(0, 0, &visits[0]);
+    assert(!output_count && sestate.conditions[0].random == saved);
+}
+static void test_cross_track(int source, int target, int masked) {
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    struct conditional_state reference;
+    setup();
+    enabled[source] = 1;
+    enabled[target] = !masked;
+    sestate.clock_div_count[source] = 0;
+    sestate.clock_div_count[target] = masked ? 0 : 3;
+    sestate.bias_track_map[target] = source;
+    put(source, 0, SONG_EVENT_PROBABILITY, 100, 0);
+    put(source, 1, SONG_EVENT_INTERNAL_CC,
+        masked ? MIDI_CTRL_CC_PATTERN_TYPE : MIDI_CTRL_CC_STEP_LENGTH, 127);
+    put(target, 0, SONG_EVENT_PROBABILITY, 100, 0);
+    put(target, 1, SONG_EVENT_NOTE, 64, 100);
+    reference = sestate.conditions[target];
+    conditional_probability(&reference, 100);
+    seq_engine_prepare_visits(visits);
+    assert(visits[source].prepared && visits[target].prepared);
+    assert(reads[target] == SEQ_TRACK_POLY);
+    assert(sestate.conditions[target].random == reference.random);
+    assert(visits[target].slots == 2);
+    seq_engine_track_play_step(target, 0, &visits[target]);
+    assert(output_count == 1 && output[0].data0 == 64);
+}
+static void test_mask_mute_and_reset(void) {
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    uint32_t seed;
+    setup();
+    sestate.clock_div_count[0] = 0;
+    put(0, 0, SONG_EVENT_PROBABILITY, 100, 0);
+    put(0, 1, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_TRACK_MUTE, 127);
+    sestate.bias_track_map[1] = 0;
+    seed = sestate.conditions[0].random;
+    seq_engine_prepare_visits(visits);
+    assert(!visits[0].prepared && !reads[0]);
+    assert(sestate.conditions[0].random == seed);
+    enabled[0] = 1;
+    sestate.track_mute[0] = 1;
+    seq_engine_prepare_visits(visits);
+    assert(visits[0].prepared && sestate.track_mute[1]);
+    assert(sestate.conditions[0].history);
+    seq_engine_reset_all_tracks_pos();
+    assert(sestate.conditions[0].history); // scene position helper preserves state
+    seed = sestate.conditions[0].random;
+    seq_engine_reset_track(0);
+    assert(!sestate.conditions[0].history && sestate.conditions[0].random == seed);
+}
+static void test_cross_track_tick(void) {
+    int source, masked;
+    for(source = 0; source <= 5; source += 5) {
+        int target = 5 - source;
+        for(masked = 0; masked <= 1; masked ++) {
+            struct conditional_state expected;
+            setup();
+            enabled[source] = 1;
+            enabled[target] = !masked;
+            sestate.clock_div_count[source] = 0;
+            sestate.clock_div_count[target] = masked ? 0 : 3;
+            sestate.bias_track_map[target] = source;
+            put(source, 0, SONG_EVENT_PROBABILITY, 100, 0);
+            put(source, 1, SONG_EVENT_INTERNAL_CC,
+                masked ? MIDI_CTRL_CC_PATTERN_TYPE : MIDI_CTRL_CC_STEP_LENGTH, 127);
+            put(target, 0, SONG_EVENT_PROBABILITY, 100, 0);
+            put(target, 1, SONG_EVENT_NOTE, 65, 100);
+            expected = sestate.conditions[target];
+            conditional_probability(&expected, 100);
+            seq_engine_run(1);
+            assert(output_count == 1 && output[0].data0 == 65);
+            assert(reads[target] == SEQ_TRACK_POLY);
+            assert(sestate.conditions[target].random == expected.random);
+            assert(sestate.step_pos[target] == 1);
+        }
+    }
+}
+
+static void test_tick_loop(void) {
+    int mode;
+    for(mode = 0; mode < 3; mode ++) {
+        uint32_t evaluated;
+        setup();
+        enabled[0] = 1;
+        sestate.clock_div_count[0] = 0;
+        sestate.bias_track_map[1] = 0;
+        put(0, 0, SONG_EVENT_PROBABILITY, 100, 0);
+        put(0, 1, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_TRACK_MUTE, 127);
+        put(0, 2, SONG_EVENT_NOTE, 67, 100);
+        if(mode == 1) sestate.track_mute[0] = 1;
+        if(mode == 2) { live_mode = SEQ_CTRL_LIVE_ON; selected = 0; }
+        seq_engine_run(1);
+        assert(sestate.track_mute[1] && sestate.conditions[0].history);
+        assert(reads[0] == SEQ_TRACK_POLY);
+        assert(output_count == (mode == 0 ? 1 : 0));
+        assert(sestate.step_pos[0] == 1);
+        evaluated = sestate.conditions[0].random;
+        running = 0;
+        seq_engine_run(2);
+        assert(sestate.conditions[0].random == evaluated);
+        running = 1;
+        seq_engine_run(3);
+        assert(sestate.conditions[0].random == evaluated);
+        // Reset while stopped clears state, without evaluating a step.
+        running = 0;
+        seq_engine_run(0);
+        assert(!sestate.conditions[0].history);
+        assert(sestate.conditions[0].random == evaluated);
+    }
+    // A masked visit advances motion but performs no reads or random draws.
+    setup();
+    sestate.clock_div_count[0] = 0;
+    put(0, 0, SONG_EVENT_PROBABILITY, 100, 0);
+    {
+        uint32_t seed = sestate.conditions[0].random;
+        seq_engine_run(1);
+        assert(!reads[0] && !output_count && sestate.step_pos[0] == 1);
+        assert(sestate.conditions[0].random == seed);
+    }
+}
+static void test_cycles_and_history(void) {
+    int length, reverse, n;
+    for(length = 1; length <= 64; length ++) {
+        for(reverse = 0; reverse <= 1; reverse ++) {
+            setup();
+            sestate.motion_start[0] = 60;
+            sestate.motion_len[0] = length;
+            sestate.dir_reverse[0] = reverse;
+            sestate.step_pos[0] = reverse ? (60 + length - 1) % 64 : 60;
+            for(n = 0; n < length; n ++) {
+                assert(sestate.conditions[0].cycle == 0);
+                seq_engine_move_to_next_step(0);
+            }
+            assert(sestate.conditions[0].cycle == 1);
+        }
+    }
+    setup();
+    seq_engine_set_direction(0, 1);
+    assert(sestate.conditions[0].cycle == 1);
+    seq_engine_set_direction(0, 1);
+    assert(sestate.conditions[0].cycle == 1);
+    sestate.internal_cc[0][MIDI_CTRL_CC_MOTION_DIR - 16] = 0;
+    seq_engine_refresh_internal_cc_target(0, MIDI_CTRL_CC_MOTION_DIR);
+    assert(sestate.conditions[0].cycle == 2);
+    seq_engine_recalc_params();
+    assert(sestate.conditions[0].cycle == 2);
+    // Correction of an out-of-window position is not a completed loop.
+    sestate.step_pos[0] = 30;
+    seq_engine_move_to_next_step(0);
+    assert(sestate.conditions[0].cycle == 2);
+    // Reset must win over restoring a stored direction from a CCi override.
+    seq_engine_set_direction(0, 1);
+    running = 0;
+    seq_engine_run(0);
+    assert(sestate.conditions[0].cycle == 0);
+    // One-step Euclidean first visit sees zero; increment happens afterwards.
+    setup();
+    enabled[0] = 1;
+    sestate.clock_div_count[0] = 0;
+    sestate.motion_len[0] = 1;
+    put(0, 0, SONG_EVENT_EUCLIDEAN, 0, 0);
+    put(0, 1, SONG_EVENT_NOTE, 60, 100);
+    seq_engine_run(1);
+    assert(output_count == 1 && sestate.conditions[0].cycle == 1);
+    sestate.clock_div_count[0] = 0;
+    seq_engine_run(2);
+    assert(output_count == 2); // note-off only; second 1:2 visit fails
+    assert(output[1].status == MIDI_NOTE_OFF && sestate.conditions[0].cycle == 2);
+    // Snapshot: probability passes but later Pre still reads prior false.
+    setup();
+    enabled[0] = 1;
+    sestate.clock_div_count[0] = 0;
+    put(0, 0, SONG_EVENT_PROBABILITY, 100, 0);
+    put(0, 1, SONG_EVENT_PRE, 0, 0);
+    put(0, 2, SONG_EVENT_NOTE, 60, 100);
+    seq_engine_run(1);
+    assert(!output_count && sestate.conditions[0].history);
+    sestate.clock_div_count[0] = 0;
+    seq_engine_run(2);
+    assert(output_count == 1 && sestate.conditions[0].history);
+    // Non-Pre-only failure cannot change prior history.
+    memset(fixture[0], 0, sizeof(fixture[0]));
+    put(0, 0, SONG_EVENT_NON_PRE, 0, 0);
+    put(0, 1, SONG_EVENT_NOTE, 70, 100);
+    sestate.clock_div_count[0] = 0;
+    seq_engine_run(3);
+    assert(output_count == 2 && output[1].status == MIDI_NOTE_OFF);
+    assert(sestate.conditions[0].history);
+}
+
+static void test_scene_activation(void) {
+    uint32_t random;
+    setup();
+    scene_reverse = 1;
+    sestate.conditions[0].cycle = 10;
+    sestate.conditions[0].history = 1;
+    random = sestate.conditions[0].random;
+    sestate.scene_next = 1;
+    assert(!seq_engine_change_scene_synced());
+    assert(sestate.conditions[0].cycle == 11);
+    assert(sestate.conditions[0].history && sestate.conditions[0].random == random);
+    seq_engine_recalc_params();
+    assert(sestate.conditions[0].cycle == 11);
+    // Same-direction scene change alone does not count a loop.
+    sestate.scene_next = 2;
+    assert(!seq_engine_change_scene_synced());
+    assert(sestate.conditions[0].cycle == 12); // reverse -> forward
+    sestate.scene_next = 3;
+    assert(!seq_engine_change_scene_synced());
+    assert(sestate.conditions[0].cycle == 12);
+    assert(sestate.conditions[0].history && sestate.conditions[0].random == random);
+}
+
+static void test_control_cycles(void) {
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    int t;
+    setup();
+    // Chain 5 -> 3 -> 1; backward eligibility propagation requires rescans.
+    for(t = 1; t <= 5; t += 2) {
+        enabled[t] = 1;
+        put(t, 0, SONG_EVENT_PROBABILITY, 100, 0);
+        put(t, 1, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_STEP_LENGTH, 127);
+    }
+    sestate.bias_track_map[3] = 5;
+    sestate.bias_track_map[1] = 3;
+    sestate.clock_div_count[5] = 0;
+    seq_engine_prepare_visits(visits);
+    for(t = 1; t <= 5; t += 2) assert(reads[t] == SEQ_TRACK_POLY);
+    // Cyclic CCi mappings cannot re-evaluate either visit.
+    setup(); memset(visits, 0, sizeof(visits));
+    enabled[0] = enabled[1] = 1;
+    sestate.clock_div_count[0] = 0;
+    sestate.bias_track_map[0] = 1; sestate.bias_track_map[1] = 0;
+    put(0, 0, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_STEP_LENGTH, 127);
+    put(1, 0, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_STEP_LENGTH, 127);
+    seq_engine_prepare_visits(visits);
+    assert(reads[0] == SEQ_TRACK_POLY && reads[1] == SEQ_TRACK_POLY);
+    // Later CCi reverses an already prepared Euclidean source: its result
+    // stays frozen; phase changes immediately for its next visit.
+    setup(); memset(visits, 0, sizeof(visits));
+    enabled[0] = enabled[5] = 1;
+    sestate.clock_div_count[0] = sestate.clock_div_count[5] = 0;
+    sestate.bias_track_map[0] = 5;
+    put(0, 0, SONG_EVENT_EUCLIDEAN, 0, 0);
+    put(0, 1, SONG_EVENT_NOTE, 60, 100);
+    put(5, 0, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_MOTION_DIR, 127);
+    seq_engine_prepare_visits(visits);
+    assert(visits[0].slots == 2 && sestate.conditions[0].cycle == 1);
+    seq_engine_track_play_step(0, 0, &visits[0]);
+    assert(output_count == 1);
+    memset(visits, 0, sizeof(visits));
+    seq_engine_prepare_visits(visits);
+    assert(!visits[0].slots && sestate.conditions[0].cycle == 1);
+}
+
+static void test_root_offsets(void) {
+    struct seq_engine_step_visit visit = {0};
+    setup(); test_root = 0;
+    sestate.kbtrans = -12;
+    sestate.bias_track_map[1] = 0;
+    sestate.bias_track_output[0] = -12;
+    sestate.internal_cc[1][1] = 12; // CCi17 belongs at output in root mode
+    visit.slots = 1; visit.events[0] = (struct track_event){
+        .type = SONG_EVENT_NOTE, .data0 = 22, .data1 = 100, .length = 1};
+    seq_engine_track_play_step(1, 0, &visit);
+    assert(output_count == 1 && output[0].data0 == -2);
+    seq_engine_track_manage_notes(1);
+    assert(output_count == 2 && output[1].data0 == -2 && output[1].status == MIDI_NOTE_OFF);
+    setup(); test_root = 0;
+    sestate.internal_cc[0][1] = 12;
+    seq_engine_arp_start_note(0, &(struct midi_msg){.status = MIDI_NOTE_ON, .data0 = 64});
+    assert(output_count == 1 && output[0].data0 == 64); // no offset twice
+}
+
+static void test_harmony(void) {
+    // Root priority for every pair of tracks, regardless of resolution order.
+    for(int low = 0; low < SEQ_NUM_TRACKS; low++)
+        for(int high = low + 1; high < SEQ_NUM_TRACKS; high++) {
+            struct seq_engine_step_visit pair[SEQ_NUM_TRACKS] = {0};
+            setup();
+            pair[high].slots = pair[low].slots = 1;
+            pair[high].events[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
+                .data0 = SCALE_MAJOR + 1, .data1 = SONG_HARMONY_ROOT_C + 7};
+            pair[low].events[0] = (struct track_event){.type = SONG_EVENT_HARMONY,
+                .data0 = SCALE_NAT_MINOR + 1, .data1 = SONG_HARMONY_ROOT_C + 2};
+            seq_engine_resolve_harmony(pair);
+            assert(seq_engine_get_effective_root(0) == 2);
+            pair[low].events[0].data1 = SONG_HARMONY_ROOT_KEEP;
+            seq_engine_resolve_harmony(pair);
+            assert(seq_engine_get_effective_root(0) == 7);
+        }
+    struct seq_engine_step_visit visits[SEQ_NUM_TRACKS] = {0};
+    setup(); enabled[0] = enabled[5] = 1;
+    sestate.clock_div_count[0] = 3; sestate.clock_div_count[5] = 0;
+    sestate.bias_track_map[0] = 5; sestate.bias_track_map[2] = 0;
+    put(5, 0, SONG_EVENT_INTERNAL_CC, MIDI_CTRL_CC_STEP_LENGTH, 127);
+    put(5, 1, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C + 7);
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_NAT_MINOR + 1, SONG_HARMONY_ROOT_C + 2);
+    put(0, 1, SONG_EVENT_HARMONY, SCALE_DORIAN + 1, SONG_HARMONY_ROOT_OFF);
+    put(0, 2, SONG_EVENT_HARMONY, SCALE_BLUES + 1, SONG_HARMONY_ROOT_KEEP);
+    seq_engine_prepare_visits(visits);
+    assert(visits[0].prepared && visits[5].prepared);
+    assert(seq_engine_get_effective_root(0) == SONG_ROOT_OFF); // last explicit Track1 request
+    assert(seq_engine_get_effective_tonality(0, 2) == SCALE_BLUES); // Keep still sets scale
+    assert(seq_engine_get_effective_tonality(0, 5) == SCALE_MAJOR); // losing root still sets scale
+    assert(seq_engine_get_effective_tonality(0, 0) == SCALE_MAJOR); // later source targets T1
+    memset(visits, 0, sizeof(visits)); memset(fixture, 0, sizeof(fixture));
+    put(0, 0, SONG_EVENT_PROBABILITY, 0, 0);
+    put(0, 1, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C);
+    put(5, 0, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C + 9);
+    seq_engine_prepare_visits(visits);
+    assert(seq_engine_get_effective_root(0) == 9); // blocked lower track cannot win
+    memset(visits, 0, sizeof(visits)); memset(fixture, 0, sizeof(fixture));
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, 0);
+    fixture[0][0].data0 = 255; fixture[0][0].data1 = 255;
+    seq_engine_prepare_visits(visits); assert(seq_engine_get_effective_root(0) == 9);
+    memset(visits, 0, sizeof(visits));
+    visits[0].slots = 1; visits[0].events[0] = (struct track_event){
+        .type = SONG_EVENT_HARMONY, .data0 = SONG_HARMONY_SCALE_KEEP,
+        .data1 = SONG_HARMONY_ROOT_C + 4};
+    int old_scale = seq_engine_get_effective_tonality(0, 2);
+    seq_engine_resolve_harmony(visits);
+    assert(seq_engine_get_effective_root(0) == 4);
+    assert(seq_engine_get_effective_tonality(0, 2) == old_scale);
+    visits[0].events[0].data0 = SCALE_CHROMATIC + 1;
+    visits[0].events[0].data1 = SONG_HARMONY_ROOT_KEEP;
+    seq_engine_resolve_harmony(visits);
+    assert(seq_engine_get_effective_root(0) == 4);
+    assert(seq_engine_get_effective_tonality(0, 0) == SCALE_CHROMATIC);
+    assert(seq_engine_get_effective_tonality(0, 2) == SCALE_CHROMATIC);
+    seq_engine_clear_internal_cc(); assert(seq_engine_get_effective_root(0) == SONG_ROOT_OFF);
+    assert(!sestate.harmony_active);
+}
+
+int main(void) {
+    test_harmony();
+    test_root_offsets();
+    test_mixed_and_cleanup();
+    test_cycles_and_history();
+    test_scene_activation();
+    test_control_cycles();
+    test_tick_loop();
+    test_cross_track_tick();
+    test_gated_bias_and_control();
+    test_cross_track(5, 0, 0);
+    test_cross_track(0, 5, 0);
+    test_cross_track(5, 0, 1);
+    test_cross_track(0, 5, 1);
+    test_mask_mute_and_reset();
+    puts("engine tests passed");
+    return 0;
+}

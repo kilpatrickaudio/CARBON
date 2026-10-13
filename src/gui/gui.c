@@ -295,7 +295,10 @@ struct gui_state {
     uint8_t started;  // 0 = not started, 1 = started
 };
 // put data into CCMRAM instead of regular RAM
-struct gui_state gstate __attribute__ ((section (".ccm")));
+#ifndef GUI_STATE_SECTION
+#define GUI_STATE_SECTION __attribute__ ((section (".ccm")))
+#endif
+struct gui_state gstate GUI_STATE_SECTION;
 
 char tempstr[GFX_LABEL_LEN];
 
@@ -312,6 +315,7 @@ void gui_set_label_prefs(int index, int x, int y, int w, int h,
 void gui_set_label_color(int index, uint32_t fg_color,
     uint32_t bg_color);
 void gui_calculate_motion_steps(int track);
+int gui_get_step_display_enable(int track, int step);
 void gui_update_song(int song);
 void gui_update_scene(int scene);
 void gui_update_track_select(int track, int select);
@@ -491,7 +495,7 @@ void gui_startup(void) {
 
         gui_set_label_prefs(GUI_LABEL_SONG_MODE,
             GUI_DISP_A_LABEL_SONG_MODE_X, GUI_DISP_A_LABEL_SONG_MODE_Y,
-            20, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
+            224, 12, GUI_DISP_A_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
 
         gui_set_label_prefs(GUI_LABEL_STATUS_L1,
@@ -573,7 +577,7 @@ void gui_startup(void) {
 
         gui_set_label_prefs(GUI_LABEL_SONG_MODE,
             GUI_DISP_B_LABEL_SONG_MODE_X, GUI_DISP_B_LABEL_SONG_MODE_Y,
-            20, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
+            224, 12, GUI_DISP_B_FONT_NORMAL, GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
         gui_set_label(GUI_LABEL_SONG_MODE, "SONG MODE");
 
         gui_set_label_prefs(GUI_LABEL_STATUS_L1,
@@ -625,6 +629,9 @@ void gui_refresh_task(void) {
     if(!gstate.started) {
         return;
     }
+
+    // CCi overrides need no stored-song event; unchanged labels do not redraw.
+    gui_update_song_mode();
 
 	// force LCD reinit
 	if(gstate.force_reinit) {
@@ -946,6 +953,11 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
         case SCE_SONG_ARP_ENABLE:
             gui_update_arp_enable(data[0], data[1], data[2]);
             break;
+        case SCE_ENG_HARMONY:
+        case SCE_SONG_ROOT:
+            gui_update_tonality(gstate.current_scene, gstate.first_track,
+                song_get_tonality(gstate.current_scene, gstate.first_track));
+            break;
         case SCE_SONG_TONALITY:
             gui_update_tonality(data[0], data[1], data[2]);
             break;
@@ -966,6 +978,12 @@ void gui_handle_state_change(int event_type, int *data, int data_len) {
             break;
         case SCE_SONG_PATTERN_TYPE:
             gui_update_pattern_type(data[0], data[1], data[2]);
+            break;
+        case SCE_SONG_EUCLIDEAN_DENSITY:
+        case SCE_SONG_EUCLIDEAN_ROTATION:
+            // Preview grids recompute effective masks each refresh and redraw
+            // changed squares only. Do not clear the entire LCD on each edit.
+            gui_update_song_mode();
             break;
         case SCE_SONG_TRACK_TYPE:
             gui_update_track_type(data[0], data[1], data[2]);
@@ -1037,8 +1055,7 @@ int gui_draw_preview_grids(void) {
                     color = GUI_GRID_TRACK_COLOR_ACTIVE[track];
                 }
                 // pattern enabled on step
-                else if(pattern_get_step_enable(gstate.current_scene, track,
-                        gstate.pattern_type[track], step)) {
+                else if(gui_get_step_display_enable(track, step)) {
                     color = GUI_GRID_TRACK_COLOR_MUTED[track][gstate.motion_step[track][step]];
                 }
                 // off
@@ -1053,8 +1070,7 @@ int gui_draw_preview_grids(void) {
                     color = GUI_GRID_TRACK_COLOR_ACTIVE[track];
                 }
                 // pattern enabled on step
-                else if(pattern_get_step_enable(gstate.current_scene, track,
-                        gstate.pattern_type[track], step)) {
+                else if(gui_get_step_display_enable(track, step)) {
                     color = GUI_GRID_TRACK_COLOR_NORMAL[track][gstate.motion_step[track][step]];
                 }
                 // off
@@ -1189,9 +1205,28 @@ void gui_set_label_color(int index, uint32_t fg_color, uint32_t bg_color) {
         log_error("gslc - index invalid: %d", index);
         return;
     }
+    // Polling status must not invalidate an unchanged label on every frame.
+    if(gstate.glabels[index].fg_color == fg_color &&
+            gstate.glabels[index].bg_color == bg_color) {
+        return;
+    }
     gstate.glabels[index].fg_color = fg_color;
     gstate.glabels[index].bg_color = bg_color;
     gstate.glabels[index].dirty = 1;
+}
+
+// Determine whether a step should be shown as containing material. Within the
+// motion window this follows the effective pattern (including Euclidean
+// masking). Outside the window, retain the normal indication of stored events
+// so Euclidean mode does not make existing notes and CCs appear empty.
+int gui_get_step_display_enable(int track, int step) {
+    if(!gstate.motion_step[track][step] &&
+            song_get_euclidean_density(gstate.current_scene, track) <
+            SEQ_EUCLIDEAN_DENSITY_MAX) {
+        return song_get_num_step_events(gstate.current_scene, track, step) > 0;
+    }
+    return pattern_get_step_enable(gstate.current_scene, track,
+        gstate.pattern_type[track], step);
 }
 
 // calculate the motion squares for a track
@@ -1540,10 +1575,16 @@ void gui_update_tonality(int scene, int track, int tonality) {
     }
     // update info display
     if(!gstate.status_override) {
-        gui_set_status_text_part(3, 0, 6, "Tona: ");
-        scale_type_to_name(tempstr,
-            song_get_tonality(seq_ctrl_get_scene(), gstate.first_track));
-        gui_set_status_text_part(3, 7, 10, tempstr);
+        scale_name_with_root(tempstr,
+            seq_engine_get_effective_tonality(seq_ctrl_get_scene(), gstate.first_track),
+            seq_engine_get_effective_root(seq_ctrl_get_scene()));
+        // Leave columns 19 onward for VOICE/DRUM on both LCD layouts.
+        if(seq_engine_get_effective_root(seq_ctrl_get_scene()) < 0) {
+            char name[32];
+            scale_type_to_name(name, seq_engine_get_effective_tonality(seq_ctrl_get_scene(), gstate.first_track));
+            sprintf(tempstr, "%s (Off)", name);
+        }
+        gui_set_status_text_part(3, 0, 18, tempstr);
     }
 }
 
@@ -1744,6 +1785,8 @@ void gui_update_active_step(int track, int step) {
 
 // update the song mode status display
 void gui_update_song_mode(void) {
+    gui_update_tonality(gstate.current_scene, gstate.first_track,
+        seq_engine_get_effective_tonality(gstate.current_scene, gstate.first_track));
     struct song_mode_state *sngmode;
     sngmode = seq_engine_get_song_mode_state();
 
@@ -1755,18 +1798,43 @@ void gui_update_song_mode(void) {
         gui_set_label_color(GUI_LABEL_SONG_MODE,
             GUI_FONT_COLOR_YELLOW_DIM, GUI_TEXT_BG_COLOR);
     }
-    // display the status bar - song mode disabled
-    if(sngmode->current_entry == -1 || !seq_ctrl_get_song_mode()) {
-        sprintf(tempstr, "SONG - Slot: x: x/x  ");
+    {
+        char song_status[32], euclidean[32];
+        int track = gstate.first_track;
+        int length = seq_engine_get_effective_motion_length(track);
+        int density = seq_engine_get_effective_euclidean_density(track);
+        int rotation = seq_engine_get_effective_euclidean_rotation(track);
+        int hits;
+        if(sngmode->current_entry == -1 || !seq_ctrl_get_song_mode()) {
+            snprintf(song_status, sizeof(song_status), "SONG - x: x/x");
+        }
+        else {
+            snprintf(song_status, sizeof(song_status), "SONG - %d: %d/%d",
+                sngmode->current_entry + 1,
+                seq_utils_clamp(sngmode->beat_count,
+                    SEQ_SONG_LIST_MIN_LENGTH, SEQ_SONG_LIST_MAX_LENGTH),
+                sngmode->total_beats);
+        }
+        // Match playback rounding: mask positions, not sounding notes.
+        if(density < 100 && length >= 1 && length <= SEQ_NUM_STEPS) {
+            hits = (density * length + 50) / 100;
+            snprintf(euclidean, sizeof(euclidean), "%d:%d:%d",
+                length, hits, rotation % length);
+            {
+                size_t right = strlen(euclidean);
+                size_t left = strlen(song_status);
+                if(right > 8) right = 8;
+                if(left > GUI_STATUS_LINE_LEN - right - 1)
+                    left = GUI_STATUS_LINE_LEN - right - 1;
+                memset(tempstr, ' ', GUI_STATUS_LINE_LEN);
+                memcpy(tempstr, song_status, left);
+                memcpy(tempstr + GUI_STATUS_LINE_LEN - right, euclidean, right);
+                tempstr[GUI_STATUS_LINE_LEN] = '\0';
+            }
+        }
+        else {
+            snprintf(tempstr, sizeof(tempstr), "%-28s", song_status);
+        }
+        gui_set_label(GUI_LABEL_SONG_MODE, tempstr);
     }
-    // display the status bar - song mode enabled
-    else {
-        sprintf(tempstr, "SONG - Slot: %d: %d/%d  ",
-            (sngmode->current_entry + 1),
-            seq_utils_clamp(sngmode->beat_count,
-                SEQ_SONG_LIST_MIN_LENGTH,
-                SEQ_SONG_LIST_MAX_LENGTH),
-            sngmode->total_beats);
-    }
-    gui_set_label(GUI_LABEL_SONG_MODE, tempstr);
 }

@@ -1,0 +1,87 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#define GUI_STATE_SECTION
+#include "../src/gui/gui.c"
+#include "../src/gui/panel_menu.c"
+static int ui_scene, ui_scale, ui_songroot = -1, roots[6] = {-2,-2,-2,-2,-2,-2};
+int seq_ctrl_get_scene(void) { return ui_scene; }
+int seq_ctrl_get_first_track(void) { return 0; }
+int song_get_tonality(int scene, int track) { return ui_scale; }
+int seq_engine_get_effective_root(int scene) { return roots[scene] == -2 ? ui_songroot : roots[scene]; }
+int seq_engine_get_effective_tonality(int scene, int track) { return ui_scale; }
+int song_get_effective_root(int scene) { return roots[scene] == -2 ? ui_songroot : roots[scene]; }
+int song_get_root(void) { return ui_songroot; }
+int song_get_scene_root(int scene) { return roots[scene]; }
+static int ui_swing = 50;
+int song_get_swing(void) { return ui_swing; }
+void song_set_root(int root) { ui_songroot = root; }
+void song_set_scene_root(int scene, int root) { roots[scene] = root; }
+void seq_ctrl_adjust_swing(int change) { ui_swing += change; }
+void seq_ctrl_adjust_tonality(int change) {}
+void seq_ctrl_adjust_transpose(int change) {}
+void seq_ctrl_adjust_bias_track(int change) {}
+void seq_ctrl_adjust_track_type(int change) {}
+void seq_ctrl_adjust_magic_range(int change) {}
+void seq_ctrl_adjust_magic_chance(int change) {}
+int song_get_track_type(int track) { return 0; }
+int song_get_transpose(int scene, int track) { return 0; }
+int song_get_bias_track(int scene, int track) { return -1; }
+int song_get_magic_range(void) { return 12; }
+int song_get_magic_chance(void) { return 100; }
+void log_error(char *fmt, ...) { assert(!"unexpected error"); }
+int main(void) {
+    char expected[64];
+    for(int lcd = 0; lcd < GUI_DISP_NUM_TYPES; lcd++) {
+        gstate.screen_type = lcd;
+        for(ui_scale = 0; ui_scale < SCALE_NUM_TONALITIES; ui_scale++)
+            for(ui_songroot = -1; ui_songroot < 12; ui_songroot++) {
+                memset(gstate.status_lines, ' ', sizeof(gstate.status_lines));
+                pmstate.menu_submode = PANEL_MENU_TONALITY_SCALE;
+                panel_menu_display_tonality();
+                scale_name_with_root(expected, ui_scale, ui_songroot);
+                assert(strlen(expected) <= 27);
+                assert(!strncmp(gstate.status_lines[3], expected, strlen(expected)));
+                gstate.glabels[GUI_LABEL_STATUS_L4].dirty = 0;
+                panel_menu_display_tonality();
+                assert(!gstate.glabels[GUI_LABEL_STATUS_L4].dirty);
+                gui_update_tonality(ui_scene, 0, ui_scale);
+                assert(strlen(gstate.status_lines[3]) == 28);
+            }
+        for(int i = PANEL_MENU_TONALITY_SWING; i < PANEL_MENU_TONALITY_NUM_SUBMODES; i++) {
+            pmstate.menu_submode = i; panel_menu_display_tonality();
+            assert(strlen(gstate.status_lines[3]) == 28);
+            if(i == PANEL_MENU_TONALITY_SONG_ROOT) assert(!strncmp(gstate.status_lines[3], "Song Root", 9));
+            if(i >= PANEL_MENU_TONALITY_SCENE_ROOT1) {
+                snprintf(expected, sizeof(expected), "Scene %d Root", i - PANEL_MENU_TONALITY_SCENE_ROOT1 + 1);
+                assert(!strncmp(gstate.status_lines[3], expected, strlen(expected)));
+                assert(!strncmp(gstate.status_lines[3] + 14, "Song", 4));
+            }
+        }
+        // Actual Shift+Tonality enters SWING; roots follow Swing here too.
+        for(int i = 1; i < PANEL_MENU_SWING_NUM_SUBMODES; i++) {
+            pmstate.menu_submode = i; panel_menu_display_swing();
+            assert(strlen(gstate.status_lines[3]) == 28);
+            if(i == 1) assert(!strncmp(gstate.status_lines[3], "Song Root", 9));
+            else {
+                snprintf(expected, sizeof(expected), "Scene %d Root", i - 1);
+                assert(!strncmp(gstate.status_lines[3], expected, strlen(expected)));
+            }
+        }
+        ui_songroot = 6; roots[0] = 2; ui_scale = SCALE_MAJOR;
+        pmstate.menu_submode = PANEL_MENU_TONALITY_SCALE; panel_menu_display_tonality();
+        assert(!strncmp(gstate.status_lines[3], "D Major", 7));
+        roots[0] = -1; panel_menu_display_tonality();
+        assert(!strncmp(gstate.status_lines[3], "Major (Root Off)", 16));
+        roots[0] = -2;
+    }
+    ui_songroot = -1; panel_menu_edit_root(0, -100); assert(ui_songroot == -1);
+    panel_menu_edit_root(0, 1); assert(ui_songroot == 0);
+    panel_menu_edit_root(0, 100); assert(ui_songroot == 11);
+    for(int scene = 0; scene < 6; scene++) {
+        panel_menu_edit_root(scene + 1, -100); assert(roots[scene] == -2);
+        panel_menu_edit_root(scene + 1, 1); assert(roots[scene] == -1);
+        panel_menu_edit_root(scene + 1, 1); assert(roots[scene] == 0);
+        panel_menu_edit_root(scene + 1, 100); assert(roots[scene] == 11);
+    }
+    puts("root UI tests passed"); return 0;
+}

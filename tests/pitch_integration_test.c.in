@@ -1,0 +1,175 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#define CARBON_TEST_PITCH
+#define main conditional_engine_main
+#include "engine_test.c.in"
+#undef main
+#include "../src/seq/outproc.c"
+#include "../src/seq/arp.c"
+#include "../src/seq/arp_progs.c"
+int song_scene_copy_in_progress(void) { return 0; }
+void metronome_beat_cross(void) {}
+void metronome_mode_changed(int mode) {}
+void metronome_sound_len_changed(int len) {}
+int song_get_midi_autolive(void) { return 0; }
+int song_get_midi_program(int track, int map) { return SONG_MIDI_PROG_NULL; }
+static struct midi_msg wire[512];
+static int wires;
+int midi_stream_send_msg(struct midi_msg *msg) {
+    assert(msg->data0 >= 0 && msg->data0 <= 127);
+    assert(wires < 512); wire[wires++] = *msg; return 0;
+}
+static void init(void) {
+    setup(); test_root = 0; test_scale = SCALE_MAJOR; test_transpose = 2;
+    test_drum = 0; test_delay = 0; test_ratchet = 1; outproc_init();
+    arp_init(); outproc_root_changed(); wires = 0;
+}
+static void live(int status, int note, int value) {
+    struct midi_msg msg = {.port = 7, .len = 3, .status = status, .data0 = note, .data1 = value};
+    seq_engine_live_send_msg(0, &msg);
+}
+#ifdef CARBON_TEST_REMOTE
+int pitch_tests_main(void) {
+#else
+int main(void) {
+#endif
+    init();
+    live(MIDI_NOTE_ON, 64, 100); assert(wires == 2 && wire[0].data0 == 65);
+    test_root = 2; test_scale = SCALE_NAT_MINOR; test_transpose = -3;
+    seq_engine_handle_state_change(SCE_SONG_ROOT, 0, 0); assert(wires == 2);
+    live(MIDI_POLY_KEY_PRESSURE, 64, 40); assert(wire[2].data0 == 65);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[4].data0 == 65);
+    assert(seq_engine_live_get_num_notes(0) == 0);
+    live(MIDI_NOTE_ON, 64, 100); assert(wire[6].data0 == 60);
+    live(MIDI_CONTROL_CHANGE, 64, 127);
+    live(MIDI_NOTE_OFF, 64, 64); int before = wires;
+    test_root = SONG_ROOT_OFF; seq_engine_handle_state_change(SCE_SONG_ROOT, 0, 0);
+    assert(wires == before && sestate.live_damper_pedal[0]);
+    seq_engine_live_stop_all_notes(0); assert(wire[before].status == MIDI_CONTROL_CHANGE && wire[before].data1 == 0);
+    init(); live(MIDI_NOTE_ON, 64, 100); live(MIDI_NOTE_ON, 64, 0);
+    assert(wires == 4 && wire[2].status == MIDI_NOTE_OFF && !seq_engine_live_get_num_notes(0));
+    // Real CCi17 accepts the full bipolar range, including -1.
+    init(); sestate.bias_track_map[0] = 1;
+    for(int value = 0; value < 128; value++) {
+        seq_engine_apply_internal_cc(1, MIDI_CTRL_CC_TRACK_TRANSPOSE, value);
+        int expected = midi_ctrl_internal_cc_to_value(MIDI_CTRL_CC_TRACK_TRANSPOSE, value, 8);
+        assert(seq_engine_get_internal_cc(0, 17, 2) == expected);
+    }
+    seq_engine_apply_internal_cc(1, MIDI_CTRL_CC_TRACK_TRANSPOSE, 0);
+    live(MIDI_NOTE_ON, 64, 100); assert(wire[0].data0 == 40);
+    live(MIDI_NOTE_OFF, 64, 64);
+    // Same-input retriggers spanning harmony changes release in FIFO order.
+    init(); live(MIDI_NOTE_ON, 64, 100); test_root = 2; outproc_root_changed();
+    live(MIDI_NOTE_ON, 64, 100); assert(wire[2].data0 == 66);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[4].data0 == 65);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[6].data0 == 66);
+    assert(!seq_engine_live_get_num_notes(0));
+    // Real sequencer start/timeout across an actual scene activation.
+    init(); struct seq_engine_step_visit visit = {0};
+    visit.slots = 1; visit.events[0] = (struct track_event){.type = SONG_EVENT_NOTE,
+        .data0 = 64, .data1 = 100, .length = 1};
+    sestate.kbtrans = 2; sestate.bias_track_map[0] = 1; sestate.bias_track_output[1] = 2;
+    sestate.internal_cc[0][1] = 4;
+    seq_engine_track_play_step(0, 0, &visit); assert(wires == 2 && wire[0].data0 == 72);
+    test_root = 2; test_scale = SCALE_BLUES; test_transpose = -5;
+    sestate.scene_next = 1; seq_engine_change_scene_synced(); assert(wires == 2);
+    assert(sestate.internal_cc[0][1] == -32768);
+    seq_engine_track_manage_notes(0); assert(wires == 4 && wire[2].data0 == 72);
+    // Saturated sequencer voices steal with note-off, not duplicate note-on.
+    init(); visit.events[0].length = 100;
+    for(int i = 0; i < SEQ_ENGINE_MAX_NOTES + 1; i++) {
+        visit.events[0].data0 = 60 + i; seq_engine_track_play_step(0, 0, &visit);
+    }
+    assert(wires == 36 && wire[32].status == MIDI_NOTE_OFF && wire[34].status == MIDI_NOTE_ON);
+    seq_engine_track_stop_all_notes(0);
+    for(int i = 0; i < OUTPROC_MAX_NOTES; i++) assert(!opstate.notes[0][i].input.status);
+    visit.events[0].data0 = 64; visit.events[0].length = 1;
+    // Delayed starts use new harmony at the attack, not at scheduling time.
+    init(); test_delay = 2; seq_engine_track_play_step(0, 0, &visit); assert(wires == 0);
+    test_root = 2; outproc_root_changed();
+    seq_engine_track_manage_notes(0); assert(wires == 0);
+    seq_engine_track_manage_notes(0); assert(wires == 2 && wire[0].data0 == 66);
+    seq_engine_track_manage_notes(0); assert(wires == 4 && wire[2].data0 == 66);
+    // Ratchet releases retain each attack's actual pitch after root changes.
+    init(); test_ratchet = 2; visit.events[0].length = 8;
+    seq_engine_track_play_step(0, 0, &visit); assert(wires == 2);
+    test_root = 2; outproc_root_changed();
+    for(int tick = 0; tick < 8; tick++) seq_engine_track_manage_notes(0);
+    assert(wires == 8 && wire[2].data0 == 65 && wire[4].data0 == 66 && wire[6].data0 == 66);
+    init();
+    // Real arp input, execution and timeout. No double transpose at input.
+    wires = 0; sestate.arp_enable[0] = 1; arp_set_arp_enable(0, 1);
+    live(MIDI_NOTE_ON, 64, 100); assert(wires == 0);
+    arp_run(1); assert(wires == 2 && wire[0].data0 == 65);
+    test_root = 2; outproc_root_changed(); assert(wires == 2);
+    arp_stop_all_notes(0); assert(wires == 4 && wire[2].data0 == 65);
+    live(MIDI_NOTE_OFF, 64, 64); assert(!astate[0].held_note_count);
+    // Hrm settles global root and per-track scales before all new attacks.
+    init(); enabled[0] = enabled[1] = 1;
+    sestate.clock_div_count[0] = sestate.clock_div_count[1] = 0;
+    sestate.bias_track_map[1] = 0;
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C + 2);
+    put(1, 0, SONG_EVENT_HARMONY, SCALE_BLUES + 1, SONG_HARMONY_ROOT_C + 7);
+    put(1, 1, SONG_EVENT_NOTE, 64, 100);
+    live(MIDI_NOTE_ON, 64, 100); assert(wire[0].data0 == 65);
+    seq_engine_run(1);
+    assert(seq_engine_get_effective_root(0) == 2);
+    assert(seq_engine_get_effective_tonality(0, 1) == SCALE_BLUES);
+    assert(wires == 4 && wire[2].data0 == 65); // D blues accepts F
+    live(MIDI_POLY_KEY_PRESSURE, 64, 20); assert(wire[4].data0 == 65);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[6].data0 == 65);
+    // Reset removes overrides without changing saved values or held-note identity.
+    seq_engine_clear_internal_cc(); assert(seq_engine_get_effective_root(0) == test_root);
+    assert(seq_engine_get_effective_tonality(0, 1) == test_scale);
+    init(); live(MIDI_NOTE_ON, 64, 100);
+    memset(fixture, 0, sizeof(fixture)); enabled[0] = 1; sestate.clock_div_count[0] = 0;
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C + 2);
+    seq_engine_run(1); assert(wires == 2);
+    live(MIDI_NOTE_ON, 64, 100); assert(wire[2].data0 == 66);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[4].data0 == 65);
+    live(MIDI_NOTE_OFF, 64, 64); assert(wire[6].data0 == 66);
+    // Scene activation clears harmony along with CCi overrides.
+    sestate.scene_next = 1; seq_engine_change_scene_synced(); assert(!sestate.harmony_active);
+    // Arp attacks read effective Hrm root/scale, without reprocessing inputs.
+    init(); sestate.arp_enable[0] = 1; arp_set_arp_enable(0, 1);
+    live(MIDI_NOTE_ON, 64, 100);
+    enabled[0] = 1; sestate.clock_div_count[0] = 0;
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_MAJOR + 1, SONG_HARMONY_ROOT_C + 2);
+    seq_engine_run(1); assert(wires == 2 && wire[0].data0 == 66);
+    arp_stop_all_notes(0); assert(wires == 4 && wire[2].data0 == 66);
+    // Hrm does not change drum pitch processing.
+    init(); test_drum = 1; sestate.track_type[0] = 1;
+    enabled[0] = 1; sestate.clock_div_count[0] = 0;
+    put(0, 0, SONG_EVENT_HARMONY, SCALE_BLUES + 1, SONG_HARMONY_ROOT_C + 2);
+    put(0, 1, SONG_EVENT_NOTE, 64, 100);
+    seq_engine_run(1); assert(wires == 2 && wire[0].data0 == 66);
+    running = 0; seq_engine_run(0); assert(!sestate.harmony_active);
+    // Bias Inv affects only targets; eligible chord retains slot identities.
+    init(); test_scale = SCALE_CHROMATIC; test_transpose = 0; outproc_root_changed();
+    enabled[0] = enabled[1] = 1; sestate.clock_div_count[0] = sestate.clock_div_count[1] = 0;
+    sestate.bias_track_map[1] = 0;
+    put(0, 0, SONG_EVENT_INVERSION, 1, 0);
+    put(1, 0, SONG_EVENT_NOTE, 60, 100); put(1, 1, SONG_EVENT_NOTE, 64, 90);
+    put(1, 2, SONG_EVENT_NOTE, 67, 80);
+    seq_engine_run(1); assert(sestate.inversion[0] == 0 && sestate.inversion[1] == 1);
+    assert(wires == 6 && wire[0].data0 == 72 && wire[2].data0 == 64 && wire[4].data0 == 67);
+    assert(fixture[1][0].data0 == 60 && wire[0].data1 == 100 && wire[2].data1 == 90);
+    seq_engine_track_manage_notes(1); assert(wires == 12);
+    for(int i = 0; i < OUTPROC_MAX_NOTES; i++) assert(!opstate.notes[1][i].input.status);
+    // Source gate blocks Inv control; no target and self-only mappings are inert.
+    init(); enabled[0] = 1; sestate.clock_div_count[0] = 0; sestate.bias_track_map[1] = 0;
+    put(0, 0, SONG_EVENT_PROBABILITY, 0, 0); put(0, 1, SONG_EVENT_INVERSION, 5, 1);
+    seq_engine_run(1); assert(sestate.inversion[1] == 0);
+    seq_engine_remote_inversion(1, 2); seq_engine_remote_compact(1, 1);
+    assert(sestate.inversion[1] == 2 && sestate.compact[1] == 1);
+    seq_engine_clear_internal_cc(); assert(sestate.inversion[1] == 0 && sestate.compact[1] == 0);
+    // Overflow omits only invalid voices, not later in-range slots.
+    init(); test_scale = SCALE_CHROMATIC; test_transpose = 0; outproc_root_changed(); test_root = 0;
+    seq_engine_remote_inversion(0, 1);
+    struct seq_engine_step_visit inv = {0}; inv.slots = 7;
+    inv.events[0] = (struct track_event){.type = SONG_EVENT_NOTE, .data0 = 120, .data1 = 100, .length = 1};
+    inv.events[1] = (struct track_event){.type = SONG_EVENT_NOTE, .data0 = 124, .data1 = 100, .length = 1};
+    inv.events[2] = (struct track_event){.type = SONG_EVENT_NOTE, .data0 = 127, .data1 = 100, .length = 1};
+    seq_engine_track_play_step(0, 0, &inv); assert(wires == 4 && wire[0].data0 == 124);
+    seq_engine_track_manage_notes(0); assert(wires == 8);
+    puts("pitch integration tests passed"); return 0;
+}

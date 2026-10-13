@@ -1,0 +1,110 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include <assert.h>
+#include <stdio.h>
+#include "../src/seq/conditional.h"
+
+int main(void) {
+    struct conditional_state state, other;
+    struct conditional_visit visit = {0};
+    struct track_event note = {.type = SONG_EVENT_NOTE};
+    struct track_event gate = {.type = SONG_EVENT_PROBABILITY, .data0 = 100};
+    uint32_t saved;
+    int i, hits = 0;
+    conditional_init(&state, 0);
+    conditional_init(&other, 1);
+    assert(state.random != other.random && !state.history);
+    assert(conditional_slot(&state, &visit, &note));
+    saved = state.random;
+    assert(!conditional_slot(&state, &visit, &gate));
+    assert(state.random != saved && visit.any_true);
+    assert(conditional_slot(&state, &visit, &note));
+    gate.data0 = 0;
+    assert(!conditional_slot(&state, &visit, &gate));
+    saved = state.random;
+    gate.data0 = 100;
+    assert(!conditional_slot(&state, &visit, &gate));
+    assert(state.random == saved); // skipped gate does not draw
+    assert(!conditional_slot(&state, &visit, &note));
+    conditional_commit(&state, &visit);
+    assert(state.history); // true followed by false aggregates true
+    visit = (struct conditional_visit){0};
+    assert(conditional_slot(&state, &visit, &note)); // next visit is fresh
+    conditional_commit(&state, &visit);
+    assert(state.history); // no gates preserves history
+    gate.data0 = 0;
+    assert(!conditional_slot(&state, &visit, &gate));
+    conditional_commit(&state, &visit);
+    assert(!state.history);
+    conditional_init(&state, 0);
+    conditional_init(&other, 0);
+    for(i = 0; i < 10000; i ++) {
+        int result = conditional_probability(&state, 50);
+        assert(result == conditional_probability(&other, 50));
+        hits += result;
+    }
+    assert(hits > 4700 && hits < 5300);
+    for(i = 0; i < 1000; i ++) {
+        assert(!conditional_probability(&state, 0));
+        assert(conditional_probability(&state, 100));
+    }
+    // All 28 pairs and every rotation must yield exactly A hits in B visits.
+    for(i = 0; i < 28; i ++) {
+        unsigned a, b, rotation, p;
+        conditional_pair(i, &a, &b);
+        assert(a >= 1 && a < b && b <= 8);
+        for(rotation = 0; rotation < b; rotation ++) {
+            unsigned count = 0;
+            for(p = 0; p < b; p ++)
+                count += conditional_euclidean(p, i, rotation);
+            assert(count == a);
+            assert(conditional_euclidean(rotation, i, rotation));
+        }
+    }
+    conditional_init(&state, 0);
+    for(i = 0; i < 840; i ++) conditional_advance(&state);
+    assert(state.cycle == 0);
+    // Non-Pre is complementary and never contributes, even when it fails.
+    for(i = 0; i < 2; i ++) {
+        state.history = i;
+        gate.type = SONG_EVENT_NON_PRE;
+        visit = (struct conditional_visit){0};
+        conditional_slot(&state, &visit, &gate);
+        assert(visit.blocked == i && !visit.contributed);
+        conditional_commit(&state, &visit);
+        assert(state.history == i);
+        gate.type = SONG_EVENT_PRE;
+        visit = (struct conditional_visit){0};
+        conditional_slot(&state, &visit, &gate);
+        assert(visit.blocked == !i && visit.contributed);
+    }
+    // Current true probability must not change what a later Pre sees.
+    state.history = 0;
+    visit = (struct conditional_visit){0};
+    gate = (struct track_event){.type = SONG_EVENT_PROBABILITY, .data0 = 100};
+    conditional_slot(&state, &visit, &gate);
+    gate.type = SONG_EVENT_PRE;
+    conditional_slot(&state, &visit, &gate);
+    assert(visit.blocked && visit.any_true && !state.history);
+    conditional_commit(&state, &visit);
+    assert(state.history);
+    // True Pre sustains history; false Non-Pre preserves it.
+    visit = (struct conditional_visit){0};
+    conditional_slot(&state, &visit, &gate);
+    assert(!visit.blocked);
+    gate.type = SONG_EVENT_NON_PRE;
+    conditional_slot(&state, &visit, &gate);
+    assert(visit.blocked);
+    conditional_commit(&state, &visit);
+    assert(state.history);
+    conditional_seed(&state, 0, 123);
+    conditional_seed(&other, 0, 456);
+    assert(state.random != other.random);
+    saved = state.random;
+    state.history = 1; state.cycle = 42;
+    conditional_reset(&state, 0);
+    assert(state.random == saved && !state.history && !state.cycle);
+    conditional_seed(&state, 0, UINT32_C(0x9e3779b9));
+    assert(state.random != 0); // zero-state protection
+    puts("conditional tests passed");
+    return 0;
+}
