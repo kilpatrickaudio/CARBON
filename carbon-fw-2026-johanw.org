@@ -2,41 +2,16 @@
 #+author: Johan W. Klüwer using gpt--sol in Emacs gptel
 #+date: 2026-09-30
 
-* Development status: Chapters 9--10
-
-The current local build identifies itself as =1.34-johanwk-ch10-dev=.
-It includes the submitted 1.29 features, the 1.30 conditional gates,
-1.31 song/scene roots and CCi editor help, Harmony (=Hrm=) with Scale Keep,
-external harmony CC30/31, and 1.34 inversion (=Inv=) with Compact and CC32/33.
-Chapter 10 remains local development, not an official release or published PR.
-Chapter 9 has passed host tests and release builds, with positive practical
-hardware feedback for gates, Bias Track interactions, Euclidean status and
-startup probability variation. This is not exhaustive hardware verification;
-16 PPQ physical output, realtime timing and stack high-water remain unmeasured.
-PR #11 contains the 1.30 additions and depends on PR #10; the submitted
-=1.29-johanwk= PR #10 branch remains unchanged.
-
-Root-note playback has positive initial hardware feedback, including some
-scene changes; CCi parameter/value hints have also been tried on hardware.
-Initial Hrm tests within a track and through Bias Track work as intended,
-including Scale changes and Root Keep, Off and selected keys. Simultaneous
-conflicting root requests have host-test coverage but have not yet been
-verified on hardware. Inv chord rotation and Compact on a wide voicing have
-positive practical hardware feedback; see [[*Practical hardware feedback][Inv/Compact hardware feedback]].
-None of the later local harmony/voicing development is in PR #11.
-
-Install a specifically identified build only after a separate testing decision.
-Back up songs first. Do not load songs containing gates, Hrm or Inv events into
-firmware that does not implement those event types. Older firmware may ignore
-them or suppress later events; it also cannot reproduce named-root playback.
-
 * Introduction
 
 This is an unofficial set of additions to the CARBON firmware. It is based on the
 upstream =master= commit =bd5f5d4= and firmware 1.27.
 The System page identifies this development variant as =1.34-johanwk-ch10-dev=.
 The preceding submitted builds are =1.29-johanwk= (PR #10) and
-=1.30-johanwk-ch9-dev= (PR #11). The aim is
+=1.30-johanwk-ch9-dev= (PR #11). These suffixes identify unofficial
+development builds, not official Kilpatrick Audio releases. This guide covers
+the current 1.34 feature set: roots, CCi editor help, Harmony and inversion,
+including external Remote CC30--33. The aim is
 to extend CARBON's MIDI control and rhythmic sequencing while keeping its
 existing workflow intact.
 
@@ -66,7 +41,10 @@ This work was done independently. The open pull requests in the CARBON GitHub
 repository were not consulted or incorporated, so features proposed there are not
 part of this firmware. The earlier additions were submitted as combined PR #10; the 1.30
 conditional-gate, display and clock-output additions are submitted as the
-dependent PR #11.
+dependent PR #11. The harmony/voicing additions extend #11 and therefore
+#10; their separate dependent PR is being prepared. Both earlier submitted
+branches remain unchanged. Roots, Hrm, Inv and the new Remote controls are
+not included in PR #11.
 
 This firmware is not an official Kilpatrick Audio release and is not supported by
 Kilpatrick Audio. Installation and use are at the user's own risk.
@@ -78,7 +56,13 @@ release-build command and output files. Building does not flash CARBON.
 
 * Installation
 
-Back up important songs before installing. Put CARBON into DFU mode, confirm that
+Install a specifically identified build after reviewing its verification status.
+Back up important songs first. Do not load songs containing gates, Hrm or Inv
+into firmware that does not implement those event types: it may ignore them
+or suppress later events, and cannot reproduce named-root playback. See
+[[*Compatibility and storage][Compatibility and storage]] before considering a downgrade.
+
+Put CARBON into DFU mode, confirm that
 =dfu-util= can see device =0483:df11= and alt setting 0, then run this command from
 the directory containing =main.bin=:
 
@@ -147,7 +131,7 @@ operation before relying on it in a performance.
 - Gates also govern Note-derived Bias Track and internal =CCi= controls.
 - Probability streams continue through resets and song loads; startup seeding
   allows variation after power-cycling. Conditional history/cycle reset rules
-  are separate. See [[*Chapter 9: Conditional gates (1.30 development)][Conditional gates]] for the full rules.
+  are separate. See [[*Conditional gates (introduced in 1.30)][Conditional gates]] for the full rules.
 
 ** Compact Euclidean status (1.30)
 
@@ -515,7 +499,7 @@ menu control. It outputs one pulse every six ticks of the 96-PPQ master
 clock; no fractional scheduling is needed. Older firmware does not
 understand this new rate index. Physical output remains to be verified.
 
-* Chapter 9: Conditional gates (1.30 development)
+* Conditional gates (introduced in 1.30)
 
 ** Ordered slots
 
@@ -730,7 +714,7 @@ persistent fields: Hrm and Inv use existing event data0/data1. Older firmware ca
 interpret these events or reproduce named-root playback. Retain song backups
 for any downgrade; fixed record size does not imply playback compatibility.
 
-For Chapter 9, the local numeric firmware/song version is 1.30, with
+The conditional-gate build uses numeric firmware/song version 1.30, with
 display-only =johanwk-ch9-dev=. Event codes 2--5 add the four gates in the
 existing six-byte event records, preserving all field offsets and the
 =0x5000=-byte song size. No new persistent extension fields are needed.
@@ -817,10 +801,27 @@ Previously tested development release build (not the final PR candidate):
 
 * Hardware use
 
-The following checklist records earlier 1.29 hardware use. Chapter 9 status
-is stated above; current Hrm hardware evidence includes initial within-track
-and Bias-target use, as described in [[*Hardware verification][Hrm hardware verification]]. This historical checklist must not be read as
-verification of competing Hrm sources or all 1.34 combinations.
+** Current verification and limitations
+
+Host tests and release builds pass. Practical CARBON hardware feedback covers
+conditional gates, Bias Track interactions, stable Euclidean status and
+probability variation after reboot. Root-note playback has positive feedback,
+including some scene changes, and CCi parameter/value hints have been used
+on hardware. Hrm works within tracks and through Bias Track with Scale changes
+and Root Keep, Off and selected keys; see [[*Hardware verification][Hrm hardware verification]].
+Inv provides natural-sounding chord lifts, and Compact has an obvious, pleasing
+effect on a wide voicing; see [[*Practical hardware feedback][Inv/Compact hardware feedback]].
+
+Testing is not exhaustive. Simultaneous conflicting Hrm root requests have
+host-test coverage but are not yet verified on hardware. External Remote
+CC30--33 and broad route/boundary combinations also lack recorded hardware
+verification. Physical 16 PPQ output, realtime timing and interrupt-stack
+high-water remain unmeasured.
+
+** Earlier feature verification
+
+The following checklist records earlier 1.29 hardware use, not verification
+of every combination in the current 1.34 build.
 
 The firmware has been built, flashed and used on CARBON hardware over the past
 week, including the new features. No bugs were encountered during practical use.
